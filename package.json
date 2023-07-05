@@ -1,0 +1,78 @@
+{
+  "name": "@code-forge/remix-dev-tools",
+  "description": "Remix development tools.",
+  "author": "Alem Tuzlak",
+  "version": "1.0.7",
+  "license": "MIT",
+  "keywords": [
+    "remix",
+    "remix-dev-tools"
+  ],
+  "private": false,
+  "type": "module",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    }
+  },
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Code-Forge-Net/Remix-Dev-Tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Code-Forge-Net/Remix-Dev-Tools/issues"
+  },
+  "homepage": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
+  "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
+  "scripts": {
+    "prepublish": "npm run build",
+    "remix": "cd ./src/remix-app-for-testing && npm run dev",
+    "setup": "npm install && cd ./src/remix-app-for-testing && npm install && cd ../.. && npm run link",
+    "dev": "run-p  tailwind remix",
+    "build": "vite build",
+    "vite": "vite build --watch",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "test": "vitest run --coverage",
+    "tailwind": "npx tailwindcss -i ./src/input.css -o ./src/RemixDevToolsStylesheet.css --watch",
+    "link": "npm link ./src/remix-app-for-testing/node_modules/@remix-run/react"
+  },
+  "devDependencies": {
+    "@remix-run/react": "^1.18.1",
+    "@remix-run/server-runtime": "^1.18.1",
+    "@testing-library/react": "^14.0.0",
+    "@types/node": "^18.16.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "@vitejs/plugin-react": "^4.0.1",
+    "@vitest/coverage-c8": "^0.30.1",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "happy-dom": "^9.9.2",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.24",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.9",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.9",
+    "vitest": "^0.30.1"
+  },
+  "dependencies": {
+    "clsx": "^1.2.1",
+    "lucide-react": "^0.252.0",
+    "react-use-websocket": "^4.3.1"
+  }
+}
