@@ -8,7 +8,7 @@ const RoutesTab = ({}: RoutesTabProps) => {
   const { lastJsonMessage, sendJsonMessage } = useGetSocket();
   useEffect(() => {
     if (lastJsonMessage?.type === "routes") {
-      setRoutes(lastJsonMessage?.data as any);
+      setRoutes(lastJsonMessage?.data ?? ([] as any));
     }
     if (lastJsonMessage?.type === "file") {
       console.log(lastJsonMessage);

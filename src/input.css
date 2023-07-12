@@ -31,7 +31,7 @@
 .remix-dev-tools *::-webkit-scrollbar-track {
   border-radius: 0.4rem;
   margin-right: 0.2rem;
-  background-color: #fff;
+  background-color: #212121;
   display: "none";
 }
 
@@ -491,6 +491,23 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-backdrop-saturate: ;
   --tw-backdrop-sepia: ;
 }
-
+.remix-dev-tools * {
+  line-height: 1.5;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -moz-tab-size: 4;
+  /* 3 */
+  -o-tab-size: 4;
+  tab-size: 4;
+  /* 3 */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  /* 4 */
+  font-feature-settings: normal;
+  /* 5 */
+  font-variation-settings: normal;
+}
 @tailwind components;
 @tailwind utilities;

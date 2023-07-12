@@ -1,4 +1,5 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
+import { json, type ActionArgs, type LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,12 +9,32 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import RemixDevToolsStylesheet from "../../../src/RemixDevToolsStylesheet.css";
+import { RemixDevTools } from "../../RemixDevTools/RemixDevTools";
+import { measure } from "../../monitor";
+
 export const links: LinksFunction = () => [
   ...(RemixDevToolsStylesheet
     ? [{ rel: "stylesheet", href: RemixDevToolsStylesheet }]
     : []),
 ];
+export const loader = ({ request }: LoaderArgs) =>
+  measure(async ({ time }) => {
+    await time(
+      "test",
+      async () => new Promise((resolve) => setTimeout(resolve, 1000))
+    );
+    return json({
+      message: "Hello root World!",
+    });
+  });
 
+export const handle = {
+  test: "test",
+};
+
+export const action = async ({ request }: ActionArgs) => {
+  return json({ data: "returned yay" });
+};
 export default function App() {
   return (
     <html lang="en">
@@ -28,6 +49,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <RemixDevTools />
       </body>
     </html>
   );

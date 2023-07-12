@@ -1,3 +1,5 @@
+const { createRoutesFromFolders } = require("@remix-run/v1-route-convention");
+
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   ignoredRouteFiles: ["**/.*"],
@@ -12,6 +14,9 @@ module.exports = {
   ],
   serverModuleFormat: "cjs",
   tailwind: true,
+  /* routes(defineRoutes) {
+    return createRoutesFromFolders(defineRoutes);
+  }, */
   future: {
     v2_errorBoundary: true,
     v2_headers: true,

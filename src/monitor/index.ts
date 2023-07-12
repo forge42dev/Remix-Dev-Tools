@@ -18,7 +18,6 @@ export class Measurer {
     return [...this.measures];
   }
   async toHeaders(headers = new Headers()) {
-    //console.log(this.measures);
     for (let { name, duration } of this.measures) {
       headers.append("Server-Timing", `${name};dur=${duration}`);
     }
@@ -26,55 +25,71 @@ export class Measurer {
   }
 }
 
-export const monitor = async <T extends unknown>(
-  request: Request,
-  handler: ({}: { time: Measurer["time"] }) => T
+export const measure = async <T extends unknown>(
+  //request: Request,
+  handler: (arg: { time: Measurer["time"] }) => T
 ) => {
+  // If production don't do anything
+  if (process.env.NODE_ENV !== "development") {
+    return handler({ time: async (name, fn) => await fn() });
+  }
+
   const measurer = new Measurer();
   try {
-    const url = new URL(request.url);
-    const headers = new Headers(request.headers);
-    const possibleDevTools = headers.get("remix-dev-tools");
+    /*  const url = new URL(request.url);
+    const headers = new Headers(request.headers); */
+    /*   const possibleDevTools = headers.get("remix-dev-tools"); */
 
     let remixDevTools: any = {
-      method: request.method,
-      from: request.headers.get("Referer"),
+      //method: request.method,
+      /* from: request.headers.get("Referer"),
       path: url.pathname,
-      to: request.url,
+      to: request.url, */
     };
 
     const res = await measurer.time(
-      `${remixDevTools.path} - ${
+      `Total Request Time ` /**#${
         remixDevTools.method === "GET" ? "loader" : "action"
-      }`,
+      } */,
       async () => {
         const response = await handler({
           time: measurer.time.bind(measurer),
         });
-        return response as Response;
+        return response;
       }
     );
-    //console.log(request.headers.get("Accept"));
 
-    const clone = res.clone();
-    const data = await clone.json();
     const timers = await measurer.toData();
     remixDevTools["timers"] = timers;
-    const newHeaders = new Headers(res.headers);
-    newHeaders.append("remix-dev-tools", JSON.stringify(remixDevTools));
-    const augmented = new Response(
-      JSON.stringify({
-        ...data,
-        remixDevTools: {
-          ...remixDevTools,
-          timers,
-        },
-      }),
-      { ...res, headers: newHeaders }
-    );
+    const isResponse = res instanceof Response;
 
-    console.log(timers);
-    return augmented as T;
+    if (!isResponse) {
+      if (typeof res === "object") {
+        const body = { ...res, remixDevTools };
+
+        return body;
+      }
+
+      return res as T;
+    }
+
+    try {
+      const newRes = res.clone();
+      const data = await newRes.json();
+      const newHeaders = new Headers(newRes.headers);
+      newHeaders.append("remix-dev-tools", JSON.stringify(remixDevTools));
+      await measurer.toHeaders(newHeaders);
+      const body = JSON.stringify({
+        ...data,
+        remixDevTools,
+      });
+
+      const augmented = new Response(body, { ...newRes, headers: newHeaders });
+
+      return augmented as T;
+    } catch (e) {}
+
+    await measurer.toHeaders(res.headers);
     return res as T;
   } catch (error) {
     throw error;

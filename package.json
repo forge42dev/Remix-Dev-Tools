@@ -73,6 +73,7 @@
   "dependencies": {
     "clsx": "^1.2.1",
     "lucide-react": "^0.252.0",
+    "react-json-view-lite": "^0.9.6",
     "react-use-websocket": "^4.3.1"
   }
 }

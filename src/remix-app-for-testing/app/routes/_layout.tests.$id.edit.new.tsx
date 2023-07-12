@@ -1,5 +1,5 @@
 import type { ActionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderArgs } from "@remix-run/node";
+import { json, type LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { measure } from "../../../index";
 import { Link, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
@@ -17,47 +17,94 @@ export const loader = async ({ request }: LoaderArgs) =>
       "test",
       async () => new Promise((resolve) => setTimeout(resolve, 1000))
     );
-    await time(
-      "really long name for a timer that should be truncated",
-      async () => new Promise((resolve) => setTimeout(resolve, 2568))
-    );
-    return json({ message: "Hello World!" });
+    return json({
+      should: "work",
+      with: {
+        nested: {
+          objects: {
+            really: {
+              deep: "inside",
+              array: [
+                "this",
+                "is",
+                "a",
+                "really",
+                "long",
+                "array",
+                "that",
+                "should",
+                "be",
+                "truncated",
+              ],
+            },
+          },
+        },
+      },
+    });
   });
 
 export const action = async ({ request }: ActionArgs) => {
-  return redirect("/login");
+  return new Response(JSON.stringify({ test: "died" }));
 };
 
-export default function Index() {
-  const { message } = useLoaderData<typeof loader>();
+export default function IndexRoute() {
+  const string = useLoaderData<typeof loader>();
   const lFetcher = useFetcher();
+  const lFetcher2 = useFetcher();
   const pFetcher = useFetcher();
   const submit = useSubmit();
   const data = new FormData();
   data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
+      <h1>Welcome to Remix 2</h1>
       <button
-        onClick={() => lFetcher.submit(null, { method: "get", action: "/" })}
+        onClick={() =>
+          lFetcher.submit(null, { method: "GET", action: "/tests/3/edit/new" })
+        }
       >
         FETCHER Loader
+      </button>{" "}
+      <button
+        onClick={() =>
+          lFetcher2.submit(null, { method: "GET", action: "/tests/3/edit/new" })
+        }
+      >
+        FETCHER 2 Loader
       </button>
       <button
-        onClick={() => pFetcher.submit(null, { method: "POST", action: "/" })}
+        onClick={() =>
+          pFetcher.submit(null, { method: "POST", action: "/tests/3/edit/new" })
+        }
       >
         FETCHER Action
       </button>
-      <button onClick={() => submit(null, { method: "POST", action: "/" })}>
+      <button
+        onClick={() => {
+          submit(data, { method: "POST", action: "/tests/3/edit/new" });
+        }}
+      >
         SUBMIT Action
       </button>
-      <button onClick={() => submit(data, { method: "PATCH", action: "/" })}>
+      <button
+        onClick={() =>
+          submit(data, { method: "PATCH", action: "/tests/3/edit/new" })
+        }
+      >
         SUBMIT Action PATCH
       </button>
-      <button onClick={() => submit(null, { method: "DELETE", action: "/" })}>
+      <button
+        onClick={() =>
+          submit(null, { method: "DELETE", action: "/tests/3/edit/new" })
+        }
+      >
         SUBMIT Action DELETE
       </button>
-      <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
+      <button
+        onClick={() =>
+          submit(null, { method: "PUT", action: "/tests/3/edit/new" })
+        }
+      >
         SUBMIT Action PUT
       </button>
       <Link to="/login">Login</Link>
