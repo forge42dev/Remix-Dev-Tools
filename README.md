@@ -38,7 +38,7 @@ npm install remix-devtools --save-dev
 2. Add the following to your application `root.tsx` file:
 
 ```diff
-+ import rdtStylesheet from "remix-dev-tools/public/stylesheet.css";
++ import rdtStylesheet from "remix-dev-tools/stylesheet.css";
 + import { RemixDevTools } from "remix-dev-tools";
 
 + export const links: LinksFunction = () => [
