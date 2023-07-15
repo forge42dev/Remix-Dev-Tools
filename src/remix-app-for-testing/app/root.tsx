@@ -8,25 +8,23 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import RemixDevToolsStylesheet from "../../../src/RemixDevToolsStylesheet.css";
+import stylesheet from "../../../dist/stylesheet.css";
+import { RemixDevTools } from "../../../dist";
+/* 
+import stylesheet from "../../public/stylesheet.css";
 import { RemixDevTools } from "../../RemixDevTools/RemixDevTools";
-import { measure } from "../../monitor";
 
+import stylesheet from "../../public/stylesheet.css";
+import { RemixDevTools } from "../../RemixDevTools/RemixDevTools";
+ */
 export const links: LinksFunction = () => [
-  ...(RemixDevToolsStylesheet
-    ? [{ rel: "stylesheet", href: RemixDevToolsStylesheet }]
-    : []),
+  ...(stylesheet ? [{ rel: "stylesheet", href: stylesheet }] : []),
 ];
-export const loader = ({ request }: LoaderArgs) =>
-  measure(async ({ time }) => {
-    await time(
-      "test",
-      async () => new Promise((resolve) => setTimeout(resolve, 1000))
-    );
-    return json({
-      message: "Hello root World!",
-    });
+export const loader = ({ request }: LoaderArgs) => {
+  return json({
+    message: "Hello root World!",
   });
+};
 
 export const handle = {
   test: "test",

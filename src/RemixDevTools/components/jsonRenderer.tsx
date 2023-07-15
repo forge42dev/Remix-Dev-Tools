@@ -1,4 +1,4 @@
-import { JsonView, darkStyles, defaultStyles } from "react-json-view-lite";
+import { JsonView, darkStyles } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
 
 interface JsonRendererProps {

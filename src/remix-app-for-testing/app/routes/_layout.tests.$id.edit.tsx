@@ -1,7 +1,6 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect, type LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/node";
-import { measure } from "../../../index";
 import {
   Link,
   Outlet,
@@ -17,14 +16,9 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-export const loader = async ({ request }: LoaderArgs) =>
-  measure(async ({ time }) => {
-    await time(
-      "test",
-      async () => new Promise((resolve) => setTimeout(resolve, 1000))
-    );
-    return "raw string";
-  });
+export const loader = async ({ request }: LoaderArgs) => {
+  return "raw string";
+};
 
 export const action = async ({ request }: ActionArgs) => {
   return json({

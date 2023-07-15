@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Logo } from "./Logo";
+import { Logo } from "./components/Logo";
 import { useEffect, useState } from "react";
 import { RDTContextProvider } from "./context/RDTContext";
 import { tabs } from "./tabs";
@@ -9,15 +9,19 @@ import { isDev } from "./utils/isDev";
 import { useGetSocket } from "./hooks/useGetSocket";
 import { Radio } from "lucide-react";
 
-const RemixDevTools = () => {
-  const [isOpen, setIsOpen] = useState(true);
+interface Props {
+  defaultOpen: boolean;
+}
+
+const RemixDevTools = ({ defaultOpen }: Props) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const { activeTab, setActiveTab, setShouldConnectWithForge } =
     useRDTContext();
 
   useTimelineHandler();
   const { isConnected, isConnecting } = useGetSocket();
   const Component = tabs.find((tab) => tab.id === activeTab)?.component;
-  console.log(window.__remixManifest.routes);
+
   return (
     <div className="remix-dev-tools">
       <div
@@ -46,7 +50,10 @@ const RemixDevTools = () => {
       >
         <div className="rdt-flex rdt-h-8 rdt-w-full rdt-bg-gray-800">
           {tabs
-            .filter((tab) => !(!isConnected && tab.requiresForge))
+            .filter(
+              (tab) =>
+                !(!isConnected && tab.requiresForge) && tab.id !== "timeline"
+            )
             .map((tab) => (
               <div
                 key={tab.id}
@@ -67,7 +74,7 @@ const RemixDevTools = () => {
                 isConnecting
                   ? "rdt-animate-pulse rdt-pointer-events-none rdt-cursor-default"
                   : "",
-                "rdt-flex rdt-font-sans rdt-transition-all rdt-duration-300 rdt-items-center rdt-gap-2 rdt-cursor-pointer rdt-border-r-2 rdt-px-4 rdt-border-0 rdt-border-solid rdt-border-r-[#212121] rdt-border-b rdt-border-b-[#212121]"
+                "rdt-flex rdt-font-sans rdt-transition-all rdt-items-center rdt-gap-2 rdt-cursor-pointer rdt-border-r-2 rdt-px-4 rdt-border-0 rdt-border-solid rdt-border-r-[#212121] rdt-border-b rdt-border-b-[#212121]"
               )}
             >
               <Radio size={16} />
@@ -77,8 +84,14 @@ const RemixDevTools = () => {
             </div>
           )}
         </div>
-        <div className="rdt-h-full rdt-w-full rdt-flex rdt-overflow-y-auto">
-          <div className="rdt-w-full rdt-p-2 rdt-pr-16">{Component}</div>
+        <div className="rdt-h-full rdt-w-full rdt-flex rdt-overflow-y-hidden">
+          <div className="rdt-w-full rdt-h-full rdt-p-2 rdt-z-20 rdt-pl-8  rdt-bg-[#212121] ">
+            {Component}
+          </div>
+          <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
+          <div className="rdt-w-2/3 rdt-h-full rdt-z-10 rdt-p-2 rdt-pr-16">
+            {tabs.find((t) => t.id === "timeline")?.component}
+          </div>
         </div>
       </div>
     </div>
@@ -97,14 +110,22 @@ function useHydrated() {
 
   return hydrated;
 }
-
-const RDTWithContext = () => {
+interface RemixDevToolsProps {
+  // A port to connect to the Remix Forge in your vscode extension
+  port?: number;
+  // Whether the dev tools should be open by default
+  defaultOpen?: boolean;
+}
+const RDTWithContext = ({
+  port = 3003,
+  defaultOpen = false,
+}: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const isDevelopment = isDev();
   if (!hydrated || !isDevelopment) return null;
   return (
-    <RDTContextProvider>
-      <RemixDevTools />
+    <RDTContextProvider port={port}>
+      <RemixDevTools defaultOpen={defaultOpen} />
     </RDTContextProvider>
   );
 };

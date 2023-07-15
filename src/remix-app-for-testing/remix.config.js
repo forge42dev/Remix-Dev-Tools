@@ -10,7 +10,7 @@ module.exports = {
   watchPaths: [
     "../RemixDevTools/**/*.{tsx,ts}",
     "../monitor/**/*.{tsx,ts}",
-    "../RemixDevToolsStylesheet.css",
+    "../public/stylesheet.css",
   ],
   serverModuleFormat: "cjs",
   tailwind: true,

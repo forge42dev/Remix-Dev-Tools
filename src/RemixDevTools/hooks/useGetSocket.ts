@@ -1,4 +1,4 @@
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import { ReadyState, default as useWebSocket } from "react-use-websocket";
 import {
   JsonObject,
   Options,
@@ -10,7 +10,8 @@ import { useState } from "react";
 const RETRY_COUNT = 2;
 
 export const useGetSocket = <T extends JsonObject>(options?: Options) => {
-  const { shouldConnectWithForge, setShouldConnectWithForge } = useRDTContext();
+  const { shouldConnectWithForge, setShouldConnectWithForge, port } =
+    useRDTContext();
   const [retryCount, setRetryCount] = useState(0);
   const opts: Options = {
     ...options,
@@ -31,8 +32,8 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
       setShouldConnectWithForge(false);
     },
   };
-  const properties = (useWebSocket as any).default(
-    "ws://localhost:8080",
+  const properties = useWebSocket(
+    `ws://localhost:${port}`,
     opts,
     shouldConnectWithForge
   ) as WebSocketHook<T, MessageEvent<any> | null>;

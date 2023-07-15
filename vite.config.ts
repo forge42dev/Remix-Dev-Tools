@@ -15,7 +15,13 @@ export default defineConfig({
           "**/*.test.tsx",
           "**/*.config.ts",
           "**/env.ts",
+          "**/components/**",
+          "**/context/**",
+          "**/hooks/**",
+          "**/tabs/**",
+          "**/utils/**",
           "**/remix-app-for-testing/**",
+          "**/monitor/**",
         ],
         tsconfig: resolve(__dirname, `tsconfig.json`),
         tsconfigOverride: {
@@ -29,17 +35,22 @@ export default defineConfig({
       enforce: "pre",
     },
   ],
+  publicDir: resolve(__dirname, "public"),
   build: {
+    assetsDir: "public",
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
-      name: "React input mask",
+      name: "Remix Dev Tools",
       fileName: "index",
     },
+    copyPublicDir: true,
     rollupOptions: {
-      external: ["react", "react-dom"],
+      external: ["react", "react-dom", "@remix-run/react"],
       output: {
         globals: {
           react: "React",
+          ["react-dom"]: "ReactDOM",
+          ["@remix-run/react"]: "@remix-run/react",
         },
       },
     },

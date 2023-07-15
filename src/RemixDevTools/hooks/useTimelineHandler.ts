@@ -1,76 +1,71 @@
-import {
-  useActionData,
-  useFetcher,
-  useFetchers,
-  useNavigation,
-} from "@remix-run/react";
+import { useActionData, useFetchers, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useRDTContext } from "../context/useRDTContext";
 import { TimelineEvent } from "../context/timeline";
 
+const convertFormDataToObject = (formData: FormData | undefined) => {
+  const data =
+    formData && formData.entries
+      ? Object.fromEntries(formData.entries())
+      : undefined;
+  const finalData = data && Object.keys(data).length > 0 ? data : undefined;
+  return finalData;
+};
+
 const useTimelineHandler = () => {
   const navigation = useNavigation();
   const fetchers = useFetchers();
-  const fetcher = useFetcher();
 
   const { setTimelineEvent } = useRDTContext();
   const responseData = useActionData();
-
   useEffect(() => {
-    const { state, location, formAction, formData, formEncType, formMethod } =
+    const { state, location, formAction, formData, formMethod, formEncType } =
       navigation;
     if (state === "idle") {
       return;
     }
-    const { pathname, search, hash, state: locState } = location;
+    const { state: locState, pathname, search, hash } = location;
+    const data = convertFormDataToObject(formData);
+    // Form submission handler
     if (state === "submitting") {
-      const data =
-        formData && formData.entries
-          ? Object.fromEntries(formData.entries())
-          : undefined;
       return setTimelineEvent({
         type: "FORM_SUBMISSION",
         from: pathname,
         to: formAction,
         method: formMethod,
-        data: data && Object.keys(data).length > 0 ? data : undefined,
+        data,
         encType: formEncType,
         id: (Math.random() * Date.now()).toString(),
       });
     }
     if (state === "loading") {
+      // Form submitted => action is redirecting the user
       if (formAction && formData && formMethod && locState?._isRedirect) {
-        const data =
-          formData && formData.entries
-            ? Object.fromEntries(formData.entries())
-            : undefined;
         return setTimelineEvent({
           type: "ACTION_REDIRECT",
           from: pathname,
           to: formAction,
           method: formMethod,
-          data: data && Object.keys(data).length > 0 ? data : undefined,
+          data,
           encType: formEncType,
           responseData,
           id: (Math.random() * Date.now()).toString(),
         });
       }
+      // Form submitted => action is responding with data
       if (formAction && formData && formMethod) {
-        const data =
-          formData && formData.entries
-            ? Object.fromEntries(formData.entries())
-            : undefined;
         return setTimelineEvent({
           type: "ACTION_RESPONSE",
           from: pathname,
           to: formAction,
           method: formMethod,
-          data: data && Object.keys(data).length > 0 ? data : undefined,
+          data,
           encType: formEncType,
           responseData,
           id: (Math.random() * Date.now()).toString(),
         });
       }
+      // Loader/browser is redirecting the user
       return setTimelineEvent({
         type:
           locState?._isFetchActionRedirect || locState?._isFetchLoaderRedirect
@@ -87,17 +82,20 @@ const useTimelineHandler = () => {
   }, [navigation]);
 
   const fetcherEventQueue = useRef<TimelineEvent[]>([]);
+  // Fetchers handler
   useEffect(() => {
+    if (navigation.state !== "idle") return;
     const activeFetchers = fetchers.filter((f) => f.state !== "idle");
-
-    // fix this to work with fetcher submission that return data from be
+    // Everything is finished => store the events
     if (activeFetchers.length === 0 && fetcherEventQueue.current.length > 0) {
-      console.log(fetchers);
-
       fetcherEventQueue.current.map(({ position, ...event }: any) =>
         setTimelineEvent({
           ...event,
-          responseData: fetchers[position]?.data,
+          responseData:
+            // If the fetcher is a GET request, the response data is stored in the fetcher, otherwise it's already set at this point
+            event.method === "GET"
+              ? fetchers[position]?.data
+              : event.responseData,
           id: (Math.random() * Date.now()).toString(),
         })
       );
@@ -109,29 +107,20 @@ const useTimelineHandler = () => {
       if (fetcher.state === "idle") return;
 
       const { data, formAction, formData, formEncType, formMethod } = fetcher;
-      /* if (navigation.state !== "idle") {
-        return;
-      } */
 
       if (formAction && formMethod) {
-        const form =
-          formData && formData.entries
-            ? Object.fromEntries(formData.entries())
-            : undefined;
+        const form = convertFormDataToObject(formData);
         const event = {
-          type: "FETCHER_SUBMIT",
+          type:
+            fetcher.state === "loading" ? "FETCHER_RESPONSE" : "FETCHER_SUBMIT",
           to: formAction,
           method: formMethod,
-          data: form && Object.keys(form).length > 0 ? form : undefined,
+          data: form,
           encType: formEncType as any,
-          responseData: data,
+          responseData: fetcher.state === "submitting" ? undefined : data,
           position: i,
         };
-
-        return (fetcherEventQueue.current = [
-          ...fetcherEventQueue.current,
-          event as any,
-        ]);
+        fetcherEventQueue.current.push(event as any);
       }
     });
   }, [fetchers]);

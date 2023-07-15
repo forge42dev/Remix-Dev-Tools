@@ -542,14 +542,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   left: -0.75rem !important;
 }
 
-.-rdt-right-12 {
-  right: -3rem !important;
-}
-
-.rdt--right-12 {
-  right: -3rem !important;
-}
-
 .rdt-bottom-0 {
   bottom: 0px !important;
 }
@@ -562,8 +554,16 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   right: 0px !important;
 }
 
+.rdt-right-4 {
+  right: 1rem !important;
+}
+
 .rdt-top-0 {
   top: 0px !important;
+}
+
+.rdt-z-10 {
+  z-index: 10 !important;
 }
 
 .rdt-z-20 {
@@ -606,16 +606,16 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   margin-left: 0.25rem !important;
 }
 
-.rdt-ml-3 {
-  margin-left: 0.75rem !important;
-}
-
 .rdt-ml-4 {
   margin-left: 1rem !important;
 }
 
 .rdt-ml-8 {
   margin-left: 2rem !important;
+}
+
+.rdt-ml-auto {
+  margin-left: auto !important;
 }
 
 .rdt-mr-1 {
@@ -630,6 +630,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   margin-top: 0.5rem !important;
 }
 
+.rdt-mt-4 {
+  margin-top: 1rem !important;
+}
+
 .rdt-box-border {
   box-sizing: border-box !important;
 }
@@ -642,12 +646,20 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   display: flex !important;
 }
 
+.rdt-grid {
+  display: grid !important;
+}
+
 .rdt-h-0 {
   height: 0px !important;
 }
 
 .rdt-h-14 {
   height: 3.5rem !important;
+}
+
+.rdt-h-4 {
+  height: 1rem !important;
 }
 
 .rdt-h-6 {
@@ -666,8 +678,20 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   height: 100% !important;
 }
 
+.rdt-w-1 {
+  width: 0.25rem !important;
+}
+
 .rdt-w-14 {
   width: 3.5rem !important;
+}
+
+.rdt-w-2\/3 {
+  width: 66.666667% !important;
+}
+
+.rdt-w-4 {
+  width: 1rem !important;
 }
 
 .rdt-w-6 {
@@ -686,6 +710,28 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   max-width: 28rem !important;
 }
 
+.rdt-flex-1 {
+  flex: 1 1 0% !important;
+}
+
+.rdt-shrink-0 {
+  flex-shrink: 0 !important;
+}
+
+@keyframes rdt-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.rdt-animate-fade-in {
+  animation: rdt-fade-in 0.5s ease-in !important;
+}
+
 @keyframes rdt-fade-in-left {
   0% {
     opacity: 0;
@@ -699,7 +745,7 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 
 .rdt-animate-fade-in-left {
-  animation: rdt-fade-in-left 0.5s ease-out !important;
+  animation: rdt-fade-in-left 0.5s ease-in !important;
 }
 
 @keyframes rdt-pulse {
@@ -722,6 +768,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 
 .rdt-resize-y {
   resize: vertical !important;
+}
+
+.rdt-grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
 
 .rdt-flex-col {
@@ -756,8 +806,20 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   gap: 1rem !important;
 }
 
+.rdt-gap-8 {
+  gap: 2rem !important;
+}
+
+.rdt-self-end {
+  align-self: flex-end !important;
+}
+
 .rdt-overflow-auto {
   overflow: auto !important;
+}
+
+.rdt-overflow-hidden {
+  overflow: hidden !important;
 }
 
 .rdt-overflow-y-auto {
@@ -766,6 +828,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 
 .rdt-overflow-x-hidden {
   overflow-x: hidden !important;
+}
+
+.rdt-overflow-y-hidden {
+  overflow-y: hidden !important;
 }
 
 .rdt-rounded {
@@ -809,6 +875,15 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   border-color: rgb(31 156 240 / var(--tw-border-opacity)) !important;
 }
 
+.rdt-border-gray-400 {
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity)) !important;
+}
+
+.rdt-border-gray-500\/20 {
+  border-color: rgb(107 114 128 / 0.2) !important;
+}
+
 .rdt-border-gray-700 {
   --tw-border-opacity: 1 !important;
   border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
@@ -819,9 +894,19 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   border-bottom-color: rgb(33 33 33 / var(--tw-border-opacity)) !important;
 }
 
+.rdt-border-b-gray-500 {
+  --tw-border-opacity: 1 !important;
+  border-bottom-color: rgb(107 114 128 / var(--tw-border-opacity)) !important;
+}
+
 .rdt-border-r-\[\#212121\] {
   --tw-border-opacity: 1 !important;
   border-right-color: rgb(33 33 33 / var(--tw-border-opacity)) !important;
+}
+
+.rdt-bg-\[\#121212\] {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(18 18 18 / var(--tw-bg-opacity)) !important;
 }
 
 .rdt-bg-\[\#212121\] {
@@ -837,6 +922,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .rdt-bg-blue-900 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(30 58 138 / var(--tw-bg-opacity)) !important;
+}
+
+.rdt-bg-gray-500\/20 {
+  background-color: rgb(107 114 128 / 0.2) !important;
 }
 
 .rdt-bg-gray-800 {
@@ -912,8 +1001,29 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   padding-bottom: 0.25rem !important;
 }
 
+.rdt-py-2 {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.rdt-pb-12 {
+  padding-bottom: 3rem !important;
+}
+
+.rdt-pl-8 {
+  padding-left: 2rem !important;
+}
+
 .rdt-pr-16 {
   padding-right: 4rem !important;
+}
+
+.rdt-pr-4 {
+  padding-right: 1rem !important;
+}
+
+.rdt-pt-0 {
+  padding-top: 0px !important;
 }
 
 .rdt-font-sans {
@@ -933,6 +1043,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .rdt-text-sm {
   font-size: 0.875rem !important;
   line-height: 1.25rem !important;
+}
+
+.rdt-text-xs {
+  font-size: 0.75rem !important;
+  line-height: 1rem !important;
 }
 
 .rdt-font-medium {
@@ -1034,10 +1149,43 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   transition-duration: 150ms !important;
 }
 
+.rdt-transition-transform {
+  transition-property: transform !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
 .rdt-duration-200 {
   transition-duration: 200ms !important;
 }
 
 .rdt-duration-300 {
   transition-duration: 300ms !important;
+}
+
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
+  }
+}
+
+.rdt-duration-200 {
+  animation-duration: 200ms !important;
+}
+
+.rdt-duration-300 {
+  animation-duration: 300ms !important;
+}
+
+.\[\&\[data-state\=open\]\>svg\]\:rdt-rotate-180[data-state=open]>svg {
+  --tw-rotate: 180deg !important;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important;
 }

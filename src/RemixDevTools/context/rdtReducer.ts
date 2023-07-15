@@ -1,19 +1,25 @@
 import { TimelineEvent } from "./timeline";
 import type { Tabs } from "../tabs";
 
+export type RouteWildcards = Record<string, Record<string, string> | undefined>;
+
 export type RemixDevToolsState = {
   timeline: TimelineEvent[];
   settings: {
+    routeWildcards: RouteWildcards;
     activeTab: Tabs;
     shouldConnectWithForge: boolean;
+    port: number;
   };
 };
 
 export const initialState: RemixDevToolsState = {
   timeline: [],
   settings: {
+    routeWildcards: {},
     activeTab: "timeline",
     shouldConnectWithForge: false,
+    port: 3003,
   },
 };
 
@@ -24,10 +30,17 @@ type SetTimelineEvent = {
   type: "SET_TIMELINE_EVENT";
   payload: TimelineEvent;
 };
+
 type SetActiveTab = {
   type: "SET_ACTIVE_TAB";
   payload: Tabs;
 };
+
+type SetRouteWildcards = {
+  type: "SET_ROUTE_WILDCARDS";
+  payload: RouteWildcards;
+};
+
 type PurgeTimeline = {
   type: "PURGE_TIMELINE";
   payload: undefined;
@@ -48,6 +61,7 @@ export type RemixDevToolsActions =
   | SetTimelineEvent
   | SetActiveTab
   | PurgeTimeline
+  | SetRouteWildcards
   | SetShouldConnectToForgeAction
   | SetIsSubmittedAction;
 
@@ -79,6 +93,14 @@ export const rdtReducer = (
         ...state,
         ...payload,
         isSubmitted: true,
+      };
+    case "SET_ROUTE_WILDCARDS":
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          routeWildcards: payload,
+        },
       };
     case "SET_SHOULD_CONNECT_TO_FORGE":
       return {

@@ -1,4 +1,4 @@
-export class Measurer {
+/* export class Measurer {
   measures = new Set<{
     name: string;
     duration: number;
@@ -36,21 +36,20 @@ export const measure = async <T extends unknown>(
 
   const measurer = new Measurer();
   try {
-    /*  const url = new URL(request.url);
-    const headers = new Headers(request.headers); */
-    /*   const possibleDevTools = headers.get("remix-dev-tools"); */
+    //   const url = new URL(request.url);
+    //const headers = new Headers(request.headers);  
+    //const possibleDevTools = headers.get("remix-dev-tools");  
 
     let remixDevTools: any = {
       //method: request.method,
       /* from: request.headers.get("Referer"),
       path: url.pathname,
-      to: request.url, */
+      to: request.url,  
     };
 
     const res = await measurer.time(
-      `Total Request Time ` /**#${
-        remixDevTools.method === "GET" ? "loader" : "action"
-      } */,
+      `Total Request Time ` ,
+      //#${remixDevTools.method === "GET" ? "loader" : "action"},
       async () => {
         const response = await handler({
           time: measurer.time.bind(measurer),
@@ -95,3 +94,4 @@ export const measure = async <T extends unknown>(
     throw error;
   }
 };
+ */

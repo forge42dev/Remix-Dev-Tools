@@ -16,11 +16,12 @@ RDTContext.displayName = "RDTContext";
 
 interface ContextProps {
   children: React.ReactNode;
+  port: number;
 }
 
 export const REMIX_DEV_TOOLS = "remixDevTools";
 
-export const RDTContextProvider = ({ children }: ContextProps) => {
+export const RDTContextProvider = ({ children, port }: ContextProps) => {
   const existingState = sessionStorage.getItem(REMIX_DEV_TOOLS);
   const settings = localStorage.getItem(REMIX_DEV_TOOLS);
 
@@ -28,8 +29,8 @@ export const RDTContextProvider = ({ children }: ContextProps) => {
     ...initialState,
     ...(existingState ? JSON.parse(existingState) : {}),
     settings: settings
-      ? { ...initialState.settings, ...JSON.parse(settings) }
-      : initialState.settings,
+      ? { ...initialState.settings, ...JSON.parse(settings), port }
+      : { ...initialState.settings, port },
   });
 
   const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);

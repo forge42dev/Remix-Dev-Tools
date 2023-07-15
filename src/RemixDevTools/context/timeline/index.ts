@@ -18,6 +18,11 @@ interface FetcherSubmissionEvent
   type: "FETCHER_SUBMIT";
   responseData?: Record<string, any>;
 }
+interface FetcherSubmissionResponseEvent
+  extends Omit<FormSubmissionEvent, "type" | "from"> {
+  type: "FETCHER_RESPONSE";
+  responseData?: Record<string, any>;
+}
 interface FormSubmissionEvent {
   type: "FORM_SUBMISSION";
   id: string;
@@ -49,6 +54,7 @@ export type FormEvent =
   | FormSubmissionEvent
   | FetcherSubmissionEvent
   | ActionRedirectEvent
+  | FetcherSubmissionResponseEvent
   | ActionResponseEvent;
 
 export type TimelineEvent = RedirectEvent | FormEvent;

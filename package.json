@@ -2,7 +2,7 @@
   "name": "@code-forge/remix-dev-tools",
   "description": "Remix development tools.",
   "author": "Alem Tuzlak",
-  "version": "1.0.7",
+  "version": "1.0.0",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -37,11 +37,12 @@
     "setup": "npm install && cd ./src/remix-app-for-testing && npm install && cd ../.. && npm run link",
     "dev": "run-p  tailwind remix",
     "build": "vite build",
+    "postbuild": "node moveStylesheet.js",
     "vite": "vite build --watch",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest run --coverage",
-    "tailwind": "npx tailwindcss -i ./src/input.css -o ./src/RemixDevToolsStylesheet.css --watch",
+    "tailwind": "npx tailwindcss -i ./src/input.css -o ./src/public/stylesheet.css --watch",
     "link": "npm link ./src/remix-app-for-testing/node_modules/@remix-run/react"
   },
   "devDependencies": {
@@ -64,16 +65,20 @@
     "postcss": "^8.4.24",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-typescript2": "^0.34.1",
     "tailwindcss": "^3.3.2",
+    "tailwindcss-animate": "^1.0.6",
     "typescript": "^5.0.4",
     "vite": "^4.3.9",
     "vitest": "^0.30.1"
   },
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.1.2",
     "clsx": "^1.2.1",
     "lucide-react": "^0.252.0",
     "react-json-view-lite": "^0.9.6",
-    "react-use-websocket": "^4.3.1"
+    "react-use-websocket": "^4.3.1",
+    "tailwind-merge": "^1.13.2"
   }
 }

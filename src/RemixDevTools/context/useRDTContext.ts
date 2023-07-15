@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect } from "react";
 import { RDTContext, REMIX_DEV_TOOLS } from "./RDTContext";
 import { TimelineEvent } from "./timeline";
 import { Tabs } from "../tabs";
+import { RouteWildcards } from "./rdtReducer";
 
 const useRDTContext = () => {
   const context = useContext(RDTContext);
@@ -10,7 +11,7 @@ const useRDTContext = () => {
   }
   const { state, dispatch } = context;
   const { timeline, settings } = state;
-  const { activeTab, shouldConnectWithForge } = settings;
+  const { activeTab, shouldConnectWithForge, routeWildcards, port } = settings;
 
   useEffect(() => {
     const reducedState = { ...state };
@@ -37,6 +38,12 @@ const useRDTContext = () => {
     },
     [dispatch]
   );
+  const setRouteWildcards = useCallback(
+    (activeTab: RouteWildcards) => {
+      dispatch({ type: "SET_ROUTE_WILDCARDS", payload: activeTab });
+    },
+    [dispatch]
+  );
   const setShouldConnectWithForge = useCallback(
     (shouldConnectWithForge: boolean) => {
       dispatch({
@@ -54,6 +61,9 @@ const useRDTContext = () => {
     clearTimeline,
     setShouldConnectWithForge,
     shouldConnectWithForge,
+    routeWildcards,
+    port,
+    setRouteWildcards,
   };
 };
 

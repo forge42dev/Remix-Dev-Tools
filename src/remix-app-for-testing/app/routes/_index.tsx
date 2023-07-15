@@ -1,7 +1,6 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect, type LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/node";
-import { measure } from "../../../index";
 import { Link, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
@@ -11,18 +10,9 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-export const loader = async ({ request }: LoaderArgs) =>
-  measure(async ({ time }) => {
-    await time(
-      "test",
-      async () => new Promise((resolve) => setTimeout(resolve, 1000))
-    );
-    await time(
-      "really long name for a timer that should be truncated",
-      async () => new Promise((resolve) => setTimeout(resolve, 2568))
-    );
-    return json({ message: "Hello World!" });
-  });
+export const loader = async ({ request }: LoaderArgs) => {
+  return json({ message: "Hello World!" });
+};
 
 export const action = async ({ request }: ActionArgs) => {
   return redirect("/login");
@@ -44,7 +34,7 @@ export default function Index() {
         FETCHER Loader
       </button>
       <button
-        onClick={() => pFetcher.submit(null, { method: "POST", action: "/" })}
+        onClick={() => pFetcher.submit(data, { method: "POST", action: "/" })}
       >
         FETCHER Action
       </button>
