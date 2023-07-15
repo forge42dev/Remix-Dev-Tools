@@ -32,14 +32,14 @@ To install and utilize Remix Development Tools, follow these steps:
 1. Install the package via npm:
 
 ```bash
-npm install remix-devtools --save-dev
+npm install remix-development-tools --save-dev
 ``` 
  
 2. Add the following to your application `root.tsx` file:
 
 ```diff
-+ import rdtStylesheet from "remix-dev-tools/stylesheet.css";
-+ import { RemixDevTools } from "remix-dev-tools";
++ import rdtStylesheet from "remix-development-tools/stylesheet.css";
++ import { RemixDevTools } from "remix-development-tools";
 
 + export const links: LinksFunction = () => [
 +   ...(rdtStylesheet ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
