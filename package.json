@@ -34,8 +34,7 @@
   "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "remix": "cd ./src/remix-app-for-testing && npm run dev",
-    "setup": "npm install && cd ./src/remix-app-for-testing && npm install && cd ../..",
+    "remix": "npm run dev -w remix-app-for-testing",
     "dev": "npm-run-all -s build:dev -p remix vite",
     "build:dev": "vite build -m development",
     "build": "vite build",
