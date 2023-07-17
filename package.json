@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools.",
   "author": "Alem Tuzlak",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -10,13 +10,13 @@
   ],
   "private": false,
   "type": "module",
-  "main": "./dist/index.umd.cjs",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "exports": {
     "./stylesheet.css": "./dist/stylesheet.css",
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.umd.cjs"
+      "require": "./dist/index.cjs"
     }
   },
   "typings": "./dist/index.d.ts",
