@@ -82,7 +82,7 @@ Contributions to Remix Development Tools are welcome! To contribute, please foll
 
 1. Fork the repository and clone it locally.
 2. Create a new branch for your feature or bug fix.
-3. Run `npm run setup` to get your development environment set up.
+3. Run `npm install` to get your development environment set up.
 4. Run `npm run dev` to start the development server.
 5. Implement your changes, adhering to the existing code style and best practices.
 6. Commit and push your changes to your forked repository.
