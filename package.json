@@ -33,18 +33,26 @@
   "homepage": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "remix": "cd ./src/remix-app-for-testing && npm run dev",
-    "setup": "npm install && cd ./src/remix-app-for-testing && npm install && cd ../.. && npm run link",
-    "dev": "run-p  tailwind remix",
+    "setup": "npm install && cd ./src/remix-app-for-testing && npm install && cd ../..",
+    "dev": "npm-run-all -s build:dev -p remix vite",
+    "build:dev": "vite build -m development",
     "build": "vite build",
-    "postbuild": "node moveStylesheet.js",
-    "vite": "vite build --watch",
+    "vite": "vite build --watch -m development",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "prettier": "prettier --check .",
     "preview": "vite preview",
-    "test": "vitest run --coverage",
-    "tailwind": "npx tailwindcss -i ./src/input.css -o ./src/public/stylesheet.css --watch",
-    "link": "npm link ./src/remix-app-for-testing/node_modules/@remix-run/react"
+    "test": "vitest run --coverage"
+  },
+  "workspaces": [
+    ".",
+    "src/remix-app-for-testing"
+  ],
+  "peerDependencies": {
+    "@remix-run/react": "^1.18.1",
+    "react": ">=17",
+    "react-dom": ">=17"
   },
   "devDependencies": {
     "@remix-run/react": "^1.18.1",
@@ -62,8 +70,11 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "happy-dom": "^9.9.2",
+    "nodemon": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.24",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.4.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "rollup-plugin-copy": "^3.4.0",

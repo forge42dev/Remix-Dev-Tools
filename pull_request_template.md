@@ -6,7 +6,6 @@ Fixes # (issue)
 
 If this is a new feature please add a description of what was added and why below:
 
-
 ## Type of change
 
 Please delete options that are not relevant.

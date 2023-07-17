@@ -14,8 +14,6 @@ import { Input } from "../components/Input";
 import { NewRouteForm } from "../components/NewRouteForm";
 import { useGetSocket } from "../hooks/useGetSocket";
 
-interface RoutesTabProps {}
-
 const isLayout = (route: EntryRoute & { route: string }) => {
   const rId = route.id.replace("routes/", "");
   const v2Layout =
@@ -26,7 +24,7 @@ const isLayout = (route: EntryRoute & { route: string }) => {
   return v1Layout || v2Layout;
 };
 
-const RoutesTab = ({}: RoutesTabProps) => {
+const RoutesTab = () => {
   const { routeWildcards, setRouteWildcards } = useRDTContext();
   const { isConnected } = useGetSocket();
   const [routes] = useState<(EntryRoute & { route: string })[]>(
@@ -43,7 +41,7 @@ const RoutesTab = ({}: RoutesTabProps) => {
 
   return (
     <Accordion
-      className="rdt-w-full rdt-h-[40vh] rdt-pr-4 rdt-pb-12 rdt-overflow-y-auto"
+      className="rdt-h-[40vh] rdt-w-full rdt-overflow-y-auto rdt-pb-12 rdt-pr-4"
       type="single"
       collapsible
     >
@@ -72,14 +70,14 @@ const RoutesTab = ({}: RoutesTabProps) => {
         return (
           <AccordionItem key={route.id} value={route.id}>
             <AccordionTrigger>
-              <div className="rdt-flex rdt-w-full rdt-items-center justify-center rdt-gap-2">
+              <div className="justify-center rdt-flex rdt-w-full rdt-items-center rdt-gap-2">
                 <span className="rdt-text-gray-500">Route:</span> {route.route}{" "}
-                <span className="rdt-text-gray-500 rdt-text-xs rdt-ml-auto">
+                <span className="rdt-ml-auto rdt-text-xs rdt-text-gray-500">
                   Url: "{pathToOpen}"
                 </span>
                 <div
                   title={pathToOpen}
-                  className="rdt-rounded rdt-border-gray-400 rdt-border rdt-px-2 rdt-py-1 rdt-text-sm rdt-mr-2"
+                  className="rdt-mr-2 rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm"
                   onClick={(e) => {
                     e.preventDefault();
                     navigate(path);
@@ -94,7 +92,7 @@ const RoutesTab = ({}: RoutesTabProps) => {
                 <span className="rdt-text-gray-500">Key:</span>
                 {route.id}
               </div>
-              <div className="rdt-flex rdt-flex-col rdt-gap-2 rdt-mt-4 rdt-mb-4">
+              <div className="rdt-mb-4 rdt-mt-4 rdt-flex rdt-flex-col rdt-gap-2">
                 <span className="rdt-text-gray-500">
                   Components contained in the route:
                 </span>
@@ -108,10 +106,10 @@ const RoutesTab = ({}: RoutesTabProps) => {
               </div>
               {hasWildcard && (
                 <>
-                  <p className="rdt-text-gray-500 rdt-mb-2">
+                  <p className="rdt-mb-2 rdt-text-gray-500">
                     Wildcard parameters:
                   </p>
-                  <div className="rdt-grid rdt-w-full rdt-grid-cols-2 rdt-gap-2 rdt-mb-4">
+                  <div className="rdt-mb-4 rdt-grid rdt-w-full rdt-grid-cols-2 rdt-gap-2">
                     {route.route
                       .split("/")
                       .filter((p) => p.startsWith(":"))

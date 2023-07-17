@@ -79,7 +79,7 @@ const useTimelineHandler = () => {
         id: (Math.random() * Date.now()).toString(),
       });
     }
-  }, [navigation]);
+  }, [navigation, responseData, setTimelineEvent]);
 
   const fetcherEventQueue = useRef<TimelineEvent[]>([]);
   // Fetchers handler
@@ -123,7 +123,7 @@ const useTimelineHandler = () => {
         fetcherEventQueue.current.push(event as any);
       }
     });
-  }, [fetchers]);
+  }, [fetchers, navigation.state, setTimelineEvent]);
 };
 
 export { useTimelineHandler };

@@ -7,11 +7,7 @@ module.exports = {
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
-  watchPaths: [
-    "../RemixDevTools/**/*.{tsx,ts}",
-    "../monitor/**/*.{tsx,ts}",
-    "../public/stylesheet.css",
-  ],
+  watchPaths: ["../../dist"],
   serverModuleFormat: "cjs",
   tailwind: true,
   /* routes(defineRoutes) {

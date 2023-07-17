@@ -52,6 +52,7 @@ export default defineConfig({
           ["react-dom"]: "ReactDOM",
           ["@remix-run/react"]: "@remix-run/react",
         },
+        assetFileNames: "stylesheet[extname]",
       },
     },
   },
