@@ -9,13 +9,14 @@ export const convertRemixPathToUrl = (
   routes: RouteManifest<EntryRoute>,
   route: EntryRoute
 ) => {
-  let currentRoute = route;
+  let currentRoute: EntryRoute | null = route;
   const path = [];
 
   while (currentRoute) {
-    if (!currentRoute) break;
     path.push(currentRoute.path);
-    currentRoute = routes[currentRoute.parentId as any];
+    if (!currentRoute.parentId) break;
+    if (!routes[currentRoute.parentId]) break;
+    currentRoute = routes[currentRoute.parentId];
   }
   const output = path.reverse().filter(Boolean).join("/");
   return output === "" ? "/" : output;

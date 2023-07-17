@@ -28,12 +28,12 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
         style={{ zIndex: 9999 }}
         onClick={() => setIsOpen(!isOpen)}
         className={
-          "rdt-fixed rdt-cursor-pointer rdt-bottom-0 rdt-m-1.5 rdt-w-14 rdt-h-14 rdt-right-0 rdt-rounded-full "
+          "rdt-fixed rdt-bottom-0 rdt-right-0 rdt-m-1.5 rdt-h-14 rdt-w-14 rdt-cursor-pointer rdt-rounded-full "
         }
       >
         <Logo
           className={clsx(
-            "rdt-rounded-full rdt-w-14 rdt-h-14 rdt-duration-200 rdt-transition-all",
+            "rdt-h-14 rdt-w-14 rdt-rounded-full rdt-transition-all rdt-duration-200",
             "rdt-hover:cursor-pointer rdt-hover:ring-2 rdt-ring-slate-600"
           )}
         />
@@ -42,9 +42,9 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
       <div
         style={{ zIndex: 9998 }}
         className={clsx(
-          "rdt-fixed rdt-flex rdt-flex-col rdt-resize-y rdt-overflow-auto rdt-left-0 rdt-box-border rdt-bottom-0 rdt-transition-all rdt-duration-600 rdt-opacity-0 rdt-bg-[#212121] rdt-w-screen rdt-text-white",
+          "rdt-duration-600 rdt-fixed rdt-bottom-0 rdt-left-0 rdt-box-border rdt-flex rdt-w-screen rdt-resize-y rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
           isOpen
-            ? "rdt-drop-shadow-2xl rdt-h-[40vh] rdt-opacity-100"
+            ? "rdt-h-[40vh] rdt-opacity-100 rdt-drop-shadow-2xl"
             : "rdt-h-0"
         )}
       >
@@ -59,7 +59,7 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={clsx(
-                  "rdt-flex rdt-font-sans rdt-transition-all rdt-duration-300 rdt-items-center rdt-gap-2 rdt-cursor-pointer rdt-border-r-2 rdt-px-4 rdt-border-0 rdt-border-solid rdt-border-r-[#212121] rdt-border-b rdt-border-b-[#212121]",
+                  "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
                   activeTab !== tab.id && "rdt-hover:opacity-50",
                   activeTab === tab.id && "rdt-bg-[#212121]"
                 )}
@@ -72,9 +72,9 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
               onClick={() => setShouldConnectWithForge(true)}
               className={clsx(
                 isConnecting
-                  ? "rdt-animate-pulse rdt-pointer-events-none rdt-cursor-default"
+                  ? "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default"
                   : "",
-                "rdt-flex rdt-font-sans rdt-transition-all rdt-items-center rdt-gap-2 rdt-cursor-pointer rdt-border-r-2 rdt-px-4 rdt-border-0 rdt-border-solid rdt-border-r-[#212121] rdt-border-b rdt-border-b-[#212121]"
+                "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all"
               )}
             >
               <Radio size={16} />
@@ -84,12 +84,12 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
             </div>
           )}
         </div>
-        <div className="rdt-h-full rdt-w-full rdt-flex rdt-overflow-y-hidden">
-          <div className="rdt-w-full rdt-h-full rdt-p-2 rdt-z-20 rdt-pl-8  rdt-bg-[#212121] ">
+        <div className="rdt-flex rdt-h-full rdt-w-full rdt-overflow-y-hidden">
+          <div className="rdt-z-20 rdt-h-full rdt-w-full rdt-bg-[#212121] rdt-p-2  rdt-pl-8 ">
             {Component}
           </div>
           <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
-          <div className="rdt-w-2/3 rdt-h-full rdt-z-10 rdt-p-2 rdt-pr-16">
+          <div className="rdt-z-10 rdt-h-full rdt-w-2/3 rdt-p-2 rdt-pr-16">
             {tabs.find((t) => t.id === "timeline")?.component}
           </div>
         </div>
@@ -101,7 +101,7 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
 let hydrating = true;
 
 function useHydrated() {
-  let [hydrated, setHydrated] = useState(() => !hydrating);
+  const [hydrated, setHydrated] = useState(() => !hydrating);
 
   useEffect(function hydrate() {
     hydrating = false;
@@ -110,12 +110,14 @@ function useHydrated() {
 
   return hydrated;
 }
+
 interface RemixDevToolsProps {
   // A port to connect to the Remix Forge in your vscode extension
   port?: number;
   // Whether the dev tools should be open by default
   defaultOpen?: boolean;
 }
+
 const RDTWithContext = ({
   port = 3003,
   defaultOpen = false,

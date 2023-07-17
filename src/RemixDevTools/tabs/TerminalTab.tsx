@@ -1,4 +1,4 @@
-import { Columns, MonitorPlay, Send, Split, X } from "lucide-react";
+import { Columns, MonitorPlay, Send, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useGetSocket } from "../hooks/useGetSocket";
 
@@ -7,11 +7,10 @@ export interface TerminalInput {
   data: string;
 }
 
-interface TerminalTabProps {}
-
 interface TerminalProps {
   onClose: () => void;
 }
+
 const Terminal = ({ onClose }: TerminalProps) => {
   const [terminalOutput, setTerminalOutput] = useState<TerminalInput[]>([]); // [{type: "log", data: "hello world"}
   const [command, setCommand] = useState("");
@@ -42,7 +41,7 @@ const Terminal = ({ onClose }: TerminalProps) => {
         },
       ]);
     }
-  }, [lastJsonMessage]);
+  }, [lastJsonMessage, terminalOutput]);
 
   return (
     <div className="h-full w-full flex border-gray-100/10 border rounded-lg relative flex-col justify-between">
@@ -86,14 +85,14 @@ const Terminal = ({ onClose }: TerminalProps) => {
   );
 };
 
-const TerminalTab = ({}: TerminalTabProps) => {
+const TerminalTab = () => {
   const [terminals, setTerminals] = useState<number[]>([0]);
-  const [projectCommands, setProjectCommands] = useState<string[]>([]);
+  const [, setProjectCommands] = useState<string[]>([]);
   const { lastJsonMessage, sendJsonMessage } = useGetSocket();
 
   useEffect(() => {
     sendJsonMessage({ type: "commands" });
-  }, []);
+  }, [sendJsonMessage]);
 
   useEffect(() => {
     if (lastJsonMessage?.type === "commands") {

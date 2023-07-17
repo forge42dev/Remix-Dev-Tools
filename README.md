@@ -33,8 +33,8 @@ To install and utilize Remix Development Tools, follow these steps:
 
 ```bash
 npm install remix-development-tools
-``` 
- 
+```
+
 2. Add the following to your application `root.tsx` file:
 
 ```diff
@@ -72,6 +72,7 @@ export default function App() {
 ## RemixDevTools props
 
 The `RemixDevTools` component accepts the following props:
+
 - `port`: The port number to use for the Remix Development Tools connection to Remix Forge. If you want to change the port and connect to your Remix Forge VS code extension you need to change the port in VS Code too. Defaults to `3003`.
 - `defaultOpen`: Whether to open the Remix Development Tools by default. Defaults to `false`.
 
@@ -81,11 +82,11 @@ Contributions to Remix Development Tools are welcome! To contribute, please foll
 
 1. Fork the repository and clone it locally.
 2. Create a new branch for your feature or bug fix.
-3. Run `npm run setup` to get your development environment set up.
+3. Run `npm install` to get your development environment set up.
 4. Run `npm run dev` to start the development server.
-3. Implement your changes, adhering to the existing code style and best practices. 
-5. Commit and push your changes to your forked repository.
-6. Open a pull request, providing a clear description of your changes and their purpose.
+5. Implement your changes, adhering to the existing code style and best practices.
+6. Commit and push your changes to your forked repository.
+7. Open a pull request, providing a clear description of your changes and their purpose.
 
 ## Support
 

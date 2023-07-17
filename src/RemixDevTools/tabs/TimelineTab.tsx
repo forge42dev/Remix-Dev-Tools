@@ -4,8 +4,6 @@ import { useRDTContext } from "../context/useRDTContext";
 import { JsonRenderer } from "../components/jsonRenderer";
 import { TAG_COLORS, Tag } from "../components/Tag";
 
-interface TimelineTabProps {}
-
 const Translations: Record<TimelineEvent["type"], string> = {
   REDIRECT: "Normal Page navigation",
   FETCHER_REDIRECT: "Page navigation due to fetcher",
@@ -19,7 +17,7 @@ const Translations: Record<TimelineEvent["type"], string> = {
 const RedirectEventComponent = (event: RedirectEvent) => {
   return (
     <div className="rdt-mb-4">
-      <time className="rdt-block rdt-mb-2 rdt-text-sm rdt-font-normal rdt-leading-none  rdt-text-gray-500">
+      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none  rdt-text-gray-500">
         Navigated to url: "{event.to + event.search}"
       </time>
       <p className="rdt-mb-4 rdt-text-base rdt-font-normal   rdt-text-gray-400">
@@ -44,7 +42,7 @@ const FormEventComponent = (event: FormEvent) => {
   delete responseData?.remixDevTools;
   return (
     <div className="rdt-mb-4">
-      <time className="rdt-block rdt-mb-2 rdt-text-sm rdt-font-normal rdt-leading-none   rdt-text-gray-500">
+      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none   rdt-text-gray-500">
         {firstPart} | encType: {event.encType}
       </time>
       <div className="rdt-flex rdt-gap-8">
@@ -73,14 +71,14 @@ export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
   PATCH: "PURPLE",
 };
 
-const TimelineTab = ({}: TimelineTabProps) => {
+const TimelineTab = () => {
   const { timeline, clearTimeline } = useRDTContext();
   return (
-    <div className="rdt-flex rdt-flex-col rdt-h-[40vh] rdt-overflow-y-auto rdt-relative rdt-p-6 rdt-px-6">
+    <div className="rdt-relative rdt-flex rdt-h-[40vh] rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
       {timeline.length > 0 && (
         <button
           onClick={() => clearTimeline()}
-          className="rdt-absolute rdt-z-20 rdt-right-4 rdt-top-0 rdt-cursor-pointer rdt-rounded-lg rdt-bg-red-500 rdt-text-white rdt-px-3 rdt-py-1 rdt-font-semibold rdt-text-sm"
+          className="rdt-absolute rdt-right-4 rdt-top-0 rdt-z-20 rdt-cursor-pointer rdt-rounded-lg rdt-bg-red-500 rdt-px-3 rdt-py-1 rdt-text-sm rdt-font-semibold rdt-text-white"
         >
           Clear Timeline
         </button>
@@ -92,10 +90,10 @@ const TimelineTab = ({}: TimelineTabProps) => {
               key={event.id}
               className="rdt-mb-2 rdt-ml-8 rdt-animate-fade-in-left"
             >
-              <span className="rdt-absolute rdt-flex rdt-items-center rdt-animate-fade-in rdt-justify-center rdt-w-6 rdt-h-6 rdt-bg-blue-900 rdt-rounded-full -rdt-left-3 rdt-ring-4 rdt-mt-2 rdt-ring-blue-900">
+              <span className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-animate-fade-in rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900">
                 <Activity />
               </span>
-              <h3 className="rdt-flex rdt-items-center -rdt-mt-3 rdt-mb-1 rdt-text-lg rdt-font-semibold rdt-gap-2 rdt-text-white">
+              <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
                 {Translations[event.type]}
                 {event?.method && (
                   <Tag color={METHOD_COLORS[event.method]}>{event.method}</Tag>

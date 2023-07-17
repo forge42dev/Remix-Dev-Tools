@@ -18,7 +18,7 @@ const Tag = ({ color, children, className }: TagProps) => {
   return (
     <span
       className={clsx(
-        "rdt-text-sm rdt-font-medium rdt-flex rdt-items-center rdt-px-2.5 rdt-py-0.5 rdt-rounded",
+        "rdt-flex rdt-items-center rdt-rounded rdt-px-2.5 rdt-py-0.5 rdt-text-sm rdt-font-medium",
         className,
         TAG_COLORS[color]
       )}

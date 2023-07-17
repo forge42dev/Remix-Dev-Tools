@@ -4,7 +4,6 @@ import { Checkbox } from "./Checkbox";
 import { Input } from "./Input";
 import { useGetSocket } from "../hooks/useGetSocket";
 
-interface NewRouteFormProps {}
 interface NewRouteOptions {
   path: string;
   loader: boolean;
@@ -28,7 +27,8 @@ const DEFAULT_VALUES = {
   meta: false,
   links: false,
 };
-const NewRouteForm = ({}: NewRouteFormProps) => {
+
+const NewRouteForm = () => {
   const { sendJsonMessage } = useGetSocket({
     onMessage: (e) => {
       const messageData = e.data;
@@ -53,7 +53,7 @@ const NewRouteForm = ({}: NewRouteFormProps) => {
     setNewRouteInfo({ ...newRouteInfo, ...info });
   };
   return (
-    <div className="rdt-p-2 rdt-border rdt-border-gray-500/20 rdt-rounded-lg rdt-mb-2">
+    <div className="rdt-mb-2 rdt-rounded-lg rdt-border rdt-border-gray-500/20 rdt-p-2">
       <label className="rdt-mb-2 rdt-block ">Route path:</label>
       <Input
         onBlur={() =>
@@ -64,7 +64,7 @@ const NewRouteForm = ({}: NewRouteFormProps) => {
         onChange={(e) => setNewInfo({ path: e.target.value })}
         className="rdt-mb-1"
       />
-      <span className="rdt-text-gray-500 rdt-block rdt-mb-4">
+      <span className="rdt-mb-4 rdt-block rdt-text-gray-500">
         This will be added to your routes folder under your entered name,
         exclude the extension
       </span>
@@ -153,7 +153,7 @@ const NewRouteForm = ({}: NewRouteFormProps) => {
         onClick={handleSubmit}
         disabled={!newRouteInfo.path}
         className={clsx(
-          "rdt-rounded rdt-self-end rdt-border-gray-400 rdt-border rdt-px-2 rdt-py-1 rdt-text-sm rdt-mr-2 rdt-mt-2",
+          "rdt-mr-2 rdt-mt-2 rdt-self-end rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm",
           !newRouteInfo.path && "rdt-opacity-50"
         )}
       >

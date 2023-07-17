@@ -1,11 +1,11 @@
 {
+  "name": "remix-app-for-testing",
   "private": true,
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
     "start": "cross-env NODE_ENV=production node ./server.js",
-    "postinstall": "npm link ../../node_modules/react",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
     "@remix-run/express": "^1.17.1",
     "@remix-run/node": "^1.17.1",
     "@remix-run/react": "^1.17.1",
+    "@remix-run/serve": "^1.18.1",
     "@remix-run/v1-route-convention": "^0.1.2",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
@@ -28,7 +29,8 @@
     "remix-auth-github": "^1.4.0",
     "remix-auth-google": "^1.2.0",
     "remix-auth-socials": "^2.0.5",
-    "remix-auth-twitter": "^2.0.0-1"
+    "remix-auth-twitter": "^2.0.0-1",
+    "remix-development-tools": "^1.0.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.17.1",

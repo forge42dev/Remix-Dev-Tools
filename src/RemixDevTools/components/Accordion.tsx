@@ -31,7 +31,7 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <ChevronDownIcon className="rdt-h-4 rdt-w-4 rdt-shrink-0 rdt-text-muted-foreground rdt-transition-transform rdt-duration-200" />
+      <ChevronDownIcon className="rdt-text-muted-foreground rdt-h-4 rdt-w-4 rdt-shrink-0 rdt-transition-transform rdt-duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));
@@ -44,7 +44,7 @@ const AccordionContent = React.forwardRef<
   <AccordionPrimitive.Content
     ref={ref}
     className={cn(
-      "rdt-overflow-hidden rdt-text-sm rdt-data-[state=closed]:animate-accordion-up rdt-data-[state=open]:animate-accordion-down",
+      "rdt-data-[state=closed]:animate-accordion-up rdt-data-[state=open]:animate-accordion-down rdt-overflow-hidden rdt-text-sm",
       className
     )}
     {...props}
