@@ -42,7 +42,7 @@ const FormEventComponent = (event: FormEvent) => {
   delete responseData?.remixDevTools;
   return (
     <div className="rdt-mb-4">
-      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none   rdt-text-gray-500">
+      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500">
         {firstPart} | encType: {event.encType}
       </time>
       <div className="rdt-flex rdt-gap-8">
@@ -74,7 +74,7 @@ export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
 const TimelineTab = () => {
   const { timeline, clearTimeline } = useRDTContext();
   return (
-    <div className="rdt-relative rdt-flex rdt-h-[40vh] rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
+    <div className="rdt-relative rdt-flex rdt-h-full  rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
       {timeline.length > 0 && (
         <button
           onClick={() => clearTimeline()}

@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools.",
   "author": "Alem Tuzlak",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -10,13 +10,14 @@
   ],
   "private": false,
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
   "exports": {
     "./stylesheet.css": "./dist/stylesheet.css",
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.umd.cjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "typings": "./dist/index.d.ts",
@@ -42,7 +43,12 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prettier": "prettier --check .",
     "preview": "vite preview",
-    "test": "vitest run --coverage"
+    "profile": "vite build --profile",
+    "test": "vitest run --coverage",
+    "setup": "npm install && cd ./src/remix-app-for-testing && npm install && cd ../..",
+    "prepare": "husky install",
+    "tsc": "tsc --noEmit",
+    "validate": "npm run lint && npm run tsc && npm run test"
   },
   "workspaces": [
     ".",
@@ -69,6 +75,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "happy-dom": "^9.9.2",
+    "husky": "^8.0.3",
     "nodemon": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.24",

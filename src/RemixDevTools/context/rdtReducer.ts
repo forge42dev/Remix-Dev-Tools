@@ -10,6 +10,7 @@ export type RemixDevToolsState = {
     activeTab: Tabs;
     shouldConnectWithForge: boolean;
     port: number;
+    height: number;
   };
 };
 
@@ -20,6 +21,7 @@ export const initialState: RemixDevToolsState = {
     activeTab: "timeline",
     shouldConnectWithForge: false,
     port: 3003,
+    height: 400,
   },
 };
 
@@ -34,6 +36,11 @@ type SetTimelineEvent = {
 type SetActiveTab = {
   type: "SET_ACTIVE_TAB";
   payload: Tabs;
+};
+
+type SetDevToolsHeight = {
+  type: "SET_HEIGHT";
+  payload: number;
 };
 
 type SetRouteWildcards = {
@@ -62,6 +69,7 @@ export type RemixDevToolsActions =
   | SetActiveTab
   | PurgeTimeline
   | SetRouteWildcards
+  | SetDevToolsHeight
   | SetShouldConnectToForgeAction
   | SetIsSubmittedAction;
 
@@ -102,6 +110,15 @@ export const rdtReducer = (
           routeWildcards: payload,
         },
       };
+    case "SET_HEIGHT":
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          height: payload,
+        },
+      };
+
     case "SET_SHOULD_CONNECT_TO_FORGE":
       return {
         ...state,

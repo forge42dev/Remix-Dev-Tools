@@ -11,7 +11,8 @@ const useRDTContext = () => {
   }
   const { state, dispatch } = context;
   const { timeline, settings } = state;
-  const { activeTab, shouldConnectWithForge, routeWildcards, port } = settings;
+  const { activeTab, shouldConnectWithForge, routeWildcards, port, height } =
+    settings;
 
   useEffect(() => {
     const reducedState = { ...state };
@@ -53,6 +54,17 @@ const useRDTContext = () => {
     },
     [dispatch]
   );
+
+  const setHeight = useCallback(
+    (height: number) => {
+      dispatch({
+        type: "SET_HEIGHT",
+        payload: height,
+      });
+    },
+    [dispatch]
+  );
+
   return {
     setTimelineEvent,
     setActiveTab,
@@ -63,6 +75,8 @@ const useRDTContext = () => {
     shouldConnectWithForge,
     routeWildcards,
     port,
+    height,
+    setHeight,
     setRouteWildcards,
   };
 };

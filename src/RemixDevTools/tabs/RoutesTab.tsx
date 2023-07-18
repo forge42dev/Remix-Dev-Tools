@@ -41,7 +41,7 @@ const RoutesTab = () => {
 
   return (
     <Accordion
-      className="rdt-h-[40vh] rdt-w-full rdt-overflow-y-auto rdt-pb-12 rdt-pr-4"
+      className="rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-pb-12 rdt-pr-4"
       type="single"
       collapsible
     >

@@ -1,14 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+import { useRDTContext } from "../context/useRDTContext";
 
-type UseResizeProps = {
-  minHeight: number;
-};
-
-const useResize = (
-  { minHeight = 384 }: UseResizeProps = { minHeight: 384 }
-) => {
+const useResize = () => {
+  const { height, setHeight } = useRDTContext();
   const [isResizing, setIsResizing] = useState(false);
-  const [height, setHeight] = useState(minHeight);
 
   const enableResize = useCallback(() => {
     setIsResizing(true);
@@ -24,12 +19,11 @@ const useResize = (
         const newHeight = window.innerHeight - e.clientY; // Calculate the new height based on the mouse position
 
         //const newHeight = e.clientY; // You may want to add some offset here from props
-        if (newHeight >= minHeight) {
-          setHeight(newHeight);
-        }
+
+        setHeight(newHeight);
       }
     },
-    [minHeight, isResizing, setHeight]
+    [isResizing, setHeight]
   );
 
   useEffect(() => {
@@ -42,7 +36,7 @@ const useResize = (
     };
   }, [disableResize, resize]);
 
-  return { height, enableResize };
+  return { height, enableResize, disableResize, isResizing };
 };
 
 export { useResize };

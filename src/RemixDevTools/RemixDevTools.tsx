@@ -8,6 +8,7 @@ import { useRDTContext } from "./context/useRDTContext";
 import { isDev } from "./utils/isDev";
 import { useGetSocket } from "./hooks/useGetSocket";
 import { Radio } from "lucide-react";
+import { useResize } from "./hooks/useResize";
 
 interface Props {
   defaultOpen: boolean;
@@ -15,9 +16,9 @@ interface Props {
 
 const RemixDevTools = ({ defaultOpen }: Props) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  const { activeTab, setActiveTab, setShouldConnectWithForge } =
+  const { activeTab, setActiveTab, setShouldConnectWithForge, height } =
     useRDTContext();
-
+  const { enableResize, disableResize, isResizing } = useResize();
   useTimelineHandler();
   const { isConnected, isConnecting } = useGetSocket();
   const Component = tabs.find((tab) => tab.id === activeTab)?.component;
@@ -38,16 +39,23 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
           )}
         />
       </div>
-
       <div
-        style={{ zIndex: 9998 }}
+        style={{ zIndex: 9998, height }}
         className={clsx(
           "rdt-duration-600 rdt-fixed rdt-bottom-0 rdt-left-0 rdt-box-border rdt-flex rdt-w-screen rdt-resize-y rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
-          isOpen
-            ? "rdt-h-[40vh] rdt-opacity-100 rdt-drop-shadow-2xl"
-            : "rdt-h-0"
+          isOpen ? "rdt-opacity-100 rdt-drop-shadow-2xl" : "rdt-h-0",
+          isResizing ? "rdt-pointer-events-none" : "",
+          isResizing && "rdt-cursor-grabbing "
         )}
       >
+        <div
+          onMouseDown={enableResize}
+          onMouseUp={disableResize}
+          className={clsx(
+            "rdt-absolute rdt-h-1 rdt-w-full rdt-cursor-n-resize",
+            isResizing && "rdt-cursor-grabbing "
+          )}
+        />
         <div className="rdt-flex rdt-h-8 rdt-w-full rdt-bg-gray-800">
           {tabs
             .filter(

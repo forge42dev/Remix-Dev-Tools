@@ -17,7 +17,7 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = () => {
-  return json({
+  return json({ 
     message: "Hello root World!",
   });
 };
@@ -44,7 +44,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <RemixDevTools />
+        <RemixDevTools defaultOpen />
       </body>
     </html>
   );

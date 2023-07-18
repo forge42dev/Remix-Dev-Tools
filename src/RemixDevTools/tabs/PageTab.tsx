@@ -43,8 +43,9 @@ const PageTab = () => {
   const reversed = routes.reverse();
   const { revalidate, state } = useRevalidator();
   const { isConnected, sendJsonMessage } = useGetSocket();
+
   return (
-    <div className="rdt-relative rdt-flex rdt-h-[40vh] rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
+    <div className="rdt-relative rdt-flex rdt-h-full rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
       <button
         onClick={() => revalidate()}
         className={clsx(
