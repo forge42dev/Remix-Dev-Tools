@@ -44,11 +44,12 @@ npm install remix-development-tools
 2. Add the following to your application `root.tsx` file:
 
 ```diff
++ import { lazy } from "react";
 + import rdtStylesheet from "remix-development-tools/stylesheet.css";
-+ import { RemixDevTools } from "remix-development-tools";
++ const RemixDevTools = lazy(() => import("remix-development-tools");
 
 + export const links: LinksFunction = () => [
-+   ...(rdtStylesheet ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
++   ...(rdtStylesheet && process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
 + ];
 
 
@@ -68,7 +69,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-+       <RemixDevTools />
++       {process.env.NODE_ENV === "development" && <RemixDevTools />}
       </body>
     </html>
   );
