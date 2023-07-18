@@ -5,6 +5,7 @@ import { JsonRenderer } from "../components/jsonRenderer";
 import { useGetSocket } from "../hooks/useGetSocket";
 import { Tag } from "../components/Tag";
 import { VsCodeButton } from "../components/VScodeButton";
+import { useMemo } from "react";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -40,7 +41,7 @@ const getOriginalData = (data: string | Record<string, any>) => {
 
 const PageTab = () => {
   const routes = useMatches();
-  const reversed = routes.reverse();
+  const reversed = useMemo(() => routes.reverse(), [routes]);
   const { revalidate, state } = useRevalidator();
   const { isConnected, sendJsonMessage } = useGetSocket();
 
