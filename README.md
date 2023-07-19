@@ -49,7 +49,7 @@ npm install remix-development-tools -D
 + import rdtStylesheet from "remix-development-tools/stylesheet.css";
 + const RemixDevTools =
 +  process.env.NODE_ENV === "development"
-+    ? React.lazy(() => import("remix-development-tools").then(({ RemixDevTools }) => ({ default: RemixDevTools })))
++    ? React.lazy(() => import("remix-development-tools"))
 +    : undefined;
 
 + export const links: LinksFunction = () => [
