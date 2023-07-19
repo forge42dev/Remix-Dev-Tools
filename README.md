@@ -47,7 +47,10 @@ npm install remix-development-tools -D
 // We'll lazy load RemixDevTools to ensure it doesn't contribute to production bundle size
 + import { lazy } from "react";
 + import rdtStylesheet from "remix-development-tools/stylesheet.css";
-+ const RemixDevTools = lazy(() => import("remix-development-tools");
++ const RemixDevTools =
++  process.env.NODE_ENV === "development"
++    ? React.lazy(() => import("remix-development-tools").then(({ RemixDevTools }) => ({ default: RemixDevTools })))
++    : undefined;
 
 + export const links: LinksFunction = () => [
 +   ...(rdtStylesheet && process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
@@ -70,7 +73,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-+       {process.env.NODE_ENV === "development" && <RemixDevTools />}
++       {RemixDevTools && <RemixDevTools />}
       </body>
     </html>
   );
