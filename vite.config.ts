@@ -41,8 +41,9 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "Remix Dev Tools",
-      fileName: "index",
+      fileName: (format) => `index.${format === "es" ? "mjs" : "umd.cjs"}`,
     },
+    emptyOutDir: false,
     copyPublicDir: true,
     rollupOptions: {
       external: ["react", "react-dom", "@remix-run/react"],

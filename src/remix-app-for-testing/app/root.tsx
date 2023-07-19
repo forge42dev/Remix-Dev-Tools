@@ -49,7 +49,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        {RemixDevTools && <RemixDevTools defaultOpen />}
+        {RemixDevTools && <RemixDevTools defaultOpen  />}
       </body>
     </html>
   );

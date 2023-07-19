@@ -11,13 +11,15 @@
   "private": false,
   "type": "module",
   "main": "./dist/index.umd.cjs",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "exports": {
     "./stylesheet.css": "./dist/stylesheet.css",
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs",
+      "node": "./dist/index.umd.cjs"
     }
   },
   "typings": "./dist/index.d.ts",

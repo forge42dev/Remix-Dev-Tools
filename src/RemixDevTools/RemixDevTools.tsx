@@ -9,12 +9,20 @@ import { isDev } from "./utils/isDev";
 import { useGetSocket } from "./hooks/useGetSocket";
 import { Radio } from "lucide-react";
 import { useResize } from "./hooks/useResize";
+import { useLocation } from "@remix-run/react";
 
 interface Props {
+  position:
+    | "bottom-right"
+    | "bottom-left"
+    | "top-right"
+    | "top-left"
+    | "middle-right"
+    | "middle-left";
   defaultOpen: boolean;
 }
 
-const RemixDevTools = ({ defaultOpen }: Props) => {
+const RemixDevTools = ({ defaultOpen, position }: Props) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const { activeTab, setActiveTab, setShouldConnectWithForge, height } =
     useRDTContext();
@@ -22,15 +30,27 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
   useTimelineHandler();
   const { isConnected, isConnecting } = useGetSocket();
   const Component = tabs.find((tab) => tab.id === activeTab)?.component;
+  const leftSideOriented =
+    position === "top-left" ||
+    position === "bottom-left" ||
+    position === "middle-left";
 
   return (
     <div className="remix-dev-tools">
       <div
         style={{ zIndex: 9999 }}
         onClick={() => setIsOpen(!isOpen)}
-        className={
-          "rdt-fixed rdt-bottom-0 rdt-right-0 rdt-m-1.5 rdt-h-14 rdt-w-14 rdt-cursor-pointer rdt-rounded-full "
-        }
+        className={clsx(
+          "rdt-fixed rdt-m-1.5 rdt-h-14 rdt-w-14 rdt-cursor-pointer rdt-rounded-full ",
+          position === "bottom-right" && "rdt-bottom-0 rdt-right-0",
+          position === "bottom-left" && "rdt-bottom-0 rdt-left-0",
+          position === "top-right" && "rdt-right-0 rdt-top-0",
+          position === "top-left" && "rdt-left-0 rdt-top-0",
+          position === "middle-right" &&
+            "rdt-right-0 rdt-top-1/2 -rdt-translate-y-1/2",
+          position === "middle-left" &&
+            "rdt-left-0 rdt-top-1/2 -rdt-translate-y-1/2"
+        )}
       >
         <Logo
           className={clsx(
@@ -93,11 +113,21 @@ const RemixDevTools = ({ defaultOpen }: Props) => {
           )}
         </div>
         <div className="rdt-flex rdt-h-full rdt-w-full rdt-overflow-y-hidden">
-          <div className="rdt-z-20 rdt-h-full rdt-w-full rdt-bg-[#212121] rdt-p-2  rdt-pl-8 ">
+          <div
+            className={clsx(
+              "rdt-z-20 rdt-h-full rdt-w-full rdt-bg-[#212121] rdt-p-2",
+              leftSideOriented ? "rdt-pl-16" : "rdt-pl-8"
+            )}
+          >
             {Component}
           </div>
           <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
-          <div className="rdt-z-10 rdt-h-full rdt-w-2/3 rdt-p-2 rdt-pr-16">
+          <div
+            className={clsx(
+              "rdt-z-10 rdt-h-full rdt-w-2/3 rdt-p-2",
+              leftSideOriented ? "rdt-pl-16" : "rdt-pr-16"
+            )}
+          >
             {tabs.find((t) => t.id === "timeline")?.component}
           </div>
         </div>
@@ -124,18 +154,27 @@ interface RemixDevToolsProps {
   port?: number;
   // Whether the dev tools should be open by default
   defaultOpen?: boolean;
+  // Whether the dev tools require a url flag to be shown
+  requireUrlFlag?: boolean;
+  // Set the position of the trigger button
+  position?: Props["position"];
 }
 
 const RDTWithContext = ({
   port = 3003,
   defaultOpen = false,
+  requireUrlFlag,
+  position = "bottom-right",
 }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const isDevelopment = isDev();
+  const url = useLocation().search;
+
   if (!hydrated || !isDevelopment) return null;
+  if (requireUrlFlag && !url.includes("rdt=true")) return null;
   return (
     <RDTContextProvider port={port}>
-      <RemixDevTools defaultOpen={defaultOpen} />
+      <RemixDevTools position={position} defaultOpen={defaultOpen} />
     </RDTContextProvider>
   );
 };
