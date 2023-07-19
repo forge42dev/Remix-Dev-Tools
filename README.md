@@ -44,6 +44,7 @@ npm install remix-development-tools
 2. Add the following to your application `root.tsx` file:
 
 ```diff
+// We'll lazy load RemixDevTools to ensure it doesn't contribute to production bundle size
 + import { lazy } from "react";
 + import rdtStylesheet from "remix-development-tools/stylesheet.css";
 + const RemixDevTools = lazy(() => import("remix-development-tools");
