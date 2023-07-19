@@ -38,17 +38,22 @@ To install and utilize Remix Development Tools, follow these steps:
 1. Install the package via npm:
 
 ```bash
-npm install remix-development-tools
+npm install remix-development-tools -D
 ```
 
 2. Add the following to your application `root.tsx` file:
 
 ```diff
+// We'll lazy load RemixDevTools to ensure it doesn't contribute to production bundle size
++ import { lazy } from "react";
 + import rdtStylesheet from "remix-development-tools/stylesheet.css";
-+ import { RemixDevTools } from "remix-development-tools";
++ const RemixDevTools =
++  process.env.NODE_ENV === "development"
++    ? React.lazy(() => import("remix-development-tools").then(({ RemixDevTools }) => ({ default: RemixDevTools })))
++    : undefined;
 
 + export const links: LinksFunction = () => [
-+   ...(rdtStylesheet ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
++   ...(rdtStylesheet && process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
 + ];
 
 
@@ -68,7 +73,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-+       <RemixDevTools />
++       {RemixDevTools && <RemixDevTools />}
       </body>
     </html>
   );
