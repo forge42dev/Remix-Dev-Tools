@@ -47,6 +47,7 @@ export default defineConfig({
     rollupOptions: {
       external: ["react", "react-dom", "@remix-run/react"],
       output: {
+        exports: "named",
         globals: {
           react: "React",
           ["react-dom"]: "ReactDOM",

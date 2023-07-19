@@ -9,11 +9,16 @@ import {
   ScrollRestoration,
   useMatches,
 } from "@remix-run/react";
-import stylesheet from "remix-development-tools/stylesheet.css";
-import { RemixDevTools } from "remix-development-tools";
+import { lazy } from "react";
+import rdtStylesheet from "remix-development-tools/stylesheet.css";
+
+const RemixDevTools =
+  process.env.NODE_ENV === "development"
+    ? lazy(() => import("remix-development-tools"))
+    : undefined;
 
 export const links: LinksFunction = () => [
-  ...(stylesheet ? [{ rel: "stylesheet", href: stylesheet }] : []),
+  ...(rdtStylesheet && process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
 ];
 
 export const loader = () => {
@@ -44,7 +49,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <RemixDevTools defaultOpen />
+        {RemixDevTools && <RemixDevTools defaultOpen />}
       </body>
     </html>
   );

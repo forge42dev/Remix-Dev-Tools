@@ -1,3 +1,5 @@
 import "./input.css";
-export * from "./RemixDevTools";
+import { RemixDevTools } from "./RemixDevTools";
+export { RemixDevTools };
 //export * from "./monitor";
+export default RemixDevTools;
