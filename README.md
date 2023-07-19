@@ -38,7 +38,7 @@ To install and utilize Remix Development Tools, follow these steps:
 1. Install the package via npm:
 
 ```bash
-npm install remix-development-tools
+npm install remix-development-tools -D
 ```
 
 2. Add the following to your application `root.tsx` file:
