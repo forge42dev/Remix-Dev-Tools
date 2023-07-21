@@ -13,13 +13,12 @@ export function getRouteType(route: EntryRoute) {
     // Pathless layout route
     routeType = "LAYOUT";
   } else {
-    // Find an other route with parentId set to this route
-    const childRoute = Object.values(window.__remixManifest.routes).find(
-      (r) => r.parentId === route.id
+    // Find an index route with parentId set to this route
+    const childIndexRoute = Object.values(window.__remixManifest.routes).find(
+      (r) => r.parentId === route.id && r.index
     );
 
-    // If this is an index route, current route is only layout route
-    routeType = childRoute?.index ? "LAYOUT" : "ROUTE";
+    routeType = childIndexRoute ? "LAYOUT" : "ROUTE";
   }
 
   return routeType;
