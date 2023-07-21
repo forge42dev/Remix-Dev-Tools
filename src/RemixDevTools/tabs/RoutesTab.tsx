@@ -13,16 +13,7 @@ import { useRDTContext } from "../context/useRDTContext";
 import { Input } from "../components/Input";
 import { NewRouteForm } from "../components/NewRouteForm";
 import { useGetSocket } from "../hooks/useGetSocket";
-
-const isLayout = (route: EntryRoute & { route: string }) => {
-  const rId = route.id.replace("routes/", "");
-  const v2Layout =
-    rId.startsWith("_") &&
-    !rId.split(".")[0].endsWith("index") &&
-    rId.split(".").length === 1;
-  const v1Layout = rId.startsWith("__");
-  return v1Layout || v2Layout;
-};
+import { isLeafRoute } from "../utils/misc";
 
 const RoutesTab = () => {
   const { routeWildcards, setRouteWildcards } = useRDTContext();
@@ -35,7 +26,7 @@ const RoutesTab = () => {
           route: convertRemixPathToUrl(window.__remixManifest.routes, route),
         };
       })
-      .filter((route) => !isLayout(route) && route.id !== "root")
+      .filter((route) => isLeafRoute(route))
   );
   const navigate = useNavigate();
 
