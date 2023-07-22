@@ -1,15 +1,16 @@
 import { EntryRoute, RouteManifest } from "@remix-run/react/dist/routes";
 
+type Route = Pick<EntryRoute, "path" | "parentId">;
 /**
  * Helper method used to convert remix route conventions to url segments
  * @param chunk Chunk to convert
  * @returns Returns the converted chunk
  */
 export const convertRemixPathToUrl = (
-  routes: RouteManifest<EntryRoute>,
-  route: EntryRoute
+  routes: RouteManifest<Route>,
+  route: Route
 ) => {
-  let currentRoute: EntryRoute | null = route;
+  let currentRoute: Route | null = route;
   const path = [];
 
   while (currentRoute) {

@@ -8,8 +8,9 @@ import {
   Scripts,
   ScrollRestoration,
   useMatches,
+  useRevalidator,
 } from "@remix-run/react";
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import rdtStylesheet from "remix-development-tools/stylesheet.css";
 
 const RemixDevTools =
@@ -33,9 +34,10 @@ export const handle = {
 
 export const action = async () => {
   return json({ data: "returned yay" });
-};
+}; 
 
 export default function App() {
+  
   return (
     <html lang="en">
       <head>
@@ -48,7 +50,7 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        <LiveReload /> 
         {RemixDevTools && <RemixDevTools defaultOpen  />}
       </body>
     </html>

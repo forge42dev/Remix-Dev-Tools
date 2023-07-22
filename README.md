@@ -17,6 +17,7 @@ The **Active Page** tab in Remix Development Tools allows you to gain insights i
 - **URL Parameters**: Easily view and analyze the URL parameters associated with the current page.
 - **Server Responses**: Inspect and review the server responses received by the application for the current page.
 - **Loader Data**: Monitor and track the loader data used by the application during page rendering.
+- **Outlet boundaries** Activate the **Show Route Boundaries** option to see each Outlet and route boundaries by coloring the background.
 
 ### Routes Tab
 
@@ -86,6 +87,9 @@ The `RemixDevTools` component accepts the following props:
 
 - `port`: The port number to use for the Remix Development Tools connection to Remix Forge. If you want to change the port and connect to your Remix Forge VS code extension you need to change the port in VS Code too. Defaults to `3003`.
 - `defaultOpen`: Whether to open the Remix Development Tools by default. Defaults to `false`.
+- `position`: The position of the Remix Development Tools trigger. Defaults to `bottom-right`.
+- `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`.
+- `showRouteBoundaries`: Allows you to see each Outlet and route boundaries by coloring the background. Defaults to `false`.
 
 ## Contributing
 
@@ -93,9 +97,10 @@ Contributions to Remix Development Tools are welcome! To contribute, please foll
 
 1. Fork the repository and clone it locally.
 2. Create a new branch for your feature or bug fix.
-3. Run `npm install` to get your development environment set up.
+3. Run `npm run setup` to get your development environment set up.
 4. Run `npm run dev` to start the development server.
 5. Implement your changes, adhering to the existing code style and best practices.
+5. Please add tests for any new features or bug fixes.
 6. Commit and push your changes to your forked repository.
 7. Open a pull request, providing a clear description of your changes and their purpose.
 
@@ -114,3 +119,5 @@ Remix Development Tools was inspired by the Remix framework and aims to enhance 
 ---
 
 Feel free to explore Remix Development Tools, and we hope it significantly improves your Remix development process. If you encounter any issues or have suggestions for enhancements, please don't hesitate to open an issue on our GitHub repository. Happy Remixing!
+
+ 

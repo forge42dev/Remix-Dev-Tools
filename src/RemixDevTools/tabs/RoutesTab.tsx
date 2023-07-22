@@ -13,7 +13,7 @@ import { useRDTContext } from "../context/useRDTContext";
 import { Input } from "../components/Input";
 import { NewRouteForm } from "../components/NewRouteForm";
 import { useGetSocket } from "../hooks/useGetSocket";
-import { isLeafRoute } from "../utils/misc";
+import { isLeafRoute } from "../utils/routing";
 
 const RoutesTab = () => {
   const { routeWildcards, setRouteWildcards } = useRDTContext();

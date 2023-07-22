@@ -6,7 +6,8 @@ import { useGetSocket } from "../hooks/useGetSocket";
 import { Tag } from "../components/Tag";
 import { VsCodeButton } from "../components/VScodeButton";
 import { useMemo } from "react";
-import { isLayoutRoute } from "../utils/misc";
+import { isLayoutRoute } from "../utils/routing";
+import { useRDTContext } from "../context/useRDTContext";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -45,7 +46,26 @@ const PageTab = () => {
   const reversed = useMemo(() => routes.reverse(), [routes]);
   const { revalidate, state } = useRevalidator();
   const { isConnected, sendJsonMessage } = useGetSocket();
+  const { showRouteBoundaries } = useRDTContext();
+  const onHover = (path: string, type: "enter" | "leave") => {
+    if (!showRouteBoundaries) return;
+    const classes =
+      "rdt-bg-green-100 rdt-transition-all rdt-rounded rdt-apply-tw rdt-bg-gradient-to-r rdt-from-cyan-500/50 rdt-to-blue-500/50";
+    const isRoot = path === "root";
+    const elements = isRoot
+      ? document.getElementsByTagName("body")
+      : document.getElementsByClassName(path);
 
+    const element = elements.item(elements.length - 1);
+
+    if (element) {
+      // Root has no outlet so we need to use the body, otherwise we get the outlet that is the next sibling of the element
+      const outlet = isRoot ? element : (element.nextSibling as HTMLElement);
+      for (const c of classes.split(" ")) {
+        outlet.classList[type === "enter" ? "add" : "remove"](c);
+      }
+    }
+  };
   return (
     <div className="rdt-relative rdt-flex rdt-h-full rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
       <button
@@ -73,7 +93,12 @@ const PageTab = () => {
           const isLayout = isLayoutRoute(entryRoute);
 
           return (
-            <li key={route.id} className="rdt-mb-8 rdt-ml-8">
+            <li
+              onMouseEnter={() => onHover(route.id, "enter")}
+              onMouseLeave={() => onHover(route.id, "leave")}
+              key={route.id}
+              className="rdt-mb-8 rdt-ml-8"
+            >
               <span className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900  ">
                 <CornerDownRight />
               </span>

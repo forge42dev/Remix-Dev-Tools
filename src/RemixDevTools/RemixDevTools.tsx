@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Logo } from "./components/Logo";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RDTContextProvider } from "./context/RDTContext";
 import { tabs } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
@@ -10,16 +10,11 @@ import { useGetSocket } from "./hooks/useGetSocket";
 import { Radio } from "lucide-react";
 import { useResize } from "./hooks/useResize";
 import { useLocation } from "@remix-run/react";
+import { useOutletAugment } from "./hooks/useOutletAugment";
 
-interface Props {
-  position:
-    | "bottom-right"
-    | "bottom-left"
-    | "top-right"
-    | "top-left"
-    | "middle-right"
-    | "middle-left";
+interface Props extends RemixDevToolsProps {
   defaultOpen: boolean;
+  position: Exclude<RemixDevToolsProps["position"], undefined>;
 }
 
 const RemixDevTools = ({ defaultOpen, position }: Props) => {
@@ -157,23 +152,33 @@ interface RemixDevToolsProps {
   // Whether the dev tools require a url flag to be shown
   requireUrlFlag?: boolean;
   // Set the position of the trigger button
-  position?: Props["position"];
+  position?:
+    | "bottom-right"
+    | "bottom-left"
+    | "top-right"
+    | "top-left"
+    | "middle-right"
+    | "middle-left";
+  // Show route boundaries when you hover over a route in active page tab
+  showRouteBoundaries?: boolean;
 }
 
 const RDTWithContext = ({
   port = 3003,
   defaultOpen = false,
   requireUrlFlag,
+  showRouteBoundaries = false,
   position = "bottom-right",
 }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const isDevelopment = isDev();
   const url = useLocation().search;
+  useOutletAugment(showRouteBoundaries);
 
   if (!hydrated || !isDevelopment) return null;
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
   return (
-    <RDTContextProvider port={port}>
+    <RDTContextProvider showRouteBoundaries={showRouteBoundaries} port={port}>
       <RemixDevTools position={position} defaultOpen={defaultOpen} />
     </RDTContextProvider>
   );
