@@ -6,6 +6,7 @@ import { useGetSocket } from "../hooks/useGetSocket";
 import { Tag } from "../components/Tag";
 import { VsCodeButton } from "../components/VScodeButton";
 import { useMemo } from "react";
+import { isLayoutRoute } from "../utils/misc";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -67,12 +68,9 @@ const PageTab = () => {
           const originalData = getOriginalData(route.data);
 
           const isRoot = route.id === "root";
-          const lastPart = route.id.split("/").pop();
-          const isLayout =
-            lastPart?.split(".")?.length === 1 &&
-            (lastPart?.startsWith("_") || lastPart?.startsWith("__")) &&
-            lastPart !== "_index" &&
-            "index";
+
+          const entryRoute = __remixManifest.routes[route.id];
+          const isLayout = isLayoutRoute(entryRoute);
 
           return (
             <li key={route.id} className="rdt-mb-8 rdt-ml-8">
