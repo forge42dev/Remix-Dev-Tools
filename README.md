@@ -12,12 +12,14 @@ Remix Development Tools is an open-source package designed to enhance your devel
 
 ### Active Page Tab
 
-The **Active Page** tab in Remix Development Tools allows you to gain insights into the current page you are working on. It provides valuable information and data that can assist you in debugging and understanding the behavior of your application. Key features include:
+The **Active Page** tab in Remix Development Tools allows you to gain insights into the current page you are working on. It provides valuable information and data that can assist you in debugging and understanding the behavior of your application. 
+
+Key features include:
 
 - **URL Parameters**: Easily view and analyze the URL parameters associated with the current page.
 - **Server Responses**: Inspect and review the server responses received by the application for the current page.
 - **Loader Data**: Monitor and track the loader data used by the application during page rendering.
-- **Outlet boundaries** Activate the **Show Route Boundaries** option to see each Outlet and route boundaries by coloring the background.
+- **Outlet boundaries** Activate the **Show Route Boundaries** option to see each Outlet and route boundaries by coloring the background. This needs to make a GET request to the current route when the dev tools are mounted for the first time to work properly and hence it is locked behind a flag. You can enable it by passing `showRouteBoundaries` prop to `true` in the `RemixDevTools` component.
 
 ### Routes Tab
 
@@ -104,6 +106,18 @@ Contributions to Remix Development Tools are welcome! To contribute, please foll
 6. Commit and push your changes to your forked repository.
 7. Open a pull request, providing a clear description of your changes and their purpose.
 
+### Contributing on Remix Forge integrations
+
+If you want to contribute to the VS Code extension integration follow the steps above and then:
+1. Clone the repo for Remix Forge locally.
+2. Open it in VS Code.
+3. Run `npm install`
+4. Run `npm run dev`
+5. Click `F5` which will launch a debugger instance of VS Code.
+6. In the debugger instance of VS Code, start the remix dev tools
+7. Click `Connect to Remix Forge` in the Remix Dev Tools
+8. Code on!
+
 ## Support
 
 If you like Remix Development Tools consider starring the repository. If you have any questions, comments, or suggestions, please feel free to reach out!
@@ -116,8 +130,14 @@ Remix Development Tools is open-source software released under the [MIT License]
 
 Remix Development Tools was inspired by the Remix framework and aims to enhance the development experience for Remix users.
 
----
-
 Feel free to explore Remix Development Tools, and we hope it significantly improves your Remix development process. If you encounter any issues or have suggestions for enhancements, please don't hesitate to open an issue on our GitHub repository. Happy Remixing!
 
- 
+## Thanks
+
+Thanks to all the contributors on this project and the support to the community. You guys are awesome!
+
+---
+
+Devoted to my loving wife.
+
+In loving memory of my late Grandfather, who taught me to always be curious, never stop learning, and to always be kind to others. I miss you, Grandpa.
