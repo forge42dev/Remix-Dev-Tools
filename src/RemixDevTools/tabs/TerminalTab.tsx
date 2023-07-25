@@ -144,13 +144,9 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
 
 const TerminalTab = () => {
   const { terminals, addOrRemoveTerminal } = useRDTContext();
-
   const [projectCommands, setProjectCommands] =
     useState<Record<string, string>>();
   const { sendJsonMessage } = useGetSocket({
-    onOpen: () => {
-      sendJsonMessage({ type: "commands" });
-    },
     onMessage: (message) => {
       try {
         const data = JSON.parse(message.data);
@@ -163,6 +159,9 @@ const TerminalTab = () => {
     },
   });
 
+  useEffect(() => {
+    sendJsonMessage({ type: "commands" });
+  }, [sendJsonMessage]);
   return (
     <div className="rdt-relative rdt-mr-8 rdt-flex rdt-h-full rdt-justify-between rdt-gap-4 rdt-rounded-lg">
       {terminals.length < 3 && (
