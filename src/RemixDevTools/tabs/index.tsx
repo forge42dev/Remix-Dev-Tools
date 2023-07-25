@@ -3,12 +3,14 @@ import {
   Terminal,
   /* Server, */ History,
   Layers,
+  Cog
 } from "lucide-react";
 import { PageTab } from "./PageTab";
 import { RoutesTab } from "./RoutesTab"; /* 
 import { ServerTab } from "./ServerTab";*/
 import { TerminalTab } from "./TerminalTab";
 import { TimelineTab } from "./TimelineTab";
+import { SettingsTab } from "./SettingsTab";
 
 export type Tabs = (typeof tabs)[number]["id"];
 
@@ -29,7 +31,6 @@ export const tabs = [
     component: <TimelineTab />,
     requiresForge: false,
   },
-
   {
     name: "Routes",
     icon: <GitMerge size={TAB_SIZE} />,
@@ -43,7 +44,16 @@ export const tabs = [
     id: "terminal",
     component: <TerminalTab />,
     requiresForge: true,
-  } /*
+  },
+  // Must be the last element of the `tabs` array
+  {
+    name: "Settings",
+    icon: <Cog size={TAB_SIZE} />,
+    id: "settings",
+    component: <SettingsTab />,
+    requiresForge: false,
+  } 
+  /*
   {
     name: "Server",
     icon: <Server size={TAB_SIZE} />,
