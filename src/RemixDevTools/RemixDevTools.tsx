@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Logo } from "./components/Logo";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { RDTContextProvider } from "./context/RDTContext";
 import { tabs } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
@@ -72,7 +72,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
           onMouseDown={enableResize}
           onMouseUp={disableResize}
           className={clsx(
-            "rdt-absolute rdt-h-1 rdt-w-full rdt-cursor-n-resize",
+            "rdt-absolute rdt-h-1 rdt-w-full rdt-cursor-n-resize rdt-z-50",
             isResizing && "rdt-cursor-grabbing "
           )}
         />
@@ -81,7 +81,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
             {tabs
               .filter(
                 (tab) =>
-                  !(!isConnected && tab.requiresForge) && tab.id !== "timeline"
+                  !(!isConnected && tab.requiresForge) && tab.id !== "timeline" && tab.id !== "settings"
               )
               .map((tab) => (
                 <div
@@ -112,6 +112,25 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
                   : "Connect to Remix Forge"}
               </div>
             )}
+            {/* Perfomance-wise note: Optimise this operation. Instead of filtering and mapping each time, just pop it. */}
+            {tabs
+              .filter(
+                (tab) =>
+                  tab.id === "settings"
+              )
+              .map((tab) => (
+                <div
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={clsx(
+                    "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
+                    activeTab !== tab.id && "rdt-hover:opacity-50",
+                    activeTab === tab.id && "rdt-bg-[#212121]"
+                  )}
+                >
+                  {tab.icon} {tab.name}
+                </div>
+              ))}
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" onClick={() => setIsOpen(false)} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="rdt-w-6 rdt-h-6 rdt-absolute rdt-right-4 rdt-cursor-pointer rdt-top-1/2 -rdt-translate-y-1/2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -121,20 +140,22 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
           <div
             className={clsx(
               "rdt-z-20 rdt-h-full rdt-w-full rdt-bg-[#212121] rdt-p-2",
-              leftSideOriented ? "rdt-pl-16" : "rdt-pl-8"
+              leftSideOriented ? "rdt-pl-6" : "rdt-pl-6" // leftSideOriented ? "rdt-pl-16" : "rdt-pl-8" Spacing is too large
             )}
           >
             {Component}
           </div>
-          <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
-          <div
-            className={clsx(
-              "rdt-z-10 rdt-h-full rdt-w-2/3 rdt-p-2",
-              // leftSideOriented ? "rdt-pl-16" : "rdt-pr-16"
-            )}
-          >
-            {tabs.find((t) => t.id === "timeline")?.component}
-          </div>
+          {activeTab !== "settings" && <Fragment>
+            <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
+            <div
+              className={clsx(
+                "rdt-z-10 rdt-h-full rdt-w-2/3 rdt-p-2",
+                leftSideOriented ? "rdt-pl-2" : "rdt-pr-2" // leftSideOriented ? "rdt-pl-16" : "rdt-pr-16" Spacing is too large
+              )}
+            >
+              {tabs.find((t) => t.id === "timeline")?.component}
+            </div>
+          </Fragment>}
         </div>
       </div>
     </div>
