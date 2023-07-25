@@ -1,84 +1,141 @@
-import { Columns, MonitorPlay, Send, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Columns, /* MonitorPlay */ Send, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useGetSocket } from "../hooks/useGetSocket";
-
-export interface TerminalInput {
-  type: "command" | "output";
-  data: string;
-}
+import { useRDTContext } from "../context/useRDTContext";
+import { Terminal } from "../context/terminal";
+import clsx from "clsx";
+import { useTerminalShortcuts } from "../hooks/useTerminalShortcuts";
 
 interface TerminalProps {
   onClose: () => void;
+  terminal: Terminal;
+  projectCommands?: Record<string, string>;
 }
 
-const Terminal = ({ onClose }: TerminalProps) => {
-  const [terminalOutput, setTerminalOutput] = useState<TerminalInput[]>([]); // [{type: "log", data: "hello world"}
+const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
+  const {
+    addTerminalOutput,
+    toggleTerminalLock,
+    setProcessId,
+    addTerminalHistory,
+    terminals,
+  } = useRDTContext();
   const [command, setCommand] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
 
   const onSubmit = () => {
     sendJsonMessage({
       type: "terminal_command",
       command,
+      terminalId: terminal.id,
     });
-    setTerminalOutput([
-      ...terminalOutput,
-      {
-        type: "command",
-        data: command + "\n",
-      },
-    ]);
+    addTerminalOutput(terminal.id, {
+      type: "command",
+      value: command + "\n",
+    });
+    addTerminalHistory(terminal.id, command);
     setCommand("");
+    toggleTerminalLock(terminal.id);
   };
-  const { lastJsonMessage, sendJsonMessage } = useGetSocket();
 
   useEffect(() => {
-    if (lastJsonMessage?.type === "terminal_command") {
-      setTerminalOutput([
-        ...terminalOutput,
-        {
-          type: "output",
-          data: lastJsonMessage.data + "\n",
-        },
-      ]);
-    }
-  }, [lastJsonMessage, terminalOutput]);
+    ref.current?.scrollTo({ top: ref.current.scrollHeight });
+  }, [terminal.output]);
 
+  const { sendJsonMessage } = useGetSocket({
+    onMessage: (message) => {
+      try {
+        const data = JSON.parse(message.data);
+        // Check if command was sent from this terminal
+        const isThisTerminalCommand =
+          data.type === "terminal_command" && data.terminalId === terminal.id;
+
+        if (isThisTerminalCommand) {
+          const processDone =
+            data.subtype === "ERROR" ||
+            data.subtype === "EXIT" ||
+            data.subtype === "CLOSE";
+          const hasOutputData =
+            data.subtype === "DATA" || data.subtype === "ERROR";
+          // set the process ID if it exists so we can terminate it if we want
+          if (data.processId) {
+            setProcessId(terminal.id, data.processId);
+          }
+          // Process done => unlock terminal
+          if (processDone) {
+            setProcessId(terminal.id, undefined);
+            toggleTerminalLock(terminal.id, false);
+          }
+          // Add output to terminal
+          if (hasOutputData) {
+            addTerminalOutput(data.terminalId, {
+              type: data.subtype === "ERROR" ? "error" : "output",
+              value: data.data,
+            });
+          }
+        }
+      } catch (e) {
+        // console.log(e);
+      }
+    },
+  });
+  const { onKeyDown } = useTerminalShortcuts({
+    onSubmit,
+    setCommand,
+    terminal,
+    projectCommands,
+    sendJsonMessage,
+  });
   return (
-    <div className="h-full w-full flex border-gray-100/10 border rounded-lg relative flex-col justify-between">
-      <button
-        onClick={onClose}
-        title="Close terminal"
-        className="absolute right-2 top-2"
-      >
-        <X className="stroke-red-500" size={24} />
-      </button>
-      <div className="h-72 overflow-y-auto p-2">
-        {terminalOutput?.map((output) => (
+    <div className="rdt-relative rdt-flex rdt-h-full rdt-w-full rdt-flex-col rdt-justify-between rdt-rounded-lg rdt-border rdt-border-gray-100/10">
+      {terminals.length > 1 && (
+        <button
+          onClick={onClose}
+          title="Close terminal"
+          className="rdt-absolute rdt-right-2 rdt-top-2"
+        >
+          <X className="rdt-stroke-red-500" size={24} />
+        </button>
+      )}
+      <div ref={ref} className="rdt-overflow-y-auto rdt-p-2">
+        {terminal.output?.map((output, i) => (
           <div
-            className={output.type === "command" ? "font-bold" : ""}
+            key={output.value + i}
+            className={clsx(
+              "rdt-px-2",
+              output.type === "command" &&
+                "rdt-mb-1 rdt-mt-1 rdt-block rdt-rounded-lg rdt-bg-blue-950 rdt-px-2 rdt-py-1 rdt-font-bold",
+              output.type === "error" && "rdt-text-red-500 "
+            )}
             dangerouslySetInnerHTML={{
-              __html: output.data.split("\n").join("<br />"),
+              __html: output.value.split("\n").join("<br />"),
             }}
           ></div>
         ))}
       </div>
 
-      <div className="relative flex border-3 border-gray-100 rounded-xl">
+      <div className="rdt-border-3 rdt-relative rdt-flex rdt-rounded-xl rdt-border-gray-100">
         <input
-          onKeyDown={(e) => {
-            if (e.key === "Enter") onSubmit();
-          }}
+          readOnly={terminal.locked}
+          onKeyDown={onKeyDown}
           value={command}
           onChange={(e) => setCommand(e.target.value)}
-          onBlur={() => setCommand(command.trim())}
-          placeholder="Enter command"
-          className="w-full font-medium rounded-tr-none z-10 py-0 rounded-tl-none text-gray-500 text-lg h-8 rounded-lg border-none px-6"
+          onBlur={() => setCommand(command?.trim())}
+          placeholder={terminal.locked ? "Command running" : "Enter command"}
+          className={clsx(
+            "rdt-z-10 rdt-h-8 rdt-w-full rdt-rounded-lg rdt-rounded-tl-none rdt-rounded-tr-none rdt-border-none rdt-px-6 rdt-py-0 rdt-text-lg rdt-font-medium rdt-text-gray-500",
+            terminal.locked && "rdt-opacity-50"
+          )}
         />
         <button
+          disabled={terminal.locked}
           onClick={onSubmit}
-          className="z-20 rounded-l-none rounded-tr-none cursor-pointer right-0 top-0 absolute border-none w-8 flex items-center justify-center h-8 rounded-lg bg-green-500"
+          className={clsx(
+            "rdt-absolute rdt-right-0 rdt-top-0 rdt-z-20 rdt-flex rdt-h-8 rdt-w-8 rdt-cursor-pointer rdt-items-center rdt-justify-center rdt-rounded-lg rdt-rounded-l-none rdt-rounded-tr-none rdt-border-none rdt-bg-green-500",
+            terminal.locked && "rdt-opacity-50"
+          )}
         >
-          <Send className="stroke-white" size={16} />
+          <Send className="rdt-stroke-white" size={16} />
         </button>
       </div>
     </div>
@@ -86,40 +143,45 @@ const Terminal = ({ onClose }: TerminalProps) => {
 };
 
 const TerminalTab = () => {
-  const [terminals, setTerminals] = useState<number[]>([0]);
-  const [, setProjectCommands] = useState<string[]>([]);
-  const { lastJsonMessage, sendJsonMessage } = useGetSocket();
+  const { terminals, addOrRemoveTerminal } = useRDTContext();
 
-  useEffect(() => {
-    sendJsonMessage({ type: "commands" });
-  }, [sendJsonMessage]);
-
-  useEffect(() => {
-    if (lastJsonMessage?.type === "commands") {
-      setProjectCommands(lastJsonMessage?.data as any);
-    }
-  }, [lastJsonMessage]);
+  const [projectCommands, setProjectCommands] =
+    useState<Record<string, string>>();
+  const { sendJsonMessage } = useGetSocket({
+    onOpen: () => {
+      sendJsonMessage({ type: "commands" });
+    },
+    onMessage: (message) => {
+      try {
+        const data = JSON.parse(message.data);
+        if (data.type === "commands") {
+          setProjectCommands(data.data);
+        }
+      } catch (e) {
+        // console.log(e);
+      }
+    },
+  });
 
   return (
-    <div className="rounded-lg gap-4 relative h-full flex justify-between ">
-      <button
-        className="absolute -right-8"
-        onClick={() => setTerminals([...terminals, terminals.length])}
-      >
-        <Columns />
-      </button>
-      <button
-        className="absolute -right-8 top-8"
-        onClick={() => setTerminals([...terminals, terminals.length])}
-      >
+    <div className="rdt-relative rdt-mr-8 rdt-flex rdt-h-full rdt-justify-between rdt-gap-4 rdt-rounded-lg">
+      {terminals.length < 3 && (
+        <button
+          className="rdt-absolute -rdt-right-8"
+          onClick={() => addOrRemoveTerminal()}
+        >
+          <Columns />
+        </button>
+      )}
+      {/*  <button className="rdt-absolute -rdt-right-8 rdt-top-8">
         <MonitorPlay />
-      </button>
+      </button> */}
       {terminals.map((terminal) => (
         <Terminal
-          onClose={() => {
-            setTerminals(terminals.filter((t) => t !== terminal));
-          }}
-          key={terminal}
+          terminal={terminal}
+          projectCommands={projectCommands}
+          onClose={() => addOrRemoveTerminal(terminal.id)}
+          key={terminal.id}
         />
       ))}
     </div>

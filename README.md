@@ -6,7 +6,7 @@
 ![npm](https://img.shields.io/npm/dy/remix-development-tools?style=plastic) 
 ![GitHub top language](https://img.shields.io/github/languages/top/Code-Forge-Net/Remix-Dev-Tools?style=plastic) 
 
-Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of two tabs, **Active Page** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
+Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
 
 ## Features
 
@@ -33,6 +33,15 @@ The **Routes** tab enables you to manage and explore the routes within your Remi
 ### Timeline Tab
 
 The **Timeline** side tab provides a timeline view of events occurring during the development process. This tab helps you track the sequence of actions and events, providing valuable insights into the execution flow of your application.
+
+### Terminal tab
+
+The terminal tab allows you to run terminal commands from the Remix Dev Tools. This is useful for running commands like `npm run typecheck` or `npm run lint:fix` without having to switch to the terminal in VS code. The tab requires you to connect to Remix Forge VS Code extension to work properly. 
+
+You can press `Arrow Up` and `Arrow Down` to cycle through the history of commands you have run in the terminal.
+You can press `Arrow Left` and `Arrow Right` to cycle through all available commands in your projects package.json file.
+You can press `Ctrl + C` to cancel the current command.
+You can press `Ctrl + L` to clear the terminal.
 
 ## Getting Started
 

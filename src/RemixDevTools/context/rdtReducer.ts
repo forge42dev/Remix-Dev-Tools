@@ -1,11 +1,13 @@
 import { TimelineEvent } from "./timeline";
 import type { Tabs } from "../tabs";
+import { Terminal } from "./terminal";
 
 export type RouteWildcards = Record<string, Record<string, string> | undefined>;
 
 export type RemixDevToolsState = {
   timeline: TimelineEvent[];
   showRouteBoundaries?: boolean;
+  terminals: Terminal[];
   settings: {
     routeWildcards: RouteWildcards;
     activeTab: Tabs;
@@ -18,6 +20,7 @@ export type RemixDevToolsState = {
 export const initialState: RemixDevToolsState = {
   timeline: [],
   showRouteBoundaries: false,
+  terminals: [{ id: 0, locked: false, output: [], history: [] }],
   settings: {
     routeWildcards: {},
     activeTab: "timeline",
@@ -35,11 +38,52 @@ type SetTimelineEvent = {
   payload: TimelineEvent;
 };
 
+type ToggleTerminalLock = {
+  type: "TOGGLE_TERMINAL_LOCK";
+  payload: {
+    terminalId: Terminal["id"];
+    locked?: boolean;
+  };
+};
+
+type AddOrRemoveTerminal = {
+  type: "ADD_OR_REMOVE_TERMINAL";
+  payload?: Terminal["id"];
+};
+
+type AddTerminalOutput = {
+  type: "ADD_TERMINAL_OUTPUT";
+  payload: {
+    terminalId: Terminal["id"];
+    output: Terminal["output"][number];
+  };
+};
+
+type AddTerminalHistory = {
+  type: "ADD_TERMINAL_HISTORY";
+  payload: {
+    terminalId: Terminal["id"];
+    history: Terminal["history"][number];
+  };
+};
+
+type ClearTerminalOutput = {
+  type: "CLEAR_TERMINAL_OUTPUT";
+  payload: Terminal["id"];
+};
+
 type SetActiveTab = {
   type: "SET_ACTIVE_TAB";
   payload: Tabs;
 };
 
+type SetProcessId = {
+  type: "SET_PROCESS_ID";
+  payload: {
+    terminalId: Terminal["id"];
+    processId?: number;
+  };
+};
 type SetDevToolsHeight = {
   type: "SET_HEIGHT";
   payload: number;
@@ -68,7 +112,13 @@ type SetShouldConnectToForgeAction = {
 /** Aggregate of all action types */
 export type RemixDevToolsActions =
   | SetTimelineEvent
+  | ToggleTerminalLock
+  | AddOrRemoveTerminal
+  | AddTerminalOutput
+  | ClearTerminalOutput
+  | AddTerminalHistory
   | SetActiveTab
+  | SetProcessId
   | PurgeTimeline
   | SetRouteWildcards
   | SetDevToolsHeight
@@ -120,7 +170,97 @@ export const rdtReducer = (
           height: payload,
         },
       };
+    case "SET_PROCESS_ID":
+      return {
+        ...state,
+        terminals: state.terminals.map((terminal) => {
+          if (terminal.id === payload.terminalId) {
+            return {
+              ...terminal,
+              processId: payload.processId,
+            };
+          }
+          return terminal;
+        }),
+      };
+    case "TOGGLE_TERMINAL_LOCK":
+      return {
+        ...state,
+        terminals: state.terminals.map((terminal) => {
+          if (terminal.id === payload.terminalId) {
+            return {
+              ...terminal,
+              locked: payload.locked ?? !terminal.locked,
+            };
+          }
+          return terminal;
+        }),
+      };
+    case "ADD_OR_REMOVE_TERMINAL": {
+      const terminalExists = state.terminals.some(
+        (terminal) => terminal.id === payload
+      );
+      if (terminalExists) {
+        return {
+          ...state,
+          terminals: state.terminals
+            .filter((terminal) => terminal.id !== payload)
+            .map((terminal, i) => ({ ...terminal, id: i })),
+        };
+      }
+      return {
+        ...state,
+        terminals: [
+          ...state.terminals,
+          {
+            id: state.terminals.length,
+            locked: false,
+            history: [],
+            output: [],
+          },
+        ],
+      };
+    }
+    case "ADD_TERMINAL_OUTPUT":
+      return {
+        ...state,
+        terminals: state.terminals.map((terminal) => {
+          if (terminal.id === payload.terminalId) {
+            return {
+              ...terminal,
+              output: [...terminal.output, payload.output],
+            };
+          }
+          return terminal;
+        }),
+      };
+    case "CLEAR_TERMINAL_OUTPUT":
+      return {
+        ...state,
+        terminals: state.terminals.map((terminal) => {
+          if (terminal.id === payload) {
+            return {
+              ...terminal,
+              output: [],
+            };
+          }
+          return terminal;
+        }),
+      };
 
+    case "ADD_TERMINAL_HISTORY":
+      return {
+        ...state,
+        terminals: state.terminals.map((terminal) => {
+          if (terminal.id === payload.terminalId) {
+            return {
+              ...terminal,
+              history: [...terminal.history, payload.history],
+            };
+          }
+          return terminal;
+        }),
+      };
     case "SET_SHOULD_CONNECT_TO_FORGE":
       return {
         ...state,
