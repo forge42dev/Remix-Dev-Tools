@@ -36,7 +36,7 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
           toggleTerminalLock(terminal.id, false);
           setProcessId(terminal.id, undefined);
         });
-        if (activeTab !== "page" && activeTab !== "routes") {
+        if (activeTab !== "page" && activeTab !== "routes" && activeTab !== "settings") {
           setActiveTab("page");
         }
         return;
@@ -44,7 +44,7 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
       if (retryCount < RETRY_COUNT) {
         return setRetryCount(retryCount + 1);
       }
-      if (activeTab !== "page" && activeTab !== "routes") {
+      if (activeTab !== "page" && activeTab !== "routes" && activeTab !== "settings") {
         setActiveTab("page");
       }
       setShouldConnectWithForge(false);
@@ -68,7 +68,7 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
 
   useEffect(() => {
     if (!isConnected && !isConnecting) {
-      if (activeTab !== "page" && activeTab !== "routes") {
+      if (activeTab !== "page" && activeTab !== "routes" && activeTab !== "settings") {
         setActiveTab("page");
       }
     }
