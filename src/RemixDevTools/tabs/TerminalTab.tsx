@@ -90,7 +90,16 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
     <div className="rdt-relative rdt-flex rdt-h-full rdt-w-full rdt-flex-col rdt-justify-between rdt-rounded-lg rdt-border rdt-border-gray-100/10">
       {terminals.length > 1 && (
         <button
-          onClick={onClose}
+          onClick={() => {
+            if (terminal.locked) {
+              sendJsonMessage({
+                type: "kill",
+                terminalId: terminal.id,
+                processId: terminal.processId,
+              });
+            }
+            onClose();
+          }}
           title="Close terminal"
           className="rdt-absolute rdt-right-2 rdt-top-2"
         >
