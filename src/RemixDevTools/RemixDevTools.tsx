@@ -120,25 +120,18 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
                   : "Connect to Remix Forge"}
               </div>
             )}
-            {/* Perfomance-wise note: Optimise this operation. Instead of filtering and mapping each time, just pop it. */}
-            {tabs
-              .filter(
-                (tab) =>
-                  tab.id === "settings"
-              )
-              .map((tab) => (
-                <div
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={clsx(
-                    "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
-                    activeTab !== tab.id && "rdt-hover:opacity-50",
-                    activeTab === tab.id && "rdt-bg-[#212121]"
-                  )}
-                >
-                  {tab.icon} {tab.name}
-                </div>
-              ))}
+            {[tabs.at(-1)!].map(tab =>
+              <div
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={clsx(
+                  "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
+                  activeTab !== tab.id && "rdt-hover:opacity-50",
+                  activeTab === tab.id && "rdt-bg-[#212121]"
+                )}
+              >
+                {tab.icon} {tab.name}
+              </div>)}
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" onClick={() => setPersistOpen(false)} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="rdt-w-6 rdt-h-6 rdt-absolute rdt-right-4 rdt-cursor-pointer rdt-top-1/2 -rdt-translate-y-1/2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
