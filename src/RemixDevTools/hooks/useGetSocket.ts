@@ -5,7 +5,7 @@ import {
   WebSocketHook,
 } from "react-use-websocket/dist/lib/types";
 import { useRDTContext } from "../context/useRDTContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const RETRY_COUNT = 2;
 
@@ -16,8 +16,6 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
     port,
     terminals,
     toggleTerminalLock,
-    activeTab,
-    setActiveTab,
     setProcessId,
   } = useRDTContext();
   const [retryCount, setRetryCount] = useState(0);
@@ -36,17 +34,13 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
           toggleTerminalLock(terminal.id, false);
           setProcessId(terminal.id, undefined);
         });
-        if (activeTab !== "page" && activeTab !== "routes") {
-          setActiveTab("page");
-        }
+
         return;
       }
       if (retryCount < RETRY_COUNT) {
         return setRetryCount(retryCount + 1);
       }
-      if (activeTab !== "page" && activeTab !== "routes") {
-        setActiveTab("page");
-      }
+
       setShouldConnectWithForge(false);
     },
   };
@@ -65,14 +59,6 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
   }[properties.readyState];
   const isConnected = properties.readyState === ReadyState.OPEN;
   const isConnecting = properties.readyState === ReadyState.CONNECTING;
-
-  useEffect(() => {
-    if (!isConnected && !isConnecting) {
-      if (activeTab !== "page" && activeTab !== "routes") {
-        setActiveTab("page");
-      }
-    }
-  }, [isConnected, isConnecting, activeTab, setActiveTab]);
 
   return { ...properties, connectionStatus, isConnected, isConnecting };
 };

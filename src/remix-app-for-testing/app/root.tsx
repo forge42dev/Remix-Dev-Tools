@@ -51,7 +51,13 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload /> 
-        {RemixDevTools && <RemixDevTools defaultOpen showRouteBoundaries />}
+        {RemixDevTools && <RemixDevTools additionalTabs={[{
+          name: "Test",
+          icon: <div>Test</div>,
+          id: "test",
+          component: <div>Test</div>,
+          requiresForge: true,
+        }]} defaultOpen showRouteBoundaries />}
       </body>
     </html>
   );

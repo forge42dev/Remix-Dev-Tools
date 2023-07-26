@@ -1,8 +1,7 @@
 import clsx from "clsx";
-import { Logo } from "./components/Logo";
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { RDTContextProvider } from "./context/RDTContext";
-import { tabs } from "./tabs";
+import { Tab, Tabs } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
 import { useRDTContext } from "./context/useRDTContext";
 import { isDev } from "./utils/isDev";
@@ -11,57 +10,51 @@ import { Radio } from "lucide-react";
 import { useResize } from "./hooks/useResize";
 import { useLocation } from "@remix-run/react";
 import { useOutletAugment } from "./hooks/useOutletAugment";
+import { Trigger } from "./components/Trigger";
+import { TimelineTab } from "./tabs/TimelineTab";
+import { useTabs } from "./hooks/useTabs";
 
 interface Props extends RemixDevToolsProps {
   defaultOpen: boolean;
   position: Exclude<RemixDevToolsProps["position"], undefined>;
+  hideUntilHover: boolean;
 }
 
-const RemixDevTools = ({ defaultOpen, position }: Props) => {
+const RemixDevTools = ({
+  defaultOpen,
+  position,
+  additionalTabs,
+  hideUntilHover,
+}: Props) => {
   const {
     activeTab,
     setActiveTab,
     setShouldConnectWithForge,
     height,
-    setPersistOpen,
     persistOpen,
   } = useRDTContext();
   const { enableResize, disableResize, isResizing } = useResize();
   useTimelineHandler();
   const { isConnected, isConnecting } = useGetSocket();
-  const Component = tabs.find((tab) => tab.id === activeTab)?.component;
-  const leftSideOriented =
-    position === "top-left" ||
-    position === "bottom-left" ||
-    position === "middle-left";
-  const isOpen = useMemo(
-    () => defaultOpen || persistOpen,
-    [persistOpen, defaultOpen]
+  const { Component, visibleTabs } = useTabs(
+    isConnected,
+    isConnecting,
+    additionalTabs
   );
+  const leftSideOriented = position.includes("left");
+
+  const [isOpen, setIsOpen] = useState(defaultOpen || persistOpen);
+
+  const shouldShowConnectToForge = !isConnected || isConnecting;
+
   return (
     <div className="remix-dev-tools">
-      <div
-        style={{ zIndex: 9999 }}
-        onClick={() => setPersistOpen(!isOpen)}
-        className={clsx(
-          "rdt-fixed rdt-m-1.5 rdt-h-14 rdt-w-14 rdt-cursor-pointer rdt-rounded-full ",
-          position === "bottom-right" && "rdt-bottom-0 rdt-right-0",
-          position === "bottom-left" && "rdt-bottom-0 rdt-left-0",
-          position === "top-right" && "rdt-right-0 rdt-top-0",
-          position === "top-left" && "rdt-left-0 rdt-top-0",
-          position === "middle-right" &&
-            "rdt-right-0 rdt-top-1/2 -rdt-translate-y-1/2",
-          position === "middle-left" &&
-            "rdt-left-0 rdt-top-1/2 -rdt-translate-y-1/2"
-        )}
-      >
-        <Logo
-          className={clsx(
-            "rdt-h-14 rdt-w-14 rdt-rounded-full rdt-transition-all rdt-duration-200",
-            "rdt-hover:cursor-pointer rdt-hover:ring-2 rdt-ring-slate-600"
-          )}
-        />
-      </div>
+      <Trigger
+        isOpen={isOpen}
+        position={position}
+        hideUntilHover={hideUntilHover}
+        setIsOpen={setIsOpen}
+      />
       <div
         style={{ zIndex: 9998, height }}
         className={clsx(
@@ -80,31 +73,25 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
           )}
         />
         <div className="rdt-flex rdt-h-8 rdt-w-full rdt-bg-gray-800">
-          {tabs
-            .filter(
-              (tab) =>
-                !(!isConnected && tab.requiresForge) && tab.id !== "timeline"
-            )
-            .map((tab) => (
-              <div
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={clsx(
-                  "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
-                  activeTab !== tab.id && "rdt-hover:opacity-50",
-                  activeTab === tab.id && "rdt-bg-[#212121]"
-                )}
-              >
-                {tab.icon} {tab.name}
-              </div>
-            ))}
-          {(!isConnected || isConnecting) && (
+          {visibleTabs.map((tab) => (
+            <div
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as Tabs)}
+              className={clsx(
+                "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
+                activeTab !== tab.id && "rdt-hover:opacity-50",
+                activeTab === tab.id && "rdt-bg-[#212121]"
+              )}
+            >
+              {tab.icon} {tab.name}
+            </div>
+          ))}
+          {shouldShowConnectToForge && (
             <div
               onClick={() => setShouldConnectWithForge(true)}
               className={clsx(
-                isConnecting
-                  ? "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default"
-                  : "",
+                isConnecting &&
+                  "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default",
                 "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all"
               )}
             >
@@ -131,7 +118,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
               leftSideOriented ? "rdt-pl-16" : "rdt-pr-16"
             )}
           >
-            {tabs.find((t) => t.id === "timeline")?.component}
+            <TimelineTab />
           </div>
         </div>
       </div>
@@ -152,7 +139,7 @@ function useHydrated() {
   return hydrated;
 }
 
-interface RemixDevToolsProps {
+export interface RemixDevToolsProps {
   // A port to connect to the Remix Forge in your vscode extension
   port?: number;
   // Whether the dev tools should be open by default
@@ -169,6 +156,10 @@ interface RemixDevToolsProps {
     | "middle-left";
   // Show route boundaries when you hover over a route in active page tab
   showRouteBoundaries?: boolean;
+  // Additional tabs to add to the dev tools
+  additionalTabs?: Tab[];
+  // Whether the dev tools trigger should hide until hovered
+  hideUntilHover?: boolean;
 }
 
 const RDTWithContext = ({
@@ -177,6 +168,8 @@ const RDTWithContext = ({
   requireUrlFlag,
   showRouteBoundaries = false,
   position = "bottom-right",
+  hideUntilHover = false,
+  additionalTabs,
 }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const isDevelopment = isDev();
@@ -187,7 +180,23 @@ const RDTWithContext = ({
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
   return (
     <RDTContextProvider showRouteBoundaries={showRouteBoundaries} port={port}>
-      <RemixDevTools position={position} defaultOpen={defaultOpen} />
+      <Suspense
+        fallback={
+          <Trigger
+            isOpen
+            setIsOpen={() => void 0}
+            position={position}
+            hideUntilHover={hideUntilHover}
+          />
+        }
+      >
+        <RemixDevTools
+          defaultOpen={defaultOpen}
+          position={position}
+          additionalTabs={additionalTabs}
+          hideUntilHover={hideUntilHover}
+        />
+      </Suspense>
     </RDTContextProvider>
   );
 };
