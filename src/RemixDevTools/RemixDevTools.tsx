@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Logo } from "./components/Logo";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useMemo } from "react";
 import { RDTContextProvider } from "./context/RDTContext";
 import { tabs } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
@@ -20,9 +20,14 @@ interface Props extends RemixDevToolsProps {
 const RemixDevTools = ({ defaultOpen, position }: Props) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const { activeTab, setActiveTab, setShouldConnectWithForge, height } =
-    useRDTContext();
-
+  const {
+    activeTab,
+    setActiveTab,
+    setShouldConnectWithForge,
+    height,
+    setPersistOpen,
+    persistOpen,
+  } = useRDTContext();
   const { enableResize, disableResize, isResizing } = useResize();
 
   useTimelineHandler();
@@ -33,12 +38,15 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
     position === "top-left" ||
     position === "bottom-left" ||
     position === "middle-left";
-
+  const isOpen = useMemo(
+    () => defaultOpen || persistOpen,
+    [persistOpen, defaultOpen]
+  );
   return (
     <div className="remix-dev-tools">
       <div
         style={{ zIndex: 9999 }}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setPersistOpen(!isOpen)}
         className={clsx(
           "rdt-fixed rdt-m-1.5 rdt-h-14 rdt-w-14 rdt-cursor-pointer rdt-rounded-full ",
           position === "bottom-right" && "rdt-bottom-0 rdt-right-0",
