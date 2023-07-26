@@ -11,6 +11,7 @@ import { Radio } from "lucide-react";
 import { useResize } from "./hooks/useResize";
 import { useLocation } from "@remix-run/react";
 import { useOutletAugment } from "./hooks/useOutletAugment";
+import useHorizontalScroll from "./hooks/useHorizontalScroll";
 
 interface Props extends RemixDevToolsProps {
   defaultOpen: boolean;
@@ -27,6 +28,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
     persistOpen,
   } = useRDTContext();
   const { enableResize, disableResize, isResizing } = useResize();
+  const scrollRef = useHorizontalScroll();
 
   useTimelineHandler();
 
@@ -85,7 +87,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
           )}
         />
         <div className="rdt-h-8 rdt-w-full rdt-relative rdt-bg-gray-800 rdt-select-none">
-          <div className="rdt-overflow-y-auto rdt-w-full rdt-flex rdt-h-full rdt-pr-12">
+          <div ref={scrollRef} className="remix-dev-tools__tab rdt-overflow-x-auto rdt-overflow-y-hidden rdt-flex rdt-h-full rdt-mr-12">
             {tabs
               .filter(
                 (tab) =>
@@ -96,7 +98,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={clsx(
-                    "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
+                    "rdt-flex rdt-cursor-pointer rdt-shrink-0 rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
                     activeTab !== tab.id && "rdt-hover:opacity-50",
                     activeTab === tab.id && "rdt-bg-[#212121]"
                   )}
@@ -111,7 +113,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
                   isConnecting
                     ? "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default"
                     : "",
-                  "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all"
+                  "rdt-flex rdt-cursor-pointer rdt-shrink-0 rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all"
                 )}
               >
                 <Radio size={16} />
@@ -125,13 +127,14 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={clsx(
-                  "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
+                  "rdt-flex rdt-cursor-pointer rdt-items-center rdt-shrink-0 rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all rdt-duration-300",
                   activeTab !== tab.id && "rdt-hover:opacity-50",
                   activeTab === tab.id && "rdt-bg-[#212121]"
                 )}
               >
                 {tab.icon} {tab.name}
-              </div>)}
+              </div>
+            )}
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" onClick={() => setPersistOpen(false)} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="rdt-w-6 rdt-h-6 rdt-absolute rdt-right-4 rdt-cursor-pointer rdt-top-1/2 -rdt-translate-y-1/2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
