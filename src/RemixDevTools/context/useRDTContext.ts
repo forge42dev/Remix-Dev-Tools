@@ -11,7 +11,8 @@ const useRDTContext = () => {
     throw new Error("useRDTContext must be used within a RDTContextProvider");
   }
   const { state, dispatch } = context;
-  const { timeline, settings, showRouteBoundaries, terminals } = state;
+  const { timeline, settings, showRouteBoundaries, terminals, persistOpen } =
+    state;
   const { activeTab, shouldConnectWithForge, routeWildcards, port, height } =
     settings;
 
@@ -118,6 +119,16 @@ const useRDTContext = () => {
     [dispatch]
   );
 
+  const setPersistOpen = useCallback(
+    (persistOpen: boolean) => {
+      dispatch({
+        type: "SET_PERSIST_OPEN",
+        payload: persistOpen,
+      });
+    },
+    [dispatch]
+  );
+
   return {
     setTimelineEvent,
     setActiveTab,
@@ -139,6 +150,8 @@ const useRDTContext = () => {
     clearTerminalOutput,
     addTerminalHistory,
     setProcessId,
+    persistOpen,
+    setPersistOpen,
   };
 };
 

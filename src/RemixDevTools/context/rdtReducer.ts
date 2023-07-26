@@ -15,6 +15,7 @@ export type RemixDevToolsState = {
     port: number;
     height: number;
   };
+  persistOpen: boolean;
 };
 
 export const initialState: RemixDevToolsState = {
@@ -28,6 +29,7 @@ export const initialState: RemixDevToolsState = {
     port: 3003,
     height: 400,
   },
+  persistOpen: false,
 };
 
 export type ReducerActions = Pick<RemixDevToolsActions, "type">["type"];
@@ -109,6 +111,11 @@ type SetShouldConnectToForgeAction = {
   payload: boolean;
 };
 
+type SetPersistOpenAction = {
+  type: "SET_PERSIST_OPEN";
+  payload: boolean;
+};
+
 /** Aggregate of all action types */
 export type RemixDevToolsActions =
   | SetTimelineEvent
@@ -123,7 +130,8 @@ export type RemixDevToolsActions =
   | SetRouteWildcards
   | SetDevToolsHeight
   | SetShouldConnectToForgeAction
-  | SetIsSubmittedAction;
+  | SetIsSubmittedAction
+  | SetPersistOpenAction;
 
 export const rdtReducer = (
   state: RemixDevToolsState = initialState,
@@ -268,6 +276,11 @@ export const rdtReducer = (
           ...state.settings,
           shouldConnectWithForge: payload,
         },
+      };
+    case "SET_PERSIST_OPEN":
+      return {
+        ...state,
+        persistOpen: payload,
       };
     default:
       return state;
