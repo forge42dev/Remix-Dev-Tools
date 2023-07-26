@@ -524,11 +524,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   direction: ltr;
 }
 
-.remix-dev-tools-window::-webkit-resizer {
-  /* Remove that tiny, annoying resizing icon at the bottom right */
-  display: none;
-}
-
 .rdt-apply-tw {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;

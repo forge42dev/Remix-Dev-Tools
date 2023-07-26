@@ -18,8 +18,6 @@ interface Props extends RemixDevToolsProps {
 }
 
 const RemixDevTools = ({ defaultOpen, position }: Props) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-
   const {
     activeTab,
     setActiveTab,
@@ -38,10 +36,12 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
     position === "top-left" ||
     position === "bottom-left" ||
     position === "middle-left";
+
   const isOpen = useMemo(
     () => defaultOpen || persistOpen,
     [persistOpen, defaultOpen]
   );
+
   return (
     <div className="remix-dev-tools">
       <div
@@ -70,7 +70,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
       <div
         style={{ zIndex: 9998, height }}
         className={clsx(
-          "remix-dev-tools-window rdt-duration-600 rdt-fixed rdt-bottom-0 rdt-left-0 rdt-box-border rdt-flex rdt-w-screen rdt-resize-y rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
+          "rdt-duration-600 rdt-fixed rdt-bottom-0 rdt-left-0 rdt-box-border rdt-flex rdt-w-screen rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
           isOpen ? "rdt-opacity-100 rdt-drop-shadow-2xl" : "rdt-h-0",
           isResizing ? "rdt-pointer-events-none" : "",
           isResizing && "rdt-cursor-grabbing "
@@ -140,7 +140,7 @@ const RemixDevTools = ({ defaultOpen, position }: Props) => {
                 </div>
               ))}
           </div>
-          <svg xmlns="http://www.w3.org/2000/svg" onClick={() => setIsOpen(false)} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="rdt-w-6 rdt-h-6 rdt-absolute rdt-right-4 rdt-cursor-pointer rdt-top-1/2 -rdt-translate-y-1/2">
+          <svg xmlns="http://www.w3.org/2000/svg" onClick={() => setPersistOpen(false)} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="rdt-w-6 rdt-h-6 rdt-absolute rdt-right-4 rdt-cursor-pointer rdt-top-1/2 -rdt-translate-y-1/2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>
