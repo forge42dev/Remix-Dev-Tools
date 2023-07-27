@@ -1,6 +1,6 @@
 import { Columns, /* MonitorPlay */ Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useGetSocket } from "../hooks/useGetSocket";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { useRDTContext } from "../context/useRDTContext";
 import { Terminal } from "../context/terminal";
 import clsx from "clsx";
@@ -42,7 +42,7 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
     ref.current?.scrollTo({ top: ref.current.scrollHeight });
   }, [terminal.output]);
 
-  const { sendJsonMessage } = useGetSocket({
+  const { sendJsonMessage } = useRemixForgeSocket({
     onMessage: (message) => {
       try {
         const data = JSON.parse(message.data);
@@ -155,7 +155,7 @@ const TerminalTab = () => {
   const { terminals, addOrRemoveTerminal } = useRDTContext();
   const [projectCommands, setProjectCommands] =
     useState<Record<string, string>>();
-  const { sendJsonMessage } = useGetSocket({
+  const { sendJsonMessage } = useRemixForgeSocket({
     onMessage: (message) => {
       try {
         const data = JSON.parse(message.data);

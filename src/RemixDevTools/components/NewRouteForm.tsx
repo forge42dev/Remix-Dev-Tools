@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import { Checkbox } from "./Checkbox";
 import { Input } from "./Input";
-import { useGetSocket } from "../hooks/useGetSocket";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 
 interface NewRouteOptions {
   path: string;
@@ -29,7 +29,7 @@ const DEFAULT_VALUES = {
 };
 
 const NewRouteForm = () => {
-  const { sendJsonMessage } = useGetSocket({
+  const { sendJsonMessage } = useRemixForgeSocket({
     onMessage: (e) => {
       const messageData = e.data;
       if (messageData.type === "route_added") {

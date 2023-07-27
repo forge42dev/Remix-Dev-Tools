@@ -9,7 +9,9 @@ import { useState } from "react";
 
 const RETRY_COUNT = 2;
 
-export const useGetSocket = <T extends JsonObject>(options?: Options) => {
+export const useRemixForgeSocket = <T extends JsonObject>(
+  options?: Options
+) => {
   const {
     shouldConnectWithForge,
     setShouldConnectWithForge,
@@ -61,4 +63,18 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
   const isConnecting = properties.readyState === ReadyState.CONNECTING;
 
   return { ...properties, connectionStatus, isConnected, isConnecting };
+};
+
+interface RemixForgeMessage extends JsonObject {
+  subtype: "read_file" | "open_file" | "delete_file" | "write_file";
+  path: string;
+  data?: string;
+}
+
+export const useRemixForgeSocketExternal = (options?: Options) => {
+  const { sendJsonMessage, ...rest } = useRemixForgeSocket(options);
+  const sendJsonMessageExternal = (message: RemixForgeMessage) => {
+    sendJsonMessage({ ...message, type: "plugin" });
+  };
+  return { sendJsonMessage: sendJsonMessageExternal, ...rest };
 };
