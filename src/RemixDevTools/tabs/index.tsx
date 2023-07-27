@@ -1,16 +1,17 @@
-import {
-  GitMerge,
-  Terminal,
-  /* Server, */ History,
-  Layers,
-} from "lucide-react";
+import { GitMerge, Terminal, Layers } from "lucide-react";
 import { PageTab } from "./PageTab";
-import { RoutesTab } from "./RoutesTab"; /* 
-import { ServerTab } from "./ServerTab";*/
+import { RoutesTab } from "./RoutesTab";
 import { TerminalTab } from "./TerminalTab";
-import { TimelineTab } from "./TimelineTab";
 
 export type Tabs = (typeof tabs)[number]["id"];
+
+export interface Tab {
+  name: string;
+  icon: JSX.Element;
+  id: string;
+  component: JSX.Element;
+  requiresForge: boolean;
+}
 
 const TAB_SIZE = 16;
 
@@ -20,13 +21,6 @@ export const tabs = [
     icon: <Layers size={TAB_SIZE} />,
     id: "page",
     component: <PageTab />,
-    requiresForge: false,
-  },
-  {
-    name: "Timeline",
-    icon: <History size={TAB_SIZE} />,
-    id: "timeline",
-    component: <TimelineTab />,
     requiresForge: false,
   },
 
@@ -43,12 +37,5 @@ export const tabs = [
     id: "terminal",
     component: <TerminalTab />,
     requiresForge: true,
-  } /*
-  {
-    name: "Server",
-    icon: <Server size={TAB_SIZE} />,
-    id: "server",
-    component: <ServerTab />,
-    requiresForge: true,
-  }, */,
+  },
 ] as const;

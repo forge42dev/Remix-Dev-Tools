@@ -4,6 +4,7 @@ module.exports = {
     "node_modules",
     "dist",
     "src/remix-app-for-testing",
+    "src/epic-stack-remix-dev-tools",
     ".eslintrc.cjs",
     "tailwind.config.js",
   ],

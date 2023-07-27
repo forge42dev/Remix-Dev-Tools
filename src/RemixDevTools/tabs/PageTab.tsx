@@ -2,7 +2,7 @@ import { useMatches, useRevalidator } from "@remix-run/react";
 import { CornerDownRight } from "lucide-react";
 import clsx from "clsx";
 import { JsonRenderer } from "../components/jsonRenderer";
-import { useGetSocket } from "../hooks/useGetSocket";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { Tag } from "../components/Tag";
 import { VsCodeButton } from "../components/VScodeButton";
 import { useMemo } from "react";
@@ -45,7 +45,7 @@ const PageTab = () => {
   const routes = useMatches();
   const reversed = useMemo(() => routes.reverse(), [routes]);
   const { revalidate, state } = useRevalidator();
-  const { isConnected, sendJsonMessage } = useGetSocket();
+  const { isConnected, sendJsonMessage } = useRemixForgeSocket();
   const { showRouteBoundaries } = useRDTContext();
   const onHover = (path: string, type: "enter" | "leave") => {
     if (!showRouteBoundaries) return;

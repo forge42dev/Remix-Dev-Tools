@@ -24,7 +24,7 @@ export const initialState: RemixDevToolsState = {
   terminals: [{ id: 0, locked: false, output: [], history: [] }],
   settings: {
     routeWildcards: {},
-    activeTab: "timeline",
+    activeTab: "page",
     shouldConnectWithForge: false,
     port: 3003,
     height: 400,

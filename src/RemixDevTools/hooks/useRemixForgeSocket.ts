@@ -5,19 +5,19 @@ import {
   WebSocketHook,
 } from "react-use-websocket/dist/lib/types";
 import { useRDTContext } from "../context/useRDTContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const RETRY_COUNT = 2;
 
-export const useGetSocket = <T extends JsonObject>(options?: Options) => {
+export const useRemixForgeSocket = <T extends JsonObject>(
+  options?: Options
+) => {
   const {
     shouldConnectWithForge,
     setShouldConnectWithForge,
     port,
     terminals,
     toggleTerminalLock,
-    activeTab,
-    setActiveTab,
     setProcessId,
   } = useRDTContext();
   const [retryCount, setRetryCount] = useState(0);
@@ -36,17 +36,13 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
           toggleTerminalLock(terminal.id, false);
           setProcessId(terminal.id, undefined);
         });
-        if (activeTab !== "page" && activeTab !== "routes") {
-          setActiveTab("page");
-        }
+
         return;
       }
       if (retryCount < RETRY_COUNT) {
         return setRetryCount(retryCount + 1);
       }
-      if (activeTab !== "page" && activeTab !== "routes") {
-        setActiveTab("page");
-      }
+
       setShouldConnectWithForge(false);
     },
   };
@@ -66,13 +62,19 @@ export const useGetSocket = <T extends JsonObject>(options?: Options) => {
   const isConnected = properties.readyState === ReadyState.OPEN;
   const isConnecting = properties.readyState === ReadyState.CONNECTING;
 
-  useEffect(() => {
-    if (!isConnected && !isConnecting) {
-      if (activeTab !== "page" && activeTab !== "routes") {
-        setActiveTab("page");
-      }
-    }
-  }, [isConnected, isConnecting, activeTab, setActiveTab]);
-
   return { ...properties, connectionStatus, isConnected, isConnecting };
+};
+
+interface RemixForgeMessage extends JsonObject {
+  subtype: "read_file" | "open_file" | "delete_file" | "write_file";
+  path: string;
+  data?: string;
+}
+
+export const useRemixForgeSocketExternal = (options?: Options) => {
+  const { sendJsonMessage, ...rest } = useRemixForgeSocket(options);
+  const sendJsonMessageExternal = (message: RemixForgeMessage) => {
+    sendJsonMessage({ ...message, type: "plugin" });
+  };
+  return { sendJsonMessage: sendJsonMessageExternal, ...rest };
 };

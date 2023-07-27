@@ -16,7 +16,7 @@ RDTContext.displayName = "RDTContext";
 
 interface ContextProps {
   children: React.ReactNode;
-  port: number;
+  port?: number;
   showRouteBoundaries?: boolean;
 }
 
