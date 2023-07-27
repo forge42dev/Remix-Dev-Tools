@@ -51,7 +51,8 @@ export const Trigger = ({
         position === "middle-right" &&
           "rdt-right-0 rdt-top-1/2 -rdt-translate-y-1/2",
         position === "middle-left" &&
-          "rdt-left-0 rdt-top-1/2 -rdt-translate-y-1/2"
+          "rdt-left-0 rdt-top-1/2 -rdt-translate-y-1/2",
+        isOpen && "rdt-hidden" // Hide the button when the dev tools is open
       )}
     >
       <Logo
