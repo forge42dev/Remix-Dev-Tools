@@ -14,7 +14,7 @@ const MainPanel = ({ children, isOpen }: MainPanelProps) => {
     <div
       style={{ zIndex: 9998, height }}
       className={clsx(
-        "rdt-duration-600 rdt-fixed rdt-bottom-0 rdt-left-0 rdt-box-border rdt-flex rdt-w-screen rdt-resize-y rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
+        "rdt-duration-600 rdt-fixed rdt-bottom-0 rdt-left-0 rdt-box-border rdt-flex rdt-w-screen rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
         isOpen ? "rdt-opacity-100 rdt-drop-shadow-2xl" : "rdt-h-0",
         isResizing ? "rdt-pointer-events-none" : "",
         isResizing && "rdt-cursor-grabbing "
@@ -24,8 +24,8 @@ const MainPanel = ({ children, isOpen }: MainPanelProps) => {
         onMouseDown={enableResize}
         onMouseUp={disableResize}
         className={clsx(
-          "rdt-absolute rdt-h-1 rdt-w-full rdt-cursor-n-resize",
-          isResizing && "rdt-cursor-grabbing "
+          "rdt-absolute rdt-h-1 rdt-w-full rdt-z-50",
+          isResizing ? "rdt-cursor-grabbing" : "rdt-cursor-ns-resize"
         )}
       />
       {children}
