@@ -40,7 +40,7 @@ const RemixDevTools = ({
         setIsOpen={setIsOpen}
       />
       <MainPanel isOpen={isOpen}>
-        <Tabs additionalTabs={additionalTabs} />
+        <Tabs additionalTabs={additionalTabs} setIsOpen={setIsOpen} />
         <ContentPanel
           leftSideOriented={leftSideOriented}
           additionalTabs={additionalTabs}
