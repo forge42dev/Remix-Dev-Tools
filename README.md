@@ -57,7 +57,7 @@ npm install remix-development-tools -D
 
 ```diff
 // We'll lazy load RemixDevTools to ensure it doesn't contribute to production bundle size
-+ import { lazy } from "react";
++ import { lazy, Suspense } from "react";
 + import rdtStylesheet from "remix-development-tools/stylesheet.css";
 + const RemixDevTools =
 +  process.env.NODE_ENV === "development"
@@ -85,7 +85,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-+       {RemixDevTools && <RemixDevTools />}
++       {RemixDevTools && <Suspense><RemixDevTools /></Suspense>}
       </body>
     </html>
   );
@@ -101,15 +101,230 @@ The `RemixDevTools` component accepts the following props:
 - `position`: The position of the Remix Development Tools trigger. Defaults to `bottom-right`.
 - `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`.
 - `showRouteBoundaries`: Allows you to see each Outlet and route boundaries by coloring the background. Defaults to `false`.
+- `hideUntilHover`: Allows you to hide the trigger until you hover over it. Defaults to `false`.
+- `additionalTabs`: Allows you to provide additional tabs to the Remix Development Tools. Defaults to `[]`.
+
+## Plugins
+
+Writing plugins for Remix Development Tools is easy. You can write a plugin that adds a new tab to the Remix Development Tools in the following way:
+1. Create a new file in your project called `remix-dev-tools-plugin.tsx`
+2. Implement your jsx component and add the logic you wish to add to the Remix Development Tools.
+3. Export a function with the following contract:
+  
+```jsx
+
+  const MyComponent = () => {
+    // Implement your logic here
+    return <div>My Component</div>
+  }
+
+  export function remixDevToolsPlugin(yourOptions?: { ... }): JSX.Element {
+    return {
+      // can't be page, terminal or routes, must be unique
+      id: "my-plugin",
+      // Name that is shown in the tab next to the icon
+      name: "My Plugin",
+      // Icon to be shown in the tab
+      icon: <MyIcon size={16} />,
+      // The component to be rendered when the tab is active
+      component: <MyComponent />,
+      // Whether the tab requires the Remix Forge VS Code extension to be connected to be shown
+      requiresForge: false,
+    }
+  }
+  ```
+4. Import it in your `root.tsx` file and pass it to your Remix Development Tools:
+```diff
+import { remixDevToolsPlugin } from "./remix-dev-tools-plugin";
+
+-  <RemixDevTools />
++  <RemixDevTools additionalTabs={[remixDevToolsPlugin()]} />
+ 
+```
+5. You should now see your plugin in the Remix Development Tools as a new tab.
+
+
+### Using Remix Forge with your plugin
+
+If you want to use Remix Forge with your plugin you can do so by setting the `requiresForge` property to `true` in your plugin. This will make sure that the plugin is only shown when the Remix Forge VS Code extension is connected. 
+
+1. Follow the above guide to create a plugin.
+2. Import the following hook from remix-development-tools:
+
+```jsx 
+import { useRemixForgeSocket } from "remix-development-tools"; 
+```
+
+3. Use the hook in your plugin to get the Remix Forge socket:
+```jsx
+  const MyComponent = () => {
+    const socket = useRemixForgeSocket();
+    // Implement your logic here
+    return <div>My Component</div>
+  }
+```
+4. You can now use the socket to send messages to the Remix Forge VS Code extension. For now it accepts reading/deleting/opening files in VS Code
+
+```jsx
+  const MyComponent = () => {
+    const socket = useRemixForgeSocket();
+    const runCommand = () => {
+      socket.sendJsonMessage({ subtype: "read_file", path: "package.json" })
+    }
+    // Implement your logic here
+    return <div onClick={runCommand}>My Component</div>
+  }
+```
+
+5. The following contract is returned from the extension:
+
+```ts
+  interface RemixForgeResponse {
+    type: "plugin";
+    subtype: "read_file" | "open_file" | "delete_file" | "write_file";
+    error: boolean;
+    data: string | null;
+  }
+```
+6. Make sure you check if the type and subtype match your needs before using the data.
+7. Refer to `react-use-websocket` for more information on how to use the socket and what options it accepts because that is what is used under the hood.
+8. After you're done share your plugin with the community by opening a discussion!
+
+## Troubleshooting
+
+If you are having trouble getting Remix Development Tools to work, please try the following:
+
+### RemixDevTools are not appearing in the DOM / causing re-renders
+
+1. Move the RemixDevTools as high as possible in your root.tsx file. It should be the first thing in the body tag.
+
+```diff
+export default function App() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
++       {RemixDevTools && <Suspense><RemixDevTools /></Suspense>}
+      </body>
+    </html>
+  );
+}
+```
+
+2. Make sure the RemixDevTools are not wrapped in custom providers that might cause re-renders.
+
+```jsx
+const ThemeProvider = () => {
+  return (
+    <ThemeContext.Provider value={theme}>
+      <RemixDevTools />
+    </ThemeContext.Provider>
+  );
+}
+
+export default function App() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <ThemeProvider >
+          <Outlet />
+        </ThemeProvider> 
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+      </body>
+    </html>
+  );
+}
+
+```
+
+instead do this:
+
+```diff
+const ThemeProvider = () => {
+  return (
+    <ThemeContext.Provider value={theme}>
+-     <RemixDevTools />    
++      <Outlet />
+    </ThemeContext.Provider>
+  );
+}
+
+export default function App() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+-        <ThemeProvider >
+-          <Outlet />
+-        </ThemeProvider> 
++       <ThemeProvider />
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
++       <RemixDevTools />
+      </body>
+    </html>
+  );
+}
+
+``` 
+
+### HMR is failing with RDT
+
+Wrap the `RemixDevTools` component in a `Suspense` component.
+
+```diff
+export default function App() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
++       {RemixDevTools && <Suspense><RemixDevTools /></Suspense>}
+      </body>
+    </html>
+  );
+}
+```
 
 ## Contributing
 
 Contributions to Remix Development Tools are welcome! To contribute, please follow these guidelines:
 
 1. Fork the repository and clone it locally.
-2. Create a new branch for your feature or bug fix.
-3. Run `npm run setup` to get your development environment set up.
+2. Create a new branch for your feature or bug fix. 
 4. Run `npm run dev` to start the development server.
+4. Run `npm run epic-dev` to start the development server with the epic stack.
 5. Implement your changes, adhering to the existing code style and best practices.
 5. Please add tests for any new features or bug fixes.
 6. Commit and push your changes to your forked repository.

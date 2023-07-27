@@ -17,12 +17,18 @@ export default defineConfig({
           "**/env.ts",
           "**/components/**",
           "**/context/**",
-          "**/hooks/**",
+          "**/hooks/useOutletAugment.tsx",
+          "**/hooks/useResize.ts",
+          "**/hooks/useTabs.ts",
+          "**/hooks/useTerminalShortcuts.ts",
+          "**/hooks/useTimelineHandler.ts",
           "**/tabs/**",
           "**/utils/**",
           "**/remix-app-for-testing/**",
           "**/monitor/**",
+          "**/layout/**",
         ],
+
         tsconfig: resolve(__dirname, `tsconfig.json`),
         tsconfigOverride: {
           compilerOptions: {
