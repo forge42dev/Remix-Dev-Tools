@@ -11,7 +11,7 @@ export const useTabs = (
   const { activeTab, setActiveTab } = useRDTContext();
 
   const allTabs = useMemo(
-    () => [...tabs, ...(additionalTabs ? additionalTabs : [])],
+    () => [...tabs.filter(tab => tab.id !== "settings"), ...(additionalTabs ? additionalTabs : [])],
     [additionalTabs]
   );
   const Component = useMemo(
