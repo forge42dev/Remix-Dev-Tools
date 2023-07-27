@@ -12,12 +12,12 @@ import { Tag } from "../components/Tag";
 import { useRDTContext } from "../context/useRDTContext";
 import { Input } from "../components/Input";
 import { NewRouteForm } from "../components/NewRouteForm";
-import { useGetSocket } from "../hooks/useGetSocket";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { isLeafRoute } from "../utils/routing";
 
 const RoutesTab = () => {
   const { routeWildcards, setRouteWildcards } = useRDTContext();
-  const { isConnected } = useGetSocket();
+  const { isConnected } = useRemixForgeSocket();
   const [routes] = useState<(EntryRoute & { route: string })[]>(
     Object.values(window.__remixManifest.routes)
       .map((route) => {

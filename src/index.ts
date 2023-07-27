@@ -1,5 +1,5 @@
 import "./input.css";
-import { RemixDevTools } from "./RemixDevTools";
-export { RemixDevTools };
+import { RemixDevTools, useRemixForgeSocket } from "./RemixDevTools";
+export { RemixDevTools, useRemixForgeSocket };
 //export * from "./monitor";
 export default RemixDevTools;
