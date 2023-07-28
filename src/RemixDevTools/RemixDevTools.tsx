@@ -5,7 +5,6 @@ import { useTimelineHandler } from "./hooks/useTimelineHandler";
 import { useRDTContext } from "./context/useRDTContext";
 import { isDev } from "./utils/isDev";
 import { useLocation } from "@remix-run/react";
-import { useOutletAugment } from "./hooks/useOutletAugment";
 import { Trigger } from "./components/Trigger";
 import { MainPanel } from "./layout/MainPanel";
 import { Tabs } from "./layout/Tabs";
@@ -15,7 +14,6 @@ interface Props extends RemixDevToolsProps {
   defaultOpen: boolean;
   position: Exclude<RemixDevToolsProps["position"], undefined>;
   hideUntilHover: boolean;
-  showRouteBoundaries: boolean;
 }
 
 const RemixDevTools = ({
@@ -23,9 +21,7 @@ const RemixDevTools = ({
   position,
   additionalTabs,
   hideUntilHover,
-  showRouteBoundaries,
 }: Props) => {
-  useOutletAugment(showRouteBoundaries);
   useTimelineHandler();
   const { persistOpen } = useRDTContext();
   const [isOpen, setIsOpen] = useState(defaultOpen || persistOpen);
@@ -49,7 +45,6 @@ const RemixDevTools = ({
     </div>
   );
 };
-
 let hydrating = true;
 
 function useHydrated() {
@@ -78,8 +73,6 @@ export interface RemixDevToolsProps {
     | "top-left"
     | "middle-right"
     | "middle-left";
-  // Show route boundaries when you hover over a route in active page tab
-  showRouteBoundaries?: boolean;
   // Additional tabs to add to the dev tools
   additionalTabs?: Tab[];
   // Whether the dev tools trigger should hide until hovered
@@ -90,7 +83,6 @@ const RDTWithContext = ({
   port = 3003,
   defaultOpen = false,
   requireUrlFlag,
-  showRouteBoundaries = false,
   position = "bottom-right",
   hideUntilHover = false,
   additionalTabs,
@@ -101,14 +93,14 @@ const RDTWithContext = ({
 
   if (!hydrated || !isDevelopment) return null;
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
+
   return (
-    <RDTContextProvider showRouteBoundaries={showRouteBoundaries} port={port}>
+    <RDTContextProvider port={port}>
       <RemixDevTools
         defaultOpen={defaultOpen}
         position={position}
         additionalTabs={additionalTabs}
         hideUntilHover={hideUntilHover}
-        showRouteBoundaries={showRouteBoundaries}
       />
     </RDTContextProvider>
   );

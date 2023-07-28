@@ -22,18 +22,13 @@ interface ContextProps {
 
 export const REMIX_DEV_TOOLS = "remixDevTools";
 
-export const RDTContextProvider = ({
-  children,
-  port,
-  showRouteBoundaries,
-}: ContextProps) => {
+export const RDTContextProvider = ({ children, port }: ContextProps) => {
   const existingState = sessionStorage.getItem(REMIX_DEV_TOOLS);
   const settings = localStorage.getItem(REMIX_DEV_TOOLS);
 
   const [state, dispatch] = useReducer(rdtReducer, {
     ...initialState,
     ...(existingState ? JSON.parse(existingState) : {}),
-    showRouteBoundaries,
     settings: settings
       ? { ...initialState.settings, ...JSON.parse(settings), port }
       : { ...initialState.settings, port },
