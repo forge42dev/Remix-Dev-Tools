@@ -100,9 +100,100 @@ The `RemixDevTools` component accepts the following props:
 - `defaultOpen`: Whether to open the Remix Development Tools by default. Defaults to `false`.
 - `position`: The position of the Remix Development Tools trigger. Defaults to `bottom-right`.
 - `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`.
-- `showRouteBoundaries`: Allows you to see each Outlet and route boundaries by coloring the background. Defaults to `false`.
+- [**DEPRECATED**] `showRouteBoundaries`:This flag has been deprecated in favor of adding route boundaries. Please see the section below for more information.
 - `hideUntilHover`: Allows you to hide the trigger until you hover over it. Defaults to `false`.
 - `additionalTabs`: Allows you to provide additional tabs to the Remix Development Tools. Defaults to `[]`.
+
+## Adding route boundaries
+
+The `showErrorBoundaries` flag has been deprecated in favor of this method. Please use it instead.
+
+In order to add Route boundaries to your project you need to do the following two things:
+
+1. Modify your `entry.server.ts` to add the following code:
+
+```diff
+function handleBrowserRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext
+) {
+-  return new Promise((resolve, reject) => {
++  return new Promise(async (resolve, reject) => {
+    let shellRendered = false;
++    const context = process.env.NODE_ENV === "development" ? await import("remix-development-tools").then(({ initRouteBoundariesServer }) => initRouteBoundariesServer(remixContext)) : remixContext;
+    const { pipe, abort } = renderToPipeableStream(
+      <RemixServer
+-        context={remixContext}
++        context={context}
+        url={request.url}
+        abortDelay={ABORT_DELAY}
+      />,
+      {
+        onShellReady() {
+          shellRendered = true;
+          const body = new PassThrough();
+
+          responseHeaders.set("Content-Type", "text/html");
+
+          resolve(
+            new Response(body, {
+              headers: responseHeaders,
+              status: responseStatusCode,
+            })
+          );
+
+          pipe(body);
+        },
+        onShellError(error: unknown) {
+          reject(error);
+        },
+        onError(error: unknown) {
+          responseStatusCode = 500;
+          // Log streaming rendering errors from inside the shell.  Don't log
+          // errors encountered during initial shell rendering since they'll
+          // reject and get logged in handleDocumentRequest.
+          if (shellRendered) {
+            console.error(error);
+          }
+        },
+      }
+    );
+
+    setTimeout(abort, ABORT_DELAY);
+  });
+}
+```
+
+2. Modify your `entry.client.tsx` to add the following code:
+
+```diff
++ if(process.env.NODE_ENV === "development") {
++   import("remix-development-tools").then(({ initRouteBoundariesClient }) => {
++     initRouteBoundariesClient();
++     startTransition(() => {
++       hydrateRoot(
++         document,
++         <StrictMode>
++           <RemixBrowser />
++         </StrictMode>
++       );
++     });
++     
++   }); 
++ } else {
+   startTransition(() => {
+     hydrateRoot(
+       document,
+       <StrictMode>
+         <RemixBrowser />
+       </StrictMode>
+     );
+   }); 
++ }
+``` 
+3. You are good to go. Now you can see the route boundaries in your project when you hover each route.
 
 ## Plugins
 
