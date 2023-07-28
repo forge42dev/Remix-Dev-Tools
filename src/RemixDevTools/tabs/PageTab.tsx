@@ -7,7 +7,6 @@ import { Tag } from "../components/Tag";
 import { VsCodeButton } from "../components/VScodeButton";
 import { useMemo } from "react";
 import { isLayoutRoute } from "../utils/routing";
-import { useRDTContext } from "../context/useRDTContext";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -46,9 +45,7 @@ const PageTab = () => {
   const reversed = useMemo(() => routes.reverse(), [routes]);
   const { revalidate, state } = useRevalidator();
   const { isConnected, sendJsonMessage } = useRemixForgeSocket();
-  const { showRouteBoundaries } = useRDTContext();
   const onHover = (path: string, type: "enter" | "leave") => {
-    if (!showRouteBoundaries) return;
     const classes =
       "rdt-bg-green-100 rdt-transition-all rdt-rounded rdt-apply-tw rdt-bg-gradient-to-r rdt-from-cyan-500/50 rdt-to-blue-500/50";
     const isRoot = path === "root";

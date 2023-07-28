@@ -6,7 +6,6 @@ export type RouteWildcards = Record<string, Record<string, string> | undefined>;
 
 export type RemixDevToolsState = {
   timeline: TimelineEvent[];
-  showRouteBoundaries?: boolean;
   terminals: Terminal[];
   settings: {
     routeWildcards: RouteWildcards;
@@ -20,7 +19,6 @@ export type RemixDevToolsState = {
 
 export const initialState: RemixDevToolsState = {
   timeline: [],
-  showRouteBoundaries: false,
   terminals: [{ id: 0, locked: false, output: [], history: [] }],
   settings: {
     routeWildcards: {},

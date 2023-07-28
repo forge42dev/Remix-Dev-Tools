@@ -83,19 +83,21 @@ function handleBotRequest(
 
     setTimeout(abort, ABORT_DELAY);
   });
-}
-
+} 
+ 
 function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let shellRendered = false;
+    const devTools = await import("remix-development-tools");
+    const context = process.env.NODE_ENV === "development" ? devTools.initRouteBoundariesServer(remixContext) : remixContext;
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
-        context={remixContext}
+        context={context}
         url={request.url}
         abortDelay={ABORT_DELAY}
       />,
