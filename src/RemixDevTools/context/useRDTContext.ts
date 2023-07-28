@@ -11,7 +11,7 @@ const useRDTContext = () => {
     throw new Error("useRDTContext must be used within a RDTContextProvider");
   }
   const { state, dispatch } = context;
-  const { timeline, settings, showRouteBoundaries, terminals, persistOpen } = state;
+  const { timeline, settings, terminals, persistOpen } = state;
   const { activeTab, shouldConnectWithForge, routeWildcards, port, height, maxHeight, minHeight } =
     settings;
 
@@ -141,7 +141,6 @@ const useRDTContext = () => {
     height,
     maxHeight,
     minHeight,
-    showRouteBoundaries,
     setHeight,
     setRouteWildcards,
     terminals,
