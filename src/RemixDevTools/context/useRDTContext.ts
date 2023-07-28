@@ -12,7 +12,7 @@ const useRDTContext = () => {
   }
   const { state, dispatch } = context;
   const { timeline, settings, terminals, persistOpen } = state;
-  const { activeTab, shouldConnectWithForge, routeWildcards, port, height } =
+  const { activeTab, shouldConnectWithForge, routeWildcards, port, height, maxHeight, minHeight } =
     settings;
 
   useEffect(() => {
@@ -139,6 +139,8 @@ const useRDTContext = () => {
     routeWildcards,
     port,
     height,
+    maxHeight,
+    minHeight,
     setHeight,
     setRouteWildcards,
     terminals,

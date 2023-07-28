@@ -36,13 +36,11 @@ export const useRemixForgeSocket = <T extends JsonObject>(
           toggleTerminalLock(terminal.id, false);
           setProcessId(terminal.id, undefined);
         });
-
         return;
       }
       if (retryCount < RETRY_COUNT) {
         return setRetryCount(retryCount + 1);
       }
-
       setShouldConnectWithForge(false);
     },
   };
