@@ -9,8 +9,8 @@ import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client"; 
 
 if(process.env.NODE_ENV === "development") {
-  import("remix-development-tools").then(({ initRouteBoundariesClient }) => {
-    initRouteBoundariesClient();
+  import("remix-development-tools").then(({ initClient }) => {
+    initClient();
     startTransition(() => {
       hydrateRoot(
         document,

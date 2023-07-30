@@ -1,5 +1,5 @@
-import type { LoaderArgs } from "@remix-run/node";
-import { json, type ActionArgs, type LinksFunction } from "@remix-run/node";
+ 
+import { json,   type LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,8 +7,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
-import { lazy, useEffect } from "react";
+} from "@remix-run/react"; 
 import rdtStylesheet from "remix-development-tools/stylesheet.css";
 import { useRemixForgeSocket } from "remix-development-tools";
 
@@ -43,15 +42,10 @@ const plugin = () => {
     component: <Component />,
   };
 };
-const RemixDevTools =
-  process.env.NODE_ENV === "development"
-    ? lazy(() => import("remix-development-tools"))
-    : undefined;
+ 
 
 export const links: LinksFunction = () => [
-  ...(rdtStylesheet && process.env.NODE_ENV === "development"
-    ? [{ rel: "stylesheet", href: rdtStylesheet }]
-    : []),
+  ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : [])
 ];
 
 export const loader = () => {
@@ -81,13 +75,7 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
-        {RemixDevTools && (
-          <RemixDevTools
-            additionalTabs={[plugin()]}
-            defaultOpen
-          />
-        )}
+        <LiveReload /> 
       </body>
     </html>
   );

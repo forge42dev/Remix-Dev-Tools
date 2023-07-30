@@ -98,6 +98,7 @@
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
+    "@remix-run/css-bundle": "^1.19.1",
     "clsx": "^1.2.1",
     "lucide-react": "^0.252.0",
     "react-json-view-lite": "^0.9.6",

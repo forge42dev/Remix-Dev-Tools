@@ -94,7 +94,7 @@ function handleBrowserRequest(
   return new Promise(async (resolve, reject) => {
     let shellRendered = false;
     const devTools = await import("remix-development-tools");
-    const context = process.env.NODE_ENV === "development" ? devTools.initRouteBoundariesServer(remixContext) : remixContext;
+    const context = process.env.NODE_ENV === "development" ? devTools.initServer(remixContext) : remixContext;
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
         context={context}
