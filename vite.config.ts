@@ -18,6 +18,7 @@ export default defineConfig({
           "**/components/**",
           "**/context/**",
           "**/hooks/useOutletAugment.tsx",
+          "**/hooks/useHorizontalScroll.ts",
           "**/hooks/useResize.ts",
           "**/hooks/useTabs.ts",
           "**/hooks/useTerminalShortcuts.ts",

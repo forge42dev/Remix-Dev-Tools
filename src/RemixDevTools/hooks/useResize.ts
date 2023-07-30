@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRDTContext } from "../context/useRDTContext";
 
 const useResize = () => {
-  const { height, setHeight } = useRDTContext();
+  const { height, setHeight, maxHeight, minHeight } = useRDTContext();
   const [isResizing, setIsResizing] = useState(false);
 
   const enableResize = useCallback(() => {
@@ -16,14 +16,25 @@ const useResize = () => {
   const resize = useCallback(
     (e: MouseEvent) => {
       if (isResizing) {
+        window.getSelection()?.removeAllRanges(); // Prevent text selection
         const newHeight = window.innerHeight - e.clientY; // Calculate the new height based on the mouse position
 
         //const newHeight = e.clientY; // You may want to add some offset here from props
 
+        if (newHeight > maxHeight) {
+          setHeight(maxHeight);
+          return;
+        }
+
+        if (newHeight < minHeight) {
+          setHeight(minHeight);
+          return;
+        }
+
         setHeight(newHeight);
       }
     },
-    [isResizing, setHeight]
+    [isResizing, maxHeight, minHeight, setHeight]
   );
 
   useEffect(() => {

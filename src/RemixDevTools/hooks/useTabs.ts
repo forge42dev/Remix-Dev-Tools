@@ -14,10 +14,10 @@ export const useTabs = (
     () => [...tabs, ...(additionalTabs ? additionalTabs : [])],
     [additionalTabs]
   );
-  const Component = useMemo(
-    () => allTabs.find((t) => t.id === activeTab)?.component,
-    [activeTab, allTabs]
-  );
+  const { Component, hideTimeline } = useMemo(() => {
+    const tab = allTabs.find((tab) => tab.id === activeTab);
+    return { Component: tab?.component, hideTimeline: tab?.hideTimeline };
+  }, [activeTab, allTabs]);
   const visibleTabs = useMemo(
     () => allTabs.filter((tab) => !(!isConnected && tab.requiresForge)),
     [isConnected, allTabs]
@@ -38,5 +38,5 @@ export const useTabs = (
     }
   }, [isConnected, isConnecting, activeTab, setActiveTab, additionalTabs]);
 
-  return { visibleTabs, Component, allTabs };
+  return { visibleTabs, Component, allTabs, hideTimeline };
 };

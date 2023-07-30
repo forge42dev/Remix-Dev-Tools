@@ -103,6 +103,8 @@ The `RemixDevTools` component accepts the following props:
 - [**DEPRECATED**] `showRouteBoundaries`:This flag has been deprecated in favor of adding route boundaries. Please see the section below for more information.
 - `hideUntilHover`: Allows you to hide the trigger until you hover over it. Defaults to `false`.
 - `additionalTabs`: Allows you to provide additional tabs to the Remix Development Tools. Defaults to `[]`.
+- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `600`.
+- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `200`.
 
 ## Adding route boundaries
 
@@ -221,6 +223,8 @@ Writing plugins for Remix Development Tools is easy. You can write a plugin that
       component: <MyComponent />,
       // Whether the tab requires the Remix Forge VS Code extension to be connected to be shown
       requiresForge: false,
+      // Whether the timeline should be shown on the tab
+      hideTimeline: false,
     }
   }
   ```
@@ -414,7 +418,7 @@ Contributions to Remix Development Tools are welcome! To contribute, please foll
 
 1. Fork the repository and clone it locally.
 2. Create a new branch for your feature or bug fix. 
-4. Run `npm run dev` to start the development server.
+4. Run `npm run dev` to start the development server with a vanilla Remix app setup.
 4. Run `npm run epic-dev` to start the development server with the epic stack.
 5. Implement your changes, adhering to the existing code style and best practices.
 5. Please add tests for any new features or bug fixes.
