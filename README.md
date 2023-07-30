@@ -65,63 +65,40 @@ npm install remix-development-tools -D
 2. Add the following to your application `root.tsx` file:
 
 ```diff
-// We'll lazy load RemixDevTools to ensure it doesn't contribute to production bundle size
-+ import { lazy, Suspense } from "react";
+// We add the stylesheet if it's development mode
 + import rdtStylesheet from "remix-development-tools/stylesheet.css";
-+ const RemixDevTools =
-+  process.env.NODE_ENV === "development"
-+    ? React.lazy(() => import("remix-development-tools"))
-+    : undefined;
-
+ 
 + export const links: LinksFunction = () => [
-+   ...(rdtStylesheet && process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
-+ ];
-
-
-...
-
-export default function App() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-+       {RemixDevTools && <Suspense><RemixDevTools /></Suspense>}
-      </body>
-    </html>
-  );
-}
++   ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
++ ]; 
 ```
 
-## RemixDevTools props
+3. Add the following to your application `entry.client.tsx` file:
 
-The `RemixDevTools` component accepts the following props:
+```diff
++ if(process.env.NODE_ENV === "development") {
++   import("remix-development-tools").then(({ initClient }) => {
++     // Add all the dev tools props here into the client
++     initClient();
++     startTransition(() => {
++       hydrateRoot(
++         document,
++         <RemixBrowser />
++       );
++     });
++     
++   }); 
++ } else {
+   startTransition(() => {
+     hydrateRoot(
+       document,
+       <RemixBrowser />
+     );
+   }); 
++ }
+``` 
 
-- `port`: The port number to use for the Remix Development Tools connection to Remix Forge. If you want to change the port and connect to your Remix Forge VS code extension you need to change the port in VS Code too. Defaults to `3003`.
-- `defaultOpen`: Whether to open the Remix Development Tools by default. Defaults to `false`.
-- `position`: The position of the Remix Development Tools trigger. Defaults to `bottom-right`.
-- `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`.
-- [**DEPRECATED**] `showRouteBoundaries`:This flag has been deprecated in favor of adding route boundaries. Please see the section below for more information.
-- `hideUntilHover`: Allows you to hide the trigger until you hover over it. Defaults to `false`.
-- `additionalTabs`: Allows you to provide additional tabs to the Remix Development Tools. Defaults to `[]`.
-- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `600`.
-- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `200`.
-
-## Adding route boundaries
-
-The `showErrorBoundaries` flag has been deprecated in favor of this method. Please use it instead.
-
-In order to add Route boundaries to your project you need to do the following two things:
-
-1. Modify your `entry.server.ts` to add the following code:
+4. Add the following to your application `entry.server.tsx` file:
 
 ```diff
 function handleBrowserRequest(
@@ -133,7 +110,7 @@ function handleBrowserRequest(
 -  return new Promise((resolve, reject) => {
 +  return new Promise(async (resolve, reject) => {
     let shellRendered = false;
-+    const context = process.env.NODE_ENV === "development" ? await import("remix-development-tools").then(({ initRouteBoundariesServer }) => initRouteBoundariesServer(remixContext)) : remixContext;
++    const context = process.env.NODE_ENV === "development" ? await import("remix-development-tools").then(({ initServer }) => initServer(remixContext)) : remixContext;
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
 -        context={remixContext}
@@ -177,34 +154,20 @@ function handleBrowserRequest(
 }
 ```
 
-2. Modify your `entry.client.tsx` to add the following code:
+5. You're good to go!
 
-```diff
-+ if(process.env.NODE_ENV === "development") {
-+   import("remix-development-tools").then(({ initRouteBoundariesClient }) => {
-+     initRouteBoundariesClient();
-+     startTransition(() => {
-+       hydrateRoot(
-+         document,
-+         <StrictMode>
-+           <RemixBrowser />
-+         </StrictMode>
-+       );
-+     });
-+     
-+   }); 
-+ } else {
-   startTransition(() => {
-     hydrateRoot(
-       document,
-       <StrictMode>
-         <RemixBrowser />
-       </StrictMode>
-     );
-   }); 
-+ }
-``` 
-3. You are good to go. Now you can see the route boundaries in your project when you hover each route.
+## InitClient props
+
+The `initClient` handler accepts the following props:
+
+- `port`: The port number to use for the Remix Development Tools connection to Remix Forge. If you want to change the port and connect to your Remix Forge VS code extension you need to change the port in VS Code too. Defaults to `3003`.
+- `defaultOpen`: Whether to open the Remix Development Tools by default. Defaults to `false`.
+- `position`: The position of the Remix Development Tools trigger. Defaults to `bottom-right`.
+- `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`.
+- `hideUntilHover`: Allows you to hide the trigger until you hover over it. Defaults to `false`.
+- `additionalTabs`: Allows you to provide additional tabs to the Remix Development Tools. Defaults to `[]`.
+- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `600`.
+- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `200`.
 
 ## Plugins
 
@@ -237,12 +200,12 @@ Writing plugins for Remix Development Tools is easy. You can write a plugin that
     }
   }
   ```
-4. Import it in your `root.tsx` file and pass it to your Remix Development Tools:
+4. Import it in your `entry.client.tsx` file and pass it to your Remix Development Tools:
 ```diff
 import { remixDevToolsPlugin } from "./remix-dev-tools-plugin";
 
--  <RemixDevTools />
-+  <RemixDevTools additionalTabs={[remixDevToolsPlugin()]} />
+-  initClient();
++  initClient({ additionalTabs: [remixDevToolsPlugin()] })
  
 ```
 5. You should now see your plugin in the Remix Development Tools as a new tab.
@@ -294,7 +257,7 @@ import { useRemixForgeSocket } from "remix-development-tools";
 7. Refer to `react-use-websocket` for more information on how to use the socket and what options it accepts because that is what is used under the hood.
 8. After you're done share your plugin with the community by opening a discussion!
 
-## Troubleshooting
+## Troubleshooting [v1 only]
 
 If you are having trouble getting Remix Development Tools to work, please try the following:
 
