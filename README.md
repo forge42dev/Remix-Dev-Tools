@@ -13,6 +13,8 @@ Remix Development Tools is an open-source package designed to enhance your devel
 ![active page tab](./assets/active-page.png)
 ### Routes Tab
 ![routes](./assets/routes.gif)
+### Timeline
+![routes](./assets/timeline.gif)
 
 
 ## Features
