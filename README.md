@@ -8,6 +8,15 @@
 
 Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
 
+## How it looks
+### Active pages Tab
+![active page tab](./assets/active-page.png)
+### Routes Tab
+![routes](./assets/routes.gif)
+### Timeline
+![timeline](./assets/timeline.gif)
+
+
 ## Features
 
 ### Active Page Tab
