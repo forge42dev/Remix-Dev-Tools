@@ -17,14 +17,14 @@ const Translations: Record<TimelineEvent["type"], string> = {
 const RedirectEventComponent = (event: RedirectEvent) => {
   return (
     <div className="rdt-mb-4">
-      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none  rdt-text-gray-500">
+      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500">
         Navigated to url: "{event.to + event.search}"
       </time>
-      <p className="rdt-mb-4 rdt-text-base rdt-font-normal   rdt-text-gray-400">
+      <p className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
         {event.hash}
       </p>
       {event.responseData && (
-        <p className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
+        <p className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
           Data received:
           <JsonRenderer data={event.responseData} />
         </p>
@@ -47,13 +47,13 @@ const FormEventComponent = (event: FormEvent) => {
       </time>
       <div className="rdt-flex rdt-gap-8">
         {event.data && event.type !== "ACTION_RESPONSE" && (
-          <div className="rdt-mb-4 rdt-text-base rdt-font-normal   rdt-text-gray-400">
+          <div className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
             Data sent:
             <JsonRenderer data={event.data} />
           </div>
         )}
         {responseData && (
-          <div className="rdt-mb-4 rdt-text-base rdt-font-normal   rdt-text-gray-400">
+          <div className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
             Server Response Data:
             <JsonRenderer data={responseData} />
           </div>
@@ -74,11 +74,11 @@ export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
 const TimelineTab = () => {
   const { timeline, clearTimeline } = useRDTContext();
   return (
-    <div className="rdt-relative rdt-flex rdt-h-full  rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
+    <div className="rdt-relative rdt-flex rdt-h-full rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
       {timeline.length > 0 && (
         <button
           onClick={() => clearTimeline()}
-          className="rdt-absolute rdt-right-4 rdt-top-0 rdt-z-20 rdt-cursor-pointer rdt-rounded-lg rdt-bg-red-500 rdt-px-3 rdt-py-1 rdt-text-sm rdt-font-semibold rdt-text-white"
+          className="rdt-absolute rdt-right-3 rdt-top-0 rdt-z-20 rdt-cursor-pointer rdt-rounded-lg rdt-bg-red-500 rdt-px-3 rdt-py-1 rdt-text-sm rdt-font-semibold rdt-text-white"
         >
           Clear Timeline
         </button>

@@ -68,7 +68,7 @@ const RoutesTab = () => {
                 </span>
                 <div
                   title={pathToOpen}
-                  className="rdt-mr-2 rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm"
+                  className="rdt-mr-2 rdt-whitespace-nowrap rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm"
                   onClick={(e) => {
                     e.preventDefault();
                     navigate(path);

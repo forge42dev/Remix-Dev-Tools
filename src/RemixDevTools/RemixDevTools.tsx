@@ -36,7 +36,7 @@ const RemixDevTools = ({
         setIsOpen={setIsOpen}
       />
       <MainPanel isOpen={isOpen}>
-        <Tabs additionalTabs={additionalTabs} />
+        <Tabs additionalTabs={additionalTabs} setIsOpen={setIsOpen} />
         <ContentPanel
           leftSideOriented={leftSideOriented}
           additionalTabs={additionalTabs}
@@ -77,6 +77,10 @@ export interface RemixDevToolsProps {
   additionalTabs?: Tab[];
   // Whether the dev tools trigger should hide until hovered
   hideUntilHover?: boolean;
+  // min height of the dev tools
+  minHeight?: number;
+  // max height of the dev tools
+  maxHeight?: number;
 }
 
 const RDTWithContext = ({
@@ -86,6 +90,8 @@ const RDTWithContext = ({
   position = "bottom-right",
   hideUntilHover = false,
   additionalTabs,
+  minHeight = 200,
+  maxHeight = 600,
 }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const isDevelopment = isDev();
@@ -95,7 +101,7 @@ const RDTWithContext = ({
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
-    <RDTContextProvider port={port}>
+    <RDTContextProvider minHeight={minHeight} maxHeight={maxHeight} port={port}>
       <RemixDevTools
         defaultOpen={defaultOpen}
         position={position}

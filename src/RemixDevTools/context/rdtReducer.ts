@@ -13,6 +13,8 @@ export type RemixDevToolsState = {
     shouldConnectWithForge: boolean;
     port: number;
     height: number;
+    maxHeight: number;
+    minHeight: number;
   };
   persistOpen: boolean;
 };
@@ -26,6 +28,8 @@ export const initialState: RemixDevToolsState = {
     shouldConnectWithForge: false,
     port: 3003,
     height: 400,
+    maxHeight: 600,
+    minHeight: 200,
   },
   persistOpen: false,
 };
