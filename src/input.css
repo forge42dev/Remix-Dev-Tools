@@ -524,21 +524,21 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   direction: ltr;
 }
 
-.remix-dev-tools__tab::-webkit-scrollbar {
+.remix-dev-tools-tab::-webkit-scrollbar {
   height: 3px;
   z-index: 9999;
   display: block;
 }
 
-.remix-dev-tools__tab::-webkit-scrollbar-thumb {
+.remix-dev-tools-tab::-webkit-scrollbar-thumb {
   background-color: #f1c40f82;
 }
 
-.remix-dev-tools__tab:hover::-webkit-scrollbar-thumb {
+.remix-dev-tools-tab:hover::-webkit-scrollbar-thumb {
   background-color: #f1c40f;
 }
 
-.remix-dev-tools__tab::-webkit-scrollbar-button {
+.remix-dev-tools-tab::-webkit-scrollbar-button {
   display: none;
 }
 

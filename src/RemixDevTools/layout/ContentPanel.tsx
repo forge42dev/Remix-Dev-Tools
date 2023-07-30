@@ -3,8 +3,7 @@ import { TimelineTab } from "../tabs/TimelineTab";
 import { Tab } from "../tabs";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { useTabs } from "../hooks/useTabs";
-import { Fragment } from 'react';
-import { useRDTContext } from "../context/useRDTContext";
+import { Fragment } from "react";
 
 interface ContentPanelProps {
   leftSideOriented: boolean;
@@ -16,8 +15,11 @@ const ContentPanel = ({
   additionalTabs,
 }: ContentPanelProps) => {
   const { isConnected, isConnecting } = useRemixForgeSocket();
-  const { Component } = useTabs(isConnected, isConnecting, additionalTabs);
-  const { activeTab } = useRDTContext();
+  const { Component, hideTimeline } = useTabs(
+    isConnected,
+    isConnecting,
+    additionalTabs
+  );
 
   return (
     <div className="rdt-flex rdt-h-full rdt-w-full rdt-overflow-y-hidden">
@@ -29,9 +31,8 @@ const ContentPanel = ({
       >
         {Component}
       </div>
-      {/** Future note: Since there are chances I want to create a tab without
-           timeline involved, add the ability to disable timeline when creating a new tab */}
-      {activeTab !== "settings" &&
+
+      {!hideTimeline && (
         <Fragment>
           <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
           <div
@@ -43,7 +44,7 @@ const ContentPanel = ({
             <TimelineTab />
           </div>
         </Fragment>
-      }
+      )}
     </div>
   );
 };

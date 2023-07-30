@@ -1,8 +1,8 @@
-import { GitMerge, Terminal, Layers, Cog } from "lucide-react";
+import { GitMerge, Terminal, Layers /* Settings */ } from "lucide-react";
 import { PageTab } from "./PageTab";
 import { RoutesTab } from "./RoutesTab";
 import { TerminalTab } from "./TerminalTab";
-import { SettingsTab } from "./SettingsTab";
+/* import { SettingsTab } from "./SettingsTab"; */
 
 export type Tabs = (typeof tabs)[number]["id"];
 
@@ -12,6 +12,7 @@ export interface Tab {
   id: string;
   component: JSX.Element;
   requiresForge: boolean;
+  hideTimeline: boolean;
 }
 
 const TAB_SIZE = 16;
@@ -23,6 +24,7 @@ export const tabs = [
     id: "page",
     component: <PageTab />,
     requiresForge: false,
+    hideTimeline: false,
   },
   {
     name: "Routes",
@@ -30,6 +32,7 @@ export const tabs = [
     id: "routes",
     component: <RoutesTab />,
     requiresForge: false,
+    hideTimeline: false,
   },
   {
     name: "Terminal",
@@ -37,13 +40,14 @@ export const tabs = [
     id: "terminal",
     component: <TerminalTab />,
     requiresForge: true,
+    hideTimeline: false,
   },
-  // Must be the last element of the `tabs` array
-  {
+  /* {
     name: "Settings",
-    icon: <Cog size={TAB_SIZE} />,
+    icon: <Settings size={TAB_SIZE} />,
     id: "settings",
     component: <SettingsTab />,
     requiresForge: false,
-  } 
+    hideTimeline: false,
+  }, */
 ] as const;
