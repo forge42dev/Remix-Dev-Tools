@@ -62,18 +62,7 @@ To install and utilize Remix Development Tools, follow these steps:
 npm install remix-development-tools -D
 ```
 
-2. Add the following to your application `root.tsx` file:
-
-```diff
-// We add the stylesheet if it's development mode
-+ import rdtStylesheet from "remix-development-tools/stylesheet.css";
- 
-+ export const links: LinksFunction = () => [
-+   ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
-+ ]; 
-```
-
-3. Add the following to your application `entry.client.tsx` file:
+2. Add the following to your application `entry.client.tsx` file:
 
 ```diff
 + if(process.env.NODE_ENV === "development") {
@@ -98,7 +87,7 @@ npm install remix-development-tools -D
 + }
 ``` 
 
-4. Add the following to your application `entry.server.tsx` file:
+3. Add the following to your application `entry.server.tsx` file:
 
 ```diff
 function handleBrowserRequest(
@@ -154,7 +143,7 @@ function handleBrowserRequest(
 }
 ```
 
-5. You're good to go!
+4. You're good to go!
 
 ## InitClient props
 
