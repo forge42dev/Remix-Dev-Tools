@@ -9,13 +9,15 @@ import { Trigger } from "./components/Trigger";
 import { MainPanel } from "./layout/MainPanel";
 import { Tabs } from "./layout/Tabs";
 import { ContentPanel } from "./layout/ContentPanel";
-
+import rdtStylesheet from "../input.css?inline";
 interface Props extends RemixDevToolsProps {
   defaultOpen: boolean;
   position: Exclude<RemixDevToolsProps["position"], undefined>;
   hideUntilHover: boolean;
 }
-
+const InjectedStyles = () => (
+  <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />
+);
 const RemixDevTools = ({
   defaultOpen,
   position,
@@ -102,6 +104,7 @@ const RDTWithContext = ({
 
   return (
     <RDTContextProvider minHeight={minHeight} maxHeight={maxHeight} port={port}>
+      <InjectedStyles />
       <RemixDevTools
         defaultOpen={defaultOpen}
         position={position}

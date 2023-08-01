@@ -13,7 +13,6 @@
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.mjs",
   "exports": {
-    "./stylesheet.css": "./dist/stylesheet.css",
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.umd.cjs",

@@ -1,5 +1,5 @@
  
-import { json,   type LinksFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,7 +8,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react"; 
-import rdtStylesheet from "remix-development-tools/stylesheet.css";
 import { useRemixForgeSocket } from "remix-development-tools";
 
 const Component = () => {
@@ -44,9 +43,6 @@ const plugin = () => {
 };
  
 
-export const links: LinksFunction = () => [
-  ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : [])
-];
 
 export const loader = () => {
   return json({
