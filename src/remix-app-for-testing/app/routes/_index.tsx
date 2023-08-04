@@ -18,8 +18,7 @@ export const action = async ({ request }: ActionArgs) => {
   return redirect("/login");
 };
 
-export default function Index() {
-  const { message } = useLoaderData<typeof loader>();
+export default function Index() {  
   const lFetcher = useFetcher();
   const pFetcher = useFetcher();
   const submit = useSubmit();

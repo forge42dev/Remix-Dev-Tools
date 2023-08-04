@@ -1,13 +1,35 @@
-import { TimelineEvent } from "./timeline";
+import { TimelineEvent } from "./timeline/types";
 import type { Tabs } from "../tabs";
-import { Terminal } from "./terminal";
+import { Terminal } from "./terminal/types";
+export const ROUTE_BOUNDARY_GRADIENTS = {
+  sea: "rdt-bg-green-100 rdt-bg-gradient-to-r rdt-from-cyan-500/50 rdt-to-blue-500/50",
+  hyper:
+    "rdt-bg-gradient-to-r rdt-from-pink-500 rdt-via-red-500 rdt-to-yellow-500",
+  gotham:
+    "rdt-bg-gradient-to-r rdt-from-gray-700 rdt-via-gray-900 rdt-to-black",
+  gray: "rdt-bg-gradient-to-r rdt-from-gray-700/50 rdt-via-gray-900/50 rdt-to-black/50",
+  watermelon: "rdt-bg-gradient-to-r rdt-from-red-500 rdt-to-green-500",
+  ice: "rdt-bg-gradient-to-r rdt-from-rose-100 rdt-to-teal-100",
+  silver: "rdt-bg-gradient-to-r rdt-from-gray-100 rdt-to-gray-300",
+} as const;
 
+export const RouteBoundaryOptions = Object.keys(
+  ROUTE_BOUNDARY_GRADIENTS
+) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[];
 export type RouteWildcards = Record<string, Record<string, string> | undefined>;
+export type TriggerPosition =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "middle-left"
+  | "middle-right";
 
 export type RemixDevToolsState = {
   timeline: TimelineEvent[];
   terminals: Terminal[];
   settings: {
+    routeBoundaryGradient: keyof typeof ROUTE_BOUNDARY_GRADIENTS;
     routeWildcards: RouteWildcards;
     activeTab: Tabs;
     shouldConnectWithForge: boolean;
@@ -15,6 +37,9 @@ export type RemixDevToolsState = {
     height: number;
     maxHeight: number;
     minHeight: number;
+    defaultOpen: boolean;
+    hideUntilHover: boolean;
+    position: TriggerPosition;
   };
   persistOpen: boolean;
 };
@@ -23,6 +48,7 @@ export const initialState: RemixDevToolsState = {
   timeline: [],
   terminals: [{ id: 0, locked: false, output: [], history: [] }],
   settings: {
+    routeBoundaryGradient: "silver",
     routeWildcards: {},
     activeTab: "page",
     shouldConnectWithForge: false,
@@ -30,6 +56,9 @@ export const initialState: RemixDevToolsState = {
     height: 400,
     maxHeight: 600,
     minHeight: 200,
+    defaultOpen: false,
+    hideUntilHover: false,
+    position: "bottom-right",
   },
   persistOpen: false,
 };
@@ -76,11 +105,6 @@ type ClearTerminalOutput = {
   payload: Terminal["id"];
 };
 
-type SetActiveTab = {
-  type: "SET_ACTIVE_TAB";
-  payload: Tabs;
-};
-
 type SetProcessId = {
   type: "SET_PROCESS_ID";
   payload: {
@@ -88,14 +112,10 @@ type SetProcessId = {
     processId?: number;
   };
 };
-type SetDevToolsHeight = {
-  type: "SET_HEIGHT";
-  payload: number;
-};
 
-type SetRouteWildcards = {
-  type: "SET_ROUTE_WILDCARDS";
-  payload: RouteWildcards;
+type SetSettings = {
+  type: "SET_SETTINGS";
+  payload: Partial<RemixDevToolsState["settings"]>;
 };
 
 type PurgeTimeline = {
@@ -106,11 +126,6 @@ type PurgeTimeline = {
 type SetIsSubmittedAction = {
   type: "SET_IS_SUBMITTED";
   payload: any;
-};
-
-type SetShouldConnectToForgeAction = {
-  type: "SET_SHOULD_CONNECT_TO_FORGE";
-  payload: boolean;
 };
 
 type SetPersistOpenAction = {
@@ -126,12 +141,9 @@ export type RemixDevToolsActions =
   | AddTerminalOutput
   | ClearTerminalOutput
   | AddTerminalHistory
-  | SetActiveTab
   | SetProcessId
   | PurgeTimeline
-  | SetRouteWildcards
-  | SetDevToolsHeight
-  | SetShouldConnectToForgeAction
+  | SetSettings
   | SetIsSubmittedAction
   | SetPersistOpenAction;
 
@@ -140,19 +152,20 @@ export const rdtReducer = (
   { type, payload }: RemixDevToolsActions
 ): RemixDevToolsState => {
   switch (type) {
+    case "SET_SETTINGS":
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          ...payload,
+        },
+      };
     case "SET_TIMELINE_EVENT":
       return {
         ...state,
         timeline: [payload, ...state.timeline],
       };
-    case "SET_ACTIVE_TAB":
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          activeTab: payload,
-        },
-      };
+
     case "PURGE_TIMELINE":
       return {
         ...state,
@@ -164,22 +177,7 @@ export const rdtReducer = (
         ...payload,
         isSubmitted: true,
       };
-    case "SET_ROUTE_WILDCARDS":
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          routeWildcards: payload,
-        },
-      };
-    case "SET_HEIGHT":
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          height: payload,
-        },
-      };
+
     case "SET_PROCESS_ID":
       return {
         ...state,
@@ -271,14 +269,7 @@ export const rdtReducer = (
           return terminal;
         }),
       };
-    case "SET_SHOULD_CONNECT_TO_FORGE":
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          shouldConnectWithForge: payload,
-        },
-      };
+
     case "SET_PERSIST_OPEN":
       return {
         ...state,

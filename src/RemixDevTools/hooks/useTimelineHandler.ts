@@ -1,7 +1,9 @@
 import { useActionData, useFetchers, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { useRDTContext } from "../context/useRDTContext";
-import { TimelineEvent } from "../context/timeline";
+import { useTimelineContext } from "../context/useRDTContext";
+import { TimelineEvent } from "../context/timeline/types";
+
+const uniqueId = () => (Math.random() * Date.now()).toString();
 
 const convertFormDataToObject = (formData: FormData | undefined) => {
   const data =
@@ -15,33 +17,41 @@ const convertFormDataToObject = (formData: FormData | undefined) => {
 const useTimelineHandler = () => {
   const navigation = useNavigation();
   const fetchers = useFetchers();
-
-  const { setTimelineEvent } = useRDTContext();
+  const navigationEventQueue = useRef<TimelineEvent[]>([]);
+  const { setTimelineEvent } = useTimelineContext();
   const responseData = useActionData();
   useEffect(() => {
     const { state, location, formAction, formData, formMethod, formEncType } =
       navigation;
     if (state === "idle") {
+      navigationEventQueue.current.map((event) =>
+        setTimelineEvent({
+          ...event,
+          id: uniqueId(),
+        })
+      );
+      navigationEventQueue.current = [];
       return;
     }
     const { state: locState, pathname, search, hash } = location;
     const data = convertFormDataToObject(formData);
     // Form submission handler
     if (state === "submitting") {
-      return setTimelineEvent({
+      navigationEventQueue.current.push({
         type: "FORM_SUBMISSION",
         from: pathname,
         to: formAction,
         method: formMethod,
         data,
         encType: formEncType,
-        id: (Math.random() * Date.now()).toString(),
+        id: uniqueId(),
       });
+      return;
     }
     if (state === "loading") {
       // Form submitted => action is redirecting the user
       if (formAction && formData && formMethod && locState?._isRedirect) {
-        return setTimelineEvent({
+        navigationEventQueue.current.push({
           type: "ACTION_REDIRECT",
           from: pathname,
           to: formAction,
@@ -49,12 +59,13 @@ const useTimelineHandler = () => {
           data,
           encType: formEncType,
           responseData,
-          id: (Math.random() * Date.now()).toString(),
+          id: uniqueId(),
         });
+        return;
       }
       // Form submitted => action is responding with data
       if (formAction && formData && formMethod) {
-        return setTimelineEvent({
+        navigationEventQueue.current.push({
           type: "ACTION_RESPONSE",
           from: pathname,
           to: formAction,
@@ -62,11 +73,13 @@ const useTimelineHandler = () => {
           data,
           encType: formEncType,
           responseData,
-          id: (Math.random() * Date.now()).toString(),
+          id: uniqueId(),
         });
+        return;
       }
+
       // Loader/browser is redirecting the user
-      return setTimelineEvent({
+      navigationEventQueue.current.push({
         type:
           locState?._isFetchActionRedirect || locState?._isFetchLoaderRedirect
             ? "FETCHER_REDIRECT"
@@ -76,8 +89,9 @@ const useTimelineHandler = () => {
         hash,
         method: "GET",
 
-        id: (Math.random() * Date.now()).toString(),
+        id: uniqueId(),
       });
+      return;
     }
   }, [navigation, responseData, setTimelineEvent]);
 
@@ -96,7 +110,6 @@ const useTimelineHandler = () => {
             event.method === "GET"
               ? fetchers[position]?.data
               : event.responseData,
-          id: (Math.random() * Date.now()).toString(),
         })
       );
       fetcherEventQueue.current = [];
@@ -116,9 +129,10 @@ const useTimelineHandler = () => {
           to: formAction,
           method: formMethod,
           data: form,
-          encType: formEncType as any,
+          encType: formEncType,
           responseData: fetcher.state === "submitting" ? undefined : data,
           position: i,
+          id: uniqueId(),
         };
         fetcherEventQueue.current.push(event as any);
       }

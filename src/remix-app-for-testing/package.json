@@ -9,7 +9,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@remix-run/css-bundle": "^1.17.1",
+    "@remix-run/css-bundle": "^1.19.1",
     "@remix-run/express": "^1.17.1",
     "@remix-run/node": "^1.17.1",
     "@remix-run/react": "^1.17.1",
@@ -30,7 +30,7 @@
     "remix-auth-google": "^1.2.0",
     "remix-auth-socials": "^2.0.5",
     "remix-auth-twitter": "^2.0.0-1",
-    "remix-development-tools": "^1.0.4"
+    "remix-development-tools": "^2.0.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.17.1",

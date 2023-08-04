@@ -6,7 +6,7 @@
 ![npm](https://img.shields.io/npm/dy/remix-development-tools?style=plastic) 
 ![GitHub top language](https://img.shields.io/github/languages/top/Code-Forge-Net/Remix-Dev-Tools?style=plastic) 
 
-Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
+Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
 
 ## How it looks
 ### Active pages Tab
@@ -43,14 +43,19 @@ The **Routes** tab enables you to manage and explore the routes within your Remi
 
 The **Timeline** side tab provides a timeline view of events occurring during the development process. This tab helps you track the sequence of actions and events, providing valuable insights into the execution flow of your application.
 
+### Settings tab
+
+The **Settings** tab allows you to tweak your Remix Development Tools to your needs. Allows you to tweak around the height of the dev tools,
+the trigger position, the Remix Forge port and many more options to come.
+
 ### Terminal tab
 
 The terminal tab allows you to run terminal commands from the Remix Dev Tools. This is useful for running commands like `npm run typecheck` or `npm run lint:fix` without having to switch to the terminal in VS code. The tab requires you to connect to Remix Forge VS Code extension to work properly. 
 
-You can press `Arrow Up` and `Arrow Down` to cycle through the history of commands you have run in the terminal.
-You can press `Arrow Left` and `Arrow Right` to cycle through all available commands in your projects package.json file.
-You can press `Ctrl + C` to cancel the current command.
-You can press `Ctrl + L` to clear the terminal.
+- You can press `Arrow Up` and `Arrow Down` to cycle through the history of commands you have run in the terminal.
+- You can press `Arrow Left` and `Arrow Right` to cycle through all available commands in your projects package.json file.
+- You can press `Ctrl + C` to cancel the current command.
+- You can press `Ctrl + L` to clear the terminal.
 
 ## Getting Started
 
@@ -62,68 +67,39 @@ To install and utilize Remix Development Tools, follow these steps:
 npm install remix-development-tools -D
 ```
 
-2. Add the following to your application `root.tsx` file:
+2. Add the following to your application `entry.client.tsx` file:
 
 ```diff
-// We'll lazy load RemixDevTools to ensure it doesn't contribute to production bundle size
-+ import { lazy, Suspense } from "react";
-+ import rdtStylesheet from "remix-development-tools/stylesheet.css";
-+ const RemixDevTools =
-+  process.env.NODE_ENV === "development"
-+    ? React.lazy(() => import("remix-development-tools"))
-+    : undefined;
+This might differ if you use <StrictMode> or some other wrappers around <RemixBrowser>, whats important is wrapping the start transition in a callback
+-startTransition(() => {
+-  hydrateRoot(
+-   document,
+-   <RemixBrowser />
+-);
++});
++ const callback = () => startTransition(() => {
++   hydrateRoot(
++    document,
++    <RemixBrowser />
++  );
++});
++
++ if(process.env.NODE_ENV === "development") {
++   import("remix-development-tools").then(({ initClient }) => {
++     // Add all the dev tools props here into the client
++     initClient();
++     callback();
++   }); 
++ } else {
++  callback()
++ }
+``` 
 
-+ export const links: LinksFunction = () => [
-+   ...(rdtStylesheet && process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
-+ ];
-
-
-...
-
-export default function App() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-+       {RemixDevTools && <Suspense><RemixDevTools /></Suspense>}
-      </body>
-    </html>
-  );
-}
-```
-
-## RemixDevTools props
-
-The `RemixDevTools` component accepts the following props:
-
-- `port`: The port number to use for the Remix Development Tools connection to Remix Forge. If you want to change the port and connect to your Remix Forge VS code extension you need to change the port in VS Code too. Defaults to `3003`.
-- `defaultOpen`: Whether to open the Remix Development Tools by default. Defaults to `false`.
-- `position`: The position of the Remix Development Tools trigger. Defaults to `bottom-right`.
-- `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`.
-- [**DEPRECATED**] `showRouteBoundaries`:This flag has been deprecated in favor of adding route boundaries. Please see the section below for more information.
-- `hideUntilHover`: Allows you to hide the trigger until you hover over it. Defaults to `false`.
-- `additionalTabs`: Allows you to provide additional tabs to the Remix Development Tools. Defaults to `[]`.
-- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `600`.
-- `minHeight`: Allows you to set the minimum height of the Remix Development Tools. Defaults to `200`.
-
-## Adding route boundaries
-
-The `showErrorBoundaries` flag has been deprecated in favor of this method. Please use it instead.
-
-In order to add Route boundaries to your project you need to do the following two things:
-
-1. Modify your `entry.server.ts` to add the following code:
+3. Add the following to your application `entry.server.tsx` file:
 
 ```diff
+The important part is modifying the remixContext, this might differ based on the provider you are using.
+
 function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
@@ -133,7 +109,7 @@ function handleBrowserRequest(
 -  return new Promise((resolve, reject) => {
 +  return new Promise(async (resolve, reject) => {
     let shellRendered = false;
-+    const context = process.env.NODE_ENV === "development" ? await import("remix-development-tools").then(({ initRouteBoundariesServer }) => initRouteBoundariesServer(remixContext)) : remixContext;
++    const context = process.env.NODE_ENV === "development" ? await import("remix-development-tools").then(({ initServer }) => initServer(remixContext)) : remixContext;
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
 -        context={remixContext}
@@ -176,35 +152,39 @@ function handleBrowserRequest(
   });
 }
 ```
-
-2. Modify your `entry.client.tsx` to add the following code:
+4. Add the Remix Development Tools to your `root.tsx` file:
 
 ```diff
-+ if(process.env.NODE_ENV === "development") {
-+   import("remix-development-tools").then(({ initRouteBoundariesClient }) => {
-+     initRouteBoundariesClient();
-+     startTransition(() => {
-+       hydrateRoot(
-+         document,
-+         <StrictMode>
-+           <RemixBrowser />
-+         </StrictMode>
-+       );
-+     });
-+     
-+   }); 
-+ } else {
-   startTransition(() => {
-     hydrateRoot(
-       document,
-       <StrictMode>
-         <RemixBrowser />
-       </StrictMode>
-     );
-   }); 
-+ }
-``` 
-3. You are good to go. Now you can see the route boundaries in your project when you hover each route.
++ const RemixDevTools = process.env.NODE_ENV === 'development' ? lazy(() => import("remix-development-tools")) : null
+
+export default function App() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload /> 
++       {RemixDevTools ? (<Suspense><RemixDevTools /></Suspense>) : null}
+      </body>
+    </html>
+  );
+}
+```
+5. You're good to go!
+
+## RemixDevTools props
+
+The `RemixDevTools` component accepts the following props: 
+- `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`. 
+- `plugins`: Allows you to provide additional tabs (plugins) to the Remix Development Tools. Defaults to `[]`.
+ 
 
 ## Plugins
 
@@ -242,7 +222,7 @@ Writing plugins for Remix Development Tools is easy. You can write a plugin that
 import { remixDevToolsPlugin } from "./remix-dev-tools-plugin";
 
 -  <RemixDevTools />
-+  <RemixDevTools additionalTabs={[remixDevToolsPlugin()]} />
++  <RemixDevTools plugins={[remixDevToolsPlugin()]} />
  
 ```
 5. You should now see your plugin in the Remix Development Tools as a new tab.
@@ -294,107 +274,26 @@ import { useRemixForgeSocket } from "remix-development-tools";
 7. Refer to `react-use-websocket` for more information on how to use the socket and what options it accepts because that is what is used under the hood.
 8. After you're done share your plugin with the community by opening a discussion!
 
-## Troubleshooting
 
-If you are having trouble getting Remix Development Tools to work, please try the following:
-
-### RemixDevTools are not appearing in the DOM / causing re-renders
-
-1. Move the RemixDevTools as high as possible in your root.tsx file. It should be the first thing in the body tag.
-
+## v1 -> v2 migration guide
+The migration should be really simple. These are the following things you need to do:
+1. Remove the old imports of the stylesheet and addition of the stylesheets to your links export. This is bundled now within the Remix Development Tools.
 ```diff
-export default function App() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-+       {RemixDevTools && <Suspense><RemixDevTools /></Suspense>}
-      </body>
-    </html>
-  );
-}
-```
-
-2. Make sure the RemixDevTools are not wrapped in custom providers that might cause re-renders.
-
-```jsx
-const ThemeProvider = () => {
-  return (
-    <ThemeContext.Provider value={theme}>
-      <RemixDevTools />
-    </ThemeContext.Provider>
-  );
-}
-
-export default function App() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <ThemeProvider >
-          <Outlet />
-        </ThemeProvider> 
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
-  );
-}
+- import rdtStylesheet from "remix-development-tools/stylesheet.css";
+export const links = [
+  // ... other links
+-  { rel: "stylesheet", href: rdtStylesheet },
+]
 
 ```
 
-instead do this:
+2. If you were using `initRouteBoundariesClient` and `initRouteBoundariesServer` you just need to replace them with the new `initClient` and `initServer` functions. You can skip the rest of the steps, you're ready to go!
+3. Add the `initClient` function to your `entry.client.tsx` file. This is needed to initialize the route boundaries functionality and possible future functionality. (Refer to getting started steps above on how to do that)
+4. Add the `initServer` function to your `entry.server.tsx` file. This is needed to initialize the route boundaries functionality (and not cause hydration issues) and possible future functionality. (Refer to getting started steps above on how to do that)
+5. You are good to go!
+## Troubleshooting [v1 only]
 
-```diff
-const ThemeProvider = () => {
-  return (
-    <ThemeContext.Provider value={theme}>
--     <RemixDevTools />    
-+      <Outlet />
-    </ThemeContext.Provider>
-  );
-}
-
-export default function App() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
--        <ThemeProvider >
--          <Outlet />
--        </ThemeProvider> 
-+       <ThemeProvider />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-+       <RemixDevTools />
-      </body>
-    </html>
-  );
-}
-
-``` 
-
+ 
 ### HMR is failing with RDT
 
 Wrap the `RemixDevTools` component in a `Suspense` component.

@@ -1,8 +1,8 @@
-import { GitMerge, Terminal, Layers /* Settings */ } from "lucide-react";
+import { GitMerge, Terminal, Layers, Settings } from "lucide-react";
 import { PageTab } from "./PageTab";
 import { RoutesTab } from "./RoutesTab";
 import { TerminalTab } from "./TerminalTab";
-/* import { SettingsTab } from "./SettingsTab"; */
+import { SettingsTab } from "./SettingsTab";
 
 export type Tabs = (typeof tabs)[number]["id"];
 
@@ -42,12 +42,12 @@ export const tabs = [
     requiresForge: true,
     hideTimeline: false,
   },
-  /* {
+  {
     name: "Settings",
     icon: <Settings size={TAB_SIZE} />,
     id: "settings",
     component: <SettingsTab />,
     requiresForge: false,
     hideTimeline: false,
-  }, */
+  },
 ] as const;

@@ -1,15 +1,8 @@
-import "./input.css";
 import {
-  RemixDevTools,
   useRemixForgeSocket,
-  initRouteBoundariesClient,
-  initRouteBoundariesServer,
+  initClient,
+  initServer,
+  RemixDevTools,
 } from "./RemixDevTools";
-export {
-  RemixDevTools,
-  useRemixForgeSocket,
-  initRouteBoundariesClient,
-  initRouteBoundariesServer,
-};
-//export * from "./monitor";
+export { useRemixForgeSocket, initClient, initServer };
 export default RemixDevTools;

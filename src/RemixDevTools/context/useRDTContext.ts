@@ -1,30 +1,77 @@
 import { useCallback, useContext, useEffect } from "react";
 import { RDTContext, REMIX_DEV_TOOLS } from "./RDTContext";
-import { TimelineEvent } from "./timeline";
-import { Tabs } from "../tabs";
-import { RouteWildcards } from "./rdtReducer";
-import { Terminal } from "./terminal";
-
+import { TimelineEvent } from "./timeline/types";
+import { Terminal } from "./terminal/types";
+import { RemixDevToolsState } from "./rdtReducer";
+/**
+ * Returns an object containing the current state and dispatch function of the RDTContext.
+ * Throws an error if used outside of a RDTContextProvider.
+ * - Saves the state to session storage on every state change.
+ * - Saves the settings to local storage on every settings state change.
+ * @returns {Object} An object containing the following properties:
+ *  - dispatch: A function to dispatch actions to the RDTContext reducer.
+ *  - state: The current state of the RDTContext.
+ */
 const useRDTContext = () => {
   const context = useContext(RDTContext);
   if (context === undefined) {
     throw new Error("useRDTContext must be used within a RDTContextProvider");
   }
   const { state, dispatch } = context;
-  const { timeline, settings, terminals, persistOpen } = state;
-  const { activeTab, shouldConnectWithForge, routeWildcards, port, height, maxHeight, minHeight } =
-    settings;
 
   useEffect(() => {
-    const reducedState = { ...state };
-    delete (reducedState as any).settings;
-    const settings = state.settings;
+    const { settings, ...rest } = state;
     // Store user settings for dev tools into local storage
     localStorage.setItem(REMIX_DEV_TOOLS, JSON.stringify(settings));
     // Store general state into session storage
-    sessionStorage.setItem(REMIX_DEV_TOOLS, JSON.stringify(state));
+    sessionStorage.setItem(REMIX_DEV_TOOLS, JSON.stringify(rest));
   }, [state]);
 
+  return {
+    dispatch,
+    state,
+  };
+};
+
+export const useSettingsContext = () => {
+  const { dispatch, state } = useRDTContext();
+  const { settings } = state;
+  const setSettings = useCallback(
+    (settings: Partial<RemixDevToolsState["settings"]>) => {
+      dispatch({
+        type: "SET_SETTINGS",
+        payload: settings,
+      });
+    },
+    [dispatch]
+  );
+  return { setSettings, settings };
+};
+
+export const usePersistOpen = () => {
+  const { dispatch, state } = useRDTContext();
+  const { persistOpen } = state;
+  const setPersistOpen = useCallback(
+    (persistOpen: boolean) => {
+      dispatch({
+        type: "SET_PERSIST_OPEN",
+        payload: persistOpen,
+      });
+    },
+    [dispatch]
+  );
+  return { persistOpen, setPersistOpen };
+};
+/**
+ * Returns an object containing functions and state related to the timeline context.
+ * @returns {Object} An object containing the following properties:
+ *  - setTimelineEvent: A function that sets a new timeline event.
+ *  - timeline: An array of timeline events.
+ *  - clearTimeline: A function that clears all timeline events.
+ */
+export const useTimelineContext = () => {
+  const { state, dispatch } = useRDTContext();
+  const { timeline } = state;
   const setTimelineEvent = useCallback(
     (payload: TimelineEvent) => {
       dispatch({ type: "SET_TIMELINE_EVENT", payload });
@@ -34,18 +81,24 @@ const useRDTContext = () => {
   const clearTimeline = useCallback(() => {
     dispatch({ type: "PURGE_TIMELINE", payload: undefined });
   }, [dispatch]);
-  const setActiveTab = useCallback(
-    (activeTab: Tabs) => {
-      dispatch({ type: "SET_ACTIVE_TAB", payload: activeTab });
-    },
-    [dispatch]
-  );
-  const setRouteWildcards = useCallback(
-    (activeTab: RouteWildcards) => {
-      dispatch({ type: "SET_ROUTE_WILDCARDS", payload: activeTab });
-    },
-    [dispatch]
-  );
+
+  return { setTimelineEvent, timeline, clearTimeline };
+};
+
+/**
+ * Returns an object containing functions and state related to the terminal context.
+ * @returns {Object} An object containing the following properties:
+ *  - terminals: An array of terminal objects.
+ *  - addOrRemoveTerminal: A function that adds or removes a terminal object.
+ *  - toggleTerminalLock: A function that toggles the lock state of a terminal object.
+ *  - addTerminalOutput: A function that adds output to a terminal object.
+ *  - clearTerminalOutput: A function that clears the output of a terminal object.
+ *  - addTerminalHistory: A function that adds a command to the history of a terminal object.
+ *  - setProcessId: A function that sets the process ID of a terminal object.
+ */
+export const useTerminalContext = () => {
+  const { state, dispatch } = useRDTContext();
+  const { terminals } = state;
   const addOrRemoveTerminal = useCallback(
     (terminalId?: Terminal["id"]) => {
       dispatch({ type: "ADD_OR_REMOVE_TERMINAL", payload: terminalId });
@@ -80,16 +133,6 @@ const useRDTContext = () => {
     [dispatch]
   );
 
-  const setShouldConnectWithForge = useCallback(
-    (shouldConnectWithForge: boolean) => {
-      dispatch({
-        type: "SET_SHOULD_CONNECT_TO_FORGE",
-        payload: shouldConnectWithForge,
-      });
-    },
-    [dispatch]
-  );
-
   const addTerminalHistory = useCallback(
     (terminalId: Terminal["id"], history: Terminal["history"][number]) => {
       dispatch({
@@ -99,15 +142,7 @@ const useRDTContext = () => {
     },
     [dispatch]
   );
-  const setHeight = useCallback(
-    (height: number) => {
-      dispatch({
-        type: "SET_HEIGHT",
-        payload: height,
-      });
-    },
-    [dispatch]
-  );
+
   const setProcessId = useCallback(
     (terminalId: Terminal["id"], processId?: number) => {
       dispatch({
@@ -117,32 +152,7 @@ const useRDTContext = () => {
     },
     [dispatch]
   );
-
-  const setPersistOpen = useCallback(
-    (persistOpen: boolean) => {
-      dispatch({
-        type: "SET_PERSIST_OPEN",
-        payload: persistOpen,
-      });
-    },
-    [dispatch]
-  );
-
   return {
-    setTimelineEvent,
-    setActiveTab,
-    timeline,
-    activeTab,
-    clearTimeline,
-    setShouldConnectWithForge,
-    shouldConnectWithForge,
-    routeWildcards,
-    port,
-    height,
-    maxHeight,
-    minHeight,
-    setHeight,
-    setRouteWildcards,
     terminals,
     addOrRemoveTerminal,
     toggleTerminalLock,
@@ -150,8 +160,6 @@ const useRDTContext = () => {
     clearTerminalOutput,
     addTerminalHistory,
     setProcessId,
-    persistOpen,
-    setPersistOpen,
   };
 };
 
