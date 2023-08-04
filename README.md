@@ -217,7 +217,7 @@ Writing plugins for Remix Development Tools is easy. You can write a plugin that
     }
   }
   ```
-4. Import it in your `entry.client.tsx` file and pass it to your Remix Development Tools:
+4. Import it in your `root.tsx` file and pass it to your Remix Development Tools:
 ```diff
 import { remixDevToolsPlugin } from "./remix-dev-tools-plugin";
 
