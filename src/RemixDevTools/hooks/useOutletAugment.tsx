@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import { useEffect } from "react";
+import { InvisibleBoundary } from "../init/project";
 
 const isHooked = Symbol("isHooked");
 export function useOutletAugment() {
@@ -18,12 +18,7 @@ export function useOutletAugment() {
             default: function hooked() {
               return (
                 <>
-                  <div
-                    className={clsx(
-                      "rdt-invisible rdt-absolute rdt-hidden rdt-h-0 rdt-w-0",
-                      property as string
-                    )}
-                  />
+                  <InvisibleBoundary path={property as any} />
                   <value.default />
                 </>
               );

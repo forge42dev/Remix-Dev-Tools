@@ -1,7 +1,7 @@
 import { EntryContext } from "@remix-run/server-runtime";
 import clsx from "clsx";
 
-const InvisibleBoundary = ({ path }: { path: string }) => {
+export const InvisibleBoundary = ({ path }: { path: string }) => {
   return (
     <div
       className={clsx(
