@@ -9,14 +9,15 @@ import {
 } from "../components/Accordion";
 import { useNavigate } from "@remix-run/react";
 import { Tag } from "../components/Tag";
-import { useRDTContext } from "../context/useRDTContext";
+import { useSettingsContext } from "../context/useRDTContext";
 import { Input } from "../components/Input";
 import { NewRouteForm } from "../components/NewRouteForm";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { isLeafRoute } from "../utils/routing";
 
 const RoutesTab = () => {
-  const { routeWildcards, setRouteWildcards } = useRDTContext();
+  const { settings, setSettings } = useSettingsContext();
+  const { routeWildcards } = settings;
   const { isConnected } = useRemixForgeSocket();
   const [routes] = useState<(EntryRoute & { route: string })[]>(
     Object.values(window.__remixManifest.routes)
@@ -32,7 +33,7 @@ const RoutesTab = () => {
 
   return (
     <Accordion
-      className="rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-pb-12 rdt-pr-4"
+      className="rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-pr-4"
       type="single"
       collapsible
     >
@@ -115,11 +116,13 @@ const RoutesTab = () => {
                           <Input
                             value={routeWildcards[route.id]?.[param] || ""}
                             onChange={(e) =>
-                              setRouteWildcards({
-                                ...routeWildcards,
-                                [route.id]: {
-                                  ...routeWildcards[route.id],
-                                  [param]: e.target.value,
+                              setSettings({
+                                routeWildcards: {
+                                  ...routeWildcards,
+                                  [route.id]: {
+                                    ...routeWildcards[route.id],
+                                    [param]: e.target.value,
+                                  },
                                 },
                               })
                             }

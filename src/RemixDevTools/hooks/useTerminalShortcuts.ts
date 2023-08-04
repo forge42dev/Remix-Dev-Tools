@@ -1,6 +1,6 @@
 import { useState, KeyboardEvent } from "react";
-import { useRDTContext } from "../context/useRDTContext";
-import { Terminal } from "../context/terminal";
+import { useTerminalContext } from "../context/useRDTContext";
+import { Terminal } from "../context/terminal/types";
 
 const useTerminalShortcuts = ({
   onSubmit,
@@ -19,7 +19,7 @@ const useTerminalShortcuts = ({
   const [projectCommandIndex, setProjectCommandIndex] = useState<number>();
   const availableCommands = Object.keys(projectCommands ?? {});
 
-  const { addTerminalOutput, clearTerminalOutput } = useRDTContext();
+  const { addTerminalOutput, clearTerminalOutput } = useTerminalContext();
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();

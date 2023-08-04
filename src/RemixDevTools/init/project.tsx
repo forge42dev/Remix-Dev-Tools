@@ -1,7 +1,5 @@
 import { EntryContext } from "@remix-run/server-runtime";
 import clsx from "clsx";
-import { RemixDevTools, RemixDevToolsProps } from "../RemixDevTools";
-import ReactDOM from "react-dom";
 
 const InvisibleBoundary = ({ path }: { path: string }) => {
   return (
@@ -45,27 +43,14 @@ export const initServer = (context: EntryContext) => {
   };
 };
 
-export const initClient = (props?: RemixDevToolsProps) => {
+export const initClient = () => {
   window.__remixRouteModules = Object.keys(window.__remixRouteModules).reduce(
     (acc, key) => {
       const value = window.__remixRouteModules[key];
       if (key === "root") {
         return {
           ...acc,
-          [key]: {
-            ...value,
-            default: () => {
-              return (
-                <>
-                  {ReactDOM.createPortal(
-                    <RemixDevTools {...props} />,
-                    document.body
-                  )}
-                  <value.default />
-                </>
-              );
-            },
-          },
+          [key]: value,
         };
       }
 

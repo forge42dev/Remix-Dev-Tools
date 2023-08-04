@@ -1,8 +1,8 @@
 import { Columns, /* MonitorPlay */ Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { useRDTContext } from "../context/useRDTContext";
-import { Terminal } from "../context/terminal";
+import { useTerminalContext } from "../context/useRDTContext";
+import { Terminal } from "../context/terminal/types";
 import clsx from "clsx";
 import { useTerminalShortcuts } from "../hooks/useTerminalShortcuts";
 
@@ -19,7 +19,7 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
     setProcessId,
     addTerminalHistory,
     terminals,
-  } = useRDTContext();
+  } = useTerminalContext();
   const [command, setCommand] = useState("");
   const ref = useRef<HTMLDivElement>(null);
 
@@ -152,7 +152,7 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
 };
 
 const TerminalTab = () => {
-  const { terminals, addOrRemoveTerminal } = useRDTContext();
+  const { terminals, addOrRemoveTerminal } = useTerminalContext();
   const [projectCommands, setProjectCommands] =
     useState<Record<string, string>>();
   const { sendJsonMessage } = useRemixForgeSocket({

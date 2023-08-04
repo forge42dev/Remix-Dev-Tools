@@ -3,6 +3,10 @@ export default {
   content: ["./src/RemixDevTools/**/*.{tsx,ts}"],
   theme: {
     extend: {
+      colors: {
+        popover: "#212121",
+        "popover-foreground": "#fff",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },

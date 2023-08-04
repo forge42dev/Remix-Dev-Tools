@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { useRDTContext } from "../context/useRDTContext";
+import { useSettingsContext } from "../context/useRDTContext";
 
 const useResize = () => {
-  const { height, setHeight, maxHeight, minHeight } = useRDTContext();
+  const { setSettings, settings } = useSettingsContext();
+  const { height, maxHeight, minHeight } = settings;
   const [isResizing, setIsResizing] = useState(false);
 
   const enableResize = useCallback(() => {
@@ -22,19 +23,19 @@ const useResize = () => {
         //const newHeight = e.clientY; // You may want to add some offset here from props
 
         if (newHeight > maxHeight) {
-          setHeight(maxHeight);
+          setSettings({ height: maxHeight });
           return;
         }
 
         if (newHeight < minHeight) {
-          setHeight(minHeight);
+          setSettings({ height: minHeight });
           return;
         }
 
-        setHeight(newHeight);
+        setSettings({ height: newHeight });
       }
     },
-    [isResizing, maxHeight, minHeight, setHeight]
+    [isResizing, maxHeight, minHeight, setSettings]
   );
 
   useEffect(() => {

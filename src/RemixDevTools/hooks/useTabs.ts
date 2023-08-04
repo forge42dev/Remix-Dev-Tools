@@ -1,18 +1,18 @@
 import { useEffect, useMemo } from "react";
 import { RemixDevToolsProps } from "../RemixDevTools";
-import { useRDTContext } from "../context/useRDTContext";
+import { useSettingsContext } from "../context/useRDTContext";
 import { tabs } from "../tabs";
 
 export const useTabs = (
   isConnected: boolean,
   isConnecting: boolean,
-  additionalTabs?: RemixDevToolsProps["additionalTabs"]
+  plugins?: RemixDevToolsProps["plugins"]
 ) => {
-  const { activeTab, setActiveTab } = useRDTContext();
-
+  const { settings, setSettings } = useSettingsContext();
+  const { activeTab } = settings;
   const allTabs = useMemo(
-    () => [...tabs, ...(additionalTabs ? additionalTabs : [])],
-    [additionalTabs]
+    () => [...tabs, ...(plugins ? plugins : [])],
+    [plugins]
   );
   const { Component, hideTimeline } = useMemo(() => {
     const tab = allTabs.find((tab) => tab.id === activeTab);
@@ -31,12 +31,14 @@ export const useTabs = (
       (tab) => tab.requiresForge && tab.id === activeTab
     );
     const isOnAdditionalForgeTab = Boolean(
-      additionalTabs?.some((tab) => tab.requiresForge && tab.id === activeTab)
+      plugins?.some((tab) => tab.requiresForge && tab.id === activeTab)
     );
     if (isOnForgeTab || isOnAdditionalForgeTab) {
-      setActiveTab("page");
+      setSettings({
+        activeTab: "page",
+      });
     }
-  }, [isConnected, isConnecting, activeTab, setActiveTab, additionalTabs]);
+  }, [isConnected, isConnecting, activeTab, setSettings, plugins]);
 
   return { visibleTabs, Component, allTabs, hideTimeline };
 };

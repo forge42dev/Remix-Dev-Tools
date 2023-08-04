@@ -8,8 +8,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react"; 
+import { Suspense, lazy } from "react";
 import { useRemixForgeSocket } from "remix-development-tools";
-
+const RemixDevTools = process.env.NODE_ENV === 'development' ? lazy(() => import("remix-development-tools")) : null
 const Component = () => {
   const { isConnected, sendJsonMessage } = useRemixForgeSocket({
     onMessage: (message) => {
@@ -71,6 +72,7 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
+        {RemixDevTools ? (<Suspense><RemixDevTools /></Suspense>) : null}
         <LiveReload /> 
       </body>
     </html>

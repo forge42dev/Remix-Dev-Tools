@@ -1,20 +1,17 @@
 import clsx from "clsx";
-import { RemixDevToolsProps } from "../RemixDevTools";
-import { useRDTContext } from "../context/useRDTContext";
+import { usePersistOpen, useSettingsContext } from "../context/useRDTContext";
 import { Logo } from "./Logo";
 
 export const Trigger = ({
   isOpen,
-  position,
-  hideUntilHover,
   setIsOpen,
 }: {
   isOpen: boolean;
-  position: Exclude<RemixDevToolsProps["position"], undefined>;
-  hideUntilHover: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { setPersistOpen } = useRDTContext();
+  const { settings } = useSettingsContext();
+  const { setPersistOpen } = usePersistOpen();
+  const { hideUntilHover, position } = settings;
   const handleHover = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     event: "enter" | "leave"

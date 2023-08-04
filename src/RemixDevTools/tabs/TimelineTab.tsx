@@ -1,6 +1,10 @@
 import { Activity } from "lucide-react";
-import { FormEvent, RedirectEvent, TimelineEvent } from "../context/timeline";
-import { useRDTContext } from "../context/useRDTContext";
+import {
+  FormEvent,
+  RedirectEvent,
+  TimelineEvent,
+} from "../context/timeline/types";
+import { useTimelineContext } from "../context/useRDTContext";
 import { JsonRenderer } from "../components/jsonRenderer";
 import { TAG_COLORS, Tag } from "../components/Tag";
 
@@ -72,7 +76,7 @@ export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
 };
 
 const TimelineTab = () => {
-  const { timeline, clearTimeline } = useRDTContext();
+  const { timeline, clearTimeline } = useTimelineContext();
   return (
     <div className="rdt-relative rdt-flex rdt-h-full rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
       {timeline.length > 0 && (

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useResize } from "../hooks/useResize";
-import { useRDTContext } from "../context/useRDTContext";
+import { useSettingsContext } from "../context/useRDTContext";
 
 interface MainPanelProps {
   children: React.ReactNode;
@@ -8,7 +8,8 @@ interface MainPanelProps {
 }
 
 const MainPanel = ({ children, isOpen }: MainPanelProps) => {
-  const { height } = useRDTContext();
+  const { settings } = useSettingsContext();
+  const { height } = settings;
   const { enableResize, disableResize, isResizing } = useResize();
   return (
     <div
@@ -23,7 +24,7 @@ const MainPanel = ({ children, isOpen }: MainPanelProps) => {
         onMouseDown={enableResize}
         onMouseUp={disableResize}
         className={clsx(
-          "rdt-absolute rdt-h-1 rdt-w-full rdt-z-50",
+          "rdt-absolute rdt-z-50 rdt-h-1 rdt-w-full",
           isResizing ? "rdt-cursor-grabbing" : "rdt-cursor-ns-resize"
         )}
       />
