@@ -3,7 +3,6 @@ import { RDTContextProvider } from "./context/RDTContext";
 import { Tab } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
 import { useRDTContext } from "./context/useRDTContext";
-import { isDev } from "./utils/isDev";
 import { useLocation } from "@remix-run/react";
 import { Trigger } from "./components/Trigger";
 import { MainPanel } from "./layout/MainPanel";
@@ -94,10 +93,9 @@ const RDTWithContext = ({
   maxHeight = 600,
 }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
-  const isDevelopment = isDev();
   const url = useLocation().search;
 
-  if (!hydrated || !isDevelopment) return null;
+  if (!hydrated) return null;
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
