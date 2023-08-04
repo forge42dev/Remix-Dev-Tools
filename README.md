@@ -70,7 +70,13 @@ npm install remix-development-tools -D
 2. Add the following to your application `entry.client.tsx` file:
 
 ```diff
-// This might differ if you use <StrictMode> or some other wrappers around <RemixBrowser>, whats important is wrapping the start transition in a callback
+This might differ if you use <StrictMode> or some other wrappers around <RemixBrowser>, whats important is wrapping the start transition in a callback
+-startTransition(() => {
+-  hydrateRoot(
+-   document,
+-   <RemixBrowser />
+-);
++});
 + const callback = () => startTransition(() => {
 +   hydrateRoot(
 +    document,
@@ -92,6 +98,8 @@ npm install remix-development-tools -D
 3. Add the following to your application `entry.server.tsx` file:
 
 ```diff
+The important part is modifying the remixContext, this might differ based on the provider you are using.
+
 function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
@@ -162,8 +170,8 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-+       {RemixDevTools ? (<Suspense><RemixDevTools /></Suspense>) : null}
         <LiveReload /> 
++       {RemixDevTools ? (<Suspense><RemixDevTools /></Suspense>) : null}
       </body>
     </html>
   );
