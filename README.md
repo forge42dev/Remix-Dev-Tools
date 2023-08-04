@@ -291,9 +291,25 @@ export const links = [
 3. Add the `initClient` function to your `entry.client.tsx` file. This is needed to initialize the route boundaries functionality and possible future functionality. (Refer to getting started steps above on how to do that)
 4. Add the `initServer` function to your `entry.server.tsx` file. This is needed to initialize the route boundaries functionality (and not cause hydration issues) and possible future functionality. (Refer to getting started steps above on how to do that)
 5. You are good to go!
-## Troubleshooting [v1 only]
+## Troubleshooting
 
- 
+### Hydration issues and Remix Development tools crashing with i18n
+
+Make sure you're passing the same context to the `i18n.getRouteNamespaces()` function as you're passing to the `<RemixServer>` component. 
+
+```diff
++  const context =
++    process.env.NODE_ENV === "development"
++      ? await import("remix-development-tools").then(({ initServer }) => initServer(remixContext))
++      : remixContext;
+   ...
+-  let ns = i18n.getRouteNamespaces(remixContext);
++  let ns = i18n.getRouteNamespaces(context);
+   ...
+   <I18nextProvider i18n={instance}> 
++    <RemixServer abortDelay={ABORT_DELAY} context={context} url={request.url} />
+   </I18nextProvider>
+```
 ### HMR is failing with RDT
 
 Wrap the `RemixDevTools` component in a `Suspense` component.
