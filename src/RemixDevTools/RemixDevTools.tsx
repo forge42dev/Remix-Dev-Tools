@@ -94,10 +94,9 @@ const RDTWithContext = ({
   maxHeight = 600,
 }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
-  const isDevelopment = isDev();
   const url = useLocation().search;
 
-  if (!hydrated || !isDevelopment) return null;
+  if (!hydrated) return null;
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
