@@ -3,7 +3,6 @@ import { RDTContextProvider } from "./context/RDTContext";
 import { Tab } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
 import { useRDTContext } from "./context/useRDTContext";
-import { isDev } from "./utils/isDev";
 import { useLocation } from "@remix-run/react";
 import { Trigger } from "./components/Trigger";
 import { MainPanel } from "./layout/MainPanel";
