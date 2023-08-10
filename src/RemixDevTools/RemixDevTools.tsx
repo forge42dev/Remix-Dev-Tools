@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { RDTContextProvider } from "./context/RDTContext";
-import { Tab } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
 import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext";
 import { useLocation } from "@remix-run/react";
@@ -58,6 +57,15 @@ function useHydrated() {
   }, []);
 
   return hydrated;
+}
+
+export interface Tab {
+  name: string;
+  icon: JSX.Element;
+  id: string;
+  component: JSX.Element;
+  requiresForge: boolean;
+  hideTimeline: boolean;
 }
 
 export interface RemixDevToolsProps {

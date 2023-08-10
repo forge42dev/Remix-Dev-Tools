@@ -6,15 +6,6 @@ import { SettingsTab } from "./SettingsTab";
 
 export type Tabs = (typeof tabs)[number]["id"];
 
-export interface Tab {
-  name: string;
-  icon: JSX.Element;
-  id: string;
-  component: JSX.Element;
-  requiresForge: boolean;
-  hideTimeline: boolean;
-}
-
 const TAB_SIZE = 16;
 
 export const tabs = [
