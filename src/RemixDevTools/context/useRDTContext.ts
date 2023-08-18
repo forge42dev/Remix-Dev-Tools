@@ -1,8 +1,18 @@
 import { useCallback, useContext, useEffect } from "react";
-import { RDTContext, REMIX_DEV_TOOLS } from "./RDTContext";
+import { RDTContext } from "./RDTContext";
 import { TimelineEvent } from "./timeline/types";
 import { Terminal } from "./terminal/types";
 import { RemixDevToolsState } from "./rdtReducer";
+import {
+  REMIX_DEV_TOOLS_SETTINGS,
+  REMIX_DEV_TOOLS_STATE,
+  REMIX_DEV_TOOLS_DETACHED,
+  REMIX_DEV_TOOLS_DETACHED_OWNER,
+  setStorageItem,
+  setSessionItem,
+} from "../utils/storage";
+import { useRefreshDetachedPanel } from "../hooks/detached/useRefreshDetachedPanel";
+
 /**
  * Returns an object containing the current state and dispatch function of the RDTContext.
  * Throws an error if used outside of a RDTContextProvider.
@@ -20,16 +30,47 @@ const useRDTContext = () => {
   const { state, dispatch } = context;
 
   useEffect(() => {
-    const { settings, ...rest } = state;
+    const { settings, detachedWindow, detachedWindowOwner, ...rest } = state;
+
     // Store user settings for dev tools into local storage
-    localStorage.setItem(REMIX_DEV_TOOLS, JSON.stringify(settings));
+    setStorageItem(REMIX_DEV_TOOLS_SETTINGS, JSON.stringify(settings));
     // Store general state into session storage
-    sessionStorage.setItem(REMIX_DEV_TOOLS, JSON.stringify(rest));
+    setStorageItem(REMIX_DEV_TOOLS_STATE, JSON.stringify(rest));
+    if (state.detachedWindow) {
+      return;
+    }
+    // Store if the window is detached into session storage
+    setSessionItem(REMIX_DEV_TOOLS_DETACHED, JSON.stringify(detachedWindow));
+    setSessionItem(REMIX_DEV_TOOLS_DETACHED_OWNER, JSON.stringify(detachedWindowOwner));
   }, [state]);
+
+  useRefreshDetachedPanel();
 
   return {
     dispatch,
     state,
+  };
+};
+
+export const useDetachedWindowControls = () => {
+  const { state, dispatch } = useRDTContext();
+  const { detachedWindow, detachedWindowOwner } = state;
+
+  const setDetachedWindowOwner = useCallback(
+    (isDetachedWindowOwner: boolean) => {
+      dispatch({
+        type: "SET_DETACHED_WINDOW_OWNER",
+        payload: isDetachedWindowOwner,
+      });
+    },
+    [dispatch]
+  );
+
+  return {
+    detachedWindow,
+    detachedWindowOwner,
+    setDetachedWindowOwner,
+    isDetached: detachedWindow || detachedWindowOwner,
   };
 };
 

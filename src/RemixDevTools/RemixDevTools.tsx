@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { RDTContextProvider } from "./context/RDTContext";
 import { Tab } from "./tabs";
 import { useTimelineHandler } from "./hooks/useTimelineHandler";
-import { usePersistOpen, useSettingsContext } from "./context/useRDTContext";
+import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext";
 import { useLocation } from "@remix-run/react";
 import { Trigger } from "./components/Trigger";
 import { MainPanel } from "./layout/MainPanel";
@@ -10,25 +10,34 @@ import { Tabs } from "./layout/Tabs";
 import { ContentPanel } from "./layout/ContentPanel";
 import rdtStylesheet from "../input.css?inline";
 import { useOutletAugment } from "./hooks/useOutletAugment";
+import { useSetUnloadDetachedWindowChecks } from "./hooks/detached/useSetUnloadDetachedWindowChecks";
+import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries";
+import { REMIX_DEV_TOOLS } from "./utils/storage";
 
 type Props = RemixDevToolsProps;
 
-const InjectedStyles = () => (
-  <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />
-);
+const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />;
+
 const RemixDevTools = ({ plugins }: Props) => {
   useTimelineHandler();
   useOutletAugment();
+  useSetUnloadDetachedWindowChecks();
+  useSetRouteBoundaries();
+  const { detachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
   const { persistOpen } = usePersistOpen();
   const { position } = settings;
   const [isOpen, setIsOpen] = useState(settings.defaultOpen || persistOpen);
   const leftSideOriented = position.includes("left");
 
+  // If the dev tools are detached, we don't want to render the main panel
+  if (detachedWindowOwner) {
+    return null;
+  }
+
   return (
     <>
-      <InjectedStyles />
-      <div className="remix-dev-tools">
+      <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
         <Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
         <MainPanel isOpen={isOpen}>
           <Tabs plugins={plugins} setIsOpen={setIsOpen} />
@@ -68,6 +77,7 @@ const RDTWithContext = ({ requireUrlFlag, plugins }: RemixDevToolsProps) => {
 
   return (
     <RDTContextProvider>
+      <InjectedStyles />
       <RemixDevTools plugins={plugins} />
     </RDTContextProvider>
   );

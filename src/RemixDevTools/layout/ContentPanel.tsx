@@ -12,18 +12,15 @@ interface ContentPanelProps {
 
 const ContentPanel = ({ leftSideOriented, plugins }: ContentPanelProps) => {
   const { isConnected, isConnecting } = useRemixForgeSocket();
-  const { Component, hideTimeline } = useTabs(
-    isConnected,
-    isConnecting,
-    plugins
-  );
+  const { Component, hideTimeline, isPluginTab } = useTabs(isConnected, isConnecting, plugins);
 
   return (
     <div className="rdt-flex rdt-h-full rdt-w-full rdt-overflow-y-hidden">
       <div
         className={clsx(
           "rdt-z-20 rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-bg-[#212121] rdt-p-2",
-          leftSideOriented ? "rdt-pl-6" : "rdt-pl-6" // leftSideOriented ? "rdt-pl-16" : "rdt-pl-8" Spacing is too much
+          leftSideOriented ? "rdt-pl-6" : "rdt-pl-6",
+          isPluginTab && "rdt-unset"
         )}
       >
         {Component}

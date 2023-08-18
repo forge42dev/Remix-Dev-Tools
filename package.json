@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools.",
   "author": "Alem Tuzlak",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -98,9 +98,9 @@
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-select": "^1.2.2",
+    "@uiw/react-json-view": "^1.8.4",
     "clsx": "^2.0.0",
     "lucide-react": "^0.263.1",
-    "react-json-view-lite": "^0.9.7",
     "react-use-websocket": "^4.3.1",
     "tailwind-merge": "^1.14.0"
   }

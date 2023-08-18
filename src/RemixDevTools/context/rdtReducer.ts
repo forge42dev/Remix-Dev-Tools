@@ -40,8 +40,12 @@ export type RemixDevToolsState = {
     defaultOpen: boolean;
     hideUntilHover: boolean;
     position: TriggerPosition;
+    hoveredRoute: string;
+    isHoveringRoute: boolean;
   };
   persistOpen: boolean;
+  detachedWindow: boolean;
+  detachedWindowOwner: boolean;
 };
 
 export const initialState: RemixDevToolsState = {
@@ -59,8 +63,12 @@ export const initialState: RemixDevToolsState = {
     defaultOpen: false,
     hideUntilHover: false,
     position: "bottom-right",
+    hoveredRoute: "",
+    isHoveringRoute: false,
   },
   persistOpen: false,
+  detachedWindow: false,
+  detachedWindowOwner: false,
 };
 
 export type ReducerActions = Pick<RemixDevToolsActions, "type">["type"];
@@ -113,6 +121,16 @@ type SetProcessId = {
   };
 };
 
+type SetDetachedWindowOwner = {
+  type: "SET_DETACHED_WINDOW_OWNER";
+  payload: boolean;
+};
+
+type SetWholeState = {
+  type: "SET_WHOLE_STATE";
+  payload: RemixDevToolsState;
+};
+
 type SetSettings = {
   type: "SET_SETTINGS";
   payload: Partial<RemixDevToolsState["settings"]>;
@@ -144,6 +162,8 @@ export type RemixDevToolsActions =
   | SetProcessId
   | PurgeTimeline
   | SetSettings
+  | SetWholeState
+  | SetDetachedWindowOwner
   | SetIsSubmittedAction
   | SetPersistOpenAction;
 
@@ -152,6 +172,12 @@ export const rdtReducer = (
   { type, payload }: RemixDevToolsActions
 ): RemixDevToolsState => {
   switch (type) {
+    case "SET_DETACHED_WINDOW_OWNER":
+      return {
+        ...state,
+        detachedWindowOwner: payload,
+      };
+
     case "SET_SETTINGS":
       return {
         ...state,
@@ -165,6 +191,12 @@ export const rdtReducer = (
         ...state,
         timeline: [payload, ...state.timeline],
       };
+
+    case "SET_WHOLE_STATE": {
+      return {
+        ...payload,
+      };
+    }
 
     case "PURGE_TIMELINE":
       return {

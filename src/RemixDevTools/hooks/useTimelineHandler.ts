@@ -1,15 +1,12 @@
 import { useActionData, useFetchers, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { useTimelineContext } from "../context/useRDTContext";
+import { useDetachedWindowControls, useTimelineContext } from "../context/useRDTContext";
 import { TimelineEvent } from "../context/timeline/types";
 
 const uniqueId = () => (Math.random() * Date.now()).toString();
 
 const convertFormDataToObject = (formData: FormData | undefined) => {
-  const data =
-    formData && formData.entries
-      ? Object.fromEntries(formData.entries())
-      : undefined;
+  const data = formData && formData.entries ? Object.fromEntries(formData.entries()) : undefined;
   const finalData = data && Object.keys(data).length > 0 ? data : undefined;
   return finalData;
 };
@@ -20,9 +17,14 @@ const useTimelineHandler = () => {
   const navigationEventQueue = useRef<TimelineEvent[]>([]);
   const { setTimelineEvent } = useTimelineContext();
   const responseData = useActionData();
+  const { detachedWindow } = useDetachedWindowControls();
   useEffect(() => {
-    const { state, location, formAction, formData, formMethod, formEncType } =
-      navigation;
+    // Do not record events if the window is detached, the main window will handle it
+    if (detachedWindow) {
+      return;
+    }
+    const { state, location, formAction, formData, formMethod, formEncType } = navigation;
+
     if (state === "idle") {
       navigationEventQueue.current.map((event) =>
         setTimelineEvent({
@@ -80,10 +82,7 @@ const useTimelineHandler = () => {
 
       // Loader/browser is redirecting the user
       navigationEventQueue.current.push({
-        type:
-          locState?._isFetchActionRedirect || locState?._isFetchLoaderRedirect
-            ? "FETCHER_REDIRECT"
-            : "REDIRECT",
+        type: locState?._isFetchActionRedirect || locState?._isFetchLoaderRedirect ? "FETCHER_REDIRECT" : "REDIRECT",
         to: pathname,
         search,
         hash,
@@ -93,7 +92,7 @@ const useTimelineHandler = () => {
       });
       return;
     }
-  }, [navigation, responseData, setTimelineEvent]);
+  }, [navigation, responseData, setTimelineEvent, detachedWindow]);
 
   const fetcherEventQueue = useRef<TimelineEvent[]>([]);
   // Fetchers handler
@@ -107,9 +106,7 @@ const useTimelineHandler = () => {
           ...event,
           responseData:
             // If the fetcher is a GET request, the response data is stored in the fetcher, otherwise it's already set at this point
-            event.method === "GET"
-              ? fetchers[position]?.data
-              : event.responseData,
+            event.method === "GET" ? fetchers[position]?.data : event.responseData,
         })
       );
       fetcherEventQueue.current = [];
@@ -124,8 +121,7 @@ const useTimelineHandler = () => {
       if (formAction && formMethod) {
         const form = convertFormDataToObject(formData);
         const event = {
-          type:
-            fetcher.state === "loading" ? "FETCHER_RESPONSE" : "FETCHER_SUBMIT",
+          type: fetcher.state === "loading" ? "FETCHER_RESPONSE" : "FETCHER_SUBMIT",
           to: formAction,
           method: formMethod,
           data: form,
