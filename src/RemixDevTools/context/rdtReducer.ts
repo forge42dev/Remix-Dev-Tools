@@ -3,19 +3,15 @@ import type { Tabs } from "../tabs";
 import { Terminal } from "./terminal/types";
 export const ROUTE_BOUNDARY_GRADIENTS = {
   sea: "rdt-bg-green-100 rdt-bg-gradient-to-r rdt-from-cyan-500/50 rdt-to-blue-500/50",
-  hyper:
-    "rdt-bg-gradient-to-r rdt-from-pink-500 rdt-via-red-500 rdt-to-yellow-500",
-  gotham:
-    "rdt-bg-gradient-to-r rdt-from-gray-700 rdt-via-gray-900 rdt-to-black",
+  hyper: "rdt-bg-gradient-to-r rdt-from-pink-500 rdt-via-red-500 rdt-to-yellow-500",
+  gotham: "rdt-bg-gradient-to-r rdt-from-gray-700 rdt-via-gray-900 rdt-to-black",
   gray: "rdt-bg-gradient-to-r rdt-from-gray-700/50 rdt-via-gray-900/50 rdt-to-black/50",
   watermelon: "rdt-bg-gradient-to-r rdt-from-red-500 rdt-to-green-500",
   ice: "rdt-bg-gradient-to-r rdt-from-rose-100 rdt-to-teal-100",
   silver: "rdt-bg-gradient-to-r rdt-from-gray-100 rdt-to-gray-300",
 } as const;
 
-export const RouteBoundaryOptions = Object.keys(
-  ROUTE_BOUNDARY_GRADIENTS
-) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[];
+export const RouteBoundaryOptions = Object.keys(ROUTE_BOUNDARY_GRADIENTS) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[];
 export type RouteWildcards = Record<string, Record<string, string> | undefined>;
 export type TriggerPosition =
   | "top-left"
@@ -237,9 +233,7 @@ export const rdtReducer = (
         }),
       };
     case "ADD_OR_REMOVE_TERMINAL": {
-      const terminalExists = state.terminals.some(
-        (terminal) => terminal.id === payload
-      );
+      const terminalExists = state.terminals.some((terminal) => terminal.id === payload);
       if (terminalExists) {
         return {
           ...state,

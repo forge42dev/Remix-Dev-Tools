@@ -125,34 +125,10 @@ describe("setIsDetachedIfRequired", () => {
 });
 
 describe("resetIsDetachedCheck", () => {
-  it('should set REMIX_DEV_TOOLS_CHECK_DETACHED to "false" if window is detached and REMIX_DEV_TOOLS_CHECK_DETACHED is not "false"', () => {
-    const getStorageSpy = vi.spyOn(localStorage, "getItem").mockReturnValue("true");
+  it('should set REMIX_DEV_TOOLS_CHECK_DETACHED to "false" whenever the window is mounted', () => {
     const setStorageSpy = vi.spyOn(localStorage, "setItem");
-    const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(true);
 
     resetIsDetachedCheck();
-    expect(isDetachedWindowSpy).toHaveBeenCalled();
-    expect(getStorageSpy).toHaveBeenCalledWith(REMIX_DEV_TOOLS_CHECK_DETACHED);
-    expect(setStorageSpy).not.toHaveBeenCalledWith(REMIX_DEV_TOOLS_CHECK_DETACHED);
-  });
-
-  it("should not set REMIX_DEV_TOOLS_CHECK_DETACHED if window is not detached", () => {
-    //const getStorageSpy = vi.spyOn(localStorage, "getItem").mockReturnValue("true");
-    const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(false);
-    const setSessionSpy = vi.spyOn(sessionStorage, "setItem");
-
-    resetIsDetachedCheck();
-    expect(isDetachedWindowSpy).toHaveBeenCalled();
-    expect(setSessionSpy).not.toHaveBeenCalled();
-  });
-
-  it('should not set REMIX_DEV_TOOLS_CHECK_DETACHED if REMIX_DEV_TOOLS_CHECK_DETACHED is already "false"', () => {
-    // const getStorageSpy = vi.spyOn(localStorage, "getItem").mockReturnValue("false");
-    const setStorageSpy = vi.spyOn(localStorage, "setItem");
-    // const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(false);
-
-    resetIsDetachedCheck();
-
-    expect(setStorageSpy).not.toHaveBeenCalled();
+    expect(setStorageSpy).toHaveBeenCalledWith(REMIX_DEV_TOOLS_CHECK_DETACHED, "false");
   });
 });

@@ -10,24 +10,24 @@ import { Tabs } from "./layout/Tabs";
 import { ContentPanel } from "./layout/ContentPanel";
 import rdtStylesheet from "../input.css?inline";
 import { useOutletAugment } from "./hooks/useOutletAugment";
-import { useSetUnloadDetachedWindowChecks } from "./hooks/detached/useSetUnloadDetachedWindowChecks";
+import { useResetDetachmentCheck } from "./hooks/detached/useResetDetachmentCheck";
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries";
 import { REMIX_DEV_TOOLS } from "./utils/storage";
-
-type Props = RemixDevToolsProps;
+import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached";
 
 const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />;
 
-const RemixDevTools = ({ plugins }: Props) => {
+const RemixDevTools = ({ plugins }: RemixDevToolsProps) => {
   useTimelineHandler();
   useOutletAugment();
-  useSetUnloadDetachedWindowChecks();
+  useResetDetachmentCheck();
   useSetRouteBoundaries();
-  const { detachedWindowOwner } = useDetachedWindowControls();
+  useSyncStateWhenDetached();
+  const { detachedWindowOwner, isDetached } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
   const { persistOpen } = usePersistOpen();
   const { position } = settings;
-  const [isOpen, setIsOpen] = useState(settings.defaultOpen || persistOpen);
+  const [isOpen, setIsOpen] = useState(isDetached || settings.defaultOpen || persistOpen);
   const leftSideOriented = position.includes("left");
 
   // If the dev tools are detached, we don't want to render the main panel

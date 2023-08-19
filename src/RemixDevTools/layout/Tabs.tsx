@@ -6,7 +6,12 @@ import { useTabs } from "../hooks/useTabs";
 import { Tab, Tabs as TabType } from "../tabs";
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll";
 import { twMerge } from "tailwind-merge";
-import { REMIX_DEV_TOOLS_IS_DETACHED, setStorageItem } from "../utils/storage";
+import {
+  REMIX_DEV_TOOLS_DETACHED_OWNER,
+  REMIX_DEV_TOOLS_IS_DETACHED,
+  setSessionItem,
+  setStorageItem,
+} from "../utils/storage";
 
 declare global {
   interface Window {
@@ -59,12 +64,13 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
     const rdtWindow = window.open(
       window.location.href,
       "",
-      `popup,width=${window.innerWidth},height=${settings.height}`
+      `popup,width=${window.innerWidth},height=${settings.height},top=${window.screen.height},left=${window.screenLeft}}`
     );
 
     if (rdtWindow) {
       setDetachedWindowOwner(true);
       setStorageItem(REMIX_DEV_TOOLS_IS_DETACHED, "true");
+      setSessionItem(REMIX_DEV_TOOLS_DETACHED_OWNER, "true");
       rdtWindow.RDT_MOUNTED = true;
     }
   };

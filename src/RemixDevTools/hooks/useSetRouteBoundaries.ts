@@ -1,9 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer";
-import {
-  useSettingsContext,
-  useDetachedWindowControls,
-} from "../context/useRDTContext";
+import { useSettingsContext, useDetachedWindowControls } from "../context/useRDTContext";
 import { useAttachListener } from "./useAttachListener";
 
 export const useSetRouteBoundaries = () => {
@@ -35,11 +32,7 @@ export const useSetRouteBoundaries = () => {
         }
       }
     },
-    [
-      settings.hoveredRoute,
-      settings.isHoveringRoute,
-      settings.routeBoundaryGradient,
-    ]
+    [settings.hoveredRoute, settings.isHoveringRoute, settings.routeBoundaryGradient]
   );
   // Mouse left the document => remove classes => set isHovering to false so that detached mode removes as well
   useAttachListener("mouseleave", "document", () => {
@@ -64,7 +57,6 @@ export const useSetRouteBoundaries = () => {
   // We apply/remove classes on state change which happens in Page tab
   useEffect(() => {
     if (!settings.isHoveringRoute && !settings.hoveredRoute) return;
-
     applyOrRemoveClasses();
     if (!settings.isHoveringRoute && !detachedWindow) {
       setSettings({

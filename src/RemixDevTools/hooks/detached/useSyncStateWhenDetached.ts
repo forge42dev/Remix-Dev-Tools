@@ -1,13 +1,12 @@
-import { useContext } from "react";
-import { RDTContext, getExistingStateFromStorage } from "../../context/RDTContext";
+import { getExistingStateFromStorage } from "../../context/RDTContext";
 import { REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE } from "../../utils/storage";
 import { useAttachListener } from "../useAttachListener";
-import { useCheckIfStillDetached } from "./useCheckIfStillDetached";
+import { useRDTContext } from "../../context/useRDTContext";
 
 const refreshRequiredKeys = [REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE];
 
-export const useRefreshDetachedPanel = () => {
-  const { dispatch, state } = useContext(RDTContext);
+export const useSyncStateWhenDetached = () => {
+  const { dispatch, state } = useRDTContext();
 
   useAttachListener("storage", "window", (e: any) => {
     // Not caused by the dev tools
@@ -35,5 +34,4 @@ export const useRefreshDetachedPanel = () => {
     const newState = getExistingStateFromStorage();
     dispatch({ type: "SET_WHOLE_STATE", payload: newState });
   });
-  useCheckIfStillDetached();
 };

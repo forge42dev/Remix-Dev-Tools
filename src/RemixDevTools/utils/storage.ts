@@ -11,5 +11,5 @@ export const REMIX_DEV_TOOLS_STATE = "remixDevTools_state";
 export const REMIX_DEV_TOOLS_SETTINGS = "remixDevTools_settings";
 export const REMIX_DEV_TOOLS_DETACHED = "remixDevTools_detached";
 export const REMIX_DEV_TOOLS_DETACHED_OWNER = "remixDevTools_detached_owner";
-export const REMIX_DEV_TOOLS_IS_DETACHED = "remixDevTools_detached_is_detached";
+export const REMIX_DEV_TOOLS_IS_DETACHED = "remixDevTools_is_detached";
 export const REMIX_DEV_TOOLS_CHECK_DETACHED = "remixDevTools_check_detached";
