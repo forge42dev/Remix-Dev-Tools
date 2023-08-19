@@ -3,7 +3,8 @@ import { CopySlash, Radio, X } from "lucide-react";
 import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "../context/useRDTContext";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { useTabs } from "../hooks/useTabs";
-import { Tab, Tabs as TabType } from "../tabs";
+import { Tabs as TabType } from "../tabs";
+import { type Tab } from "../RemixDevTools";
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll";
 import { twMerge } from "tailwind-merge";
 import {

@@ -1,5 +1,5 @@
 import { useRemixForgeSocket, initClient, initServer, RemixDevTools } from "./RemixDevTools";
-import { type Tab } from "./RemixDevTools/tabs";
+import { type Tab } from "./RemixDevTools/RemixDevTools";
 
 export type Plugin = (...args: any) => Tab;
 

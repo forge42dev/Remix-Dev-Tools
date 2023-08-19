@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { TimelineTab } from "../tabs/TimelineTab";
-import { Tab } from "../tabs";
+import { type Tab } from "../RemixDevTools";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { useTabs } from "../hooks/useTabs";
 import { Fragment } from "react";
