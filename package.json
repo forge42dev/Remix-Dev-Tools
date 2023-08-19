@@ -6,7 +6,11 @@
   "license": "MIT",
   "keywords": [
     "remix",
-    "remix-dev-tools"
+    "remix-dev-tools",
+    "remix-development-tools",
+    "remix-debugger",
+    "remix-debugger-ui",
+    "remix-debugger-ui-react"
   ],
   "private": false,
   "type": "module",
