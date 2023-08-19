@@ -14,6 +14,9 @@
   border-color: #e5e7eb;
   /* 2 */
 }
+.remix-dev-tools .w-json-view-container {
+  background-color: transparent !important;
+}
 /*
 1. Add the correct height in Firefox.
 2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
@@ -361,7 +364,7 @@ Make sure disabled buttons don't get the pointer cursor.
 */
 
 .remix-dev-tools img,
-.remix-dev-tools svg,
+.remix-dev-tools svg:not(.w-rjv-copied),
 .remix-dev-tools video,
 .remix-dev-tools canvas,
 .remix-dev-tools audio,

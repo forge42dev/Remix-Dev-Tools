@@ -1,8 +1,9 @@
-import { useCallback, useContext, useEffect } from "react";
-import { RDTContext, REMIX_DEV_TOOLS } from "./RDTContext";
+import { useCallback, useContext } from "react";
+import { RDTContext } from "./RDTContext";
 import { TimelineEvent } from "./timeline/types";
 import { Terminal } from "./terminal/types";
 import { RemixDevToolsState } from "./rdtReducer";
+
 /**
  * Returns an object containing the current state and dispatch function of the RDTContext.
  * Throws an error if used outside of a RDTContextProvider.
@@ -18,18 +19,31 @@ const useRDTContext = () => {
     throw new Error("useRDTContext must be used within a RDTContextProvider");
   }
   const { state, dispatch } = context;
-
-  useEffect(() => {
-    const { settings, ...rest } = state;
-    // Store user settings for dev tools into local storage
-    localStorage.setItem(REMIX_DEV_TOOLS, JSON.stringify(settings));
-    // Store general state into session storage
-    sessionStorage.setItem(REMIX_DEV_TOOLS, JSON.stringify(rest));
-  }, [state]);
-
   return {
     dispatch,
     state,
+  };
+};
+
+export const useDetachedWindowControls = () => {
+  const { state, dispatch } = useRDTContext();
+  const { detachedWindow, detachedWindowOwner } = state;
+
+  const setDetachedWindowOwner = useCallback(
+    (isDetachedWindowOwner: boolean) => {
+      dispatch({
+        type: "SET_DETACHED_WINDOW_OWNER",
+        payload: isDetachedWindowOwner,
+      });
+    },
+    [dispatch]
+  );
+
+  return {
+    detachedWindow: detachedWindow || window.RDT_MOUNTED,
+    detachedWindowOwner,
+    setDetachedWindowOwner,
+    isDetached: detachedWindow || detachedWindowOwner,
   };
 };
 

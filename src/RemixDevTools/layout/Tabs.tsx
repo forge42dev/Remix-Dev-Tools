@@ -1,10 +1,23 @@
 import clsx from "clsx";
-import { Radio } from "lucide-react";
-import { usePersistOpen, useSettingsContext } from "../context/useRDTContext";
+import { CopySlash, Radio, X } from "lucide-react";
+import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "../context/useRDTContext";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { useTabs } from "../hooks/useTabs";
 import { Tab, Tabs as TabType } from "../tabs";
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll";
+import { twMerge } from "tailwind-merge";
+import {
+  REMIX_DEV_TOOLS_DETACHED_OWNER,
+  REMIX_DEV_TOOLS_IS_DETACHED,
+  setSessionItem,
+  setStorageItem,
+} from "../utils/storage";
+
+declare global {
+  interface Window {
+    RDT_MOUNTED: boolean;
+  }
+}
 
 interface TabsProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,9 +38,7 @@ const Tab = ({
   const { setSettings } = useSettingsContext();
   return (
     <div
-      onClick={() =>
-        onClick ? onClick() : setSettings({ activeTab: tab.id as TabType })
-      }
+      onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabType }))}
       className={clsx(
         "rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all",
         activeTab !== tab.id && "rdt-hover:opacity-50",
@@ -48,60 +59,70 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
   const { visibleTabs } = useTabs(isConnected, isConnecting, plugins);
   const shouldShowConnectToForge = !isConnected || isConnecting;
   const scrollRef = useHorizontalScroll();
+  const { setDetachedWindowOwner, detachedWindowOwner, detachedWindow } = useDetachedWindowControls();
+  const handleDetachment = () => {
+    const rdtWindow = window.open(
+      window.location.href,
+      "",
+      `popup,width=${window.innerWidth},height=${settings.height},top=${window.screen.height},left=${window.screenLeft}}`
+    );
 
+    if (rdtWindow) {
+      setDetachedWindowOwner(true);
+      setStorageItem(REMIX_DEV_TOOLS_IS_DETACHED, "true");
+      setSessionItem(REMIX_DEV_TOOLS_DETACHED_OWNER, "true");
+      rdtWindow.RDT_MOUNTED = true;
+    }
+  };
   return (
     <div className="rdt-relative rdt-flex rdt-h-8 rdt-w-full rdt-bg-gray-800">
       <div
         ref={scrollRef}
-        className="remix-dev-tools-tab rdt-mr-10 rdt-flex rdt-h-full rdt-w-full rdt-overflow-x-auto rdt-overflow-y-hidden"
+        className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-overflow-x-auto rdt-overflow-y-hidden"
       >
         {visibleTabs.map((tab) => (
-          <Tab
-            key={tab.id}
-            tab={tab}
-            activeTab={activeTab}
-            className="rdt-duration-300"
-          />
+          <Tab key={tab.id} tab={tab} activeTab={activeTab} className="rdt-duration-300" />
         ))}
-        {shouldShowConnectToForge && (
-          <Tab
-            tab={{
-              id: "connect",
-              name: isConnecting
-                ? "Connecting to Forge..."
-                : "Connect to Remix Forge",
-              requiresForge: false,
-              hideTimeline: false,
-              component: <></>,
-              icon: <Radio size={16} />,
-            }}
-            className={clsx(
-              isConnecting &&
-                "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default",
-              "rdt-ml-auto rdt-mr-4 rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all"
-            )}
-            onClick={() => setSettings({ shouldConnectWithForge: true })}
-          />
-        )}
+        <div className={clsx("rdt-ml-auto rdt-flex rdt-items-center rdt-gap-2", detachedWindow ? "" : "rdt-pr-4")}>
+          {shouldShowConnectToForge && (
+            <Tab
+              tab={{
+                id: "connect",
+                name: isConnecting ? "Connecting to Forge..." : "Connect to Remix Forge",
+                requiresForge: false,
+                hideTimeline: false,
+                component: <></>,
+                icon: <Radio size={16} />,
+              }}
+              className={twMerge(
+                clsx(
+                  isConnecting && "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default",
+                  "rdt-ml-auto rdt-h-full",
+                  detachedWindow ? "rdt-mr-0" : "rdt-mr-2 rdt-border-r-2"
+                )
+              )}
+              onClick={() => setSettings({ shouldConnectWithForge: true })}
+            />
+          )}
+          {!detachedWindow && (
+            <>
+              {!detachedWindowOwner && (
+                <CopySlash
+                  onClick={handleDetachment}
+                  className="rdt-cursor-pointer rdt-transition-all hover:rdt-text-green-600"
+                />
+              )}
+              <X
+                onClick={() => {
+                  setPersistOpen(false);
+                  setIsOpen(false);
+                }}
+                className="rdt-h-6 rdt-w-6   rdt-cursor-pointer rdt-transition-all hover:rdt-text-red-600"
+              />
+            </>
+          )}
+        </div>
       </div>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        onClick={() => {
-          setPersistOpen(false);
-          setIsOpen(false);
-        }}
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={2}
-        stroke="currentColor"
-        className="rdt-absolute rdt-right-4 rdt-top-1/2 rdt-h-6 rdt-w-6 -rdt-translate-y-1/2 rdt-cursor-pointer rdt-transition-all hover:rdt-text-red-600"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
     </div>
   );
 };

@@ -8,7 +8,6 @@ import { VsCodeButton } from "../components/VScodeButton";
 import { useMemo } from "react";
 import { isLayoutRoute } from "../utils/routing";
 import { useSettingsContext } from "../context/useRDTContext";
-import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -47,27 +46,14 @@ const PageTab = () => {
   const reversed = useMemo(() => routes.reverse(), [routes]);
   const { revalidate, state } = useRevalidator();
   const { isConnected, sendJsonMessage } = useRemixForgeSocket();
-  const { settings } = useSettingsContext();
+  const { setSettings } = useSettingsContext();
   const onHover = (path: string, type: "enter" | "leave") => {
-    const classes = [
-      "rdt-transition-all rdt-rounded rdt-apply-tw",
-      ROUTE_BOUNDARY_GRADIENTS[settings.routeBoundaryGradient],
-    ].join(" ");
-    const isRoot = path === "root";
-    const elements = isRoot
-      ? document.getElementsByTagName("body")
-      : document.getElementsByClassName(path);
-
-    const element = elements.item(elements.length - 1);
-
-    if (element) {
-      // Root has no outlet so we need to use the body, otherwise we get the outlet that is the next sibling of the element
-      const outlet = isRoot ? element : (element.nextSibling as HTMLElement);
-      for (const c of classes.split(" ")) {
-        outlet.classList[type === "enter" ? "add" : "remove"](c);
-      }
-    }
+    setSettings({
+      hoveredRoute: path,
+      isHoveringRoute: type === "enter",
+    });
   };
+
   return (
     <div className="rdt-relative rdt-flex rdt-h-full rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
       <button

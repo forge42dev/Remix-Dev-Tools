@@ -6,10 +6,7 @@ type Route = Pick<EntryRoute, "path" | "parentId">;
  * @param chunk Chunk to convert
  * @returns Returns the converted chunk
  */
-export const convertRemixPathToUrl = (
-  routes: RouteManifest<Route>,
-  route: Route
-) => {
+export const convertRemixPathToUrl = (routes: RouteManifest<Route>, route: Route) => {
   let currentRoute: Route | null = route;
   const path = [];
 
@@ -21,4 +18,13 @@ export const convertRemixPathToUrl = (
   }
   const output = path.reverse().filter(Boolean).join("/");
   return output === "" ? "/" : output;
+};
+
+export const tryParseJson = (json: string | null) => {
+  if (!json) return null;
+  try {
+    return JSON.parse(json);
+  } catch (e) {
+    return null;
+  }
 };

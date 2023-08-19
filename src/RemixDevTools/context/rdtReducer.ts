@@ -3,19 +3,15 @@ import type { Tabs } from "../tabs";
 import { Terminal } from "./terminal/types";
 export const ROUTE_BOUNDARY_GRADIENTS = {
   sea: "rdt-bg-green-100 rdt-bg-gradient-to-r rdt-from-cyan-500/50 rdt-to-blue-500/50",
-  hyper:
-    "rdt-bg-gradient-to-r rdt-from-pink-500 rdt-via-red-500 rdt-to-yellow-500",
-  gotham:
-    "rdt-bg-gradient-to-r rdt-from-gray-700 rdt-via-gray-900 rdt-to-black",
+  hyper: "rdt-bg-gradient-to-r rdt-from-pink-500 rdt-via-red-500 rdt-to-yellow-500",
+  gotham: "rdt-bg-gradient-to-r rdt-from-gray-700 rdt-via-gray-900 rdt-to-black",
   gray: "rdt-bg-gradient-to-r rdt-from-gray-700/50 rdt-via-gray-900/50 rdt-to-black/50",
   watermelon: "rdt-bg-gradient-to-r rdt-from-red-500 rdt-to-green-500",
   ice: "rdt-bg-gradient-to-r rdt-from-rose-100 rdt-to-teal-100",
   silver: "rdt-bg-gradient-to-r rdt-from-gray-100 rdt-to-gray-300",
 } as const;
 
-export const RouteBoundaryOptions = Object.keys(
-  ROUTE_BOUNDARY_GRADIENTS
-) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[];
+export const RouteBoundaryOptions = Object.keys(ROUTE_BOUNDARY_GRADIENTS) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[];
 export type RouteWildcards = Record<string, Record<string, string> | undefined>;
 export type TriggerPosition =
   | "top-left"
@@ -40,8 +36,12 @@ export type RemixDevToolsState = {
     defaultOpen: boolean;
     hideUntilHover: boolean;
     position: TriggerPosition;
+    hoveredRoute: string;
+    isHoveringRoute: boolean;
   };
   persistOpen: boolean;
+  detachedWindow: boolean;
+  detachedWindowOwner: boolean;
 };
 
 export const initialState: RemixDevToolsState = {
@@ -59,8 +59,12 @@ export const initialState: RemixDevToolsState = {
     defaultOpen: false,
     hideUntilHover: false,
     position: "bottom-right",
+    hoveredRoute: "",
+    isHoveringRoute: false,
   },
   persistOpen: false,
+  detachedWindow: false,
+  detachedWindowOwner: false,
 };
 
 export type ReducerActions = Pick<RemixDevToolsActions, "type">["type"];
@@ -113,6 +117,16 @@ type SetProcessId = {
   };
 };
 
+type SetDetachedWindowOwner = {
+  type: "SET_DETACHED_WINDOW_OWNER";
+  payload: boolean;
+};
+
+type SetWholeState = {
+  type: "SET_WHOLE_STATE";
+  payload: RemixDevToolsState;
+};
+
 type SetSettings = {
   type: "SET_SETTINGS";
   payload: Partial<RemixDevToolsState["settings"]>;
@@ -144,6 +158,8 @@ export type RemixDevToolsActions =
   | SetProcessId
   | PurgeTimeline
   | SetSettings
+  | SetWholeState
+  | SetDetachedWindowOwner
   | SetIsSubmittedAction
   | SetPersistOpenAction;
 
@@ -152,6 +168,12 @@ export const rdtReducer = (
   { type, payload }: RemixDevToolsActions
 ): RemixDevToolsState => {
   switch (type) {
+    case "SET_DETACHED_WINDOW_OWNER":
+      return {
+        ...state,
+        detachedWindowOwner: payload,
+      };
+
     case "SET_SETTINGS":
       return {
         ...state,
@@ -165,6 +187,12 @@ export const rdtReducer = (
         ...state,
         timeline: [payload, ...state.timeline],
       };
+
+    case "SET_WHOLE_STATE": {
+      return {
+        ...payload,
+      };
+    }
 
     case "PURGE_TIMELINE":
       return {
@@ -205,9 +233,7 @@ export const rdtReducer = (
         }),
       };
     case "ADD_OR_REMOVE_TERMINAL": {
-      const terminalExists = state.terminals.some(
-        (terminal) => terminal.id === payload
-      );
+      const terminalExists = state.terminals.some((terminal) => terminal.id === payload);
       if (terminalExists) {
         return {
           ...state,

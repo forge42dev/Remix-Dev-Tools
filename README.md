@@ -1,3 +1,7 @@
+<center>
+<img src="./assets/remix-dev-tools.png" style="  width:320px; height:320px;" />
+</center>
+
 # Remix Development Tools
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/Code-Forge-Net/Remix-Dev-Tools?style=social)
@@ -16,6 +20,18 @@ Remix Development Tools is an open-source package designed to enhance your devel
 ### Timeline
 ![timeline](./assets/timeline.gif)
 
+## What's new?
+
+### v2.1.0
+ Detached mode support!
+
+
+Json viewer improvements:
+- Number of items in objects/arrays
+- Copy to clipboard
+- type of the value
+- Doesn't close on revalidate anymore
+- Different UI
 
 ## Features
 
@@ -56,6 +72,10 @@ The terminal tab allows you to run terminal commands from the Remix Dev Tools. T
 - You can press `Arrow Left` and `Arrow Right` to cycle through all available commands in your projects package.json file.
 - You can press `Ctrl + C` to cancel the current command.
 - You can press `Ctrl + L` to clear the terminal.
+
+### Detached mode
+
+Detached mode allows you to un-dock the Remix Dev Tools from the browser and move it to a separate window. This is useful if you want to have the dev tools open on a separate monitor or if you want to have it open on a separate window on the same monitor.
 
 ## Getting Started
 

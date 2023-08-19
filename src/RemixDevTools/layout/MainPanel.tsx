@@ -1,19 +1,40 @@
 import clsx from "clsx";
 import { useResize } from "../hooks/useResize";
-import { useSettingsContext } from "../context/useRDTContext";
+import {
+  useDetachedWindowControls,
+  useSettingsContext,
+} from "../context/useRDTContext";
+import { useState } from "react";
+import { useAttachWindowListener } from "../hooks/useAttachListener";
+import { useDebounce } from "../hooks/useDebounce";
 
 interface MainPanelProps {
   children: React.ReactNode;
   isOpen: boolean;
 }
 
+const useResizeDetachedPanel = () => {
+  const { isDetached } = useDetachedWindowControls();
+  const [state, setState] = useState(0);
+  const debounce = useDebounce(() => {
+    setState(state + 1);
+  });
+  useAttachWindowListener("resize", debounce, isDetached);
+};
+
 const MainPanel = ({ children, isOpen }: MainPanelProps) => {
   const { settings } = useSettingsContext();
+  const { detachedWindow } = useDetachedWindowControls();
   const { height } = settings;
   const { enableResize, disableResize, isResizing } = useResize();
+  useResizeDetachedPanel();
+
   return (
     <div
-      style={{ zIndex: 9998, height }}
+      style={{
+        zIndex: 9998,
+        height: detachedWindow ? window.innerHeight : height,
+      }}
       className={clsx(
         "rdt-duration-600 rdt-fixed rdt-bottom-0 rdt-left-0 rdt-box-border rdt-flex rdt-w-screen rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
         isOpen ? "rdt-opacity-100 rdt-drop-shadow-2xl" : "rdt-h-0",

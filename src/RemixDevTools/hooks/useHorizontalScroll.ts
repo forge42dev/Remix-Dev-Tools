@@ -1,7 +1,3 @@
-/**
- * @fileoverview Provide horizontal scroll capabilities to a component.
- */
-
 import { useRef, useEffect } from "react";
 
 export const useHorizontalScroll = () => {
