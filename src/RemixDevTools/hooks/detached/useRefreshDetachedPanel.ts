@@ -1,23 +1,13 @@
-import { useLocation } from "@remix-run/react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { RDTContext, getExistingStateFromStorage } from "../../context/RDTContext";
 import { REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE } from "../../utils/storage";
 import { useAttachListener } from "../useAttachListener";
 import { useCheckIfStillDetached } from "./useCheckIfStillDetached";
-import { getRouteFromLocalStorage, setRouteInLocalStorage } from "./useListenToRouteChange";
 
 const refreshRequiredKeys = [REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE];
 
 export const useRefreshDetachedPanel = () => {
   const { dispatch, state } = useContext(RDTContext);
-  const location = useLocation();
-  const route = getRouteFromLocalStorage();
-
-  useEffect(() => {
-    if (route !== location.pathname && state.detachedWindowOwner) {
-      setRouteInLocalStorage(location.pathname);
-    }
-  }, [location.pathname, state.detachedWindowOwner, route]);
 
   useAttachListener("storage", "window", (e: any) => {
     // Not caused by the dev tools
