@@ -1,5 +1,5 @@
 <center>
-<img src="./assets/remix-dev-tools.png" style="  width:320px; height:320px;" />
+<img src="./assets/remix-dev-tools.png" align="center" style="width:160px; height:160px;" />
 </center>
 
 # Remix Development Tools
