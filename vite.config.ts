@@ -8,32 +8,14 @@ export default defineConfig({
     {
       ...ts2({
         check: true,
-        exclude: [
-          "**/__tests__/**",
-          "**/__mocks__/**",
-          "**/*.test.ts",
-          "**/*.test.tsx",
-          "**/*.config.ts",
-          "**/env.ts",
-          "**/components/**",
-          "**/context/**",
-          "**/hooks/detached/**",
-          "**/hooks/useOutletAugment.tsx",
-          "**/hooks/useHorizontalScroll.ts",
-          "**/hooks/useAttachListener.ts",
-          "**/hooks/useDebounce.ts",
-          "**/hooks/useSetRouteBoundaries.ts",
-          "**/hooks/useResize.ts",
-          "**/hooks/useTabs.ts",
-          "**/hooks/useTerminalShortcuts.ts",
-          "**/hooks/useTimelineHandler.ts",
-          "**/tabs/**",
-          "**/utils/**",
-          "**/remix-app-for-testing/**",
-          "**/monitor/**",
-          "**/layout/**",
+        include: [
+          "**/RemixDevTools/RemixDevTools.tsx",
+          "**/RemixDevTools/index.ts",
+          "**/src/index.ts",
+          "**/hooks/useRemixForgeSocket.ts",
+          "**/tabs/index.tsx",
+          "**/init/project.tsx",
         ],
-
         tsconfig: resolve(__dirname, `tsconfig.json`),
         tsconfigOverride: {
           compilerOptions: {

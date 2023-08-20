@@ -44,7 +44,7 @@ export const useCheckIfStillDetached = () => {
 
       // If the detached window is unloaded we want to check if it is still there
       if (shouldCheckDetached && !checking) {
-        setTimeout(() => setChecking(true), 50);
+        setTimeout(() => setChecking(true), 200);
       }
     },
     [checking]

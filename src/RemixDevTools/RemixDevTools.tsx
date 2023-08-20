@@ -12,7 +12,13 @@ import rdtStylesheet from "../input.css?inline";
 import { useOutletAugment } from "./hooks/useOutletAugment";
 import { useResetDetachmentCheck } from "./hooks/detached/useResetDetachmentCheck";
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries";
-import { REMIX_DEV_TOOLS } from "./utils/storage";
+import {
+  REMIX_DEV_TOOLS,
+  REMIX_DEV_TOOLS_DETACHED_OWNER,
+  REMIX_DEV_TOOLS_IS_DETACHED,
+  setSessionItem,
+  setStorageItem,
+} from "./utils/storage";
 import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached";
 
 const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />;
@@ -23,7 +29,7 @@ const RemixDevTools = ({ plugins }: RemixDevToolsProps) => {
   useResetDetachmentCheck();
   useSetRouteBoundaries();
   useSyncStateWhenDetached();
-  const { detachedWindowOwner, isDetached } = useDetachedWindowControls();
+  const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
   const { persistOpen } = usePersistOpen();
   const { position } = settings;
@@ -32,7 +38,18 @@ const RemixDevTools = ({ plugins }: RemixDevToolsProps) => {
 
   // If the dev tools are detached, we don't want to render the main panel
   if (detachedWindowOwner) {
-    return null;
+    return (
+      <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
+        <Trigger
+          isOpen={false}
+          setIsOpen={() => {
+            setDetachedWindowOwner(false);
+            setStorageItem(REMIX_DEV_TOOLS_IS_DETACHED, "false");
+            setSessionItem(REMIX_DEV_TOOLS_DETACHED_OWNER, "false");
+          }}
+        />
+      </div>
+    );
   }
 
   return (
