@@ -1,6 +1,6 @@
-<center>
+<p align="center">
 <img src="./assets/remix-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" width="160" height="160" alt="Remix Development Tools"  />
-</center>
+</p>
 
 # Remix Development Tools
 
