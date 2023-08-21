@@ -36,7 +36,6 @@ export const initServer = (context: EntryContext) => {
 export const initClient = () => {
   window.__remixRouteModules = Object.keys(window.__remixRouteModules).reduce((acc, key) => {
     const value = window.__remixRouteModules[key];
-
     if (key === "root") {
       return {
         ...acc,
