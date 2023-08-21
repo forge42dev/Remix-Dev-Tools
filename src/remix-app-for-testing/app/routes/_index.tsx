@@ -1,5 +1,5 @@
 import type { ActionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderArgs } from "@remix-run/node";
+import { json, redirect, type LoaderArgs, defer } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
 
@@ -11,7 +11,12 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  return json({ message: "Hello World!" });
+  const test = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("test");
+    }, 1000);
+  })
+  return defer({ message: "Hello World!", test });
 };
 
 export const action = async ({ request }: ActionArgs) => {

@@ -11,6 +11,7 @@ export const SettingsTab = () => {
   const { settings, setSettings } = useSettingsContext();
   const [minHeight, setMinHeight] = useState(settings.minHeight.toString());
   const [maxHeight, setMaxHeight] = useState(settings.maxHeight.toString());
+  const [expansionLevel, setExpansionLevel] = useState(settings.expansionLevel.toString());
   return (
     <Stack className="rdt-mb-4">
       <h1>
@@ -28,9 +29,7 @@ export const SettingsTab = () => {
       <Checkbox
         id="hideUntilHover"
         hint="The dev tools trigger will be hidden on the page until you hover over it."
-        onChange={() =>
-          setSettings({ hideUntilHover: !settings.hideUntilHover })
-        }
+        onChange={() => setSettings({ hideUntilHover: !settings.hideUntilHover })}
         value={settings.hideUntilHover}
       >
         Hide the trigger until hovered
@@ -46,12 +45,7 @@ export const SettingsTab = () => {
           onChange={(e) => setMinHeight(e.target.value ?? "")}
           onBlur={(e) => {
             const value = parseInt(e.target.value);
-            if (
-              value &&
-              !isNaN(value) &&
-              value < settings.maxHeight &&
-              value > 100
-            ) {
+            if (value && !isNaN(value) && value < settings.maxHeight && value > 100) {
               setSettings({ minHeight: value });
             }
           }}
@@ -67,6 +61,20 @@ export const SettingsTab = () => {
             const value = parseInt(e.target.value);
             if (value && !isNaN(value) && value > settings.minHeight) {
               setSettings({ maxHeight: value });
+            }
+          }}
+        />
+        <Input
+          name="expansionLevel"
+          id="expansionLevel"
+          label="Depth of expansion for JSON objects"
+          hint="This allows you to change the depth of expanded properties of json objects."
+          value={expansionLevel}
+          onChange={(e) => setExpansionLevel(e.target.value ?? "")}
+          onBlur={(e) => {
+            const value = parseInt(e.target.value);
+            if (value && !isNaN(value) && value >= 0) {
+              setSettings({ expansionLevel: value });
             }
           }}
         />

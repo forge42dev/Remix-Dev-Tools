@@ -20,13 +20,17 @@ export const useListenToRouteChange = () => {
   const ref = useRef(locationRoute);
   const route = getRouteFromLocalStorage();
 
+  // Used by the owner window only
   useEffect(() => {
+    // If the route changes and this is the original window store the event into local storage
     if (route !== locationRoute && detachedWindowOwner) {
       setRouteInLocalStorage(locationRoute);
     }
   }, [locationRoute, detachedWindowOwner, route]);
 
+  // Used to sync the route between the routes
   useAttachListener("storage", "window", (e: any) => {
+    // We only care about the key that changes the route
     if (e.key !== LOCAL_STORAGE_ROUTE_KEY) {
       return;
     }

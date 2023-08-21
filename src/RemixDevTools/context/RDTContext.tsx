@@ -90,7 +90,7 @@ export const RDTContextProvider = ({ children }: ContextProps) => {
     const { settings, detachedWindow, detachedWindowOwner, ...rest } = state;
     // Store user settings for dev tools into local storage
     setStorageItem(REMIX_DEV_TOOLS_SETTINGS, JSON.stringify(settings));
-    // Store general state into session storage
+    // Store general state into local storage
     setStorageItem(REMIX_DEV_TOOLS_STATE, JSON.stringify(rest));
   }, [state]);
 

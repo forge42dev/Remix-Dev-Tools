@@ -1,5 +1,5 @@
 <center>
-<img src="./assets/remix-dev-tools.png" align="center" style="width:160px; height:160px;" />
+<img src="./assets/remix-dev-tools.png" align="middle" width="160" height="160" alt="Remix Development Tools"  />
 </center>
 
 # Remix Development Tools
@@ -22,6 +22,9 @@ Remix Development Tools is an open-source package designed to enhance your devel
 
 ## What's new?
 
+## v2.1.3
+- Deferred data support! You can see your deferred data in the active page tab now being loaded and swapped in realtime
+- Settings option to change the default expansion level of json viewer (Default: 0)
 ### v2.1.0
  Detached mode support!
 

@@ -36,6 +36,7 @@ export type RemixDevToolsState = {
     defaultOpen: boolean;
     hideUntilHover: boolean;
     position: TriggerPosition;
+    expansionLevel: number;
     hoveredRoute: string;
     isHoveringRoute: boolean;
   };
@@ -59,6 +60,7 @@ export const initialState: RemixDevToolsState = {
     defaultOpen: false,
     hideUntilHover: false,
     position: "bottom-right",
+    expansionLevel: 0,
     hoveredRoute: "",
     isHoveringRoute: false,
   },
