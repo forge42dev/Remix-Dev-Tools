@@ -105,6 +105,7 @@
     "@uiw/react-json-view": "^1.8.4",
     "clsx": "^2.0.0",
     "lucide-react": "^0.263.1",
+    "react-d3-tree": "^3.6.1",
     "react-use-websocket": "^4.3.1",
     "tailwind-merge": "^1.14.0"
   }

@@ -1,6 +1,6 @@
 import { MouseEvent, useState } from "react";
 import { EntryRoute } from "@remix-run/react/dist/routes";
-import { convertRemixPathToUrl } from "../utils/sanitize";
+import { convertRemixPathToUrl, createRouteTree } from "../utils/sanitize";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion";
 import { useNavigate } from "@remix-run/react";
 import { Tag } from "../components/Tag";
@@ -10,6 +10,7 @@ import { NewRouteForm } from "../components/NewRouteForm";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
 import { isLeafRoute } from "../utils/routing";
 import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange";
+import Tree from "react-d3-tree";
 
 const RoutesTab = () => {
   const { settings, setSettings } = useSettingsContext();
@@ -26,6 +27,7 @@ const RoutesTab = () => {
       })
       .filter((route) => isLeafRoute(route))
   );
+  const [treeRoutes] = useState(createRouteTree(window.__remixManifest.routes));
   const navigate = useNavigate();
 
   const openNewRoute = (path: string) => (e: MouseEvent<HTMLDivElement>) => {
@@ -46,6 +48,7 @@ const RoutesTab = () => {
           </AccordionContent>
         </AccordionItem>
       )}
+      <Tree orientation="vertical" data={treeRoutes} />
       {routes?.map((route) => {
         const hasWildcard = route.route.includes(":");
         const wildcards = routeWildcards[route.id];
