@@ -1,7 +1,8 @@
 import type { ActionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderArgs, defer } from "@remix-run/node";
+import {   redirect, type LoaderArgs, defer } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Link, useFetcher,  useSubmit } from "@remix-run/react"; 
+import { Link, useFetcher,   useSubmit } from "@remix-run/react";
+import { EmbeddedDevTools } from "remix-development-tools";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -54,7 +55,9 @@ export default function Index() {
       <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
         SUBMIT Action PUT
       </button>
-     
+      <div style={{ height: 400, overflowY: "auto",  width: 1700 }}>
+        <EmbeddedDevTools className="!h-[400px] !overflow-y-auto" mainPanelClassName="w-40" />
+      </div>
       <Link to="/login">Login</Link>
       <ul>
         <li>

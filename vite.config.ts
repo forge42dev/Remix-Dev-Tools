@@ -10,7 +10,7 @@ export default defineConfig({
         check: true,
         include: [
           "**/RemixDevTools/RemixDevTools.tsx",
-          "**/RemixDevTools/index.ts",
+          "**/RemixDevTools/EmbeddedDevTools.tsx",
           "**/src/index.ts",
           "**/hooks/useRemixForgeSocket.ts",
           "**/tabs/index.tsx",

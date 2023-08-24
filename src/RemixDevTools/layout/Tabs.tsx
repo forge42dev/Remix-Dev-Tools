@@ -20,7 +20,7 @@ declare global {
 }
 
 interface TabsProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   plugins?: Tab[];
 }
 
@@ -104,7 +104,7 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
               onClick={() => setSettings({ shouldConnectWithForge: true })}
             />
           )}
-          {!detachedWindow && (
+          {!detachedWindow && setIsOpen && (
             <>
               {!detachedWindowOwner && (
                 <CopySlash

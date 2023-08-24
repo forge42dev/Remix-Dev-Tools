@@ -21,9 +21,9 @@ import {
 } from "./utils/storage";
 import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached";
 
-const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />;
+export const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />;
 
-const RemixDevTools = ({ plugins }: RemixDevToolsProps) => {
+const DevTools = ({ plugins }: RemixDevToolsProps) => {
   useTimelineHandler();
   useOutletAugment();
   useResetDetachmentCheck();
@@ -85,7 +85,7 @@ export interface RemixDevToolsProps {
   plugins?: Tab[];
 }
 
-const RDTWithContext = ({ requireUrlFlag, plugins }: RemixDevToolsProps) => {
+const RemixDevTools = ({ requireUrlFlag, plugins }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const url = useLocation().search;
 
@@ -95,9 +95,9 @@ const RDTWithContext = ({ requireUrlFlag, plugins }: RemixDevToolsProps) => {
   return (
     <RDTContextProvider>
       <InjectedStyles />
-      <RemixDevTools plugins={plugins} />
+      <DevTools plugins={plugins} />
     </RDTContextProvider>
   );
 };
 
-export { RDTWithContext as RemixDevTools };
+export { RemixDevTools };
