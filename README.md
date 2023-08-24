@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./assets/remix-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" width="160" height="160" alt="Remix Development Tools"  />
+<img src="./assets/remix-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" width="240" height="240" alt="Remix Development Tools"  />
 </p>
 
 # Remix Development Tools
@@ -22,6 +22,9 @@ Remix Development Tools is an open-source package designed to enhance your devel
 
 ## What's new?
 
+## v2.2.0
+Embedded mode support!
+Embed your dev tools wherever you want in your app by importing EmbeddedDevTools from the package!
 ## v2.1.3
 - Deferred data support! You can see your deferred data in the active page tab now being loaded and swapped in realtime
 - Settings option to change the default expansion level of json viewer (Default: 0)
@@ -79,6 +82,11 @@ The terminal tab allows you to run terminal commands from the Remix Dev Tools. T
 ### Detached mode
 
 Detached mode allows you to un-dock the Remix Dev Tools from the browser and move it to a separate window. This is useful if you want to have the dev tools open on a separate monitor or if you want to have it open on a separate window on the same monitor.
+
+### Embedded mode
+
+Embedded mode allows you to embed the Remix Dev Tools in your application. This is useful if you want to have the dev tools open in a particular
+page in your application only or you want to place it somewhere in the UI where it makes sense for your application.
 
 ## Getting Started
 
