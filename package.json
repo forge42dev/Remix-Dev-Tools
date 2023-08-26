@@ -42,8 +42,10 @@
     "prepublishOnly": "npm run build",
     "remix": "npm run dev -w src/remix-app-for-testing",
     "remix-epic": "npm run dev -w src/epic-stack-remix-dev-tools",
+    "remix-docs": "npm run dev -w src/documentation",
     "dev": "npm-run-all -s build:dev -p remix vite",
     "epic-dev": "npm-run-all -s build:dev -p remix-epic vite",
+    "doc-dev": "npm-run-all -s build:dev -p remix-docs vite",
     "build:dev": "vite build -m development",
     "build": "vite build",
     "vite": "vite build --watch -m development",
@@ -60,7 +62,8 @@
   "workspaces": [
     ".",
     "src/remix-app-for-testing",
-    "src/epic-stack-remix-dev-tools"
+    "src/epic-stack-remix-dev-tools",
+    "src/documentation"
   ],
   "peerDependencies": {
     "@remix-run/react": "^1.15",
