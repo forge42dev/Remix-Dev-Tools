@@ -22,6 +22,9 @@ Remix Development Tools is an open-source package designed to enhance your devel
 
 ## What's new?
 
+## v2.3.0 
+Route tree view support!
+View all your routes in a node tree! You can also open routes in your browser from the tree view.
 ## v2.2.0
 Embedded mode support!
 Embed your dev tools wherever you want in your app by importing EmbeddedDevTools from the package!
