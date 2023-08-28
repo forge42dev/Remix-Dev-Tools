@@ -1,35 +1,32 @@
 import { MouseEvent, useState } from "react";
-import { EntryRoute } from "@remix-run/react/dist/routes";
-import { convertRemixPathToUrl } from "../utils/sanitize";
+import { createRouteTree } from "../utils/sanitize";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion";
-import { useNavigate } from "@remix-run/react";
-import { Tag } from "../components/Tag";
+import { useMatches, useNavigate } from "@remix-run/react";
 import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext";
-import { Input } from "../components/Input";
 import { NewRouteForm } from "../components/NewRouteForm";
 import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { isLeafRoute } from "../utils/routing";
+import { ExtendedRoute, constructRoutePath, createExtendedRoutes } from "../utils/routing";
 import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange";
+import Tree from "react-d3-tree";
+import clsx from "clsx";
+import { RouteInfo } from "../components/RouteInfo";
+import { RouteNode } from "../components/RouteNode";
+import { RouteToggle } from "../components/RouteToggle";
 
 const RoutesTab = () => {
-  const { settings, setSettings } = useSettingsContext();
-  const { routeWildcards } = settings;
+  const matches = useMatches();
+  const navigate = useNavigate();
+  const activeRoutes = matches.map((match) => match.id);
+  const { settings } = useSettingsContext();
+  const { routeWildcards, routeViewMode } = settings;
   const { isConnected } = useRemixForgeSocket();
   const { detachedWindow } = useDetachedWindowControls();
-  const [routes] = useState<(EntryRoute & { route: string })[]>(
-    Object.values(window.__remixManifest.routes)
-      .map((route) => {
-        return {
-          ...route,
-          route: convertRemixPathToUrl(window.__remixManifest.routes, route),
-        };
-      })
-      .filter((route) => isLeafRoute(route))
-  );
-  const navigate = useNavigate();
-
-  const openNewRoute = (path: string) => (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
+  const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null);
+  const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes());
+  const [treeRoutes] = useState(createRouteTree(window.__remixManifest.routes));
+  const isTreeView = routeViewMode === "tree";
+  const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+    e?.preventDefault();
     navigate(path);
     if (detachedWindow) {
       setRouteInLocalStorage(path);
@@ -37,93 +34,74 @@ const RoutesTab = () => {
   };
 
   return (
-    <Accordion className="rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-pr-4" type="single" collapsible>
-      {isConnected && (
-        <AccordionItem value="add-new">
-          <AccordionTrigger>Add a new route to the project</AccordionTrigger>
-          <AccordionContent>
-            <NewRouteForm />
-          </AccordionContent>
-        </AccordionItem>
-      )}
-      {routes?.map((route) => {
-        const hasWildcard = route.route.includes(":");
-        const wildcards = routeWildcards[route.id];
-        const path = route.route
-          .split("/")
-          .map((p) => {
-            if (p.startsWith(":")) {
-              return wildcards?.[p] ? wildcards?.[p] : p;
+    <div className={clsx("rdt-relative rdt-h-full rdt-w-full ", !isTreeView && "rdt-pt-8")}>
+      <RouteToggle />
+      {isTreeView ? (
+        <div className="rdt-flex rdt-h-full rdt-w-full">
+          <Tree
+            translate={{ x: window.innerWidth / 2 - (isTreeView && activeRoute ? 0 : 0), y: 30 }}
+            pathClassFunc={(link) =>
+              activeRoutes.includes((link.target.data.attributes as any).id)
+                ? "rdt-stroke-yellow-500"
+                : "rdt-stroke-gray-400"
             }
-            return p;
-          })
-          .join("/");
-        const pathToOpen = document.location.origin + (path === "/" ? path : "/" + path);
-        return (
-          <AccordionItem key={route.id} value={route.id}>
-            <AccordionTrigger>
-              <div className="justify-center rdt-flex rdt-w-full rdt-items-center rdt-gap-2">
-                <span className="rdt-text-gray-500">Route:</span> {route.route}{" "}
-                <span className="rdt-ml-auto rdt-text-xs rdt-text-gray-500">Url: "{pathToOpen}"</span>
-                <div
-                  title={pathToOpen}
-                  className="rdt-mr-2 rdt-whitespace-nowrap rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm"
-                  onClick={openNewRoute(path)}
-                >
-                  Open in browser
-                </div>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="rdt-flex rdt-gap-2">
-                <span className="rdt-text-gray-500">Key:</span>
-                {route.id}
-              </div>
-              <div className="rdt-mb-4 rdt-mt-4 rdt-flex rdt-flex-col rdt-gap-2">
-                <span className="rdt-text-gray-500">Components contained in the route:</span>
-                <div className="rdt-flex rdt-gap-2">
-                  <Tag color={route.hasLoader ? "GREEN" : "RED"}>Loader</Tag>
-                  <Tag color={route.hasAction ? "GREEN" : "RED"}>Action</Tag>
-                  <Tag color={route.hasErrorBoundary ? "GREEN" : "RED"}>ErrorBoundary</Tag>
-                </div>
-              </div>
-              {hasWildcard && (
-                <>
-                  <p className="rdt-mb-2 rdt-text-gray-500">Wildcard parameters:</p>
-                  <div className="rdt-mb-4 rdt-grid rdt-w-full rdt-grid-cols-2 rdt-gap-2">
-                    {route.route
-                      .split("/")
-                      .filter((p) => p.startsWith(":"))
-                      .map((param) => (
-                        <div key={param} className="rdt-flex rdt-w-full rdt-gap-2">
-                          <Tag key={param} color="BLUE">
-                            {param}
-                          </Tag>
-                          <Input
-                            value={routeWildcards[route.id]?.[param] || ""}
-                            onChange={(e) =>
-                              setSettings({
-                                routeWildcards: {
-                                  ...routeWildcards,
-                                  [route.id]: {
-                                    ...routeWildcards[route.id],
-                                    [param]: e.target.value,
-                                  },
-                                },
-                              })
-                            }
-                            placeholder={param}
-                          />
-                        </div>
-                      ))}
+            renderCustomNodeElement={(props) =>
+              RouteNode({
+                ...props,
+                routeWildcards,
+                setActiveRoute,
+                activeRoutes,
+              })
+            }
+            orientation="vertical"
+            data={treeRoutes}
+          />
+          {activeRoute && (
+            <RouteInfo
+              openNewRoute={openNewRoute}
+              onClose={() => setActiveRoute(null)}
+              route={activeRoute}
+              className="rdt-w-[600px] rdt-border-l rdt-border-l-slate-800 rdt-p-2 rdt-px-4"
+            />
+          )}
+        </div>
+      ) : (
+        <Accordion className="rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-pr-4" type="single" collapsible>
+          {isConnected && (
+            <AccordionItem value="add-new">
+              <AccordionTrigger>Add a new route to the project</AccordionTrigger>
+              <AccordionContent>
+                <NewRouteForm />
+              </AccordionContent>
+            </AccordionItem>
+          )}
+
+          {routes?.map((route) => {
+            const { path, pathToOpen } = constructRoutePath(route, routeWildcards);
+            return (
+              <AccordionItem key={route.id} value={route.id}>
+                <AccordionTrigger>
+                  <div className="justify-center rdt-flex rdt-w-full rdt-items-center rdt-gap-2">
+                    <span className="rdt-text-gray-500">Route:</span> {route.url}{" "}
+                    <span className="rdt-ml-auto rdt-text-xs rdt-text-gray-500">Url: "{pathToOpen}"</span>
+                    <div
+                      title={pathToOpen}
+                      className="rdt-mr-2 rdt-whitespace-nowrap rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm"
+                      onClick={openNewRoute(path)}
+                    >
+                      Open in browser
+                    </div>
                   </div>
-                </>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        );
-      })}
-    </Accordion>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <RouteInfo openNewRoute={openNewRoute} route={route} />
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      )}
+    </div>
   );
 };
 

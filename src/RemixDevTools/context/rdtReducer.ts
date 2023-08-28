@@ -39,6 +39,7 @@ export type RemixDevToolsState = {
     expansionLevel: number;
     hoveredRoute: string;
     isHoveringRoute: boolean;
+    routeViewMode: "list" | "tree";
   };
   persistOpen: boolean;
   detachedWindow: boolean;
@@ -63,6 +64,7 @@ export const initialState: RemixDevToolsState = {
     expansionLevel: 0,
     hoveredRoute: "",
     isHoveringRoute: false,
+    routeViewMode: "tree",
   },
   persistOpen: false,
   detachedWindow: false,

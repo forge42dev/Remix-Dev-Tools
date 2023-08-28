@@ -1,4 +1,6 @@
 import { EntryRoute } from "@remix-run/react/dist/routes";
+import { RouteWildcards } from "../context/rdtReducer";
+import { convertRemixPathToUrl } from "./sanitize";
 
 export type RouteType = "ROOT" | "LAYOUT" | "ROUTE";
 type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">;
@@ -16,9 +18,7 @@ export function getRouteType(route: Route) {
   }
 
   // Find an index route with parentId set to this route
-  const childIndexRoute = Object.values(window.__remixManifest.routes).find(
-    (r) => r.parentId === route.id && r.index
-  );
+  const childIndexRoute = Object.values(window.__remixManifest.routes).find((r) => r.parentId === route.id && r.index);
 
   return childIndexRoute ? "LAYOUT" : "ROUTE";
 }
@@ -30,3 +30,52 @@ export function isLayoutRoute(route: Route) {
 export function isLeafRoute(route: Route) {
   return getRouteType(route) === "ROUTE";
 }
+
+export function isRootRoute(route: Route) {
+  return getRouteType(route) === "ROOT";
+}
+
+export const ROUTE_FILLS = {
+  GREEN: "rdt-fill-green-500 rdt-text-white",
+  BLUE: "rdt-fill-blue-500 rdt-text-white",
+  PURPLE: "rdt-fill-purple-500 rdt-text-white",
+} as const;
+
+export function getRouteColor(route: Route) {
+  switch (getRouteType(route)) {
+    case "ROOT":
+      return ROUTE_FILLS["PURPLE"];
+    case "LAYOUT":
+      return ROUTE_FILLS["BLUE"];
+    case "ROUTE":
+      return ROUTE_FILLS["GREEN"];
+  }
+}
+export type ExtendedRoute = EntryRoute & { url: string };
+
+export const constructRoutePath = (route: ExtendedRoute, routeWildcards: RouteWildcards) => {
+  const hasWildcard = route.url.includes(":");
+  const wildcards = routeWildcards[route.id];
+  const path = route.url
+    .split("/")
+    .map((p) => {
+      if (p.startsWith(":")) {
+        return wildcards?.[p] ? wildcards?.[p] : p;
+      }
+      return p;
+    })
+    .join("/");
+  const pathToOpen = document.location.origin + (path === "/" ? path : "/" + path);
+  return { pathToOpen, path, hasWildcard };
+};
+
+export const createExtendedRoutes = () => {
+  return Object.values(window.__remixManifest.routes)
+    .map((route) => {
+      return {
+        ...route,
+        url: convertRemixPathToUrl(window.__remixManifest.routes, route),
+      };
+    })
+    .filter((route) => isLeafRoute(route));
+};

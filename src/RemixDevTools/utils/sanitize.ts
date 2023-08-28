@@ -1,6 +1,6 @@
 import { EntryRoute, RouteManifest } from "@remix-run/react/dist/routes";
 
-type Route = Pick<EntryRoute, "path" | "parentId">;
+type Route = Pick<EntryRoute, "path" | "parentId" | "id">;
 /**
  * Helper method used to convert remix route conventions to url segments
  * @param chunk Chunk to convert
@@ -27,4 +27,35 @@ export const tryParseJson = (json: string | null) => {
   } catch (e) {
     return null;
   }
+};
+
+interface RawNodeDatum {
+  name: string;
+  attributes?: Record<string, string | number | boolean>;
+  children?: RawNodeDatum[];
+}
+
+const constructTree = (routes: Record<string, Route>, parentId?: string): RawNodeDatum[] => {
+  const nodes: RawNodeDatum[] = [];
+  Object.keys(routes).forEach((key) => {
+    const route = routes[key];
+    console.log(route);
+    if (route.parentId === parentId) {
+      const url = convertRemixPathToUrl(routes, route);
+      const node: RawNodeDatum = {
+        name: url,
+        attributes: {
+          ...route,
+          url,
+        },
+        children: constructTree(routes, route.id),
+      };
+      nodes.push(node);
+    }
+  });
+  return nodes;
+};
+
+export const createRouteTree = (routes: RouteManifest<Route>) => {
+  return constructTree(routes);
 };
