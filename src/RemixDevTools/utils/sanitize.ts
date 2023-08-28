@@ -35,44 +35,27 @@ interface RawNodeDatum {
   children?: RawNodeDatum[];
 }
 
-export const createRouteTree = (routes: RouteManifest<Route>) => {
-  const routeTree: Record<string, RawNodeDatum> = {};
-  const unsortedRoutes = [];
+const constructTree = (routes: Record<string, Route>, parentId?: string): RawNodeDatum[] => {
+  const nodes: RawNodeDatum[] = [];
   Object.keys(routes).forEach((key) => {
     const route = routes[key];
-    if (!route.parentId) {
-      routeTree[route.id] = {
-        name: route.id,
+    console.log(route);
+    if (route.parentId === parentId) {
+      const url = convertRemixPathToUrl(routes, route);
+      const node: RawNodeDatum = {
+        name: url,
         attributes: {
-          id: route.id,
-          parentId: route.parentId ?? "",
-          path: route.path ?? "",
+          ...route,
+          url,
         },
-        children: [],
+        children: constructTree(routes, route.id),
       };
-      return;
+      nodes.push(node);
     }
-    if (!routeTree[route.parentId]) {
-      unsortedRoutes.push(route);
-      return;
-    }
-    const node = {
-      name: route.id,
-      attributes: {
-        id: route.id,
-        parentId: route.parentId ?? "",
-        path: route.path ?? "",
-      },
-      children: [],
-    };
-    routeTree[route.parentId] = {
-      ...routeTree[route.parentId],
-      children: routeTree[route.parentId].children ? [...routeTree[route.parentId].children!, node] : [node],
-    };
   });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return Object.entries(routeTree).reduce((acc, [key, value]) => {
-    acc.push(value);
-    return acc;
-  }, [] as RawNodeDatum[]);
+  return nodes;
+};
+
+export const createRouteTree = (routes: RouteManifest<Route>) => {
+  return constructTree(routes);
 };
