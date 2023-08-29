@@ -39,7 +39,6 @@ const constructTree = (routes: Record<string, Route>, parentId?: string): RawNod
   const nodes: RawNodeDatum[] = [];
   Object.keys(routes).forEach((key) => {
     const route = routes[key];
-    console.log(route);
     if (route.parentId === parentId) {
       const url = convertRemixPathToUrl(routes, route);
       const node: RawNodeDatum = {

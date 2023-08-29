@@ -32,7 +32,7 @@ export const RouteNode = ({
       ></circle>
       <g>
         <foreignObject y={-15} x={17} width={110} height={140}>
-          <text
+          <p
             onClick={() => setActiveRoute(route)}
             style={{ width: 100, fontSize: 14 }}
             className={clsx(
@@ -41,7 +41,7 @@ export const RouteNode = ({
             )}
           >
             {nodeDatum.attributes?.id === "root" ? "Root" : name ? name : "Index"}
-          </text>
+          </p>
         </foreignObject>
       </g>
     </g>

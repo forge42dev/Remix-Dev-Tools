@@ -1,9 +1,5 @@
 import { Activity } from "lucide-react";
-import {
-  FormEvent,
-  RedirectEvent,
-  TimelineEvent,
-} from "../context/timeline/types";
+import { FormEvent, RedirectEvent, TimelineEvent } from "../context/timeline/types";
 import { useTimelineContext } from "../context/useRDTContext";
 import { JsonRenderer } from "../components/jsonRenderer";
 import { TAG_COLORS, Tag } from "../components/Tag";
@@ -24,9 +20,7 @@ const RedirectEventComponent = (event: RedirectEvent) => {
       <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500">
         Navigated to url: "{event.to + event.search}"
       </time>
-      <p className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
-        {event.hash}
-      </p>
+      <p className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">{event.hash}</p>
       {event.responseData && (
         <p className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
           Data received:
@@ -51,13 +45,13 @@ const FormEventComponent = (event: FormEvent) => {
       </time>
       <div className="rdt-flex rdt-gap-8">
         {event.data && event.type !== "ACTION_RESPONSE" && (
-          <div className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
+          <div className="rdt-mb-4 rdt-truncate rdt-text-base rdt-font-normal rdt-text-gray-400">
             Data sent:
             <JsonRenderer data={event.data} />
           </div>
         )}
         {responseData && (
-          <div className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
+          <div className="rdt-mb-4 rdt-truncate rdt-text-base rdt-font-normal rdt-text-gray-400">
             Server Response Data:
             <JsonRenderer data={responseData} />
           </div>
@@ -90,21 +84,15 @@ const TimelineTab = () => {
       <ol className="rdt-relative">
         {timeline.map((event) => {
           return (
-            <li
-              key={event.id}
-              className="rdt-mb-2 rdt-ml-8 rdt-animate-fade-in-left"
-            >
+            <li key={event.id} className="rdt-mb-2 rdt-ml-8 rdt-animate-fade-in-left">
               <span className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-animate-fade-in rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900">
                 <Activity />
               </span>
               <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
                 {Translations[event.type]}
-                {event?.method && (
-                  <Tag color={METHOD_COLORS[event.method]}>{event.method}</Tag>
-                )}
+                {event?.method && <Tag color={METHOD_COLORS[event.method]}>{event.method}</Tag>}
               </h3>
-              {event.type === "REDIRECT" ||
-              event.type === "FETCHER_REDIRECT" ? (
+              {event.type === "REDIRECT" || event.type === "FETCHER_REDIRECT" ? (
                 <RedirectEventComponent {...event} />
               ) : (
                 <FormEventComponent {...event} />

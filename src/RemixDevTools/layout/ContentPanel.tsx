@@ -31,7 +31,7 @@ const ContentPanel = ({ leftSideOriented, plugins }: ContentPanelProps) => {
           <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
           <div
             className={clsx(
-              "rdt-z-10 rdt-h-full rdt-w-2/3 rdt-p-2",
+              "rdt-z-10 rdt-h-full rdt-w-1/3 rdt-p-2",
               leftSideOriented ? "rdt-pl-2" : "rdt-pr-2" // leftSideOriented ? "rdt-pl-16" : "rdt-pr-16" Spacing is too much
             )}
           >
