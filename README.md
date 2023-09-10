@@ -327,6 +327,18 @@ export const links = [
 5. You are good to go!
 ## Troubleshooting
 
+### Dynamic imports are only supported when the "--module" flag is set to 'es2020', 'es2022', 'esnext', 'commonjs', 'amd', 'system', 'umd', 'node16', or 'nodenext'.ts(1323)
+
+To fix this issue you need to add the following to your `tsconfig.json` file:
+
+```json
+{
+  "compilerOptions": {
+    // Or whatever module you are using
+    "module": "commonjs"
+  }
+}
+```
 ### Hydration issues and Remix Development tools crashing with i18n
 
 Make sure you're passing the same context to the `i18n.getRouteNamespaces()` function as you're passing to the `<RemixServer>` component. 
