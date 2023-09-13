@@ -3,7 +3,7 @@ import { useSettingsContext } from "../context/useRDTContext";
 
 const useResize = () => {
   const { setSettings, settings } = useSettingsContext();
-  const { height, maxHeight, minHeight } = settings;
+  const { height, maxHeight, minHeight, panelLocation } = settings;
   const [isResizing, setIsResizing] = useState(false);
 
   const enableResize = useCallback(() => {
@@ -18,7 +18,7 @@ const useResize = () => {
     (e: MouseEvent) => {
       if (isResizing) {
         window.getSelection()?.removeAllRanges(); // Prevent text selection
-        const newHeight = window.innerHeight - e.clientY; // Calculate the new height based on the mouse position
+        const newHeight = panelLocation === "top" ? e.clientY : window.innerHeight - e.clientY; // Calculate the new height based on the mouse position
 
         //const newHeight = e.clientY; // You may want to add some offset here from props
 
@@ -35,7 +35,7 @@ const useResize = () => {
         setSettings({ height: newHeight });
       }
     },
-    [isResizing, maxHeight, minHeight, setSettings]
+    [isResizing, maxHeight, minHeight, setSettings, panelLocation]
   );
 
   useEffect(() => {

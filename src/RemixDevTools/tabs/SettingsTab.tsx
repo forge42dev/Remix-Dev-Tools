@@ -37,34 +37,6 @@ export const SettingsTab = () => {
       <hr className="rdt-mt-2 rdt-border-gray-700" />
       <Stack gap="lg">
         <Input
-          name="minHeight"
-          label="Min height of the dev tools (px)"
-          hint="The dev tools will not shrink below this height when being dragged."
-          id="minHeight"
-          value={minHeight}
-          onChange={(e) => setMinHeight(e.target.value ?? "")}
-          onBlur={(e) => {
-            const value = parseInt(e.target.value);
-            if (value && !isNaN(value) && value < settings.maxHeight && value > 100) {
-              setSettings({ minHeight: value });
-            }
-          }}
-        />
-        <Input
-          name="maxHeight"
-          id="maxHeight"
-          label="Max height of the dev tools (px)"
-          hint="The dev tools will not expand beyond this height when being dragged."
-          value={maxHeight}
-          onChange={(e) => setMaxHeight(e.target.value ?? "")}
-          onBlur={(e) => {
-            const value = parseInt(e.target.value);
-            if (value && !isNaN(value) && value > settings.minHeight) {
-              setSettings({ maxHeight: value });
-            }
-          }}
-        />
-        <Input
           name="expansionLevel"
           id="expansionLevel"
           label="Depth of expansion for JSON objects"
@@ -78,30 +50,66 @@ export const SettingsTab = () => {
             }
           }}
         />
-        <SelectWithOptions
-          label="Trigger position"
-          onSelect={(value) => setSettings({ position: value })}
-          value={settings.position}
-          options={[
-            { label: "Bottom Right", value: "bottom-right" },
-            { label: "Bottom Left", value: "bottom-left" },
-            { label: "Top Right", value: "top-right" },
-            { label: "Top Left", value: "top-left" },
-            { label: "Middle Right", value: "middle-right" },
-            { label: "Middle Left", value: "middle-left" },
-          ]}
-          hint="This will determine where your trigger position on the screen is when the tools are collapsed."
-        />
-        <SelectWithOptions
-          label="Route boundary gradient"
-          onSelect={(value) => setSettings({ routeBoundaryGradient: value })}
-          value={settings.routeBoundaryGradient}
-          options={RouteBoundaryOptions.map((option) => ({
-            label: uppercaseFirstLetter(option),
-            value: option,
-          }))}
-          hint="This will determine the look of the gradient shown for route boundaries."
-        />
+        <div className="rdt-flex rdt-flex-col rdt-gap-2 lg:rdt-flex-row">
+          <Input
+            name="minHeight"
+            label="Min height of the dev tools (px)"
+            hint="The dev tools will not shrink below this height when being dragged."
+            id="minHeight"
+            value={minHeight}
+            onChange={(e) => setMinHeight(e.target.value ?? "")}
+            onBlur={(e) => {
+              const value = parseInt(e.target.value);
+              if (value && !isNaN(value) && value < settings.maxHeight && value > 100) {
+                setSettings({ minHeight: value });
+              }
+            }}
+          />
+          <Input
+            name="maxHeight"
+            id="maxHeight"
+            label="Max height of the dev tools (px)"
+            hint="The dev tools will not expand beyond this height when being dragged."
+            value={maxHeight}
+            onChange={(e) => setMaxHeight(e.target.value ?? "")}
+            onBlur={(e) => {
+              const value = parseInt(e.target.value);
+              if (value && !isNaN(value) && value > settings.minHeight) {
+                setSettings({ maxHeight: value });
+              }
+            }}
+          />
+        </div>
+
+        <div className="rdt-flex rdt-flex-col rdt-gap-2 lg:rdt-flex-row">
+          <SelectWithOptions
+            label="Trigger position"
+            onSelect={(value) => setSettings({ position: value })}
+            value={settings.position}
+            className="rdt-w-full"
+            options={[
+              { label: "Bottom Right", value: "bottom-right" },
+              { label: "Bottom Left", value: "bottom-left" },
+              { label: "Top Right", value: "top-right" },
+              { label: "Top Left", value: "top-left" },
+              { label: "Middle Right", value: "middle-right" },
+              { label: "Middle Left", value: "middle-left" },
+            ]}
+            hint="This will determine where your trigger position on the screen is when the tools are collapsed."
+          />
+          <SelectWithOptions
+            label="Panel position"
+            onSelect={(value) => setSettings({ panelLocation: value })}
+            value={settings.panelLocation}
+            className="rdt-w-full"
+            options={[
+              { label: "Top", value: "top" },
+              { label: "Bottom", value: "bottom" },
+            ]}
+            hint="This will determine where your panel shows up once opened"
+          />
+        </div>
+
         <Input
           name="port"
           id="port"
@@ -114,6 +122,16 @@ export const SettingsTab = () => {
               setSettings({ port: parseInt(value) });
             }
           }}
+        />
+        <SelectWithOptions
+          label="Route boundary gradient"
+          onSelect={(value) => setSettings({ routeBoundaryGradient: value })}
+          value={settings.routeBoundaryGradient}
+          options={RouteBoundaryOptions.map((option) => ({
+            label: uppercaseFirstLetter(option),
+            value: option,
+          }))}
+          hint="This will determine the look of the gradient shown for route boundaries."
         />
       </Stack>
     </Stack>

@@ -24,7 +24,7 @@ const useResizeDetachedPanel = () => {
 const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPanelProps) => {
   const { settings } = useSettingsContext();
   const { detachedWindow } = useDetachedWindowControls();
-  const { height } = settings;
+  const { height, panelLocation } = settings;
   const { enableResize, disableResize, isResizing } = useResize();
   useResizeDetachedPanel();
 
@@ -38,19 +38,35 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
         "rdt-duration-600 rdt-box-border rdt-flex rdt-w-screen rdt-flex-col rdt-overflow-auto rdt-bg-[#212121] rdt-text-white rdt-opacity-0 rdt-transition-all",
         isOpen ? "rdt-opacity-100 rdt-drop-shadow-2xl" : "rdt-h-0",
         isResizing && "rdt-cursor-grabbing ",
-        !isEmbedded && "rdt-fixed rdt-bottom-0 rdt-left-0",
+        !isEmbedded
+          ? `rdt-fixed rdt-left-0 ${
+              panelLocation === "bottom" ? "rdt-bottom-0" : "rdt-top-0 rdt-border-b-2 rdt-border-[#212121]"
+            }`
+          : "",
         className
       )}
     >
-      <div
-        onMouseDown={enableResize}
-        onMouseUp={disableResize}
-        className={clsx(
-          "rdt-absolute rdt-z-50 rdt-h-1 rdt-w-full",
-          isResizing ? "rdt-cursor-grabbing" : "rdt-cursor-ns-resize"
-        )}
-      />
+      {panelLocation === "bottom" && (
+        <div
+          onMouseDown={enableResize}
+          onMouseUp={disableResize}
+          className={clsx(
+            "rdt-absolute rdt-z-50 rdt-h-1 rdt-w-full",
+            isResizing ? "rdt-cursor-grabbing" : "rdt-cursor-ns-resize"
+          )}
+        />
+      )}
       {children}
+      {panelLocation === "top" && (
+        <div
+          onMouseDown={enableResize}
+          onMouseUp={disableResize}
+          className={clsx(
+            "rdt-absolute rdt-bottom-0 rdt-z-50 rdt-h-1 rdt-w-full",
+            isResizing ? "rdt-cursor-grabbing" : "rdt-cursor-ns-resize"
+          )}
+        />
+      )}
     </div>
   );
 };

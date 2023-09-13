@@ -18,6 +18,9 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
   const { routeWildcards, routeViewMode } = settings;
   const { hasWildcard, path, pathToOpen } = constructRoutePath(route, routeWildcards);
   const isTreeView = routeViewMode === "tree";
+  const hasParentErrorBoundary =
+    route.errorBoundary.errorBoundaryId && route.errorBoundary.errorBoundaryId !== route.id;
+  const hasErrorBoundary = route.errorBoundary.hasErrorBoundary;
   return (
     <div className={clsx(className, "rdt-relative")}>
       {isTreeView && (
@@ -42,7 +45,27 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
         <div className="rdt-flex rdt-gap-2">
           <Tag color={route.hasLoader ? "GREEN" : "RED"}>Loader</Tag>
           <Tag color={route.hasAction ? "GREEN" : "RED"}>Action</Tag>
-          <Tag color={route.hasErrorBoundary ? "GREEN" : "RED"}>ErrorBoundary</Tag>
+
+          <div
+            className={clsx(
+              "rdt-flex rdt-gap-2 rdt-rounded-md rdt-border",
+              !hasErrorBoundary ? "rdt-border-red-500" : "rdt-border-green-500"
+            )}
+          >
+            <Tag
+              className={clsx(hasErrorBoundary && "rdt-rounded-br-none rdt-rounded-tr-none")}
+              color={hasErrorBoundary ? "GREEN" : "RED"}
+            >
+              ErrorBoundary
+            </Tag>
+            {hasErrorBoundary ? (
+              <div className="rdt-mr-2">
+                {hasParentErrorBoundary
+                  ? `Covered by parent ErrorBoundary: ${route.errorBoundary.errorBoundaryId}`
+                  : "Contains ErrorBoundary"}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
       {hasWildcard && (

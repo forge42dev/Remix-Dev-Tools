@@ -6,6 +6,7 @@ describe("convertRemixPathToUrl", () => {
       root: {
         id: "root",
         path: "",
+        hasErrorBoundary: false,
       },
     };
 
@@ -19,16 +20,19 @@ describe("convertRemixPathToUrl", () => {
       root: {
         id: "root",
         path: "",
+        hasErrorBoundary: false,
       },
       parentRoute: {
         id: "parentRoute",
         parentId: "root",
         path: "parent",
+        hasErrorBoundary: false,
       },
       childRoute: {
         id: "childRoute",
         parentId: "parentRoute",
         path: "child",
+        hasErrorBoundary: false,
       },
     };
 
@@ -42,11 +46,13 @@ describe("convertRemixPathToUrl", () => {
       root: {
         id: "root",
         path: "",
+        hasErrorBoundary: false,
       },
       childRoute: {
         id: "childRoute",
         parentId: "nonExistentParent",
         path: "child",
+        hasErrorBoundary: false,
       },
     };
 
@@ -60,16 +66,19 @@ describe("convertRemixPathToUrl", () => {
       root: {
         id: "root",
         path: "",
+        hasErrorBoundary: false,
       },
       parentRoute: {
         id: "parentRoute",
         parentId: "root",
         path: "",
+        hasErrorBoundary: false,
       },
       childRoute: {
         id: "childRoute",
         parentId: "parentRoute",
         path: "child",
+        hasErrorBoundary: false,
       },
     };
 

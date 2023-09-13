@@ -68,10 +68,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn(
-      "rdt-py-1.5 rdt-pl-8 rdt-pr-2 rdt-font-sans rdt-text-sm",
-      className
-    )}
+    className={cn("rdt-py-1.5 rdt-pl-8 rdt-pr-2 rdt-font-sans rdt-text-sm", className)}
     {...props}
   />
 ));
@@ -119,6 +116,7 @@ const SelectWithOptions = <T extends string>({
   onSelect,
   hint,
   value,
+  className,
 }: {
   placeholder?: string;
   value?: T;
@@ -126,9 +124,10 @@ const SelectWithOptions = <T extends string>({
   hint?: string;
   options: { value: T; label: string }[];
   onSelect: (value: T) => void;
+  className?: string;
 }) => {
   return (
-    <Stack gap="sm">
+    <Stack className={className} gap="sm">
       {label && <Label>{label}</Label>}
       <Select value={value} onValueChange={onSelect}>
         <SelectTrigger className="rdt-w-full">

@@ -80,12 +80,13 @@ function useHydrated() {
 export interface RemixDevToolsProps {
   // Whether the dev tools require a url flag to be shown
   requireUrlFlag?: boolean;
-
+  // Whether to use route boundaries to show them on the UI
+  useRouteBoundaries?: boolean;
   // Additional tabs to add to the dev tools
   plugins?: Tab[];
 }
 
-const RemixDevTools = ({ requireUrlFlag, plugins }: RemixDevToolsProps) => {
+const RemixDevTools = ({ requireUrlFlag, plugins, useRouteBoundaries }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const url = useLocation().search;
 
@@ -93,7 +94,7 @@ const RemixDevTools = ({ requireUrlFlag, plugins }: RemixDevToolsProps) => {
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
-    <RDTContextProvider>
+    <RDTContextProvider useRouteBoundaries={useRouteBoundaries}>
       <InjectedStyles />
       <DevTools plugins={plugins} />
     </RDTContextProvider>

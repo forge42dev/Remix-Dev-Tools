@@ -40,7 +40,9 @@ export type RemixDevToolsState = {
     hoveredRoute: string;
     isHoveringRoute: boolean;
     routeViewMode: "list" | "tree";
+    panelLocation: "top" | "bottom";
   };
+  useRouteBoundaries: boolean;
   persistOpen: boolean;
   detachedWindow: boolean;
   detachedWindowOwner: boolean;
@@ -65,10 +67,12 @@ export const initialState: RemixDevToolsState = {
     hoveredRoute: "",
     isHoveringRoute: false,
     routeViewMode: "tree",
+    panelLocation: "bottom",
   },
   persistOpen: false,
   detachedWindow: false,
   detachedWindowOwner: false,
+  useRouteBoundaries: false,
 };
 
 export type ReducerActions = Pick<RemixDevToolsActions, "type">["type"];

@@ -1,6 +1,6 @@
 import { EntryRoute } from "@remix-run/react/dist/routes";
 import { RouteWildcards } from "../context/rdtReducer";
-import { convertRemixPathToUrl } from "./sanitize";
+import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize";
 
 export type RouteType = "ROOT" | "LAYOUT" | "ROUTE";
 type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">;
@@ -51,7 +51,10 @@ export function getRouteColor(route: Route) {
       return ROUTE_FILLS["GREEN"];
   }
 }
-export type ExtendedRoute = EntryRoute & { url: string };
+export type ExtendedRoute = EntryRoute & {
+  url: string;
+  errorBoundary: { hasErrorBoundary: boolean; errorBoundaryId: string | null };
+};
 
 export const constructRoutePath = (route: ExtendedRoute, routeWildcards: RouteWildcards) => {
   const hasWildcard = route.url.includes(":");
@@ -75,6 +78,7 @@ export const createExtendedRoutes = () => {
       return {
         ...route,
         url: convertRemixPathToUrl(window.__remixManifest.routes, route),
+        errorBoundary: findParentErrorBoundary(window.__remixManifest.routes, route),
       };
     })
     .filter((route) => isLeafRoute(route));

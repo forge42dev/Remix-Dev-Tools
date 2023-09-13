@@ -1,10 +1,14 @@
 import { useEffect } from "react";
 import { InvisibleBoundary } from "../init/project";
+import { useRDTContext } from "../context/useRDTContext";
 
 const isHooked = Symbol("isHooked") as any;
 
 export function useOutletAugment() {
+  // TODO Remove once stabilized
+  const { state } = useRDTContext();
   useEffect(() => {
+    if (!state.useRouteBoundaries) return;
     if (window.__remixRouteModules[isHooked]) return;
 
     window.__remixRouteModules = new Proxy(window.__remixRouteModules, {
@@ -35,5 +39,5 @@ export function useOutletAugment() {
         return value;
       },
     });
-  }, []);
+  }, [state.useRouteBoundaries]);
 }

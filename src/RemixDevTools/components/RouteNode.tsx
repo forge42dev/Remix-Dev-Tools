@@ -17,7 +17,7 @@ export const RouteNode = ({
   const parent = hierarchyPointNode.parent?.data;
   const parentName = parent && parent?.name !== "/" ? parent.name : "";
   const name = nodeDatum.name.replace(parentName, "") ?? "/";
-  const route = nodeDatum.attributes as any as ExtendedRoute;
+  const route = { ...nodeDatum, ...nodeDatum.attributes } as any as ExtendedRoute;
   return (
     <g className="rdt-flex">
       <circle

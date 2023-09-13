@@ -22,6 +22,10 @@ Remix Development Tools is an open-source package designed to enhance your devel
 
 ## What's new?
 
+## v2.4.0
+- Route boundaries locked behind a feature flag
+- Panel position settings allow you to change the panel position to either top or bottom of the screen
+- ErrorBoundaries are more precise now
 ## v2.3.0 
 Route tree view support!
 View all your routes in a node tree! You can also open routes in your browser from the tree view.
@@ -53,7 +57,7 @@ Key features include:
 - **URL Parameters**: Easily view and analyze the URL parameters associated with the current page.
 - **Server Responses**: Inspect and review the server responses received by the application for the current page.
 - **Loader Data**: Monitor and track the loader data used by the application during page rendering.
-- **Outlet boundaries** Activate the **Show Route Boundaries** option to see each Outlet and route boundaries by coloring the background. This needs to make a GET request to the current route when the dev tools are mounted for the first time to work properly and hence it is locked behind a flag. You can enable it by passing `showRouteBoundaries` prop to `true` in the `RemixDevTools` component.
+- **Outlet boundaries** Activate the **Show Route Boundaries** option to see each Outlet and route boundaries by coloring the background. It is locked behind a flag. You can enable it by passing `useRouteBoundaries` prop to `true` in the `RemixDevTools`,first parameter of `initClient` set to `true` and second parameter of `initServer` set to `true`. This feature is experimental and can cause issues in certain scenarios. It will be considered stable with v3.0 release but until then use at your own risk.
 
 ### Routes Tab
 
@@ -218,6 +222,7 @@ export default function App() {
 The `RemixDevTools` component accepts the following props: 
 - `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`. 
 - `plugins`: Allows you to provide additional tabs (plugins) to the Remix Development Tools. Defaults to `[]`.
+- `useRouteBoundaries`: Allows you to enable the route boundaries feature. Defaults to `false`. This feature is experimental and can cause issues in certain scenarios. It will be considered stable with v3.0 release but until then use at your own risk.
  
 
 ## Plugins

@@ -130,3 +130,7 @@ export default function IndexRoute() {
     </div>
   );
 }
+
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  return null;
+};

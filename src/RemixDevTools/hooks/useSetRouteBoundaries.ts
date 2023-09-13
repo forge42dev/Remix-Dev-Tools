@@ -1,13 +1,17 @@
 import { useCallback, useEffect } from "react";
 import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer";
-import { useSettingsContext, useDetachedWindowControls } from "../context/useRDTContext";
+import { useSettingsContext, useDetachedWindowControls, useRDTContext } from "../context/useRDTContext";
 import { useAttachListener } from "./useAttachListener";
 
 export const useSetRouteBoundaries = () => {
   const { settings, setSettings } = useSettingsContext();
   const { detachedWindow } = useDetachedWindowControls();
+  // TODO Remove once stabilized
+  const { state } = useRDTContext();
   const applyOrRemoveClasses = useCallback(
     (isHovering?: boolean) => {
+      // TODO Remove once stabilized
+      if (!state.useRouteBoundaries) return;
       // Overrides the hovering so the classes are force removed if needed
       const hovering = isHovering ?? settings.isHoveringRoute;
       // Classes to apply/remove
@@ -32,10 +36,12 @@ export const useSetRouteBoundaries = () => {
         }
       }
     },
-    [settings.hoveredRoute, settings.isHoveringRoute, settings.routeBoundaryGradient]
+    [settings.hoveredRoute, state.useRouteBoundaries, settings.isHoveringRoute, settings.routeBoundaryGradient]
   );
   // Mouse left the document => remove classes => set isHovering to false so that detached mode removes as well
   useAttachListener("mouseleave", "document", () => {
+    // TODO Remove once stabilized
+    if (!state.useRouteBoundaries) return;
     applyOrRemoveClasses();
     if (!detachedWindow) {
       return;
@@ -46,6 +52,8 @@ export const useSetRouteBoundaries = () => {
   });
   // Mouse is scrolling => remove classes => set isHovering to false so that detached mode removes as well
   useAttachListener("wheel", "window", () => {
+    // TODO Remove once stabilized
+    if (!state.useRouteBoundaries) return;
     applyOrRemoveClasses(false);
     if (!detachedWindow) {
       return;
@@ -56,6 +64,8 @@ export const useSetRouteBoundaries = () => {
   });
   // We apply/remove classes on state change which happens in Page tab
   useEffect(() => {
+    // TODO Remove once stabilized
+    if (!state.useRouteBoundaries) return;
     if (!settings.isHoveringRoute && !settings.hoveredRoute) return;
     applyOrRemoveClasses();
     if (!settings.isHoveringRoute && !detachedWindow) {
@@ -65,6 +75,7 @@ export const useSetRouteBoundaries = () => {
       });
     }
   }, [
+    state.useRouteBoundaries,
     settings.hoveredRoute,
     settings.isHoveringRoute,
     settings.routeBoundaryGradient,
