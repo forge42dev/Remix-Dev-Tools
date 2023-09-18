@@ -1,10 +1,10 @@
 import { Columns, /* MonitorPlay */ Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { useTerminalContext } from "../context/useRDTContext";
-import { Terminal } from "../context/terminal/types";
+import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
+import { useTerminalContext } from '../context/useRDTContext.js';
+import { Terminal } from '../context/terminal/types.js';
 import clsx from "clsx";
-import { useTerminalShortcuts } from "../hooks/useTerminalShortcuts";
+import { useTerminalShortcuts } from '../hooks/useTerminalShortcuts.js';
 
 interface TerminalProps {
   onClose: () => void;

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { RemixDevToolsState } from "../../context/rdtReducer";
-import { REMIX_DEV_TOOLS } from "../../utils/storage";
+import { RemixDevToolsState } from '../../context/rdtReducer.js';
+import { REMIX_DEV_TOOLS } from '../../utils/storage.js';
 
 export const useRemoveBody = (state: RemixDevToolsState) => {
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { InvisibleBoundary } from "../init/project";
-import { useRDTContext } from "../context/useRDTContext";
+import { InvisibleBoundary } from '../init/project.js';
+import { useRDTContext } from '../context/useRDTContext.js';
 
 const isHooked = Symbol("isHooked") as any;
 

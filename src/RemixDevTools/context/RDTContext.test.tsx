@@ -6,15 +6,15 @@ import {
   //detachedModeSetup,
   getSettings,
   //getExistingStateFromStorage,
-} from "./RDTContext";
+} from './RDTContext.js';
 import {
   REMIX_DEV_TOOLS_STATE,
   REMIX_DEV_TOOLS_SETTINGS,
   REMIX_DEV_TOOLS_DETACHED,
   REMIX_DEV_TOOLS_CHECK_DETACHED,
-} from "../utils/storage";
-import { initialState } from "./rdtReducer";
-import * as detachedMethods from "../utils/detached";
+} from '../utils/storage.js';
+import { initialState } from './rdtReducer.js';
+import * as detachedMethods from '../utils/detached.js';
 
 vi.mock("@remix-run/react", () => ({
   useLocation: () => ({

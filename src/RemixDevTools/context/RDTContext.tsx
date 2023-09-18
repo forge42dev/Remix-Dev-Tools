@@ -1,8 +1,8 @@
 import type { Dispatch } from "react";
 import React, { useMemo, createContext, useReducer, useEffect } from "react";
-import { RemixDevToolsActions, RemixDevToolsState, rdtReducer, initialState } from "./rdtReducer";
-import { useRemoveBody } from "../hooks/detached/useRemoveBody";
-import { useListenToRouteChange } from "../hooks/detached/useListenToRouteChange";
+import { RemixDevToolsActions, RemixDevToolsState, rdtReducer, initialState } from './rdtReducer.js';
+import { useRemoveBody } from '../hooks/detached/useRemoveBody.js';
+import { useListenToRouteChange } from '../hooks/detached/useListenToRouteChange.js';
 import {
   setSessionItem,
   setStorageItem,
@@ -11,9 +11,9 @@ import {
   REMIX_DEV_TOOLS_DETACHED,
   REMIX_DEV_TOOLS_SETTINGS,
   REMIX_DEV_TOOLS_STATE,
-} from "../utils/storage";
-import { checkIsDetachedWindow, checkIsDetached, checkIsDetachedOwner } from "../utils/detached";
-import { tryParseJson } from "../utils/sanitize";
+} from '../utils/storage.js';
+import { checkIsDetachedWindow, checkIsDetached, checkIsDetachedOwner } from '../utils/detached.js';
+import { tryParseJson } from '../utils/sanitize.js';
 
 export const RDTContext = createContext<{
   state: RemixDevToolsState;

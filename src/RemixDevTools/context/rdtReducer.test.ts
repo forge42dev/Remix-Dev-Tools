@@ -1,5 +1,5 @@
-import { initialState, rdtReducer } from "./rdtReducer";
-import { TimelineEvent } from "./timeline/types";
+import { initialState, rdtReducer } from './rdtReducer.js';
+import { TimelineEvent } from './timeline/types.js';
 const timelineEvent: TimelineEvent = {
   to: "background",
   type: "REDIRECT",

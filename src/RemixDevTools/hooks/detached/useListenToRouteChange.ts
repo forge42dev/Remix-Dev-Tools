@@ -1,8 +1,8 @@
 import { useLocation, useNavigate, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { useAttachListener } from "../useAttachListener";
-import { getStorageItem, setStorageItem } from "../../utils/storage";
-import { useDetachedWindowControls } from "../../context/useRDTContext";
+import { useAttachListener } from '../useAttachListener.js';
+import { getStorageItem, setStorageItem } from '../../utils/storage.js';
+import { useDetachedWindowControls } from '../../context/useRDTContext.js';
 
 export const LOCAL_STORAGE_ROUTE_KEY = "rdt_route";
 

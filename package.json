@@ -14,18 +14,29 @@
   ],
   "private": false,
   "type": "module",
-  "main": "./dist/index.umd.cjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.umd.cjs",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs",
-      "node": "./dist/index.umd.cjs"
+      "node": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./index.css": {
+      "import": "./dist/index.css",
+      "require": "./dist/index.css",
+      "node": "./dist/index.css",
+      "default": "./dist/index.css"
     }
   },
-  "typings": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -40,43 +51,57 @@
   "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "remix": "npm run dev -w src/remix-app-for-testing",
+    "remix": "npm run dev -w src/cjs-app",
+    "remix-esm": "npm run dev -w src/esm-app",
     "remix-epic": "npm run dev -w src/epic-stack-remix-dev-tools",
     "remix-docs": "npm run dev -w src/documentation",
-    "dev": "npm-run-all -s build:dev -p remix vite",
-    "epic-dev": "npm-run-all -s build:dev -p remix-epic vite",
-    "doc-dev": "npm-run-all -s build:dev -p remix-docs vite",
-    "build:dev": "vite build -m development",
-    "build": "vite build",
+    "dev": "npm-run-all -s build:dev -p remix build:dev:w",
+    "dev:esm": "npm-run-all -s build:dev -p remix-esm build:dev:w",
+    "epic-dev": "npm-run-all -s build:dev -p remix-epic build:dev:w",
+    "doc-dev": "npm-run-all -s build:dev -p remix-docs build:dev:w",
+    "build:dev": "npm run b",
+    "build:dev:w": "npm run b -- --watch",
+    "build": "tsup",
+    "builds": "rm -fr dist/* && tsc -p tsconfig.mjs.json --jsx && tsc -p tsconfig.cjs.json --jsx && ./fixup",
     "vite": "vite build --watch -m development",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prettier": "prettier --check .",
     "preview": "vite preview",
     "profile": "vite build --profile",
     "test": "vitest run --coverage",
-    "setup": "npm install && cd ./src/remix-app-for-testing && npm install && cd ../..",
+    "setup": "npm install && cd ./src/cjs-app && npm install && cd ../..",
     "prepare": "husky install",
     "tsc": "tsc --noEmit",
-    "validate": "npm run lint && npm run tsc && npm run test"
+    "validate": "npm run lint && npm run tsc && npm run test",
+    "b": "tsup"
   },
   "workspaces": [
     ".",
-    "src/remix-app-for-testing",
-    "src/epic-stack-remix-dev-tools",
+    "src/cjs-app",
+    "src/esm-app",
     "src/documentation"
   ],
   "peerDependencies": {
-    "@remix-run/react": "^1.15",
+    "@remix-run/react": "2.0",
     "react": ">=17",
     "react-dom": ">=17"
   },
   "devDependencies": {
-    "@remix-run/react": "^1.19.1",
-    "@remix-run/server-runtime": "^1.19.1",
+    "@remix-run/react": "^2.0.0",
+    "@remix-run/router": "^1.9.0",
+    "@remix-run/server-runtime": "^2.0.0",
+    "@rollup/plugin-typescript": "^11.1.3",
     "@testing-library/react": "^14.0.0",
+    "@types/clone": "^2.1.2",
+    "@types/d3-hierarchy": "^3.1.3",
+    "@types/d3-selection": "^3.0.6",
+    "@types/d3-shape": "^3.1.2",
+    "@types/d3-zoom": "^3.0.4",
     "@types/node": "^20.4.5",
     "@types/react": "^18.2.16",
     "@types/react-dom": "^18.2.7",
+    "@types/source-map-support": "^0.5.7",
+    "@types/uuid": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react": "^4.0.3",
@@ -85,31 +110,39 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "eslint-plugin-require-extensions": "^0.1.3",
     "happy-dom": "^10.5.2",
     "husky": "^8.0.3",
+    "jest-websocket-mock": "^2.5.0",
     "nodemon": "^3.0.1",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.27",
+    "postcss": "^8.4.29",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.2",
     "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-typescript-paths": "^1.4.0",
     "rollup-plugin-typescript2": "^0.35.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
+    "tsup": "^7.2.0",
     "typescript": "^5.1.6",
+    "unbuild": "^2.0.0",
     "vite": "^4.4.7",
     "vitest": "^0.33.0"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-select": "^1.2.2",
-    "@uiw/react-json-view": "^1.8.4",
+    "clone": "^2.1.2",
     "clsx": "^2.0.0",
+    "d3-hierarchy": "^3.1.2",
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.2.0",
+    "d3-zoom": "^3.0.0",
     "lucide-react": "^0.263.1",
-    "react-d3-tree": "^3.6.1",
-    "react-use-websocket": "^4.3.1",
-    "tailwind-merge": "^1.14.0"
+    "tailwind-merge": "^1.14.0",
+    "uuid": "^9.0.1"
   }
 }

@@ -1,6 +1,6 @@
-import { TimelineEvent } from "./timeline/types";
-import type { Tabs } from "../tabs";
-import { Terminal } from "./terminal/types";
+import { TimelineEvent } from './timeline/types.js';
+import type { Tabs } from '../tabs/index.js';
+import { Terminal } from './terminal/types.js';
 export const ROUTE_BOUNDARY_GRADIENTS = {
   sea: "rdt-bg-green-100 rdt-bg-gradient-to-r rdt-from-cyan-500/50 rdt-to-blue-500/50",
   hyper: "rdt-bg-gradient-to-r rdt-from-pink-500 rdt-via-red-500 rdt-to-yellow-500",

@@ -1,7 +1,7 @@
-import { useDetachedWindowControls } from "../../context/useRDTContext";
-import { REMIX_DEV_TOOLS_CHECK_DETACHED, setStorageItem } from "../../utils/storage";
-import { useAttachListener } from "../useAttachListener";
-import { useCheckIfStillDetached } from "./useCheckIfStillDetached";
+import { useDetachedWindowControls } from '../../context/useRDTContext.js';
+import { REMIX_DEV_TOOLS_CHECK_DETACHED, setStorageItem } from '../../utils/storage.js';
+import { useAttachListener } from '../useAttachListener.js';
+import { useCheckIfStillDetached } from './useCheckIfStillDetached.js';
 
 export const useResetDetachmentCheck = () => {
   const { isDetached } = useDetachedWindowControls();

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSettingsContext } from "../context/useRDTContext";
+import { useSettingsContext } from '../context/useRDTContext.js';
 
 const useResize = () => {
   const { setSettings, settings } = useSettingsContext();

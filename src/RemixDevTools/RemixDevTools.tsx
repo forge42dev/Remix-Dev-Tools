@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
-import { RDTContextProvider } from "./context/RDTContext";
-import { Tab } from "./tabs";
-import { useTimelineHandler } from "./hooks/useTimelineHandler";
-import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext";
+import { RDTContextProvider } from "./context/RDTContext.js";
+import { Tab } from "./tabs/index.js";
+import { useTimelineHandler } from "./hooks/useTimelineHandler.js";
+import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext.js";
 import { useLocation } from "@remix-run/react";
-import { Trigger } from "./components/Trigger";
-import { MainPanel } from "./layout/MainPanel";
-import { Tabs } from "./layout/Tabs";
-import { ContentPanel } from "./layout/ContentPanel";
-import rdtStylesheet from "../input.css?inline";
-import { useOutletAugment } from "./hooks/useOutletAugment";
-import { useResetDetachmentCheck } from "./hooks/detached/useResetDetachmentCheck";
-import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries";
+import { Trigger } from "./components/Trigger.js";
+import { MainPanel } from "./layout/MainPanel.js";
+import { Tabs } from "./layout/Tabs.js";
+import { ContentPanel } from "./layout/ContentPanel.js";
+import "../input.css";
+import { useOutletAugment } from "./hooks/useOutletAugment.js";
+import { useResetDetachmentCheck } from "./hooks/detached/useResetDetachmentCheck.js";
+import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js";
 import {
   REMIX_DEV_TOOLS,
   REMIX_DEV_TOOLS_DETACHED_OWNER,
   REMIX_DEV_TOOLS_IS_DETACHED,
   setSessionItem,
   setStorageItem,
-} from "./utils/storage";
-import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached";
+} from "./utils/storage.js";
+import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached.js";
 
-export const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />;
+export const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: "" }} />;
 
 const DevTools = ({ plugins }: RemixDevToolsProps) => {
   useTimelineHandler();

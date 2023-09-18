@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import { CustomNodeElementProps } from "react-d3-tree";
-import { RouteWildcards } from "../context/rdtReducer";
-import { ExtendedRoute, getRouteColor } from "../utils/routing";
+import { RouteWildcards } from "../context/rdtReducer.js";
+import { ExtendedRoute, getRouteColor } from "../utils/routing.js";
+import { CustomNodeElementProps } from "../../external/react-d3-tree/index.js";
 
 export const RouteNode = ({
   nodeDatum,

@@ -1,7 +1,7 @@
 import { useActionData, useFetchers, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { useDetachedWindowControls, useTimelineContext } from "../context/useRDTContext";
-import { TimelineEvent } from "../context/timeline/types";
+import { useDetachedWindowControls, useTimelineContext } from '../context/useRDTContext.js';
+import { TimelineEvent } from '../context/timeline/types.js';
 
 const uniqueId = () => (Math.random() * Date.now()).toString();
 

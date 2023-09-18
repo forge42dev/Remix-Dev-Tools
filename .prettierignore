@@ -1,2 +1,4 @@
-src/remix-app-for-testing
-src/epic-stack-remix-dev-tools
+src/cjs-app
+src/esm-app
+src/RemixDevTools/init
+src/RemixDevTools/dev-server

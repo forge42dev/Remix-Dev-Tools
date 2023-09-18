@@ -1,8 +1,8 @@
 import { Activity } from "lucide-react";
-import { FormEvent, RedirectEvent, TimelineEvent } from "../context/timeline/types";
-import { useTimelineContext } from "../context/useRDTContext";
-import { JsonRenderer } from "../components/jsonRenderer";
-import { TAG_COLORS, Tag } from "../components/Tag";
+import { FormEvent, RedirectEvent, TimelineEvent } from '../context/timeline/types.js';
+import { useTimelineContext } from '../context/useRDTContext.js';
+import { JsonRenderer } from '../components/jsonRenderer.js';
+import { TAG_COLORS, Tag } from '../components/Tag.js';
 
 const Translations: Record<TimelineEvent["type"], string> = {
   REDIRECT: "Normal Page navigation",

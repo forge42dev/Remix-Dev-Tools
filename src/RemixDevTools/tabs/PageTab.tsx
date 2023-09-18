@@ -1,13 +1,13 @@
 import { useMatches, useRevalidator } from "@remix-run/react";
 import { CornerDownRight } from "lucide-react";
 import clsx from "clsx";
-import { JsonRenderer } from "../components/jsonRenderer";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { Tag } from "../components/Tag";
-import { VsCodeButton } from "../components/VScodeButton";
+import { JsonRenderer } from '../components/jsonRenderer.js';
+import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
+import { Tag } from '../components/Tag.js';
+import { VsCodeButton } from '../components/VScodeButton.js';
 import { useMemo } from "react";
-import { isLayoutRoute } from "../utils/routing";
-import { useSettingsContext } from "../context/useRDTContext";
+import { isLayoutRoute } from '../utils/routing.js';
+import { useSettingsContext } from '../context/useRDTContext.js';
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -72,8 +72,8 @@ const PageTab = () => {
         )}
       >
         {reversed.map((route) => {
-          const loaderData = getLoaderData(route.data);
-          const originalData = getOriginalData(route.data);
+          const loaderData = getLoaderData(route.data as any);
+          const originalData = getOriginalData(route.data as any);
 
           const isRoot = route.id === "root";
 
@@ -127,7 +127,7 @@ const PageTab = () => {
                   {route.handle && Object.keys(route.handle).length > 0 && (
                     <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
                       Route handle:
-                      <JsonRenderer data={route.handle} />
+                      <JsonRenderer data={route.handle as any} />
                     </div>
                   )}
                   {originalData?.remixDevTools?.timers?.length && (

@@ -1,7 +1,7 @@
-import JsonView from "@uiw/react-json-view";
-import { darkTheme } from "@uiw/react-json-view/dark";
 import { useMemo, useState } from "react";
-import { useSettingsContext } from "../context/useRDTContext";
+import { useSettingsContext } from "../context/useRDTContext.js";
+import JsonView from "../../external/react-json-view/index.js";
+import { darkTheme } from "../../external/react-json-view/theme/dark.js";
 
 interface JsonRendererProps {
   data: string | Record<string, unknown>;
@@ -41,9 +41,7 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
     return <div className="rdt-text-green-600">{json}</div>;
   }
 
-  return (
-    <JsonView highlightUpdates collapsed={settings.expansionLevel} style={{ ...(darkTheme as any) }} value={json} />
-  );
+  return <JsonView highlightUpdates style={darkTheme} collapsed={settings.expansionLevel} value={json} />;
 };
 
 export { JsonRenderer };

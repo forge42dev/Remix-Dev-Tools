@@ -1,15 +1,15 @@
 import clsx from "clsx";
-import { InjectedStyles, RemixDevToolsProps } from "./RemixDevTools";
-import { useSettingsContext } from "./context/useRDTContext";
-import { useOutletAugment } from "./hooks/useOutletAugment";
-import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries";
-import { useTimelineHandler } from "./hooks/useTimelineHandler";
-import { ContentPanel } from "./layout/ContentPanel";
-import { MainPanel } from "./layout/MainPanel";
-import { Tabs } from "./layout/Tabs";
-import { REMIX_DEV_TOOLS } from "./utils/storage";
+import { InjectedStyles, RemixDevToolsProps } from './RemixDevTools.js';
+import { useSettingsContext } from './context/useRDTContext.js';
+import { useOutletAugment } from './hooks/useOutletAugment.js';
+import { useSetRouteBoundaries } from './hooks/useSetRouteBoundaries.js';
+import { useTimelineHandler } from './hooks/useTimelineHandler.js';
+import { ContentPanel } from './layout/ContentPanel.js';
+import { MainPanel } from './layout/MainPanel.js';
+import { Tabs } from './layout/Tabs.js';
+import { REMIX_DEV_TOOLS } from './utils/storage.js';
 import { useLocation } from "@remix-run/react";
-import { RDTContextProvider } from "./context/RDTContext";
+import { RDTContextProvider } from './context/RDTContext.js';
 import { useState, useEffect } from "react";
 
 export interface EmbeddedDevToolsProps extends RemixDevToolsProps {

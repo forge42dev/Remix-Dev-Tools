@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { useState } from "react";
-import { Checkbox } from "./Checkbox";
-import { Input } from "./Input";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
+import { Checkbox } from './Checkbox.js';
+import { Input } from './Input.js';
+import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
 
 interface NewRouteOptions {
   path: string;

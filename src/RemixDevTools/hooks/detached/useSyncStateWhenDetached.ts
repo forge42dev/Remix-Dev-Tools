@@ -1,7 +1,7 @@
-import { getExistingStateFromStorage } from "../../context/RDTContext";
-import { REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE } from "../../utils/storage";
-import { useAttachListener } from "../useAttachListener";
-import { useRDTContext } from "../../context/useRDTContext";
+import { getExistingStateFromStorage } from '../../context/RDTContext.js';
+import { REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE } from '../../utils/storage.js';
+import { useAttachListener } from '../useAttachListener.js';
+import { useRDTContext } from '../../context/useRDTContext.js';
 
 const refreshRequiredKeys = [REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE];
 

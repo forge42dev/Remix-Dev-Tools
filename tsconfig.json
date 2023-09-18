@@ -27,9 +27,9 @@
     // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
     // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
     /* Modules */
-    "module": "ES2020" /* Specify what module code is generated. */,
+    "module": "NodeNext" /* Specify what module code is generated. */,
     "rootDir": "./src" /* Specify the root folder within your source files. */,
-    "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "moduleResolution": "NodeNext" /* Specify how TypeScript looks up a file from a given module specifier. */,
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
@@ -108,9 +108,14 @@
     "./dist/**/*",
     "./bin/mocks/**/*",
     "./*.config.ts",
-    "./src/remix-app-for-testing",
+    "./src/cjs-app",
+    "./src/esm-app",
     "./src/epic-stack-remix-dev-tools",
     "./src/documentation",
-    "./plugins/**/*"
+    "./plugins/**/*",
+    "./src/external/**/*",
+    "./src/dev-server/**/*",
+    "./src/monitor/**/*",
+    "./src/external/react-d3-tree"
   ]
 }

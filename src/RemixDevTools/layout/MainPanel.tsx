@@ -1,9 +1,9 @@
 import clsx from "clsx";
-import { useResize } from "../hooks/useResize";
-import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext";
+import { useResize } from '../hooks/useResize.js';
+import { useDetachedWindowControls, useSettingsContext } from '../context/useRDTContext.js';
 import { useState } from "react";
-import { useAttachWindowListener } from "../hooks/useAttachListener";
-import { useDebounce } from "../hooks/useDebounce";
+import { useAttachWindowListener } from '../hooks/useAttachListener.js';
+import { useDebounce } from '../hooks/useDebounce.js';
 
 interface MainPanelProps {
   children: React.ReactNode;

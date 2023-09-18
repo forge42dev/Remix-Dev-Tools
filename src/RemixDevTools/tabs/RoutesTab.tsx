@@ -1,17 +1,18 @@
 import { MouseEvent, useState } from "react";
-import { createRouteTree } from "../utils/sanitize";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion";
+import { createRouteTree } from "../utils/sanitize.js";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js";
 import { useMatches, useNavigate } from "@remix-run/react";
-import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext";
-import { NewRouteForm } from "../components/NewRouteForm";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { ExtendedRoute, constructRoutePath, createExtendedRoutes } from "../utils/routing";
-import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange";
-import Tree from "react-d3-tree";
+import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext.js";
+import { NewRouteForm } from "../components/NewRouteForm.js";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
+import { ExtendedRoute, constructRoutePath, createExtendedRoutes } from "../utils/routing.js";
+import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange.js";
+
 import clsx from "clsx";
-import { RouteInfo } from "../components/RouteInfo";
-import { RouteNode } from "../components/RouteNode";
-import { RouteToggle } from "../components/RouteToggle";
+import { RouteInfo } from "../components/RouteInfo.js";
+import { RouteNode } from "../components/RouteNode.js";
+import { RouteToggle } from "../components/RouteToggle.js";
+import Tree from "../../external/react-d3-tree/index.js";
 
 const RoutesTab = () => {
   const matches = useMatches();

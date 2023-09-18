@@ -1,8 +1,8 @@
 import { useCallback, useContext } from "react";
-import { RDTContext } from "./RDTContext";
-import { TimelineEvent } from "./timeline/types";
-import { Terminal } from "./terminal/types";
-import { RemixDevToolsState } from "./rdtReducer";
+import { RDTContext } from './RDTContext.js';
+import { TimelineEvent } from './timeline/types.js';
+import { Terminal } from './terminal/types.js';
+import { RemixDevToolsState } from './rdtReducer.js';
 
 /**
  * Returns an object containing the current state and dispatch function of the RDTContext.

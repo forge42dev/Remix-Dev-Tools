@@ -1,4 +1,4 @@
-import { getRouteType, isLayoutRoute, isLeafRoute } from "./routing";
+import { getRouteType, isLayoutRoute, isLeafRoute } from './routing.js';
 // Mock the window.__remixManifest.routes object for testing purposes
 const mockRoutes = {
   root: {

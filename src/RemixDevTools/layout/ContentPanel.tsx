@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import { TimelineTab } from "../tabs/TimelineTab";
-import { Tab } from "../tabs";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { useTabs } from "../hooks/useTabs";
+import { TimelineTab } from '../tabs/TimelineTab.js';
+import { Tab } from '../tabs/index.js';
+import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
+import { useTabs } from '../hooks/useTabs.js';
 import { Fragment } from "react";
 
 interface ContentPanelProps {

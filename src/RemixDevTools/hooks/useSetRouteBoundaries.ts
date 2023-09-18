@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
-import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer";
-import { useSettingsContext, useDetachedWindowControls, useRDTContext } from "../context/useRDTContext";
-import { useAttachListener } from "./useAttachListener";
+import { ROUTE_BOUNDARY_GRADIENTS } from '../context/rdtReducer.js';
+import { useSettingsContext, useDetachedWindowControls, useRDTContext } from '../context/useRDTContext.js';
+import { useAttachListener } from './useAttachListener.js';
 
 export const useSetRouteBoundaries = () => {
   const { settings, setSettings } = useSettingsContext();

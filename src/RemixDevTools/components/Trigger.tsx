@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { usePersistOpen, useSettingsContext } from "../context/useRDTContext";
-import { Logo } from "./Logo";
+import { usePersistOpen, useSettingsContext } from '../context/useRDTContext.js';
+import { Logo } from './Logo.js';
 
 export const Trigger = ({
   isOpen,

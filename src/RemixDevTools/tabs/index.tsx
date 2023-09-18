@@ -1,8 +1,8 @@
 import { GitMerge, Terminal, Layers, Settings } from "lucide-react";
-import { PageTab } from "./PageTab";
-import { RoutesTab } from "./RoutesTab";
-import { TerminalTab } from "./TerminalTab";
-import { SettingsTab } from "./SettingsTab";
+import { PageTab } from './PageTab.js';
+import { RoutesTab } from './RoutesTab.js';
+import { TerminalTab } from './TerminalTab.js';
+import { SettingsTab } from './SettingsTab.js';
 
 export type Tabs = (typeof tabs)[number]["id"];
 

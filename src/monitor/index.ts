@@ -1,15 +1,17 @@
-/* export class Measurer {
+import { DataFunctionArgs } from "@remix-run/server-runtime";
+
+export class Measurer {
   measures = new Set<{
     name: string;
     duration: number;
   }>();
 
   async time<Result>(name: string, fn: () => Promise<Result>): Promise<Result> {
-    let start = Date.now();
+    const start = Date.now();
     try {
       return await fn();
     } finally {
-      let duration = Date.now() - start;
+      const duration = Date.now() - start;
       this.measures.add({ name, duration });
     }
   }
@@ -18,41 +20,44 @@
     return [...this.measures];
   }
   async toHeaders(headers = new Headers()) {
-    for (let { name, duration } of this.measures) {
+    for (const { name, duration } of this.measures) {
       headers.append("Server-Timing", `${name};dur=${duration}`);
     }
     return headers;
   }
 }
 
-export const measure = async <T extends unknown>(
-  //request: Request,
-  handler: (arg: { time: Measurer["time"] }) => T
-) => {
+export const measure = async <T extends unknown>(args: DataFunctionArgs, loader: (args: DataFunctionArgs) => T) => {
+  const { request } = args;
+  console.log("hello!");
   // If production don't do anything
-  if (process.env.NODE_ENV !== "development") {
-    return handler({ time: async (name, fn) => await fn() });
-  }
+  //if (process.env.NODE_ENV !== "development") {
+  //   return loader({
+  //     ...args,
+  //     context: { ...args.context, time: async (name: string, fn: (...args: any[]) => any) => await fn() },
+  //  });
+  // }
 
   const measurer = new Measurer();
   try {
-    //   const url = new URL(request.url);
-    //const headers = new Headers(request.headers);  
-    //const possibleDevTools = headers.get("remix-dev-tools");  
+    const url = new URL(request.url);
+    const headers = new Headers(request.headers);
+    const possibleDevTools = headers.get("remix-dev-tools");
 
-    let remixDevTools: any = {
+    const remixDevTools: any = {
       //method: request.method,
-      /* from: request.headers.get("Referer"),
+      from: request.headers.get("Referer"),
       path: url.pathname,
-      to: request.url,  
+      to: request.url,
     };
 
     const res = await measurer.time(
-      `Total Request Time ` ,
+      `Total Request Time `,
       //#${remixDevTools.method === "GET" ? "loader" : "action"},
       async () => {
-        const response = await handler({
-          time: measurer.time.bind(measurer),
+        const response = await loader({
+          ...args,
+          context: { ...args.context, time: measurer.time.bind(measurer) },
         });
         return response;
       }
@@ -71,10 +76,10 @@ export const measure = async <T extends unknown>(
 
       return res as T;
     }
-
     try {
       const newRes = res.clone();
       const data = await newRes.json();
+
       const newHeaders = new Headers(newRes.headers);
       newHeaders.append("remix-dev-tools", JSON.stringify(remixDevTools));
       await measurer.toHeaders(newHeaders);
@@ -86,7 +91,9 @@ export const measure = async <T extends unknown>(
       const augmented = new Response(body, { ...newRes, headers: newHeaders });
 
       return augmented as T;
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
 
     await measurer.toHeaders(res.headers);
     return res as T;
@@ -94,4 +101,3 @@ export const measure = async <T extends unknown>(
     throw error;
   }
 };
- */
