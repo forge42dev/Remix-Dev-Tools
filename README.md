@@ -13,15 +13,25 @@
 Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
 
 ## How it looks
-### Active pages Tab
-![active page tab](./assets/active-page.png)
-### Routes Tab
+### Server logger
+![server logger](./assets/logs.png) 
+### Routes Tab (List view)
 ![routes](./assets/routes.gif)
+
+### Routes Tab (Tree view)
+![routes](./assets/tree-view.png)
 ### Timeline
 ![timeline](./assets/timeline.gif)
-
+### Route boundaries & Active page panel
+![route boundaries](./assets/boundaries.png)
 ## What's new?
 
+## v3.0.0
+Remix Development Tools v3.0.0 is here! This release brings a lot of new features and improvements to the Remix Development Tools. The most notable ones are:
+1. The setup is completely changed (Check the getting started section for more info) 
+2. The new dev tools are now a lot more stable and reliable. We have fixed a lot of bugs and improved the overall stability of the dev tools.
+3. New server logger and server side listeners.
+4. New rdt dev server
 ## v2.4.0
 - Route boundaries locked behind a feature flag
 - Panel position settings allow you to change the panel position to either top or bottom of the screen
@@ -46,8 +56,21 @@ Json viewer improvements:
 - Doesn't close on revalidate anymore
 - Different UI
 
-## Features
+# Features
 
+## Server
+
+Here are features offered on the server side of Remix Development Tools:
+- Loader logs -> logs loader triggers and execution timing (from the moment the loader is triggered to the moment it finishes)
+- Action logs -> logs action triggers and execution timing (from the moment the action is triggered to the moment it finishes)
+- Cache logs -> logs your caching strategies that you define in your loaders/actions
+- Cookie logs -> logs when you set cookies in your loaders/actions
+- Defer support -> tells you which keys are deferred and how long it took for them to resolve
+- Server side listeners -> listens to certain events and sends them to the client side for display
+
+More features are coming soon!
+
+## Client
 ### Active Page Tab
 
 The **Active Page** tab in Remix Development Tools allows you to gain insights into the current page you are working on. It provides valuable information and data that can assist you in debugging and understanding the behavior of your application. 
@@ -60,6 +83,8 @@ Key features include:
 - **Outlet boundaries** Activate the **Show Route Boundaries** option to see each Outlet and route boundaries by coloring the background. It is locked behind a flag. You can enable it by passing `useRouteBoundaries` prop to `true` in the `RemixDevTools`,first parameter of `initClient` set to `true` and second parameter of `initServer` set to `true`. This feature is experimental and can cause issues in certain scenarios. It will be considered stable with v3.0 release but until then use at your own risk.
 
 ### Routes Tab
+
+Allows you to view your routes in either a tree/list view! You can also open routes in your browser from the tree view.
 
 The **Routes** tab enables you to manage and explore the routes within your Remix project. This tab offers an intuitive interface to perform the following tasks:
 
@@ -105,124 +130,128 @@ To install and utilize Remix Development Tools, follow these steps:
 npm install remix-development-tools -D
 ```
 
-2. Add the following to your application `entry.client.tsx` file:
+2. Add the following to your application `root.tsx` file:
 
 ```diff
-This might differ if you use <StrictMode> or some other wrappers around <RemixBrowser>, whats important is wrapping the start transition in a callback
--startTransition(() => {
--  hydrateRoot(
--   document,
--   <RemixBrowser />
--);
-+});
-+ const callback = () => startTransition(() => {
-+   hydrateRoot(
-+    document,
-+    <RemixBrowser />
-+  );
-+});
-+
-+ if(process.env.NODE_ENV === "development") {
-+   import("remix-development-tools").then(({ initClient }) => {
-+     // Add all the dev tools props here into the client
-+     initClient();
-+     callback();
-+   }); 
-+ } else {
-+  callback()
-+ }
++ import rdtStylesheet from "remix-development-tools/index.css";
++ import { withDevTools } from "remix-development-tools";
+
++ export const links: LinksFunction = () => [
++   process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : [],
++ ] 
+ 
+
++ export default process.env.NODE_ENV === "development" ? withDevTools(App) : App;
+
 ``` 
 
-3. Add the following to your application `entry.server.tsx` file:
+You're good to go! 
 
-```diff
-The important part is modifying the remixContext, this might differ based on the provider you are using.
+If you want to add the server side logs and listeners you need to do one of the following:
 
-function handleBrowserRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext
-) {
--  return new Promise((resolve, reject) => {
-+  return new Promise(async (resolve, reject) => {
-    let shellRendered = false;
-+    const context = process.env.NODE_ENV === "development" ? await import("remix-development-tools").then(({ initServer }) => initServer(remixContext)) : remixContext;
-    const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
--        context={remixContext}
-+        context={context}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
-      {
-        onShellReady() {
-          shellRendered = true;
-          const body = new PassThrough();
+### Custom server setup
 
-          responseHeaders.set("Content-Type", "text/html");
+If you're running a custom server this is what you need to do:
+1. Wrap your build in your server file with `withServerDevTools` function. This takes an optional second parameter that allows you to configure it.
+2. Wrap your re-imported build too if you are in manual mode.
+3. You're done! Here is the example code:
 
-          resolve(
-            new Response(body, {
-              headers: responseHeaders,
-              status: responseStatusCode,
-            })
-          );
+```ts
+import { withServerDevTools, defineServerConfig } from 'remix-development-tools/server'
+// Allows you to define the configuration for the dev tools
+const devToolsConfig = defineServerConfig({ 
+  //... your config here ...
+})
 
-          pipe(body);
-        },
-        onShellError(error: unknown) {
-          reject(error);
-        },
-        onError(error: unknown) {
-          responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
-          if (shellRendered) {
-            console.error(error);
-          }
-        },
-      }
-    );
+const build = await import(BUILD_PATH)
+// wrap the build with the wrapper provided by the package
+let devBuild = withServerDevTools(build, devToolsConfig)
 
-    setTimeout(abort, ABORT_DELAY);
-  });
+// .... somewhere later in your code ...
+// This makes sure the build is wrapped on reload, you will need this if you're running with the --manual flag
+async function reloadBuild() {
+  devBuild = await import(`${BUILD_PATH}?update=${Date.now()}`)
+  devBuild = withServerDevTools(devBuild, devToolsConfig)
+  broadcastDevReady(devBuild)
 }
 ```
-4. Add the Remix Development Tools to your `root.tsx` file:
 
+### CJS remix server setup (remix run server started by remix dev)
+
+Just add the following command to your package.json:
 ```diff
-+ const RemixDevTools = process.env.NODE_ENV === 'development' ? lazy(() => import("remix-development-tools")) : null
-
-export default function App() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload /> 
-+       {RemixDevTools ? (<Suspense><RemixDevTools /></Suspense>) : null}
-      </body>
-    </html>
-  );
-}
+- "dev": "remix dev",
++ "dev": "remix dev -c \"rdt-cjs-serve ./build/index.js\" --manual",
 ```
-5. You're good to go!
+
+### ESM remix server setup (remix run server started by remix dev)
+
+Just add the following command to your package.json:
+```diff
+- "dev": "remix dev",
++ "dev": "remix dev -c \"rdt-serve ./build/index.js\" --manual",
+```
+
+## Server dev tools configuration
+Here are the server config options:
+  
+  ```ts
+    interface Config {
+      // Sets the ws port for the dev tools to communicate with the client dev tools
+      wsPort?: number;
+      // allows you to not communicate at all with the client dev tools
+      withWebsocket?: boolean;
+      // allows you to not log anything to the console
+      silent?: boolean;
+      logs?: {
+        // allows you to not log cookie logs to the console
+        cookies?: boolean;
+        // allows you to not log defer logs to the console
+        defer?: boolean;
+        // allows you to not log action logs to the console
+        actions?: boolean;
+        // allows you to not log loader logs to the console
+        loaders?: boolean;
+        // allows you to not log cache logs to the console
+        cache?: boolean;
+        // allows you to not log when cache is cleared to the console
+        siteClear?: boolean;
+      };
+    }
+  ```
+you can use the `defineServerConfig` function to define the config with a fully typed object! This is useful if you want to use the config in multiple places. 
+
+```ts
+import { defineServerConfig, withServerDevTools } from 'remix-development-tools/server'
+
+const config = defineServerConfig({
+  // ... your config here ...
+})
+
+const build = withServerDevTools(await import(BUILD_PATH), config)
+
+```
 
 ## RemixDevTools props
 
 The `RemixDevTools` component accepts the following props: 
 - `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`. 
 - `plugins`: Allows you to provide additional tabs (plugins) to the Remix Development Tools. Defaults to `[]`.
-- `useRouteBoundaries`: Allows you to enable the route boundaries feature. Defaults to `false`. This feature is experimental and can cause issues in certain scenarios. It will be considered stable with v3.0 release but until then use at your own risk.
+- `wsPort`: Allows you to specify over which port the client dev tools will communicate with the server dev tools. Defaults to `8080`.
+
+### Defining the config
+
+You can import `defineClientConfig` to define the config with a fully typed object! This is useful if you want to use the config in multiple places. 
+
+```ts
+import { defineClientConfig } from 'remix-development-tools'
+
+const config = defineClientConfig({
+  // ... your config here ...
+})
+
+export default withDevTools(App, config)
+```
  
 
 ## Plugins
@@ -260,8 +289,8 @@ Writing plugins for Remix Development Tools is easy. You can write a plugin that
 ```diff
 import { remixDevToolsPlugin } from "./remix-dev-tools-plugin";
 
--  <RemixDevTools />
-+  <RemixDevTools plugins={[remixDevToolsPlugin()]} />
+-  withDevTools(App);
++  withDevTools(App, { plugins: [remixDevToolsPlugin()] })
  
 ```
 5. You should now see your plugin in the Remix Development Tools as a new tab.
@@ -313,26 +342,26 @@ import { useRemixForgeSocket } from "remix-development-tools";
 7. Refer to `react-use-websocket` for more information on how to use the socket and what options it accepts because that is what is used under the hood.
 8. After you're done share your plugin with the community by opening a discussion!
 
+## v2 -> v3 migration guide
 
-## v1 -> v2 migration guide
 The migration should be really simple. These are the following things you need to do:
-1. Remove the old imports of the stylesheet and addition of the stylesheets to your links export. This is bundled now within the Remix Development Tools.
+1. Remove everything from `entry.client.tsx` and `entry.server.tsx` files.
+2. In your root import the stylesheet and the withDevTools function from the package.
 ```diff
-- import rdtStylesheet from "remix-development-tools/stylesheet.css";
-export const links = [
-  // ... other links
--  { rel: "stylesheet", href: rdtStylesheet },
-]
-
++ import rdtStylesheet from "remix-development-tools/index.css";
++ import { withDevTools } from "remix-development-tools";
 ```
+3. Wrap your app with the withDevTools function.
+```diff
+- export default App;
++ export default withDevTools(App);
+```
+4. You're good to go! (You can also add the server logger on top of that if you want)
 
-2. If you were using `initRouteBoundariesClient` and `initRouteBoundariesServer` you just need to replace them with the new `initClient` and `initServer` functions. You can skip the rest of the steps, you're ready to go!
-3. Add the `initClient` function to your `entry.client.tsx` file. This is needed to initialize the route boundaries functionality and possible future functionality. (Refer to getting started steps above on how to do that)
-4. Add the `initServer` function to your `entry.server.tsx` file. This is needed to initialize the route boundaries functionality (and not cause hydration issues) and possible future functionality. (Refer to getting started steps above on how to do that)
-5. You are good to go!
+ 
 ## Troubleshooting
 
-### Dynamic imports are only supported when the "--module" flag is set to 'es2020', 'es2022', 'esnext', 'commonjs', 'amd', 'system', 'umd', 'node16', or 'nodenext'.ts(1323)
+### [ lower version than V3 only ] Dynamic imports are only supported when the "--module" flag is set to 'es2020', 'es2022', 'esnext', 'commonjs', 'amd', 'system', 'umd', 'node16', or 'nodenext'.ts(1323)
 
 To fix this issue you need to add the following to your `tsconfig.json` file:
 
@@ -344,7 +373,7 @@ To fix this issue you need to add the following to your `tsconfig.json` file:
   }
 }
 ```
-### Hydration issues and Remix Development tools crashing with i18n
+### [ lower version than V3 only ] Hydration issues and Remix Development tools crashing with i18n
 
 Make sure you're passing the same context to the `i18n.getRouteNamespaces()` function as you're passing to the `<RemixServer>` component. 
 
@@ -361,7 +390,7 @@ Make sure you're passing the same context to the `i18n.getRouteNamespaces()` fun
 +    <RemixServer abortDelay={ABORT_DELAY} context={context} url={request.url} />
    </I18nextProvider>
 ```
-### HMR is failing with RDT
+### [ lower version than V3 only ] HMR is failing with RDT
 
 Wrap the `RemixDevTools` component in a `Suspense` component.
 
