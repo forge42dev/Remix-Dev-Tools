@@ -34,7 +34,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         },
       },
     },
-  });
+  }, { headers: { "Cache-Control": "max-age=60, s-maxage=6000" } });
 };
 
 export const action = async ({ request }: ActionArgs) => {

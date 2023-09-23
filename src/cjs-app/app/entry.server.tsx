@@ -92,13 +92,11 @@ function handleBrowserRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  return new Promise(async (resolve, reject) => {
-    let shellRendered = false;
-    const devTools = await import("remix-development-tools");
-    const context =   remixContext;
+  return new Promise(  (resolve, reject) => {
+    let shellRendered = false;  
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
-        context={context}
+        context={remixContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
       />,

@@ -1,13 +1,13 @@
 import { useMatches, useRevalidator } from "@remix-run/react";
 import { CornerDownRight } from "lucide-react";
 import clsx from "clsx";
-import { JsonRenderer } from '../components/jsonRenderer.js';
-import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
-import { Tag } from '../components/Tag.js';
-import { VsCodeButton } from '../components/VScodeButton.js';
+import { JsonRenderer } from "../components/jsonRenderer.js";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
+import { Tag } from "../components/Tag.js";
+import { VsCodeButton } from "../components/VScodeButton.js";
 import { useMemo } from "react";
-import { isLayoutRoute } from '../utils/routing.js';
-import { useSettingsContext } from '../context/useRDTContext.js';
+import { isLayoutRoute } from "../utils/routing.js";
+import { useSettingsContext } from "../context/useRDTContext.js";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -71,7 +71,7 @@ const PageTab = () => {
           state === "loading" && "rdt-pointer-events-none rdt-opacity-50"
         )}
       >
-        {reversed.map((route) => {
+        {reversed.map((route, i) => {
           const loaderData = getLoaderData(route.data as any);
           const originalData = getOriginalData(route.data as any);
 
@@ -82,8 +82,8 @@ const PageTab = () => {
 
           return (
             <li
-              onMouseEnter={() => onHover(route.id, "enter")}
-              onMouseLeave={() => onHover(route.id, "leave")}
+              onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
+              onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
               key={route.id}
               className="rdt-mb-8 rdt-ml-8"
             >
@@ -132,25 +132,20 @@ const PageTab = () => {
                   )}
                   {originalData?.remixDevTools?.timers?.length && (
                     <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
-                      <div className="rdt-mb-1">
-                        Registered timers for route:
-                      </div>
-                      {originalData?.remixDevTools?.timers.map(
-                        (timer: { name: string; duration: number }) => {
-                          return (
-                            <div
-                              key={timer.name}
-                              className="rdt-flex rdt-justify-between rdt-gap-4 rdt-text-sm rdt-font-normal rdt-text-white"
-                            >
-                              <div>{timer.name} </div>
-                              <div>
-                                {(timer.duration / 1000).toPrecision(2)}s (
-                                {timer.duration}ms)
-                              </div>
+                      <div className="rdt-mb-1">Registered timers for route:</div>
+                      {originalData?.remixDevTools?.timers.map((timer: { name: string; duration: number }) => {
+                        return (
+                          <div
+                            key={timer.name}
+                            className="rdt-flex rdt-justify-between rdt-gap-4 rdt-text-sm rdt-font-normal rdt-text-white"
+                          >
+                            <div>{timer.name} </div>
+                            <div>
+                              {(timer.duration / 1000).toPrecision(2)}s ({timer.duration}ms)
                             </div>
-                          );
-                        }
-                      )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

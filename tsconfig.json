@@ -116,6 +116,8 @@
     "./src/external/**/*",
     "./src/dev-server/**/*",
     "./src/monitor/**/*",
-    "./src/external/react-d3-tree"
+    "./src/external/react-d3-tree",
+    "./scripts",
+    "tsup*.ts"
   ]
 }

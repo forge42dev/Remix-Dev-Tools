@@ -33,12 +33,10 @@ function handleBotRequest(
   remixContext: EntryContext
 ) {
   return new Promise(async (resolve, reject) => {
-    const devTools = await import("remix-development-tools");
-    const context =
-      process.env.NODE_ENV === "development" ? devTools.initServer(remixContext as any, false) : remixContext;
+    
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer context={context as any} url={request.url} abortDelay={ABORT_DELAY} />,
+      <RemixServer context={remixContext  } url={request.url} abortDelay={ABORT_DELAY} />,
       {
         onAllReady() {
           shellRendered = true;

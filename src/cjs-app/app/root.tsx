@@ -1,5 +1,5 @@
  
-import { json } from "@remix-run/node";
+import { LinksFunction, json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,12 +7,18 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react"; 
-import { Suspense, lazy } from "react";
-import { useRemixForgeSocket } from "remix-development-tools";
-import rdtCss from "remix-development-tools/index.css"
-		
-const RemixDevTools = process.env.NODE_ENV === 'development' ? lazy(() => import("remix-development-tools")) : null
+} from "@remix-run/react";   
+import  { useRemixForgeSocket, withDevTools  } from "remix-development-tools";
+import { cssBundleHref } from "@remix-run/css-bundle";
+import rdtStyles from "remix-development-tools/index.css";
+export const links: LinksFunction = () => {
+  return [
+    ...(cssBundleHref
+      ? [{ rel: "stylesheet", href: cssBundleHref }]
+      : []),
+     ...(process.env.NODE_ENV === "development" ? [{rel: "stylesheet", href: rdtStyles }]: [])
+  ];
+};
 const Component = () => {
   const { isConnected, sendJsonMessage } = useRemixForgeSocket({
     onMessage: (message) => {
@@ -44,12 +50,13 @@ const plugin = () => {
     component: <Component />,
   };
 };
- 
+  
 
 
 export const loader = () => {
   return json({
     message: "Hello root World!",
+    from: "me tooo"
   });
 };
 
@@ -57,13 +64,12 @@ export const handle = {
   test: "test",
 };
 
-export const links = () => [rdtCss ? { rel: 'stylesheet', href: rdtCss } : null,]
-
+ 
 export const action = async () => {
   return json({ data: "returned yay" });
 };
 
-export default function App() {
+ function App() {
   return (
     <html lang="en">
       <head>
@@ -75,10 +81,11 @@ export default function App() {
       <body>
         <Outlet />
         <ScrollRestoration />
-        <Scripts />
-        {RemixDevTools ? (<Suspense><RemixDevTools /></Suspense>) : null}
+        <Scripts /> 
         <LiveReload /> 
       </body>
     </html>
   );
-}
+} 
+ 
+export default withDevTools(App );

@@ -1,10 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/RemixDevTools/**/*.{tsx,ts}"],
+  content: ["./src/**/*.{tsx,ts,js}"],
   theme: {
     extend: {
       colors: {
         popover: "#212121",
+        main: "#212121",
         "popover-foreground": "#fff",
       },
       keyframes: {

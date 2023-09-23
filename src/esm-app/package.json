@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual",
+    "dev": "remix dev -c \"rdt-serve ./build/index.js\" --manual",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc"
   },

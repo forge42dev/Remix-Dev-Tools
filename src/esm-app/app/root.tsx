@@ -1,15 +1,16 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
-import { RemixDevTools } from "remix-development-tools";
+ 
 import css from "remix-development-tools/index.css";
+import { withDevTools } from "remix-development-tools";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: "stylesheet", href: css },
 ];
 
-export default function App() {
+function App() {
   return (
     <html lang="en">
       <head>
@@ -23,8 +24,9 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <RemixDevTools />
+         
       </body>
     </html>
   );
 }
+export default withDevTools(App);

@@ -11,6 +11,7 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   return json({
     should: "work",
     with: {
@@ -34,7 +35,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         },
       },
     },
-  });
+  }, { headers: { "Set-Cookie": "test=1; Path=/; HttpOnly; Secure", "Cache-Control": "max-age=20"}});
 };
 
 export const action = async ({ request }: ActionArgs) => {

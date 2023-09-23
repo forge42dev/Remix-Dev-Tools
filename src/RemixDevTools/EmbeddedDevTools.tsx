@@ -1,15 +1,15 @@
 import clsx from "clsx";
-import { InjectedStyles, RemixDevToolsProps } from './RemixDevTools.js';
-import { useSettingsContext } from './context/useRDTContext.js';
-import { useOutletAugment } from './hooks/useOutletAugment.js';
-import { useSetRouteBoundaries } from './hooks/useSetRouteBoundaries.js';
-import { useTimelineHandler } from './hooks/useTimelineHandler.js';
-import { ContentPanel } from './layout/ContentPanel.js';
-import { MainPanel } from './layout/MainPanel.js';
-import { Tabs } from './layout/Tabs.js';
-import { REMIX_DEV_TOOLS } from './utils/storage.js';
+import { RemixDevToolsProps } from "./RemixDevTools.js";
+import { useSettingsContext } from "./context/useRDTContext.js";
+import { useBorderedRoutes } from "./hooks/useBorderedRoutes.js";
+import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js";
+import { useTimelineHandler } from "./hooks/useTimelineHandler.js";
+import { ContentPanel } from "./layout/ContentPanel.js";
+import { MainPanel } from "./layout/MainPanel.js";
+import { Tabs } from "./layout/Tabs.js";
+import { REMIX_DEV_TOOLS } from "./utils/storage.js";
 import { useLocation } from "@remix-run/react";
-import { RDTContextProvider } from './context/RDTContext.js';
+import { RDTContextProvider } from "./context/RDTContext.js";
 import { useState, useEffect } from "react";
 
 export interface EmbeddedDevToolsProps extends RemixDevToolsProps {
@@ -18,7 +18,7 @@ export interface EmbeddedDevToolsProps extends RemixDevToolsProps {
 }
 const Embedded = ({ plugins, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
   useTimelineHandler();
-  useOutletAugment();
+  useBorderedRoutes();
   useSetRouteBoundaries();
   const { settings } = useSettingsContext();
   const { position } = settings;
@@ -55,7 +55,6 @@ const EmbeddedDevTools = ({ requireUrlFlag, plugins, mainPanelClassName, classNa
 
   return (
     <RDTContextProvider>
-      <InjectedStyles />
       <Embedded mainPanelClassName={mainPanelClassName} className={className} plugins={plugins} />
     </RDTContextProvider>
   );

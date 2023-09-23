@@ -1,8 +1,8 @@
 import type { Dispatch } from "react";
 import React, { useMemo, createContext, useReducer, useEffect } from "react";
-import { RemixDevToolsActions, RemixDevToolsState, rdtReducer, initialState } from './rdtReducer.js';
-import { useRemoveBody } from '../hooks/detached/useRemoveBody.js';
-import { useListenToRouteChange } from '../hooks/detached/useListenToRouteChange.js';
+import { RemixDevToolsActions, RemixDevToolsState, rdtReducer, initialState } from "./rdtReducer.js";
+import { useRemoveBody } from "../hooks/detached/useRemoveBody.js";
+import { useListenToRouteChange } from "../hooks/detached/useListenToRouteChange.js";
 import {
   setSessionItem,
   setStorageItem,
@@ -11,9 +11,9 @@ import {
   REMIX_DEV_TOOLS_DETACHED,
   REMIX_DEV_TOOLS_SETTINGS,
   REMIX_DEV_TOOLS_STATE,
-} from '../utils/storage.js';
-import { checkIsDetachedWindow, checkIsDetached, checkIsDetachedOwner } from '../utils/detached.js';
-import { tryParseJson } from '../utils/sanitize.js';
+} from "../utils/storage.js";
+import { checkIsDetachedWindow, checkIsDetached, checkIsDetachedOwner } from "../utils/detached.js";
+import { tryParseJson } from "../utils/sanitize.js";
 
 export const RDTContext = createContext<{
   state: RemixDevToolsState;
@@ -24,7 +24,6 @@ RDTContext.displayName = "RDTContext";
 
 interface ContextProps {
   children: React.ReactNode;
-  useRouteBoundaries?: boolean;
 }
 
 export const setIsDetachedIfRequired = () => {
@@ -67,7 +66,7 @@ export const getSettings = () => {
   };
 };
 
-export const getExistingStateFromStorage = (useRouteBoundaries?: boolean) => {
+export const getExistingStateFromStorage = () => {
   const existingState = getStorageItem(REMIX_DEV_TOOLS_STATE);
   const settings = getSettings();
   const { detachedWindow, detachedWindowOwner } = detachedModeSetup();
@@ -75,7 +74,6 @@ export const getExistingStateFromStorage = (useRouteBoundaries?: boolean) => {
     ...initialState,
     ...(existingState ? JSON.parse(existingState) : {}),
     settings,
-    useRouteBoundaries,
     detachedWindow,
     detachedWindowOwner,
   };
@@ -83,8 +81,8 @@ export const getExistingStateFromStorage = (useRouteBoundaries?: boolean) => {
   return state;
 };
 
-export const RDTContextProvider = ({ children, useRouteBoundaries }: ContextProps) => {
-  const [state, dispatch] = useReducer<typeof rdtReducer>(rdtReducer, getExistingStateFromStorage(useRouteBoundaries));
+export const RDTContextProvider = ({ children }: ContextProps) => {
+  const [state, dispatch] = useReducer<typeof rdtReducer>(rdtReducer, getExistingStateFromStorage());
   const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
   useListenToRouteChange();
   useRemoveBody(state);

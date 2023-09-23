@@ -8,8 +8,7 @@ import { Trigger } from "./components/Trigger.js";
 import { MainPanel } from "./layout/MainPanel.js";
 import { Tabs } from "./layout/Tabs.js";
 import { ContentPanel } from "./layout/ContentPanel.js";
-import "../input.css";
-import { useOutletAugment } from "./hooks/useOutletAugment.js";
+import { useBorderedRoutes } from "./hooks/useBorderedRoutes.js";
 import { useResetDetachmentCheck } from "./hooks/detached/useResetDetachmentCheck.js";
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js";
 import {
@@ -20,15 +19,16 @@ import {
   setStorageItem,
 } from "./utils/storage.js";
 import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached.js";
+import "../input.css";
+import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
 
-export const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: "" }} />;
-
-const DevTools = ({ plugins }: RemixDevToolsProps) => {
+const DevTools = ({ plugins, wsPort }: RemixDevToolsProps) => {
   useTimelineHandler();
-  useOutletAugment();
   useResetDetachmentCheck();
+  useBorderedRoutes();
   useSetRouteBoundaries();
   useSyncStateWhenDetached();
+  useDevServerConnection(wsPort);
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
   const { persistOpen } = usePersistOpen();
@@ -80,13 +80,13 @@ function useHydrated() {
 export interface RemixDevToolsProps {
   // Whether the dev tools require a url flag to be shown
   requireUrlFlag?: boolean;
-  // Whether to use route boundaries to show them on the UI
-  useRouteBoundaries?: boolean;
   // Additional tabs to add to the dev tools
   plugins?: Tab[];
+  // The port to use for the dev tools websocket that communicates with the backend dev tools
+  wsPort?: number;
 }
 
-const RemixDevTools = ({ requireUrlFlag, plugins, useRouteBoundaries }: RemixDevToolsProps) => {
+const RemixDevTools = ({ requireUrlFlag, plugins, wsPort }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const url = useLocation().search;
 
@@ -94,9 +94,8 @@ const RemixDevTools = ({ requireUrlFlag, plugins, useRouteBoundaries }: RemixDev
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
-    <RDTContextProvider useRouteBoundaries={useRouteBoundaries}>
-      <InjectedStyles />
-      <DevTools plugins={plugins} />
+    <RDTContextProvider>
+      <DevTools wsPort={wsPort} plugins={plugins} />
     </RDTContextProvider>
   );
 };

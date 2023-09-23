@@ -8,25 +8,11 @@ import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 
-if (process.env.NODE_ENV === "development") {
-  import("remix-development-tools").then(({ initClient }) => {
-    initClient(false);
-    startTransition(() => {
-      hydrateRoot(
-        document,
-        <StrictMode>
-          <RemixBrowser />
-        </StrictMode>
-      );
-    });
-  });
-} else {
-  startTransition(() => {
-    hydrateRoot(
-      document,
-      <StrictMode>
-        <RemixBrowser />
-      </StrictMode>
-    );
-  });
-}
+startTransition(() => {
+  hydrateRoot(
+    document,
+    <StrictMode>
+      <RemixBrowser />
+    </StrictMode>
+  );
+});
