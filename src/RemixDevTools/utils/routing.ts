@@ -1,6 +1,6 @@
-import { EntryRoute } from "@remix-run/react/dist/routes";
-import { RouteWildcards } from "../context/rdtReducer";
-import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize";
+import { EntryRoute } from "@remix-run/react/dist/routes.js";
+import { RouteWildcards } from "../context/rdtReducer.js";
+import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize.js";
 
 export type RouteType = "ROOT" | "LAYOUT" | "ROUTE";
 type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">;

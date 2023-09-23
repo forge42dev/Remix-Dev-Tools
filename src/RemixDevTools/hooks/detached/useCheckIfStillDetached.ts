@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { RDTContext, getExistingStateFromStorage } from "../../context/RDTContext";
+import { RDTContext, getExistingStateFromStorage } from '../../context/RDTContext.js';
 import {
   REMIX_DEV_TOOLS_CHECK_DETACHED,
   REMIX_DEV_TOOLS_DETACHED,
@@ -7,7 +7,7 @@ import {
   REMIX_DEV_TOOLS_IS_DETACHED,
   getBooleanFromStorage,
   setStorageItem,
-} from "../../utils/storage";
+} from '../../utils/storage.js';
 
 export const useCheckIfStillDetached = () => {
   const { dispatch } = useContext(RDTContext);

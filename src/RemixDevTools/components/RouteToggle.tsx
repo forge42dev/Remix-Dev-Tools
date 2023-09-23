@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Network, List } from "lucide-react";
-import { useSettingsContext } from "../context/useRDTContext";
+import { useSettingsContext } from '../context/useRDTContext.js';
 
 export const RouteToggle = () => {
   const { settings, setSettings } = useSettingsContext();

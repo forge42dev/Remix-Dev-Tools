@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Checkbox } from "../components/Checkbox";
-import { Input } from "../components/Input";
-import { SelectWithOptions } from "../components/Select";
-import { Stack } from "../components/Stack";
-import { useSettingsContext } from "../context/useRDTContext";
-import { RouteBoundaryOptions } from "../context/rdtReducer";
-import { uppercaseFirstLetter } from "../utils/string";
+import { Checkbox } from '../components/Checkbox.js';
+import { Input } from '../components/Input.js';
+import { SelectWithOptions } from '../components/Select.js';
+import { Stack } from '../components/Stack.js';
+import { useSettingsContext } from '../context/useRDTContext.js';
+import { RouteBoundaryOptions } from '../context/rdtReducer.js';
+import { uppercaseFirstLetter } from '../utils/string.js';
 
 export const SettingsTab = () => {
   const { settings, setSettings } = useSettingsContext();

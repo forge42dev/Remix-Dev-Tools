@@ -1,9 +1,9 @@
 import clsx from "clsx";
-import { Input } from "./Input";
-import { useSettingsContext } from "../context/useRDTContext";
-import { ExtendedRoute, constructRoutePath } from "../utils/routing";
+import { Input } from './Input.js';
+import { useSettingsContext } from '../context/useRDTContext.js';
+import { ExtendedRoute, constructRoutePath } from '../utils/routing.js';
 import type { MouseEvent } from "react";
-import { Tag } from "./Tag";
+import { Tag } from './Tag.js';
 import { X } from "lucide-react";
 
 interface RouteInfoProps {

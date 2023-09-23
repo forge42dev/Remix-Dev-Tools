@@ -1,6 +1,6 @@
 import { useState, KeyboardEvent } from "react";
-import { useTerminalContext } from "../context/useRDTContext";
-import { Terminal } from "../context/terminal/types";
+import { useTerminalContext } from '../context/useRDTContext.js';
+import { Terminal } from '../context/terminal/types.js';
 
 const useTerminalShortcuts = ({
   onSubmit,

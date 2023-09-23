@@ -1,20 +1,10 @@
-import { ReadyState, default as useWebSocket } from "react-use-websocket";
-import {
-  JsonObject,
-  Options,
-  WebSocketHook,
-} from "react-use-websocket/dist/lib/types";
-import {
-  useSettingsContext,
-  useTerminalContext,
-} from "../context/useRDTContext";
+import { Options, ReadyState, useWebSocket } from "../../external/react-use-websocket/index.js";
+import { useSettingsContext, useTerminalContext } from "../context/useRDTContext.js";
 import { useState } from "react";
 
 const RETRY_COUNT = 2;
 
-export const useRemixForgeSocket = <T extends JsonObject>(
-  options?: Options
-) => {
+export const useRemixForgeSocket = (options?: Options) => {
   const { settings, setSettings } = useSettingsContext();
   const { terminals, toggleTerminalLock, setProcessId } = useTerminalContext();
   const { shouldConnectWithForge, port } = settings;
@@ -42,11 +32,8 @@ export const useRemixForgeSocket = <T extends JsonObject>(
       setSettings({ shouldConnectWithForge: false });
     },
   };
-  const properties = useWebSocket(
-    `ws://localhost:${port}`,
-    opts,
-    shouldConnectWithForge
-  ) as WebSocketHook<T, MessageEvent<any> | null>;
+
+  const properties = useWebSocket(`ws://localhost:${port}`, opts, shouldConnectWithForge);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",
@@ -61,7 +48,7 @@ export const useRemixForgeSocket = <T extends JsonObject>(
   return { ...properties, connectionStatus, isConnected, isConnecting };
 };
 
-interface RemixForgeMessage extends JsonObject {
+interface RemixForgeMessage extends Record<string, unknown> {
   subtype: "read_file" | "open_file" | "delete_file" | "write_file";
   path: string;
   data?: string;

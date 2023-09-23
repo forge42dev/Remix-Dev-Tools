@@ -1,4 +1,4 @@
-import { EntryRoute, RouteManifest } from "@remix-run/react/dist/routes";
+import { EntryRoute, RouteManifest } from "@remix-run/react/dist/routes.js";
 
 type Route = Pick<EntryRoute, "path" | "parentId" | "id" | "hasErrorBoundary">;
 /**

@@ -1,4 +1,4 @@
-import { convertRemixPathToUrl } from "./sanitize";
+import { convertRemixPathToUrl } from './sanitize.js';
 
 describe("convertRemixPathToUrl", () => {
   it('should return "/" when given a route with no parent', () => {

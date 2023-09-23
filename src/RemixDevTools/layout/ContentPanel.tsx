@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import { TimelineTab } from "../tabs/TimelineTab";
-import { Tab } from "../tabs";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { useTabs } from "../hooks/useTabs";
+import { TimelineTab } from "../tabs/TimelineTab.js";
+import { Tab } from "../tabs/index.js";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
+import { useTabs } from "../hooks/useTabs.js";
 import { Fragment } from "react";
 
 interface ContentPanelProps {
@@ -18,7 +18,7 @@ const ContentPanel = ({ leftSideOriented, plugins }: ContentPanelProps) => {
     <div className="rdt-flex rdt-h-full rdt-w-full rdt-overflow-y-hidden">
       <div
         className={clsx(
-          "rdt-z-20 rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-bg-[#212121] rdt-p-2",
+          "rdt-z-20 rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-bg-main rdt-p-2",
           leftSideOriented ? "rdt-pl-6" : "rdt-pl-6",
           isPluginTab && "rdt-unset"
         )}

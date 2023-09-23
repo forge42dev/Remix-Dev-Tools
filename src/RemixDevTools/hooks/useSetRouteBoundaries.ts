@@ -1,17 +1,16 @@
 import { useCallback, useEffect } from "react";
-import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer";
-import { useSettingsContext, useDetachedWindowControls, useRDTContext } from "../context/useRDTContext";
-import { useAttachListener } from "./useAttachListener";
+import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer.js";
+import { useSettingsContext, useDetachedWindowControls } from "../context/useRDTContext.js";
+import { useAttachListener } from "./useAttachListener.js";
+import { useMatches } from "@remix-run/react";
+import { ROUTE_CLASS } from "./useBorderedRoutes.js";
 
 export const useSetRouteBoundaries = () => {
+  const matches = useMatches();
   const { settings, setSettings } = useSettingsContext();
   const { detachedWindow } = useDetachedWindowControls();
-  // TODO Remove once stabilized
-  const { state } = useRDTContext();
   const applyOrRemoveClasses = useCallback(
     (isHovering?: boolean) => {
-      // TODO Remove once stabilized
-      if (!state.useRouteBoundaries) return;
       // Overrides the hovering so the classes are force removed if needed
       const hovering = isHovering ?? settings.isHoveringRoute;
       // Classes to apply/remove
@@ -22,26 +21,24 @@ export const useSetRouteBoundaries = () => {
 
       const isRoot = settings.hoveredRoute === "root";
       // We get all the elements with this class name, the last one is the one we want because strict mode applies 2x divs
-      const elements = isRoot
-        ? document.getElementsByTagName("body")
-        : document.getElementsByClassName(settings.hoveredRoute);
+      const elements = isRoot ? document.getElementsByTagName("body") : document.getElementsByClassName(ROUTE_CLASS);
 
-      const element = elements.item(elements.length - 1);
+      const element = isRoot
+        ? elements.item(elements.length - 1)
+        : elements.item(matches.length - 1 - parseInt(settings.hoveredRoute));
 
       if (element) {
         // Root has no outlet so we need to use the body, otherwise we get the outlet that is the next sibling of the element
-        const outlet = isRoot ? element : (element.nextSibling as HTMLElement);
+        const outlet = element;
         for (const c of classes.split(" ")) {
           outlet.classList[hovering ? "add" : "remove"](c);
         }
       }
     },
-    [settings.hoveredRoute, state.useRouteBoundaries, settings.isHoveringRoute, settings.routeBoundaryGradient]
+    [settings.hoveredRoute, settings.isHoveringRoute, settings.routeBoundaryGradient, matches.length]
   );
   // Mouse left the document => remove classes => set isHovering to false so that detached mode removes as well
   useAttachListener("mouseleave", "document", () => {
-    // TODO Remove once stabilized
-    if (!state.useRouteBoundaries) return;
     applyOrRemoveClasses();
     if (!detachedWindow) {
       return;
@@ -52,8 +49,6 @@ export const useSetRouteBoundaries = () => {
   });
   // Mouse is scrolling => remove classes => set isHovering to false so that detached mode removes as well
   useAttachListener("wheel", "window", () => {
-    // TODO Remove once stabilized
-    if (!state.useRouteBoundaries) return;
     applyOrRemoveClasses(false);
     if (!detachedWindow) {
       return;
@@ -64,8 +59,6 @@ export const useSetRouteBoundaries = () => {
   });
   // We apply/remove classes on state change which happens in Page tab
   useEffect(() => {
-    // TODO Remove once stabilized
-    if (!state.useRouteBoundaries) return;
     if (!settings.isHoveringRoute && !settings.hoveredRoute) return;
     applyOrRemoveClasses();
     if (!settings.isHoveringRoute && !detachedWindow) {
@@ -75,7 +68,6 @@ export const useSetRouteBoundaries = () => {
       });
     }
   }, [
-    state.useRouteBoundaries,
     settings.hoveredRoute,
     settings.isHoveringRoute,
     settings.routeBoundaryGradient,

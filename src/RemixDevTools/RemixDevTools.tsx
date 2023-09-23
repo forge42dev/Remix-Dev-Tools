@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react";
-import { RDTContextProvider } from "./context/RDTContext";
-import { Tab } from "./tabs";
-import { useTimelineHandler } from "./hooks/useTimelineHandler";
-import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext";
+import { RDTContextProvider } from "./context/RDTContext.js";
+import { Tab } from "./tabs/index.js";
+import { useTimelineHandler } from "./hooks/useTimelineHandler.js";
+import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext.js";
 import { useLocation } from "@remix-run/react";
-import { Trigger } from "./components/Trigger";
-import { MainPanel } from "./layout/MainPanel";
-import { Tabs } from "./layout/Tabs";
-import { ContentPanel } from "./layout/ContentPanel";
-import rdtStylesheet from "../input.css?inline";
-import { useOutletAugment } from "./hooks/useOutletAugment";
-import { useResetDetachmentCheck } from "./hooks/detached/useResetDetachmentCheck";
-import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries";
+import { Trigger } from "./components/Trigger.js";
+import { MainPanel } from "./layout/MainPanel.js";
+import { Tabs } from "./layout/Tabs.js";
+import { ContentPanel } from "./layout/ContentPanel.js";
+import { useBorderedRoutes } from "./hooks/useBorderedRoutes.js";
+import { useResetDetachmentCheck } from "./hooks/detached/useResetDetachmentCheck.js";
+import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js";
 import {
   REMIX_DEV_TOOLS,
   REMIX_DEV_TOOLS_DETACHED_OWNER,
   REMIX_DEV_TOOLS_IS_DETACHED,
   setSessionItem,
   setStorageItem,
-} from "./utils/storage";
-import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached";
+} from "./utils/storage.js";
+import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached.js";
+import "../input.css";
+import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
 
-export const InjectedStyles = () => <style dangerouslySetInnerHTML={{ __html: rdtStylesheet }} />;
-
-const DevTools = ({ plugins }: RemixDevToolsProps) => {
+const DevTools = ({ plugins, wsPort }: RemixDevToolsProps) => {
   useTimelineHandler();
-  useOutletAugment();
   useResetDetachmentCheck();
+  useBorderedRoutes();
   useSetRouteBoundaries();
   useSyncStateWhenDetached();
+  useDevServerConnection(wsPort);
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
   const { persistOpen } = usePersistOpen();
@@ -80,13 +80,13 @@ function useHydrated() {
 export interface RemixDevToolsProps {
   // Whether the dev tools require a url flag to be shown
   requireUrlFlag?: boolean;
-  // Whether to use route boundaries to show them on the UI
-  useRouteBoundaries?: boolean;
   // Additional tabs to add to the dev tools
   plugins?: Tab[];
+  // The port to use for the dev tools websocket that communicates with the backend dev tools
+  wsPort?: number;
 }
 
-const RemixDevTools = ({ requireUrlFlag, plugins, useRouteBoundaries }: RemixDevToolsProps) => {
+const RemixDevTools = ({ requireUrlFlag, plugins, wsPort }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
   const url = useLocation().search;
 
@@ -94,9 +94,8 @@ const RemixDevTools = ({ requireUrlFlag, plugins, useRouteBoundaries }: RemixDev
   if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
-    <RDTContextProvider useRouteBoundaries={useRouteBoundaries}>
-      <InjectedStyles />
-      <DevTools plugins={plugins} />
+    <RDTContextProvider>
+      <DevTools wsPort={wsPort} plugins={plugins} />
     </RDTContextProvider>
   );
 };

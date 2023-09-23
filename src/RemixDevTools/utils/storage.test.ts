@@ -5,7 +5,7 @@ import {
   setSessionItem,
   getBooleanFromStorage,
   getBooleanFromSession,
-} from "./storage";
+} from './storage.js';
 
 describe("storage utils", () => {
   beforeEach(() => {

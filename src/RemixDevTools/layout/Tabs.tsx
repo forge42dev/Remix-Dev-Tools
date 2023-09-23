@@ -1,17 +1,17 @@
 import clsx from "clsx";
 import { CopySlash, Radio, X } from "lucide-react";
-import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "../context/useRDTContext";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { useTabs } from "../hooks/useTabs";
-import { Tab, Tabs as TabType } from "../tabs";
-import { useHorizontalScroll } from "../hooks/useHorizontalScroll";
+import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from '../context/useRDTContext.js';
+import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
+import { useTabs } from '../hooks/useTabs.js';
+import { Tab, Tabs as TabType } from '../tabs/index.js';
+import { useHorizontalScroll } from '../hooks/useHorizontalScroll.js';
 import { twMerge } from "tailwind-merge";
 import {
   REMIX_DEV_TOOLS_DETACHED_OWNER,
   REMIX_DEV_TOOLS_IS_DETACHED,
   setSessionItem,
   setStorageItem,
-} from "../utils/storage";
+} from '../utils/storage.js';
 
 declare global {
   interface Window {

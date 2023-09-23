@@ -1,13 +1,13 @@
 import { useMatches, useRevalidator } from "@remix-run/react";
 import { CornerDownRight } from "lucide-react";
 import clsx from "clsx";
-import { JsonRenderer } from "../components/jsonRenderer";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket";
-import { Tag } from "../components/Tag";
-import { VsCodeButton } from "../components/VScodeButton";
+import { JsonRenderer } from "../components/jsonRenderer.js";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
+import { Tag } from "../components/Tag.js";
+import { VsCodeButton } from "../components/VScodeButton.js";
 import { useMemo } from "react";
-import { isLayoutRoute } from "../utils/routing";
-import { useSettingsContext } from "../context/useRDTContext";
+import { isLayoutRoute } from "../utils/routing.js";
+import { useSettingsContext } from "../context/useRDTContext.js";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -19,25 +19,13 @@ const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {
     try {
       const temp = JSON.parse(data);
-      delete temp.remixDevTools;
+
       return JSON.stringify(temp, null, 2);
     } catch (e) {
       return data;
     }
   }
   if (data?.remixDevTools) delete data.remixDevTools;
-  return data;
-};
-
-const getOriginalData = (data: string | Record<string, any>) => {
-  if (typeof data === "string") {
-    try {
-      const val = JSON.parse(data);
-      return val;
-    } catch (e) {
-      return data;
-    }
-  }
   return data;
 };
 
@@ -71,9 +59,8 @@ const PageTab = () => {
           state === "loading" && "rdt-pointer-events-none rdt-opacity-50"
         )}
       >
-        {reversed.map((route) => {
-          const loaderData = getLoaderData(route.data);
-          const originalData = getOriginalData(route.data);
+        {reversed.map((route, i) => {
+          const loaderData = getLoaderData(route.data as any);
 
           const isRoot = route.id === "root";
 
@@ -82,8 +69,8 @@ const PageTab = () => {
 
           return (
             <li
-              onMouseEnter={() => onHover(route.id, "enter")}
-              onMouseLeave={() => onHover(route.id, "leave")}
+              onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
+              onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
               key={route.id}
               className="rdt-mb-8 rdt-ml-8"
             >
@@ -124,35 +111,14 @@ const PageTab = () => {
                       <JsonRenderer data={route.params} />
                     </div>
                   )}
-                  {route.handle && Object.keys(route.handle).length > 0 && (
-                    <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
-                      Route handle:
-                      <JsonRenderer data={route.handle} />
-                    </div>
-                  )}
-                  {originalData?.remixDevTools?.timers?.length && (
-                    <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
-                      <div className="rdt-mb-1">
-                        Registered timers for route:
+                  {route.handle &&
+                    Object.keys(route.handle).length > 0 &&
+                    ((
+                      <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
+                        Route handle:
+                        <JsonRenderer data={route.handle as any} />
                       </div>
-                      {originalData?.remixDevTools?.timers.map(
-                        (timer: { name: string; duration: number }) => {
-                          return (
-                            <div
-                              key={timer.name}
-                              className="rdt-flex rdt-justify-between rdt-gap-4 rdt-text-sm rdt-font-normal rdt-text-white"
-                            >
-                              <div>{timer.name} </div>
-                              <div>
-                                {(timer.duration / 1000).toPrecision(2)}s (
-                                {timer.duration}ms)
-                              </div>
-                            </div>
-                          );
-                        }
-                      )}
-                    </div>
-                  )}
+                    ) as any)}
                 </div>
               </div>
             </li>

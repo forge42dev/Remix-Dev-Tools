@@ -98,8 +98,7 @@ Add the correct font weight in Edge and Safari.
 .remix-dev-tools kbd,
 .remix-dev-tools samp,
 .remix-dev-tools pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   /* 1 */
   font-size: 1em;
   /* 2 */
@@ -594,6 +593,5 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-backdrop-saturate: ;
   --tw-backdrop-sepia: ;
 }
-
 @tailwind components;
 @tailwind utilities;

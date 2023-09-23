@@ -2,9 +2,9 @@ import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 
-import { Stack } from "./Stack";
-import { Hint, Label } from "./Input";
-import { cn } from "./util";
+import { Stack } from './Stack.js';
+import { Hint, Label } from './Input.js';
+import { cn } from './util.js';
 
 const Select = SelectPrimitive.Root;
 
