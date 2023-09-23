@@ -7,12 +7,12 @@ const asyncAction = (
   action: (args: ActionFunctionArgs) => Promise<Response | unknown>
 ) => asyncAnalysis(route, "action", action);
 
-const syncAction = (route: Omit<ServerRoute, "children">, action: (args: ActionFunctionArgs) => Response | {}) =>
+const syncAction = (route: Omit<ServerRoute, "children">, action: (args: ActionFunctionArgs) => Response | unknown) =>
   syncAnalysis(route, "action", action);
 
 export const augmentAction = (
   route: Omit<ServerRoute, "children">,
-  action: (args: ActionFunctionArgs) => Response | {} | Promise<Response | unknown>
+  action: (args: ActionFunctionArgs) => Response | unknown | Promise<Response | unknown>
 ) => {
   return isAsyncFunction(action)
     ? asyncAction(route, action as (args: ActionFunctionArgs) => Promise<Response | unknown>)

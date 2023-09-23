@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { useNavigation } from "@remix-run/react";
 
+export const ROUTE_CLASS = "rdt-outlet-route";
+
 export function useBorderedRoutes() {
   const navigation = useNavigation();
   const traverseComponentTree = useCallback((fiberNode: any, callback: any) => {
@@ -17,7 +19,7 @@ export function useBorderedRoutes() {
     if (!fiberNode) return;
 
     if (fiberNode.stateNode) {
-      return fiberNode.stateNode.classList.add("rdt-border");
+      return fiberNode.stateNode.classList.add(ROUTE_CLASS);
     }
     styleNearestElement(fiberNode.child);
   }, []);

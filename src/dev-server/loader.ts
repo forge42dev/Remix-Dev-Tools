@@ -6,12 +6,12 @@ const asyncLoader = (
   route: Omit<ServerRoute, "children">,
   loader: (args: LoaderFunctionArgs) => Promise<Response | unknown>
 ) => asyncAnalysis(route, "loader", loader);
-const syncLoader = (route: Omit<ServerRoute, "children">, loader: (args: LoaderFunctionArgs) => Response | {}) =>
+const syncLoader = (route: Omit<ServerRoute, "children">, loader: (args: LoaderFunctionArgs) => Response | unknown) =>
   syncAnalysis(route, "loader", loader);
 
 export const augmentLoader = (
   route: Omit<ServerRoute, "children">,
-  loader: (args: LoaderFunctionArgs) => Response | {} | Promise<Response | unknown>
+  loader: (args: LoaderFunctionArgs) => Response | unknown | Promise<Response | unknown>
 ) => {
   return isAsyncFunction(loader)
     ? asyncLoader(route, loader as (args: LoaderFunctionArgs) => Promise<Response | unknown>)

@@ -21,27 +21,28 @@ installGlobals();
 
 function parseNumber(raw?: string) {
   if (raw === undefined) return undefined;
-  let maybe = Number(raw);
+  const maybe = Number(raw);
   if (Number.isNaN(maybe)) return undefined;
   return maybe;
 }
 
 export async function run() {
-  let port = parseNumber(process.env.PORT) ?? (await getPort({ port: 3000 }));
+  const port = parseNumber(process.env.PORT) ?? (await getPort({ port: 3000 }));
 
-  let buildPathArg = process.argv[2];
+  const buildPathArg = process.argv[2];
 
   if (!buildPathArg) {
+    // eslint-disable-next-line no-console
     console.error(`
   Usage: rdt-serve <server-build-path> - e.g. rdt-serve build/index.js`);
     process.exit(1);
   }
 
-  let buildPath = path.resolve(buildPathArg);
-  let versionPath = path.resolve(buildPathArg, "..", "version.txt");
+  const buildPath = path.resolve(buildPathArg);
+  const versionPath = path.resolve(buildPathArg, "..", "version.txt");
   async function reimportServer() {
     // Kill ESM cache
-    let stat = fs.statSync(buildPath);
+    const stat = fs.statSync(buildPath);
     // Kill CJS cache
     if (require) {
       Object.keys(require.cache).forEach((key) => {
@@ -80,25 +81,27 @@ export async function run() {
     };
   }
 
-  let build: ServerBuild = await reimportServer();
+  const build: ServerBuild = await reimportServer();
 
-  let onListen = () => {
-    let address =
+  const onListen = () => {
+    const address =
       process.env.HOST ||
       Object.values(os.networkInterfaces())
         .flat()
         .find((ip) => String(ip?.family).includes("4") && !ip?.internal)?.address;
 
     if (!address) {
+      // eslint-disable-next-line no-console
       console.log(`${chalk.green.bold("[rdt-serve]")} started on http://localhost:${port}`);
     } else {
+      // eslint-disable-next-line no-console
       console.log(`${chalk.green.bold("[rdt-serve]")} started on http://localhost:${port} (http://${address}:${port})`);
     }
 
     void broadcastDevReady(build);
   };
 
-  let app = express();
+  const app = express();
   app.disable("x-powered-by");
   app.use(compression());
   app.use(
@@ -113,9 +116,10 @@ export async function run() {
 
   app.all("*", createDevRequestHandler(build));
 
-  let server = app.listen(port, onListen);
+  const server = app.listen(port, onListen);
 
   ["SIGINT", "SIGTERM"].forEach((signal) => {
+    // eslint-disable-next-line no-console
     process.once(signal, () => server?.close(console.error));
   });
 }

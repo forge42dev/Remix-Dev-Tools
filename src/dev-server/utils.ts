@@ -127,7 +127,7 @@ const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
 };
 
 export const syncAnalysis =
-  (route: Omit<ServerRoute, "children">, type: "action" | "loader", loaderOrAction: (args: any) => Response | {}) =>
+  (route: Omit<ServerRoute, "children">, type: "action" | "loader", loaderOrAction: (args: any) => any) =>
   (args: DataFunctionArgs) => {
     const start = performance.now();
     try {
@@ -148,11 +148,7 @@ export const syncAnalysis =
   };
 
 export const asyncAnalysis =
-  (
-    route: Omit<ServerRoute, "children">,
-    type: "action" | "loader",
-    loaderOrAction: (args: any) => Promise<Response | unknown>
-  ) =>
+  (route: Omit<ServerRoute, "children">, type: "action" | "loader", loaderOrAction: (args: any) => Promise<any>) =>
   async (args: DataFunctionArgs) => {
     const start = performance.now();
     const response = loaderOrAction(args);

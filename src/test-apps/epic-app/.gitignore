@@ -1,0 +1,22 @@
+node_modules
+.DS_store
+
+/build
+/public/build
+/server-build
+.env
+
+/prisma/data.db
+/prisma/data.db-journal
+/tests/prisma
+
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/tests/fixtures/email/
+/coverage
+
+/other/cache.db
+
+# Easy way to create temporary files/folders that won't accidentally be added to git
+*.local.*

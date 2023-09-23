@@ -3,6 +3,7 @@ import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer.js";
 import { useSettingsContext, useDetachedWindowControls } from "../context/useRDTContext.js";
 import { useAttachListener } from "./useAttachListener.js";
 import { useMatches } from "@remix-run/react";
+import { ROUTE_CLASS } from "./useBorderedRoutes.js";
 
 export const useSetRouteBoundaries = () => {
   const matches = useMatches();
@@ -20,7 +21,7 @@ export const useSetRouteBoundaries = () => {
 
       const isRoot = settings.hoveredRoute === "root";
       // We get all the elements with this class name, the last one is the one we want because strict mode applies 2x divs
-      const elements = isRoot ? document.getElementsByTagName("body") : document.getElementsByClassName("rdt-border");
+      const elements = isRoot ? document.getElementsByTagName("body") : document.getElementsByClassName(ROUTE_CLASS);
 
       const element = isRoot
         ? elements.item(elements.length - 1)

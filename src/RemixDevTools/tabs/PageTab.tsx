@@ -19,25 +19,13 @@ const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {
     try {
       const temp = JSON.parse(data);
-      delete temp.remixDevTools;
+
       return JSON.stringify(temp, null, 2);
     } catch (e) {
       return data;
     }
   }
   if (data?.remixDevTools) delete data.remixDevTools;
-  return data;
-};
-
-const getOriginalData = (data: string | Record<string, any>) => {
-  if (typeof data === "string") {
-    try {
-      const val = JSON.parse(data);
-      return val;
-    } catch (e) {
-      return data;
-    }
-  }
   return data;
 };
 
@@ -73,7 +61,6 @@ const PageTab = () => {
       >
         {reversed.map((route, i) => {
           const loaderData = getLoaderData(route.data as any);
-          const originalData = getOriginalData(route.data as any);
 
           const isRoot = route.id === "root";
 
@@ -124,30 +111,14 @@ const PageTab = () => {
                       <JsonRenderer data={route.params} />
                     </div>
                   )}
-                  {route.handle && Object.keys(route.handle).length > 0 && (
-                    <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
-                      Route handle:
-                      <JsonRenderer data={route.handle as any} />
-                    </div>
-                  )}
-                  {originalData?.remixDevTools?.timers?.length && (
-                    <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
-                      <div className="rdt-mb-1">Registered timers for route:</div>
-                      {originalData?.remixDevTools?.timers.map((timer: { name: string; duration: number }) => {
-                        return (
-                          <div
-                            key={timer.name}
-                            className="rdt-flex rdt-justify-between rdt-gap-4 rdt-text-sm rdt-font-normal rdt-text-white"
-                          >
-                            <div>{timer.name} </div>
-                            <div>
-                              {(timer.duration / 1000).toPrecision(2)}s ({timer.duration}ms)
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                  {route.handle &&
+                    Object.keys(route.handle).length > 0 &&
+                    ((
+                      <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
+                        Route handle:
+                        <JsonRenderer data={route.handle as any} />
+                      </div>
+                    ) as any)}
                 </div>
               </div>
             </li>

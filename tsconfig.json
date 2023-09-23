@@ -109,6 +109,7 @@
     "./bin/mocks/**/*",
     "./*.config.ts",
     "./src/cjs-app",
+    "./src/test-apps",
     "./src/esm-app",
     "./src/epic-stack-remix-dev-tools",
     "./src/documentation",
@@ -118,6 +119,7 @@
     "./src/monitor/**/*",
     "./src/external/react-d3-tree",
     "./scripts",
-    "tsup*.ts"
+    "tsup*.ts",
+    "./src/external/react-use-websocket"
   ]
 }
