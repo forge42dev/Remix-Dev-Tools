@@ -68,8 +68,8 @@
   "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "remix": "npm run dev -w src/cjs-app",
-    "remix-esm": "npm run dev -w src/esm-app",
+    "remix": "npm run dev -w src/test-apps/cjs-app",
+    "remix-esm": "npm run dev -w src/test-apps/esm-app",
     "remix-epic": "npm run dev -w src/test-apps/epic-app",
     "remix-docs": "npm run dev -w src/documentation",
     "dev": "npm-run-all -s build -p remix cjs-watch",
@@ -100,8 +100,8 @@
   },
   "workspaces": [
     ".",
-    "src/cjs-app",
-    "src/esm-app",
+    "src/test-apps/cjs-app",
+    "src/test-apps/esm-app",
     "src/test-apps/epic-app"
   ],
   "peerDependencies": {
