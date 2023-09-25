@@ -8,10 +8,10 @@ export function useBorderedRoutes() {
   const traverseComponentTree = useCallback((fiberNode: any, callback: any) => {
     callback(fiberNode);
 
-    let child = fiberNode.child;
+    let child = fiberNode?.child;
     while (child) {
       traverseComponentTree(child, callback);
-      child = child.sibling;
+      child = child?.sibling;
     }
   }, []);
 
@@ -19,9 +19,9 @@ export function useBorderedRoutes() {
     if (!fiberNode) return;
 
     if (fiberNode.stateNode) {
-      return fiberNode.stateNode.classList.add(ROUTE_CLASS);
+      return fiberNode.stateNode?.classList?.add(ROUTE_CLASS);
     }
-    styleNearestElement(fiberNode.child);
+    styleNearestElement(fiberNode?.child);
   }, []);
 
   useEffect(() => {
