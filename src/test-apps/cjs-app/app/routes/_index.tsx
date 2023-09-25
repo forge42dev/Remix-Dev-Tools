@@ -2,6 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useFetcher,  useSubmit } from "@remix-run/react"; 
+import { Button } from "components/Button";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
  
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  throw redirect("/dashboard"); 
+   
   const test = new Promise((resolve) => {
     setTimeout(() => {
       resolve("test");
@@ -23,7 +24,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   return redirect("/login");
 };
-
+ 
 export default function Index() {  
   const lFetcher = useFetcher();
   const pFetcher = useFetcher();
@@ -33,11 +34,14 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
-      <button
-        onClick={() => lFetcher.submit(null, { method: "get", action: "/" })}
+      <Button
+        onClick={(e) => {
+          console.log(e);
+          lFetcher.submit(null, { method: "get", action: "/" })
+        }}
       >
         FETCHER Loader
-      </button>
+      </Button>
       <button
         onClick={() => pFetcher.submit(data, { method: "POST", action: "/" })}
       >

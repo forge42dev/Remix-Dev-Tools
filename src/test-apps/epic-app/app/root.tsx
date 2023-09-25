@@ -274,7 +274,14 @@ function App() {
 		</Document>
 	)
 }
-export default withDevTools(withSentry(App))
+let devTools = null;
+if(process.env.NODE_ENV === 'development') {
+
+const { withDevTools } = await import("remix-development-tools");
+devTools = withDevTools
+}
+ 
+export default devTools ? devTools(withSentry(App)) : withSentry(App)
 
 function UserDropdown() {
 	const user = useUser()

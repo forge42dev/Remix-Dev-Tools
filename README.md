@@ -122,6 +122,8 @@ page in your application only or you want to place it somewhere in the UI where 
 
 ## Getting Started
 
+Make sure that everything is guarded by the NODE_ENV check so it doesn't break your production build if you installed it as a dev dependency!
+
 To install and utilize Remix Development Tools, follow these steps:
 
 1. Install the package via npm:
@@ -133,15 +135,32 @@ npm install remix-development-tools -D
 2. Add the following to your application `root.tsx` file:
 
 ```diff
-+ import rdtStylesheet from "remix-development-tools/index.css";
-+ import { withDevTools } from "remix-development-tools";
-
+// Import styles
++ import rdtStylesheet from "remix-development-tools/index.css"; 
 + export const links: LinksFunction = () => [
+    // export the stylesheet in development only
 +   process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : [],
 + ] 
  
++ let devTools = null;
+// This imports the dev tools only if you're in development
++ if(process.env.NODE_ENV === 'development') { 
++   const { withDevTools } = await import("remix-development-tools"); 
++   devTools = withDevTools
++ }
+// Conditionally wraps the app with the dev tools
++ export default devTools ? devTools(App) : App;
 
-+ export default process.env.NODE_ENV === "development" ? withDevTools(App) : App;
+``` 
+If you're using CJS instead of ESM you can do the following instead:
+```diff
+ 
+if(process.env.NODE_ENV === 'development') { 
+- const { withDevTools } = await import("remix-development-tools"); 
++ const { withDevTools } = require("remix-development-tools"); 
+  devTools = withDevTools
+}
+export default devTools ? devTools(App) : App;
 
 ``` 
 
@@ -151,29 +170,44 @@ If you want to add the server side logs and listeners you need to do one of the 
 
 ### Custom server setup
 
+Make sure that everything is guarded by the NODE_ENV check so it doesn't break your production build if you installed it as a dev dependency!
+
 If you're running a custom server this is what you need to do:
 1. Wrap your build in your server file with `withServerDevTools` function. This takes an optional second parameter that allows you to configure it.
 2. Wrap your re-imported build too if you are in manual mode.
 3. You're done! Here is the example code:
 
-```ts
-import { withServerDevTools, defineServerConfig } from 'remix-development-tools/server'
-// Allows you to define the configuration for the dev tools
-const devToolsConfig = defineServerConfig({ 
-  //... your config here ...
-})
-
-const build = await import(BUILD_PATH)
-// wrap the build with the wrapper provided by the package
-let devBuild = withServerDevTools(build, devToolsConfig)
-
-// .... somewhere later in your code ...
-// This makes sure the build is wrapped on reload, you will need this if you're running with the --manual flag
-async function reloadBuild() {
-  devBuild = await import(`${BUILD_PATH}?update=${Date.now()}`)
-  devBuild = withServerDevTools(devBuild, devToolsConfig)
-  broadcastDevReady(devBuild)
+```ts 
+  // Somewhere in your server.ts file
+  const build = await import(BUILD_PATH)
+  let devBuild = build
+  let devToolsConfig  = null;
+  // Make sure you guard this with NODE_ENV check
+  if(process.env.NODE_ENV === 'development') {
+    const { withServerDevTools, defineServerConfig } = await import("remix-development-tools/server"); 
+     // Allows you to define the configuration for the dev tools
+      devToolsConfig = defineServerConfig({ 
+      //... your config here ...
+    })
+    // wrap the build with the dev tools
+    devBuild = withServerDevTools(build, devToolsConfig)
+  }
+// Make sure you guard this with NODE_ENV check
+if(process.env.NODE_ENV === "development"){
+  // .... somewhere later in your code ...
+  // This makes sure the build is wrapped on reload, you will need this if you're running with the --manual flag
+  async function reloadBuild() {
+    devBuild = await import(`${BUILD_PATH}?update=${Date.now()}`)
+    // wrap the build with dev tools on re-import
+    devBuild = withServerDevTools(devBuild, devToolsConfig)
+    broadcastDevReady(devBuild)
+  }
 }
+```
+If you're using a CJS custom server you can replace the following lines:
+```diff
+- const { withServerDevTools, defineServerConfig } = await import("remix-development-tools/server"); 
++ const { withServerDevTools, defineServerConfig } = require("remix-development-tools/server"); 
 ```
 
 ### CJS remix server setup (remix run server started by remix dev)

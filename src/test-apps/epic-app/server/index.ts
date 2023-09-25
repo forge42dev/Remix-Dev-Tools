@@ -20,12 +20,9 @@ import rateLimit from 'express-rate-limit'
 import getPort, { portNumbers } from 'get-port'
 import helmet from 'helmet'
 import morgan from 'morgan'
-installGlobals()
-import { withServerDevTools, defineServerConfig } from 'remix-development-tools/server'
+installGlobals() 
 
-const devToolsConfig = defineServerConfig({ 
-  //... your config here ...
-})
+
 const MODE = process.env.NODE_ENV
 
 const createRequestHandler = wrapExpressCreateRequestHandler(
@@ -40,8 +37,17 @@ const WATCH_PATH = '../build/version.txt'
  * @type {ServerBuild}
  */
 const build = await import(BUILD_PATH)
-let devBuild = withServerDevTools(build,devToolsConfig)
+let devBuild = build
+let devToolsConfig: any = null;
+if(process.env.NODE_ENV === 'development') {
+	const { withServerDevTools, defineServerConfig } = await import("remix-development-tools/server");
 
+	  devToolsConfig = defineServerConfig({ 
+		//... your config here ...
+	})
+	
+   devBuild = withServerDevTools(build, devToolsConfig)
+}
 const app = express()
 
 const getHost = (req: { get: (key: string) => string | undefined }) =>
@@ -266,6 +272,7 @@ closeWithGrace(async () => {
 
 // during dev, we'll keep the build module up to date with the changes
 if (MODE === 'development') {
+	const { withServerDevTools } = await import("remix-development-tools/server")
 	async function reloadBuild() {
 		devBuild = await import(`${BUILD_PATH}?update=${Date.now()}`)
 		devBuild = withServerDevTools(devBuild, devToolsConfig)
