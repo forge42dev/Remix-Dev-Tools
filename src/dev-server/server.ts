@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs, { existsSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import url from "node:url";
@@ -12,6 +12,7 @@ import sourceMapSupport from "source-map-support";
 import getPort from "get-port";
 import { withServerDevTools } from "./init.js";
 import chalk from "chalk";
+
 if (process.env.NODE_ENV === "production") {
   throw new Error("You can't use Remix Dev Tools server in production mode!");
 }
@@ -39,7 +40,11 @@ export async function run() {
   }
 
   const buildPath = path.resolve(buildPathArg);
-  const versionPath = path.resolve(buildPathArg, "..", "version.txt");
+  let versionPath: string | undefined = path.resolve(buildPathArg, "..", "version.txt");
+
+  if (!existsSync(versionPath)) {
+    versionPath = undefined;
+  }
   async function reimportServer() {
     // Kill ESM cache
     const stat = fs.statSync(buildPath);
@@ -66,7 +71,10 @@ export async function run() {
       broadcastDevReady(build);
     }
 
-    chokidar.watch(versionPath, { ignoreInitial: true }).on("add", handleServerUpdate).on("change", handleServerUpdate);
+    chokidar
+      .watch(versionPath ?? buildPath, { ignoreInitial: true })
+      .on("add", handleServerUpdate)
+      .on("change", handleServerUpdate);
 
     // wrap request handler to make sure its recreated with the latest build for every request
     return async (req, res, next) => {

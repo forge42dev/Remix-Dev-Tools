@@ -1,7 +1,7 @@
 import { ServerBuild } from "@remix-run/server-runtime";
 import { singleton } from "./singleton.js";
 import { WebSocketServer } from "ws";
-import { successLog } from "./logger.js";
+import { errorLog, successLog } from "./logger.js";
 import { augmentLoader } from "./loader.js";
 import { augmentAction } from "./action.js";
 import { setConfig, type DevToolsServerConfig } from "./config.js";
@@ -19,15 +19,22 @@ export const augmentIfExists = (property: string, object: Record<string, any>, a
 const installDevToolsGlobals = (config?: DevToolsServerConfig) => {
   const ws = singleton("ws", () => {
     if (config?.withWebsocket === false) return;
+
     const port = config?.wsPort || 8080;
     const ws = new WebSocketServer({ port });
+    ws.on("listening", () => {
+      successLog(`🌍  DevTools Websocket Server started on port ${chalk.green(port)}`);
+    });
+    ws.on("error", () => {
+      errorLog(`🌍  DevTools Websocket Server failed to start, port ${port} already in use!`);
+    });
+
     ["SIGINT", "SIGTERM"].forEach((event) => {
       process.on(event, () => {
         ws.close();
       });
     });
 
-    successLog(`🌍  DevTools Websocket Server started on port ${chalk.green(port)}`);
     return ws;
   });
 
