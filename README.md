@@ -142,14 +142,14 @@ npm install remix-development-tools -D
 +   process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : [],
 + ] 
  
-+ let devTools = null;
++ let AppExport = App;
 // This imports the dev tools only if you're in development
 + if(process.env.NODE_ENV === 'development') { 
 +   const { withDevTools } = await import("remix-development-tools"); 
-+   devTools = withDevTools
++   AppExport = withDevTools(AppExport);
 + }
-// Conditionally wraps the app with the dev tools
-+ export default devTools ? devTools(App) : App;
+
++ export default AppExport;
 
 ``` 
 If you're using CJS instead of ESM you can do the following instead:
@@ -158,9 +158,9 @@ If you're using CJS instead of ESM you can do the following instead:
 if(process.env.NODE_ENV === 'development') { 
 - const { withDevTools } = await import("remix-development-tools"); 
 + const { withDevTools } = require("remix-development-tools"); 
-  devTools = withDevTools
+  AppExport = withDevTools
 }
-export default devTools ? devTools(App) : App;
+export default AppExport;
 
 ``` 
 
