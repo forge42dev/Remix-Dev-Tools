@@ -4,6 +4,8 @@ import { ServerRoute } from "@remix-run/server-runtime/dist/routes.js";
 import { DevToolsServerConfig, getConfig } from "./config.js";
 import { diffInMs, secondsToHuman } from "./perf.js";
 import { DataFunctionArgs } from "@remix-run/server-runtime";
+import { getSocket } from "./init.js";
+import { storeEvent } from "./event-queue.js";
 
 const analyzeCookies = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
   if (config.logs?.cookies === false) {
@@ -125,6 +127,43 @@ const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
     throw e;
   }
 };
+const logTrigger = (id: string, type: "action" | "loader", end: number) => {
+  if (type === "action") {
+    actionLog(`${chalk.blueBright(id)} triggered - ${chalk.white(`${end} ms`)}`);
+  } else {
+    loaderLog(`${chalk.blueBright(id)} triggered - ${chalk.white(`${end} ms`)}`);
+  }
+};
+
+const storeAndEmitActionOrLoaderInfo = (
+  type: "action" | "loader",
+  route: Omit<ServerRoute, "children">,
+  response: unknown,
+  end: number
+) => {
+  const headers = new Headers(response instanceof Response ? response.headers : undefined);
+  const returnHeaders = {} as any;
+  for (const [key, value] of headers.entries()) {
+    returnHeaders[key] = value;
+  }
+  // create the event
+  const event = {
+    type,
+    data: {
+      id: route.id,
+      executionTime: end,
+      headers: returnHeaders,
+      timestamp: new Date().getTime(),
+    },
+  };
+  // store it into queue
+  storeEvent(event);
+  const ws = getSocket();
+  // send it to consumers
+  ws?.clients.forEach((client) => {
+    client.send(JSON.stringify(event));
+  });
+};
 
 export const syncAnalysis =
   (route: Omit<ServerRoute, "children">, type: "action" | "loader", loaderOrAction: (args: any) => any) =>
@@ -134,11 +173,8 @@ export const syncAnalysis =
       const response = loaderOrAction(args);
       unAwaited(() => {
         const end = diffInMs(start);
-        if (type === "action") {
-          actionLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
-        } else {
-          loaderLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
-        }
+        logTrigger(route.id, type, end);
+        storeAndEmitActionOrLoaderInfo(type, route, response, end);
         analyzeHeaders(route, response);
       });
       return response;
@@ -156,6 +192,7 @@ export const asyncAnalysis =
       .then((response: unknown) => {
         unAwaited(() => {
           const end = diffInMs(start);
+          storeAndEmitActionOrLoaderInfo(type, route, response, end);
           if (type === "action") {
             actionLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
           } else {

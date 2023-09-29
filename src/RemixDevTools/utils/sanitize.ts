@@ -34,12 +34,12 @@ export const findParentErrorBoundary = (routes: RouteManifest<Route>, route: Rou
   return { hasErrorBoundary: false, errorBoundaryId: null };
 };
 
-export const tryParseJson = (json: string | null) => {
-  if (!json) return null;
+export const tryParseJson = <T extends unknown>(json: string | null): T | undefined => {
+  if (!json) return undefined;
   try {
     return JSON.parse(json);
   } catch (e) {
-    return null;
+    return undefined;
   }
 };
 
@@ -73,4 +73,8 @@ const constructTree = (routes: Record<string, Route>, parentId?: string): RawNod
 
 export const createRouteTree = (routes: RouteManifest<Route>) => {
   return constructTree(routes);
+};
+
+export const uppercaseFirstLetter = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };

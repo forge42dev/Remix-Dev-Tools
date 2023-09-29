@@ -46,7 +46,7 @@ type TypeProps = PropsWithChildren<{
 
 export const TypeString: FC<TypeProps> = ({ children = "", expandKey, keyName }) => {
   const { Str = {}, displayDataTypes } = useTypesStore();
-  const { shortenTextAfterLength: length = 20 } = useStore();
+  const { shortenTextAfterLength: length = 30 } = useStore();
   const { as, render, ...reset } = Str;
   const childrenStr = children as string;
   const [shorten, setShorten] = useState(length && childrenStr.length >= length);

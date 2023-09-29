@@ -52,7 +52,7 @@ export default function IndexRoute() {
   data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix 2</h1>
+      <h1>Welcome to Remix 5</h1>
       <button
         onClick={() =>
           lFetcher.submit(null, { method: "GET", action: "/tests/3/edit/new" })
@@ -76,10 +76,10 @@ export default function IndexRoute() {
       </button>
       <button
         onClick={() => {
-          submit(data, { method: "POST", action: "/tests/3/edit/new" });
+          submit(data, { method: "POST", action: "/tests/3/edit/new/5/5" });
         }}
       >
-        SUBMIT Action
+        SUBMIT Action test
       </button>
       <button
         onClick={() =>

@@ -1,13 +1,8 @@
 import { useMatches, useRevalidator } from "@remix-run/react";
-import { CornerDownRight } from "lucide-react";
 import clsx from "clsx";
-import { JsonRenderer } from "../components/jsonRenderer.js";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
-import { Tag } from "../components/Tag.js";
-import { VsCodeButton } from "../components/VScodeButton.js";
 import { useMemo } from "react";
-import { isLayoutRoute } from "../utils/routing.js";
-import { useSettingsContext } from "../context/useRDTContext.js";
+
+import { RouteSegmentInfo } from "../components/RouteSegmentInfo.js";
 
 export const ROUTE_COLORS: Record<string, string> = {
   ROUTE: "rdt-bg-green-500 rdt-text-white",
@@ -15,32 +10,10 @@ export const ROUTE_COLORS: Record<string, string> = {
   ROOT: "rdt-bg-purple-500 rdt-text-white",
 };
 
-const getLoaderData = (data: string | Record<string, any>) => {
-  if (typeof data === "string") {
-    try {
-      const temp = JSON.parse(data);
-
-      return JSON.stringify(temp, null, 2);
-    } catch (e) {
-      return data;
-    }
-  }
-  if (data?.remixDevTools) delete data.remixDevTools;
-  return data;
-};
-
 const PageTab = () => {
   const routes = useMatches();
   const reversed = useMemo(() => routes.reverse(), [routes]);
   const { revalidate, state } = useRevalidator();
-  const { isConnected, sendJsonMessage } = useRemixForgeSocket();
-  const { setSettings } = useSettingsContext();
-  const onHover = (path: string, type: "enter" | "leave") => {
-    setSettings({
-      hoveredRoute: path,
-      isHoveringRoute: type === "enter",
-    });
-  };
 
   return (
     <div className="rdt-relative rdt-flex rdt-h-full rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
@@ -59,71 +32,9 @@ const PageTab = () => {
           state === "loading" && "rdt-pointer-events-none rdt-opacity-50"
         )}
       >
-        {reversed.map((route, i) => {
-          const loaderData = getLoaderData(route.data as any);
-
-          const isRoot = route.id === "root";
-
-          const entryRoute = __remixManifest.routes[route.id];
-          const isLayout = isLayoutRoute(entryRoute);
-
-          return (
-            <li
-              onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
-              onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
-              key={route.id}
-              className="rdt-mb-8 rdt-ml-8"
-            >
-              <span className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900  ">
-                <CornerDownRight />
-              </span>
-              <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
-                {route.pathname}
-                <Tag color={isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"}>
-                  {isRoot ? "ROOT" : isLayout ? "LAYOUT" : "ROUTE"}
-                </Tag>
-
-                {isConnected && (
-                  <VsCodeButton
-                    onClick={() =>
-                      sendJsonMessage({
-                        type: "open-vscode",
-                        data: { route: route.id },
-                      })
-                    }
-                  />
-                )}
-              </h3>
-              <div className="rdt-mb-4">
-                <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500  ">
-                  Route location: {route.id}
-                </time>
-                <div className="rdt-flex rdt-gap-16">
-                  {loaderData && (
-                    <div className="rdt-mb-4 rdt-max-w-md rdt-overflow-x-hidden rdt-text-base rdt-font-normal rdt-text-gray-400">
-                      Route loader data:
-                      {<JsonRenderer data={loaderData} />}
-                    </div>
-                  )}
-                  {route.params && Object.keys(route.params).length > 0 && (
-                    <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
-                      Route params:
-                      <JsonRenderer data={route.params} />
-                    </div>
-                  )}
-                  {route.handle &&
-                    Object.keys(route.handle).length > 0 &&
-                    ((
-                      <div className="rdt-mb-4 rdt-text-base rdt-font-normal  rdt-text-gray-400">
-                        Route handle:
-                        <JsonRenderer data={route.handle as any} />
-                      </div>
-                    ) as any)}
-                </div>
-              </div>
-            </li>
-          );
-        })}
+        {reversed.map((route, i) => (
+          <RouteSegmentInfo route={route} i={i} key={route.id} />
+        ))}
       </ol>
     </div>
   );

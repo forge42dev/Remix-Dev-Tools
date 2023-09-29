@@ -1,6 +1,21 @@
 import { TimelineEvent } from "./timeline/types.js";
 import type { Tabs } from "../tabs/index.js";
 import { Terminal } from "./terminal/types.js";
+import { ActionEvent, LoaderEvent } from "../../dev-server/event-queue.js";
+import { cutArrayToLastN } from "../utils/common.js";
+
+export const defaultServerRouteState: ServerRouteInfo = {
+  highestExecutionTime: 0,
+  lowestExecutionTime: 0,
+  averageExecutionTime: 0,
+  loaderTriggerCount: 0,
+  actionTriggerCount: 0,
+  lastAction: {},
+  lastLoader: {},
+  loaders: [],
+  actions: [],
+};
+
 export const ROUTE_BOUNDARY_GRADIENTS = {
   sea: "rdt-bg-green-100 rdt-bg-gradient-to-r rdt-from-cyan-500/50 rdt-to-blue-500/50",
   hyper: "rdt-bg-gradient-to-r rdt-from-pink-500 rdt-via-red-500 rdt-to-yellow-500",
@@ -20,6 +35,25 @@ export type TriggerPosition =
   | "bottom-right"
   | "middle-left"
   | "middle-right";
+
+export type ServerRouteInfo = {
+  actions?: Omit<ActionEvent["data"], "id">[];
+  loaders?: Omit<LoaderEvent["data"], "id">[];
+  lowestExecutionTime: number;
+  highestExecutionTime: number;
+  averageExecutionTime: number;
+  loaderTriggerCount: number;
+  actionTriggerCount: number;
+  lastAction: Partial<Omit<ActionEvent["data"], "id">>;
+  lastLoader: Partial<Omit<LoaderEvent["data"], "id">>;
+};
+
+export type ServerInfo = {
+  port?: number;
+  routes?: {
+    [key: string]: ServerRouteInfo;
+  };
+};
 
 export type RemixDevToolsState = {
   timeline: TimelineEvent[];
@@ -42,6 +76,7 @@ export type RemixDevToolsState = {
     routeViewMode: "list" | "tree";
     panelLocation: "top" | "bottom";
   };
+  server?: ServerInfo;
   persistOpen: boolean;
   detachedWindow: boolean;
   detachedWindowOwner: boolean;
@@ -50,6 +85,7 @@ export type RemixDevToolsState = {
 export const initialState: RemixDevToolsState = {
   timeline: [],
   terminals: [{ id: 0, locked: false, output: [], history: [] }],
+  server: undefined,
   settings: {
     routeBoundaryGradient: "silver",
     routeWildcards: {},
@@ -153,6 +189,11 @@ type SetPersistOpenAction = {
   payload: boolean;
 };
 
+type SetServerInfo = {
+  type: "SET_SERVER_INFO";
+  payload: ServerInfo;
+};
+
 /** Aggregate of all action types */
 export type RemixDevToolsActions =
   | SetTimelineEvent
@@ -167,6 +208,7 @@ export type RemixDevToolsActions =
   | SetWholeState
   | SetDetachedWindowOwner
   | SetIsSubmittedAction
+  | SetServerInfo
   | SetPersistOpenAction;
 
 export const rdtReducer = (
@@ -180,6 +222,11 @@ export const rdtReducer = (
         detachedWindowOwner: payload,
       };
 
+    case "SET_SERVER_INFO":
+      return {
+        ...state,
+        server: payload,
+      };
     case "SET_SETTINGS":
       return {
         ...state,
@@ -191,7 +238,7 @@ export const rdtReducer = (
     case "SET_TIMELINE_EVENT":
       return {
         ...state,
-        timeline: [payload, ...state.timeline],
+        timeline: cutArrayToLastN([payload, ...state.timeline], 30),
       };
 
     case "SET_WHOLE_STATE": {

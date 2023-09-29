@@ -17,7 +17,7 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader =   ({ request }: LoaderArgs) => {
-  return json({ test: "died" }, { headers: { "Clear-Site-Data": "cache"}})
+  return json({ test: "died" },  )
 };
 
 export const action = async ({ request }: ActionArgs) => {

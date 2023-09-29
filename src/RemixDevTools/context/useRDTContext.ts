@@ -1,8 +1,8 @@
 import { useCallback, useContext } from "react";
-import { RDTContext } from './RDTContext.js';
-import { TimelineEvent } from './timeline/types.js';
-import { Terminal } from './terminal/types.js';
-import { RemixDevToolsState } from './rdtReducer.js';
+import { RDTContext } from "./RDTContext.js";
+import { TimelineEvent } from "./timeline/types.js";
+import { Terminal } from "./terminal/types.js";
+import { RemixDevToolsState } from "./rdtReducer.js";
 
 /**
  * Returns an object containing the current state and dispatch function of the RDTContext.
@@ -23,6 +23,28 @@ const useRDTContext = () => {
     dispatch,
     state,
   };
+};
+
+export const useServerInfo = () => {
+  const { state, dispatch } = useRDTContext();
+  const { server } = state;
+  const setServerInfo = useCallback(
+    (serverInfo: Partial<RemixDevToolsState["server"]>) => {
+      dispatch({
+        type: "SET_SERVER_INFO",
+        payload: {
+          ...server,
+          ...serverInfo,
+          routes: {
+            ...server?.routes,
+            ...serverInfo?.routes,
+          },
+        },
+      });
+    },
+    [dispatch, server]
+  );
+  return { server, setServerInfo };
 };
 
 export const useDetachedWindowControls = () => {

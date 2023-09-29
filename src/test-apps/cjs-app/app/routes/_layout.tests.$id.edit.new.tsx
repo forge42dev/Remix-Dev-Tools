@@ -1,7 +1,7 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, type LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
+import { Link, Outlet, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -51,56 +51,8 @@ export default function IndexRoute() {
   data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix 2</h1>
-      <button
-        onClick={() =>
-          lFetcher.submit(null, { method: "GET", action: "/tests/3/edit/new" })
-        }
-      >
-        FETCHER Loader
-      </button>{" "}
-      <button
-        onClick={() =>
-          lFetcher2.submit(null, { method: "GET", action: "/tests/3/edit/new" })
-        }
-      >
-        FETCHER 2 Loader
-      </button>
-      <button
-        onClick={() =>
-          pFetcher.submit(null, { method: "POST", action: "/tests/3/edit/new" })
-        }
-      >
-        FETCHER Action
-      </button>
-      <button
-        onClick={() => {
-          submit(data, { method: "POST", action: "/tests/3/edit/new" });
-        }}
-      >
-        SUBMIT Action
-      </button>
-      <button
-        onClick={() =>
-          submit(data, { method: "PATCH", action: "/tests/3/edit/new" })
-        }
-      >
-        SUBMIT Action PATCH
-      </button>
-      <button
-        onClick={() =>
-          submit(null, { method: "DELETE", action: "/tests/3/edit/new" })
-        }
-      >
-        SUBMIT Action DELETE
-      </button>
-      <button
-        onClick={() =>
-          submit(null, { method: "PUT", action: "/tests/3/edit/new" })
-        }
-      >
-        SUBMIT Action PUT
-      </button>
+      <h1>Welcome to Remix 3</h1>
+       <Outlet />
       <Link to="/login">Login</Link>
       <ul>
         <li>

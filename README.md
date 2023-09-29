@@ -26,6 +26,14 @@ Remix Development Tools is an open-source package designed to enhance your devel
 ![route boundaries](./assets/boundaries.png)
 ## What's new?
 
+## v3.1.0
+
+- Cache information on the client side -> shows you how long and where each loader is cached for
+- Server execution timings => shows you all execution timings, average, minimum and maximum execution time for each loader/action
+- Server headers => shows you all headers that are sent from the server via actions/loaders
+- List of all loaders/actions that are executed on the server and their responses
+- UI active page tab revamp and improvements
+
 ## v3.0.0
 Remix Development Tools v3.0.0 is here! This release brings a lot of new features and improvements to the Remix Development Tools. The most notable ones are:
 1. The setup is completely changed (Check the getting started section for more info) 
@@ -80,7 +88,8 @@ Key features include:
 - **URL Parameters**: Easily view and analyze the URL parameters associated with the current page.
 - **Server Responses**: Inspect and review the server responses received by the application for the current page.
 - **Loader Data**: Monitor and track the loader data used by the application during page rendering.
-- **Outlet boundaries** Activate the **Show Route Boundaries** option to see each Outlet and route boundaries by coloring the background. It is locked behind a flag. You can enable it by passing `useRouteBoundaries` prop to `true` in the `RemixDevTools`,first parameter of `initClient` set to `true` and second parameter of `initServer` set to `true`. This feature is experimental and can cause issues in certain scenarios. It will be considered stable with v3.0 release but until then use at your own risk.
+- **Route boundaries** See each Outlet and route boundaries by coloring the background. 
+- **Server info** - See each loader min/max/avg execution time, cache info, headers info and more!
 
 ### Routes Tab
 

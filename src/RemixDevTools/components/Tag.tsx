@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { ReactNode } from "react";
 
 export const TAG_COLORS = {
   GREEN: "rdt-bg-green-500 rdt-text-white",
@@ -10,7 +11,7 @@ export const TAG_COLORS = {
 
 interface TagProps {
   color: keyof typeof TAG_COLORS;
-  children: string;
+  children: ReactNode;
   className?: string;
 }
 

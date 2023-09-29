@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSettingsContext } from "../context/useRDTContext.js";
 import JsonView from "../../external/react-json-view/index.js";
-import { darkTheme } from "../../external/react-json-view/theme/dark.js";
+import { customTheme } from "../../external/react-json-view/theme/custom.js";
 
 interface JsonRendererProps {
   data: string | Record<string, unknown>;
@@ -37,11 +37,14 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
   );
   const [json, setJson] = useState(originalData);
 
+  useEffect(() => {
+    setJson(data);
+  }, [data]);
   if (typeof json === "string") {
-    return <div className="rdt-text-green-600">{json}</div>;
+    return <div className="rdt-max-w-xs rdt-text-green-600">{json}</div>;
   }
 
-  return <JsonView highlightUpdates style={darkTheme} collapsed={settings.expansionLevel} value={json} />;
+  return <JsonView highlightUpdates style={customTheme} collapsed={settings.expansionLevel} value={json} />;
 };
 
 export { JsonRenderer };
