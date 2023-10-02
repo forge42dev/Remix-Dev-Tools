@@ -1,7 +1,7 @@
-import add from "date-fns/add";
+import add from "date-fns/add/index.js";
 import { CacheControl } from "../../dev-server/parser.js";
 import { useCountdown } from "../hooks/useCountdown.js";
-import formatDistance from "date-fns/formatDistance";
+import formatDistance from "date-fns/formatDistance/index.js";
 import { Tag } from "./Tag.js";
 
 interface CacheInfoProps {
