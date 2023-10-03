@@ -1,6 +1,6 @@
-import type { ActionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderArgs } from "@remix-run/node";
-import type { V2_MetaFunction } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import {
   Link,
   Outlet,
@@ -9,18 +9,18 @@ import {
   useSubmit,
 } from "@remix-run/react";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return new Response(new URLSearchParams("test=1&test=2&test=3"));
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     test: "died",
   });

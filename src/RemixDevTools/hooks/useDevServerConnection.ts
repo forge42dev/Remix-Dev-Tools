@@ -6,6 +6,7 @@ import { ActionEvent, LoaderEvent, isRdtEventArray } from "../../dev-server/even
 import { useDetachedWindowControls, useServerInfo } from "../context/useRDTContext.js";
 import { ServerInfo } from "../context/rdtReducer.js";
 import { cutArrayToLastN } from "../utils/common.js";
+import { ReadyState } from "../../external/react-use-websocket/constants.js";
 
 const updateRouteInfo = (
   server: ServerInfo | undefined,
@@ -83,7 +84,17 @@ const useDevServerConnection = (wsPort: number | undefined = 8080) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation.state]);
 
-  return methods;
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[methods.readyState];
+  const isConnected = methods.readyState === ReadyState.OPEN;
+  const isConnecting = methods.readyState === ReadyState.CONNECTING;
+
+  return { ...methods, connectionStatus, isConnected, isConnecting };
 };
 
 export { useDevServerConnection };

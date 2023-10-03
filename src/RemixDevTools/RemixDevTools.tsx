@@ -21,6 +21,7 @@ import {
 import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached.js";
 import "../input.css";
 import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
+import { useOpenElementSource } from "./hooks/useOpenElementSource.js";
 
 const DevTools = ({ plugins, wsPort }: RemixDevToolsProps) => {
   useTimelineHandler();
@@ -29,6 +30,8 @@ const DevTools = ({ plugins, wsPort }: RemixDevToolsProps) => {
   useSetRouteBoundaries();
   useSyncStateWhenDetached();
   useDevServerConnection(wsPort);
+  useOpenElementSource();
+
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
   const { persistOpen } = usePersistOpen();

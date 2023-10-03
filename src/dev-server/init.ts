@@ -7,6 +7,9 @@ import { augmentAction } from "./action.js";
 import { setConfig, type DevToolsServerConfig } from "./config.js";
 import chalk from "chalk";
 import { tryParseJson } from "../RemixDevTools/utils/sanitize.js";
+import { exec } from "child_process";
+import { readFileSync } from "fs";
+import { hasExtension } from "./utils.js";
 
 export const augmentIfExists = (property: string, object: Record<string, any>, augment: any) => {
   if (object[property]) {
@@ -39,7 +42,22 @@ const installDevToolsGlobals = (config?: DevToolsServerConfig) => {
       client.on("message", (message) => {
         const data = tryParseJson(message.toString());
         if (!isWsEventType(data)) return;
-
+        if (data.type === "open-source") {
+          const source = data.data.source;
+          const line = data.data.line;
+          if (hasExtension(source)) return exec(`code -g ${source}:${line}`);
+          try {
+            readFileSync(source + ".tsx");
+            return exec(`code -g ${source}.tsx`);
+            // eslint-disable-next-line no-empty
+          } catch (e) {}
+          try {
+            readFileSync(source + ".jsx");
+            return exec(`code -g ${source}.jsx`);
+          } catch (e) {
+            return;
+          }
+        }
         if (data.type === "pull_and_clear") {
           const queue = singleton("rdtEventQueue", () => {
             return [];

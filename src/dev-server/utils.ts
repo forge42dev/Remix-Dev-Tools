@@ -206,3 +206,6 @@ export const asyncAnalysis =
       .catch((err) => errorHandler(route.id, err));
     return response;
   };
+
+export const hasExtension = (path: string) =>
+  path.endsWith(".tsx") || path.endsWith(".jsx") || path.endsWith(".js") || path.endsWith(".ts");

@@ -2,7 +2,6 @@ import { UIMatch } from "@remix-run/router";
 import { CornerDownRight } from "lucide-react";
 import { parseCacheControlHeader } from "../../dev-server/parser.js";
 import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js";
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
 import { isLayoutRoute } from "../utils/routing.js";
 import { CacheInfo } from "./CacheInfo.js";
 import { VsCodeButton } from "./VScodeButton.js";
@@ -10,6 +9,7 @@ import { JsonRenderer } from "./jsonRenderer.js";
 import { ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js";
 import { Tag } from "./Tag.js";
 import { InfoCard } from "./InfoCard.js";
+import { useDevServerConnection } from "../hooks/useDevServerConnection.js";
 
 const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {
@@ -53,8 +53,7 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
 
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
   const { server, setServerInfo } = useServerInfo();
-  const { isConnected, sendJsonMessage } = useRemixForgeSocket();
-
+  const { isConnected, sendJsonMessage } = useDevServerConnection();
   const loaderData = getLoaderData(route.data as any);
   const serverInfo = server?.routes?.[route.id];
   const isRoot = route.id === "root";
@@ -89,21 +88,21 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
         <Tag color={isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"}>
           {isRoot ? "ROOT" : isLayout ? "LAYOUT" : "ROUTE"}
         </Tag>
+        {isConnected && (
+          <VsCodeButton
+            onClick={() =>
+              sendJsonMessage({
+                type: "open-source",
+                data: { source: `app/${route.id}` },
+              })
+            }
+          />
+        )}
         {cacheControl && serverInfo?.lastLoader.timestamp && (
           <CacheInfo
             key={JSON.stringify(serverInfo?.lastLoader ?? "")}
             cacheControl={cacheControl}
             cacheDate={new Date(serverInfo?.lastLoader.timestamp ?? "")}
-          />
-        )}
-        {isConnected && (
-          <VsCodeButton
-            onClick={() =>
-              sendJsonMessage({
-                type: "open-vscode",
-                data: { route: route.id },
-              })
-            }
           />
         )}
       </h3>
