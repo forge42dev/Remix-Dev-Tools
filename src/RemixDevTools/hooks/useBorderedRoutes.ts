@@ -6,9 +6,9 @@ export const ROUTE_CLASS = "rdt-outlet-route";
 const isSourceElement = (fiberNode: any) => {
   return (
     fiberNode?.elementType &&
-    fiberNode.stateNode &&
-    fiberNode._debugSource &&
-    !fiberNode.stateNode.getAttribute("data-rdt-source")
+    fiberNode?.stateNode &&
+    fiberNode?._debugSource &&
+    !fiberNode?.stateNode?.getAttribute?.("data-rdt-source")
   );
 };
 
@@ -48,8 +48,8 @@ export function useBorderedRoutes() {
         traverseComponentTree(rootFiber.current, (fiberNode: any) => {
           if (isSourceElement(fiberNode)) {
             const isJsx = isJsxFile(fiberNode);
-            const line = fiberNode._debugSource.lineNumber;
-            fiberNode.stateNode.setAttribute(
+            const line = fiberNode?._debugSource?.lineNumber;
+            fiberNode.stateNode?.setAttribute?.(
               "data-rdt-source",
               `${fiberNode._debugSource.fileName}:${isJsx ? line - 20 : line}` //
             );

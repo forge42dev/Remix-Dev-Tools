@@ -8,6 +8,7 @@
 ![npm](https://img.shields.io/npm/v/remix-development-tools?style=plastic)
 ![GitHub](https://img.shields.io/github/license/Code-Forge-Net/Remix-Dev-Tools?style=plastic)
 ![npm](https://img.shields.io/npm/dy/remix-development-tools?style=plastic) 
+![npm](https://img.shields.io/npm/dw/remix-development-tools?style=plastic) 
 ![GitHub top language](https://img.shields.io/github/languages/top/Code-Forge-Net/Remix-Dev-Tools?style=plastic) 
 
 Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
@@ -25,6 +26,11 @@ Remix Development Tools is an open-source package designed to enhance your devel
 ### Route boundaries & Active page panel
 ![route boundaries](./assets/boundaries.png)
 ## What's new?
+
+## v3.2.1
+
+- View-source > you can CTRL + right-click any element in the browser to open it up in your VS code. This requires you to have VS code "code" executable set in your PATH which is an optional checkbox durring the installation process or you can add it yourself manually as a PATH variable
+- Open in VS code button on routes > you can open up route segments directly in vscode, the same is needed as above
 
 ## v3.1.0
 
@@ -79,6 +85,10 @@ Here are features offered on the server side of Remix Development Tools:
 More features are coming soon!
 
 ## Client
+
+### View source
+
+CTRL + Right-click any element in the browser to open it directly in your vscode instance!
 ### Active Page Tab
 
 The **Active Page** tab in Remix Development Tools allows you to gain insights into the current page you are working on. It provides valuable information and data that can assist you in debugging and understanding the behavior of your application. 
@@ -148,7 +158,7 @@ npm install remix-development-tools -D
 + import rdtStylesheet from "remix-development-tools/index.css"; 
 + export const links: LinksFunction = () => [
     // export the stylesheet in development only
-+   process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : [],
++   ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
 + ] 
  
 + let AppExport = App;

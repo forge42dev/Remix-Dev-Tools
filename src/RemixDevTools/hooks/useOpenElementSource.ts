@@ -7,7 +7,7 @@ const useOpenElementSource = () => {
   useEffect(() => {
     const handleFocus = (e: any) => {
       e.stopPropagation();
-      if (!e.ctrlKey || !e.target?.getAttribute("data-rdt-source")) {
+      if (!e.ctrlKey || !e.target?.getAttribute?.("data-rdt-source")) {
         return;
       }
 
