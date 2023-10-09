@@ -48,10 +48,14 @@ export function useBorderedRoutes() {
         traverseComponentTree(rootFiber.current, (fiberNode: any) => {
           if (isSourceElement(fiberNode)) {
             const isJsx = isJsxFile(fiberNode);
-            const line = fiberNode?._debugSource?.lineNumber;
+
+            const originalSource = fiberNode?._debugSource;
+            const source = fiberNode?._debugOwner?._debugSource ?? fiberNode?._debugSource;
+            const line = source?.fileName?.startsWith("/") ? originalSource?.lineNumber : source?.lineNumber;
+            const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName;
             fiberNode.stateNode?.setAttribute?.(
               "data-rdt-source",
-              `${fiberNode._debugSource.fileName}:${isJsx ? line - 20 : line}` //
+              `${fileName}:${isJsx ? line - 20 : line}` //
             );
           }
           if (fiberNode?.elementType?.name === "default" || fiberNode?.elementType?.name === "RenderedRoute") {
