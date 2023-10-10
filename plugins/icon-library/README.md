@@ -9,15 +9,14 @@ This plugin allows you to see all your project icons in a new tab in remix devel
 1. Copy the code from the plugin located in this folder.
 2. Go over the TODO's in the code and modify the code to your project specifications.
 3. Import the plugin exported from the `icon-library.tsx` into your `root.tsx` file.
-4. Add the plugin to the `plugins` array in the `RemixDevTools` component.
+4. Add the plugin to the `plugins` array in the `withDevTools` wrapper.
 
 ```tsx
   import { iconLibraryPlugin } from "~/icon-library.tsx";
 
-  <RemixDevTools
-    ...
-    plugins={[iconLibraryPlugin()]}
-  />
+  AppExport = withDevTools(App, {
+    plugins: [iconLibraryPlugin()]
+  });
 ```
 
 5. Run your project and open the new tab in the development tools.

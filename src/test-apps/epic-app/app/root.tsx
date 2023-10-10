@@ -56,6 +56,7 @@ import { getToast } from './utils/toast.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
 import { withDevTools } from 'remix-development-tools'
 import rdtCss from 'remix-development-tools/index.css'
+import { tailwindPallettePlugin } from './utils/tailwind-pallete.tsx'
 export const links: LinksFunction = () => {
 	return [
 		// Preload svg sprite as a resource to avoid render blocking
@@ -281,7 +282,7 @@ const { withDevTools } = await import("remix-development-tools");
 devTools = withDevTools
 }
  
-export default devTools ? devTools(withSentry(App)) : withSentry(App)
+export default devTools ? devTools(withSentry(App), { plugins: [tailwindPallettePlugin()]}) : withSentry(App)
 
 function UserDropdown() {
 	const user = useUser()
