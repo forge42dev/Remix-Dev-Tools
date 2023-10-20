@@ -1,5 +1,8 @@
-import { Columns, /* MonitorPlay */ Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import columnsURL from "../icons/columns.svg";
+import sendURL from "../icons/send.svg";
+import xURL from "../icons/x.svg";
+
 import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
 import { useTerminalContext } from '../context/useRDTContext.js';
 import { Terminal } from '../context/terminal/types.js';
@@ -103,7 +106,9 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
           title="Close terminal"
           className="rdt-absolute rdt-right-2 rdt-top-2"
         >
-          <X className="rdt-stroke-red-500" size={24} />
+          <svg className="rdt-stroke-red-500 rdt-w-6 rdt-h-6">
+            <use href={xURL + "#icon"} />
+          </svg>
         </button>
       )}
       <div ref={ref} className="rdt-overflow-y-auto rdt-p-2">
@@ -144,7 +149,9 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
             terminal.locked && "rdt-opacity-50"
           )}
         >
-          <Send className="rdt-stroke-white" size={16} />
+          <svg className="rdt-stroke-white rdt-w-4 rdt-h-4">
+            <use href={sendURL + "#icon"} />
+          </svg>
         </button>
       </div>
     </div>
@@ -178,7 +185,9 @@ const TerminalTab = () => {
           className="rdt-absolute -rdt-right-8"
           onClick={() => addOrRemoveTerminal()}
         >
-          <Columns />
+          <svg>
+            <use href={columnsURL + "#icon"} />
+          </svg>
         </button>
       )}
       {/*  <button className="rdt-absolute -rdt-right-8 rdt-top-8">

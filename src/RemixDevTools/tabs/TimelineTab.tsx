@@ -1,8 +1,8 @@
-import { Activity } from "lucide-react";
-import { FormEvent, RedirectEvent, TimelineEvent } from '../context/timeline/types.js';
-import { useTimelineContext } from '../context/useRDTContext.js';
-import { JsonRenderer } from '../components/jsonRenderer.js';
-import { TAG_COLORS, Tag } from '../components/Tag.js';
+import activityURL from "../icons/activity.svg";
+import { FormEvent, RedirectEvent, TimelineEvent } from "../context/timeline/types.js";
+import { useTimelineContext } from "../context/useRDTContext.js";
+import { JsonRenderer } from "../components/jsonRenderer.js";
+import { TAG_COLORS, Tag } from "../components/Tag.js";
 
 const Translations: Record<TimelineEvent["type"], string> = {
   REDIRECT: "Normal Page navigation",
@@ -86,7 +86,9 @@ const TimelineTab = () => {
           return (
             <li key={event.id} className="rdt-mb-2 rdt-ml-8 rdt-animate-fade-in-left">
               <span className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-animate-fade-in rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900">
-                <Activity />
+                <svg>
+                  <use href={activityURL + "#activity"} />
+                </svg>
               </span>
               <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
                 {Translations[event.type]}

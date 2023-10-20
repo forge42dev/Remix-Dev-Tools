@@ -1,5 +1,4 @@
 import { UIMatch } from "@remix-run/router";
-import { CornerDownRight } from "lucide-react";
 import { parseCacheControlHeader } from "../../dev-server/parser.js";
 import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js";
 import { isLayoutRoute } from "../utils/routing.js";
@@ -10,6 +9,7 @@ import { ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.
 import { Tag } from "./Tag.js";
 import { InfoCard } from "./InfoCard.js";
 import { useDevServerConnection } from "../hooks/useDevServerConnection.js";
+import cornerURL from "../icons/corner-down-right.svg";
 
 const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {
@@ -80,9 +80,9 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
       onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
       className="rdt-mb-8 rdt-ml-8"
     >
-      <span className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900  ">
-        <CornerDownRight />
-      </span>
+      <svg className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900  ">
+        <use href={cornerURL + "#icon"} />
+      </svg>
       <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
         {route.pathname}
         <Tag color={isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"}>

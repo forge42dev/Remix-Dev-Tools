@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { cn } from './util.js';
-import { ChevronDownIcon } from "lucide-react";
+import chevronURL from "../icons/chevron-down.svg";
+
+import { cn } from "./util.js";
 
 const Accordion = AccordionPrimitive.Root;
 
@@ -9,11 +10,7 @@ const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item
-    ref={ref}
-    className={cn("rdt-border-b rdt-border-b-gray-500", className)}
-    {...props}
-  />
+  <AccordionPrimitive.Item ref={ref} className={cn("rdt-border-b rdt-border-b-gray-500", className)} {...props} />
 ));
 AccordionItem.displayName = "AccordionItem";
 
@@ -31,7 +28,9 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <ChevronDownIcon className="rdt-text-muted-foreground rdt-h-4 rdt-w-4 rdt-shrink-0 rdt-transition-transform rdt-duration-200" />
+      <svg className="rdt-text-muted-foreground rdt-h-4 rdt-w-4 rdt-shrink-0 rdt-transition-transform rdt-duration-200">
+        <use href={chevronURL + "#icon"} />
+      </svg>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

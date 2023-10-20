@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check, ChevronDown } from "lucide-react";
+import checkURL from "../icons/check.svg";
+import chevronURL from "../icons/chevron-down.svg";
 
 import { Stack } from './Stack.js';
 import { Hint, Label } from './Input.js';
@@ -26,7 +27,9 @@ const SelectTrigger = React.forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="rdt-h-4 rdt-w-4 rdt-opacity-50" />
+      <svg className="rdt-h-4 rdt-w-4 rdt-opacity-50">
+        <use href={chevronURL + "#icon"} />
+      </svg>
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -88,7 +91,9 @@ const SelectItem = React.forwardRef<
   >
     <span className="rdt-absolute rdt-left-2 rdt-flex rdt-h-3.5 rdt-w-3.5 rdt-items-center rdt-justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="rdt-h-4 rdt-w-4" />
+        <svg className="rdt-h-4 rdt-w-4">
+          <use href={checkURL + "#icon"} />
+        </svg>
       </SelectPrimitive.ItemIndicator>
     </span>
 
