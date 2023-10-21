@@ -59,6 +59,9 @@ export default function IndexRoute() {
       >
         FETCHER Loader
       </button>{" "}
+      <a>
+          <a></a>
+        </a>
       <button
         onClick={() =>
           lFetcher2.submit(null, { method: "GET", action: "/tests/3/edit/new" })

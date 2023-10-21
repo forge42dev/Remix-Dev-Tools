@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import chevronURL from "../icons/chevron-down.svg";
 
 import { cn } from "./util.js";
+import { Icon } from "./icon/Icon.js";
 
 const Accordion = AccordionPrimitive.Root;
 
@@ -28,9 +28,10 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <svg className="rdt-text-muted-foreground rdt-h-4 rdt-w-4 rdt-shrink-0 rdt-transition-transform rdt-duration-200">
-        <use href={chevronURL + "#icon"} />
-      </svg>
+      <Icon
+        className="rdt-text-muted-foreground rdt-h-4 rdt-w-4 rdt-shrink-0 rdt-transition-transform rdt-duration-200"
+        name="ChevronDown"
+      />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

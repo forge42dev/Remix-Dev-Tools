@@ -55,6 +55,16 @@ export type ServerInfo = {
   };
 };
 
+export type HTMLErrorPrimitive = {
+  file: string;
+  tag: string;
+};
+
+export type HTMLError = {
+  child: HTMLErrorPrimitive;
+  parent: HTMLErrorPrimitive;
+};
+
 export type RemixDevToolsState = {
   timeline: TimelineEvent[];
   terminals: Terminal[];
@@ -76,6 +86,7 @@ export type RemixDevToolsState = {
     routeViewMode: "list" | "tree";
     panelLocation: "top" | "bottom";
   };
+  htmlErrors: HTMLError[];
   server?: ServerInfo;
   persistOpen: boolean;
   detachedWindow: boolean;
@@ -104,6 +115,7 @@ export const initialState: RemixDevToolsState = {
     routeViewMode: "tree",
     panelLocation: "bottom",
   },
+  htmlErrors: [],
   persistOpen: false,
   detachedWindow: false,
   detachedWindowOwner: false,
@@ -194,6 +206,11 @@ type SetServerInfo = {
   payload: ServerInfo;
 };
 
+type SetHtmlErrors = {
+  type: "SET_HTML_ERRORS";
+  payload: HTMLError[];
+};
+
 /** Aggregate of all action types */
 export type RemixDevToolsActions =
   | SetTimelineEvent
@@ -209,6 +226,7 @@ export type RemixDevToolsActions =
   | SetDetachedWindowOwner
   | SetIsSubmittedAction
   | SetServerInfo
+  | SetHtmlErrors
   | SetPersistOpenAction;
 
 export const rdtReducer = (
@@ -221,7 +239,11 @@ export const rdtReducer = (
         ...state,
         detachedWindowOwner: payload,
       };
-
+    case "SET_HTML_ERRORS":
+      return {
+        ...state,
+        htmlErrors: [...payload],
+      };
     case "SET_SERVER_INFO":
       return {
         ...state,

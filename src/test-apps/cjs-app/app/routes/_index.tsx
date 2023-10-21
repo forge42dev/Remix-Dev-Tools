@@ -47,6 +47,14 @@ export default function Index() {
       >
         FETCHER Action
       </button>
+      <h1>
+        
+          <h4  />
+        
+      </h1>
+      <a>
+        <img useMap="test" />
+      </a>
       <button onClick={() => submit(null, { method: "POST", action: "/" })}>
         SUBMIT Action
       </button>

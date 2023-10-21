@@ -526,6 +526,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   direction: ltr;
 }
 
+.remix-dev-tools-tab > * {
+  cursor: pointer;
+}
+
 .remix-dev-tools-tab::-webkit-scrollbar {
   height: 3px;
   z-index: 9999;

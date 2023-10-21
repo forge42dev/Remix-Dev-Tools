@@ -1,17 +1,14 @@
-import gitMergeURL from "../icons/git-merge.svg";
-import terminalURL from "../icons/terminal.svg";
-import layersURL from "../icons/layers.svg";
-import settingsURL from "../icons/settings.svg";
-
-import { PageTab } from './PageTab.js';
-import { RoutesTab } from './RoutesTab.js';
-import { TerminalTab } from './TerminalTab.js';
-import { SettingsTab } from './SettingsTab.js';
+import { PageTab } from "./PageTab.js";
+import { RoutesTab } from "./RoutesTab.js";
+import { TerminalTab } from "./TerminalTab.js";
+import { SettingsTab } from "./SettingsTab.js";
+import { Icon } from "../components/icon/Icon.js";
+import { ErrorsTab } from "./ErrorsTab.js";
 
 export type Tabs = (typeof tabs)[number]["id"];
 
 export interface Tab {
-  name: string;
+  name: string | JSX.Element;
   icon: JSX.Element;
   id: string;
   component: JSX.Element;
@@ -22,7 +19,7 @@ export interface Tab {
 export const tabs = [
   {
     name: "Active page",
-    icon: <svg className="rdt-w-4 rdt-h-4"><use href={layersURL + "#icon"} /></svg>,
+    icon: <Icon name="Layers" />,
     id: "page",
     component: <PageTab />,
     requiresForge: false,
@@ -30,7 +27,7 @@ export const tabs = [
   },
   {
     name: "Routes",
-    icon: <svg className="rdt-w-4 rdt-h-4"><use href={gitMergeURL + "#icon"} /></svg>,
+    icon: <Icon name="GitMerge" />,
     id: "routes",
     component: <RoutesTab />,
     requiresForge: false,
@@ -38,15 +35,24 @@ export const tabs = [
   },
   {
     name: "Terminal",
-    icon: <svg className="rdt-w-4 rdt-h-4"><use href={terminalURL + "#icon"} /></svg>,
+    icon: <Icon name="Terminal" />,
     id: "terminal",
     component: <TerminalTab />,
     requiresForge: true,
     hideTimeline: false,
   },
   {
+    name: "Errors",
+    icon: <Icon name="Shield" />,
+    id: "errors",
+    component: <ErrorsTab />,
+
+    requiresForge: false,
+    hideTimeline: false,
+  },
+  {
     name: "Settings",
-    icon: <svg className="rdt-w-4 rdt-h-4"><use href={settingsURL + "#icon"} /></svg>,
+    icon: <Icon name="Settings" />,
     id: "settings",
     component: <SettingsTab />,
     requiresForge: false,

@@ -2,12 +2,13 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "license": "MIT",
   "keywords": [
     "remix",
     "remix-dev-tools",
     "remix-development-tools",
+    "hydration-debugger",
     "remix-debugger",
     "remix-debugger-ui",
     "remix-debugger-ui-react",
@@ -98,9 +99,11 @@
     "prepare": "husky install",
     "tsc": "tsc --noEmit",
     "validate": "npm run lint && npm run tsc && npm run test",
-    "run:scripts": "npx ts-node --esm --transpile-only -- $npm_config_script_path",
     "tw": "npx tailwindcss -i ./src/input.css -o ./src/output.css --minify",
-    "move": "run-s tw & npm run run:scripts --script_path=scripts/moveStyles.ts"
+    "move": "run-s tw & npm run run:scripts --script_path=scripts/moveStyles.ts",
+    "run:scripts": "npx ts-node-esm --require tsconfig-paths/register --transpile-only",
+    "script": "npm run run:scripts scripts/setup.ts",
+    "icons": "npm run run:scripts scripts/icons.ts"
   },
   "workspaces": [
     ".",
@@ -152,6 +155,7 @@
     "postcss": "^8.4.29",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.4.1",
+    "prompt": "^1.3.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.2",
     "rollup-plugin-copy": "^3.4.0",

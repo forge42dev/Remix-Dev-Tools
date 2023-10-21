@@ -1,20 +1,23 @@
 import clsx from "clsx";
-import copySlashURL from "../icons/copy-slash.svg";
-import xURL from "../icons/x.svg";
-import radioURL from "../icons/radio.svg";
 
-import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from '../context/useRDTContext.js';
-import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
-import { useTabs } from '../hooks/useTabs.js';
-import { Tab, Tabs as TabType } from '../tabs/index.js';
-import { useHorizontalScroll } from '../hooks/useHorizontalScroll.js';
+import {
+  useDetachedWindowControls,
+  useHtmlErrors,
+  usePersistOpen,
+  useSettingsContext,
+} from "../context/useRDTContext.js";
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
+import { useTabs } from "../hooks/useTabs.js";
+import { Tab, Tabs as TabType } from "../tabs/index.js";
+import { useHorizontalScroll } from "../hooks/useHorizontalScroll.js";
 import { twMerge } from "tailwind-merge";
 import {
   REMIX_DEV_TOOLS_DETACHED_OWNER,
   REMIX_DEV_TOOLS_IS_DETACHED,
   setSessionItem,
   setStorageItem,
-} from '../utils/storage.js';
+} from "../utils/storage.js";
+import { Icon } from "../components/icon/Icon.js";
 
 declare global {
   interface Window {
@@ -43,7 +46,7 @@ const Tab = ({
     <div
       onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabType }))}
       className={clsx(
-        "rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all",
+        "rdt-relative rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all",
         activeTab !== tab.id && "rdt-hover:opacity-50",
         activeTab === tab.id && "rdt-bg-[#212121]",
         className
@@ -56,6 +59,7 @@ const Tab = ({
 
 const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
   const { settings, setSettings } = useSettingsContext();
+  const { htmlErrors } = useHtmlErrors();
   const { setPersistOpen } = usePersistOpen();
   const { activeTab } = settings;
   const { isConnected, isConnecting } = useRemixForgeSocket();
@@ -84,7 +88,28 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
         className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-overflow-x-auto rdt-overflow-y-hidden"
       >
         {visibleTabs.map((tab) => (
-          <Tab key={tab.id} tab={tab} activeTab={activeTab} className="rdt-duration-300" />
+          <Tab
+            key={tab.id}
+            tab={
+              tab.id === "errors"
+                ? {
+                    ...tab,
+                    name: (
+                      <div className="rdt-inline-flex rdt-items-center rdt-gap-1">
+                        {tab.name}
+                        {htmlErrors.length > 0 && (
+                          <span className="rdt-animate-pulse rdt-font-bold rdt-text-red-600">
+                            ({htmlErrors.length})
+                          </span>
+                        )}
+                      </div>
+                    ),
+                  }
+                : tab
+            }
+            activeTab={activeTab}
+            className="rdt-cursor-pointer rdt-duration-300"
+          />
         ))}
         <div className={clsx("rdt-ml-auto rdt-flex rdt-items-center rdt-gap-2", detachedWindow ? "" : "rdt-pr-4")}>
           {shouldShowConnectToForge && (
@@ -95,7 +120,7 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
                 requiresForge: false,
                 hideTimeline: false,
                 component: <></>,
-                icon: <svg className="rdt-w-4 rdt-h-4"><use href={radioURL + "#icon"} /></svg>,
+                icon: <Icon name="Radio" className="rdt-h-4 rdt-w-4" />,
               }}
               className={twMerge(
                 clsx(
@@ -110,22 +135,20 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
           {!detachedWindow && setIsOpen && (
             <>
               {!detachedWindowOwner && (
-                <svg
+                <Icon
+                  name="CopySlash"
                   onClick={handleDetachment}
                   className="rdt-cursor-pointer rdt-transition-all hover:rdt-text-green-600"
-                >
-                  <use href={copySlashURL + "#icon"} />
-                </svg>
+                />
               )}
-              <svg
+              <Icon
+                name="X"
                 onClick={() => {
                   setPersistOpen(false);
                   setIsOpen(false);
                 }}
                 className="rdt-h-6 rdt-w-6   rdt-cursor-pointer rdt-transition-all hover:rdt-text-red-600"
-              >
-                <use href={xURL + "#icon"} />
-              </svg>
+              />
             </>
           )}
         </div>

@@ -38,6 +38,7 @@ export default function IndexRoute() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix 4</h1>
+      <form />
         <Outlet />
     </div>
   );

@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import columnsURL from "../icons/columns.svg";
-import sendURL from "../icons/send.svg";
-import xURL from "../icons/x.svg";
 
-import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
-import { useTerminalContext } from '../context/useRDTContext.js';
-import { Terminal } from '../context/terminal/types.js';
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js";
+import { useTerminalContext } from "../context/useRDTContext.js";
+import { Terminal } from "../context/terminal/types.js";
 import clsx from "clsx";
-import { useTerminalShortcuts } from '../hooks/useTerminalShortcuts.js';
+import { useTerminalShortcuts } from "../hooks/useTerminalShortcuts.js";
+import { Icon } from "../components/icon/Icon.js";
 
 interface TerminalProps {
   onClose: () => void;
@@ -16,13 +14,7 @@ interface TerminalProps {
 }
 
 const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
-  const {
-    addTerminalOutput,
-    toggleTerminalLock,
-    setProcessId,
-    addTerminalHistory,
-    terminals,
-  } = useTerminalContext();
+  const { addTerminalOutput, toggleTerminalLock, setProcessId, addTerminalHistory, terminals } = useTerminalContext();
   const [command, setCommand] = useState("");
   const ref = useRef<HTMLDivElement>(null);
 
@@ -50,16 +42,11 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
       try {
         const data = JSON.parse(message.data);
         // Check if command was sent from this terminal
-        const isThisTerminalCommand =
-          data.type === "terminal_command" && data.terminalId === terminal.id;
+        const isThisTerminalCommand = data.type === "terminal_command" && data.terminalId === terminal.id;
 
         if (isThisTerminalCommand) {
-          const processDone =
-            data.subtype === "ERROR" ||
-            data.subtype === "EXIT" ||
-            data.subtype === "CLOSE";
-          const hasOutputData =
-            data.subtype === "DATA" || data.subtype === "ERROR";
+          const processDone = data.subtype === "ERROR" || data.subtype === "EXIT" || data.subtype === "CLOSE";
+          const hasOutputData = data.subtype === "DATA" || data.subtype === "ERROR";
           // set the process ID if it exists so we can terminate it if we want
           if (data.processId) {
             setProcessId(terminal.id, data.processId);
@@ -106,9 +93,7 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
           title="Close terminal"
           className="rdt-absolute rdt-right-2 rdt-top-2"
         >
-          <svg className="rdt-stroke-red-500 rdt-w-6 rdt-h-6">
-            <use href={xURL + "#icon"} />
-          </svg>
+          <Icon name="X" className="rdt-h-6 rdt-w-6 rdt-stroke-red-500" />
         </button>
       )}
       <div ref={ref} className="rdt-overflow-y-auto rdt-p-2">
@@ -149,9 +134,7 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
             terminal.locked && "rdt-opacity-50"
           )}
         >
-          <svg className="rdt-stroke-white rdt-w-4 rdt-h-4">
-            <use href={sendURL + "#icon"} />
-          </svg>
+          <Icon name="Send" className="rdt-h-4 rdt-w-4 rdt-stroke-white" />
         </button>
       </div>
     </div>
@@ -160,8 +143,7 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
 
 const TerminalTab = () => {
   const { terminals, addOrRemoveTerminal } = useTerminalContext();
-  const [projectCommands, setProjectCommands] =
-    useState<Record<string, string>>();
+  const [projectCommands, setProjectCommands] = useState<Record<string, string>>();
   const { sendJsonMessage } = useRemixForgeSocket({
     onMessage: (message) => {
       try {
@@ -181,13 +163,8 @@ const TerminalTab = () => {
   return (
     <div className="rdt-relative rdt-mr-8 rdt-flex rdt-h-full rdt-justify-between rdt-gap-4 rdt-rounded-lg">
       {terminals.length < 3 && (
-        <button
-          className="rdt-absolute -rdt-right-8"
-          onClick={() => addOrRemoveTerminal()}
-        >
-          <svg>
-            <use href={columnsURL + "#icon"} />
-          </svg>
+        <button className="rdt-absolute -rdt-right-8" onClick={() => addOrRemoveTerminal()}>
+          <Icon name="Columns" />
         </button>
       )}
       {/*  <button className="rdt-absolute -rdt-right-8 rdt-top-8">

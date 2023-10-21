@@ -2,10 +2,9 @@ import clsx from "clsx";
 import { Input } from "./Input.js";
 import { useSettingsContext } from "../context/useRDTContext.js";
 import { ExtendedRoute, constructRoutePath } from "../utils/routing.js";
-import type { MouseEvent } from "react";
-import xURL from "../icons/x.svg";
-
+import type { MouseEvent } from "react";  
 import { Tag } from "./Tag.js";
+import { Icon } from "./icon/Icon.js";
 
 interface RouteInfoProps {
   route: ExtendedRoute;
@@ -26,9 +25,8 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
     <div className={clsx(className, "rdt-relative")}>
       {isTreeView && (
         <>
-          <svg onClick={onClose} className="rdt-absolute rdt-right-2 rdt-top-2 rdt-cursor-pointer rdt-text-red-600">
-            <use href={xURL + "#icon"} />
-          </svg>
+        <Icon onClick={onClose} className="rdt-absolute rdt-right-2 rdt-top-2 rdt-cursor-pointer rdt-text-red-600" name="Layers" />
+          
           <h1 className="rdt-text-xl rdt-font-semibold">{route.url}</h1>
           <hr className="rdt-mb-4 rdt-mt-1" />
           <h3>

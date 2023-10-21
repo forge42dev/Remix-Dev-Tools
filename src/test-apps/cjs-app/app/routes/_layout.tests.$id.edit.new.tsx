@@ -54,6 +54,7 @@ export default function IndexRoute() {
       <h1>Welcome to Remix 3</h1>
        <Outlet />
       <Link to="/login">Login</Link>
+      <form></form>
       <ul>
         <li>
           <a
@@ -73,7 +74,12 @@ export default function IndexRoute() {
             Deep Dive Jokes App Tutorial
           </a>
         </li>
+        <a>
+          <a></a>
+        </a>
+        <form />
         <li>
+         
           <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
             Remix Docs
           </a>

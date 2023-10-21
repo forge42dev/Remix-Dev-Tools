@@ -14,7 +14,7 @@ export const InfoCard = ({
     <div className="rdt-mb-4 rdt-h-min rdt-rounded-lg rdt-border rdt-border-solid rdt-border-gray-500/40 rdt-px-3 rdt-py-2 rdt-text-base rdt-font-normal rdt-text-white">
       <h6
         className={clsx(
-          "rdt-text-left rdt-text-sm",
+          "rdt-flex rdt-min-h-[30px] rdt-items-center rdt-text-left rdt-text-sm",
           onClear ? "rdt-flex rdt-items-center rdt-justify-between rdt-gap-3" : ""
         )}
       >

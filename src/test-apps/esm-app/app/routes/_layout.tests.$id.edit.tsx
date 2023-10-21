@@ -31,6 +31,9 @@ export default function Index() {
   data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+       <a>
+          <a></a>
+        </a>
       <Outlet />
     </div>
   );

@@ -11,21 +11,29 @@
 ![npm](https://img.shields.io/npm/dw/remix-development-tools?style=plastic) 
 ![GitHub top language](https://img.shields.io/github/languages/top/Code-Forge-Net/Remix-Dev-Tools?style=plastic) 
 
-Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more.
+Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings**, **Errors** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more. You can
+also track down hydration issues with the **Errors** tab and view your routes in a tree/list view with the **Routes** tab.
 
 ## How it looks
 ### Server logger
 ![server logger](./assets/logs.png) 
 ### Routes Tab (List view)
 ![routes](./assets/routes.gif)
-
 ### Routes Tab (Tree view)
 ![routes](./assets/tree-view.png)
+### Errors Tab
+![routes](./assets/errors-tab.gif)
 ### Timeline
 ![timeline](./assets/timeline.gif)
 ### Route boundaries & Active page panel
 ![route boundaries](./assets/boundaries.png)
+
+
 ## What's new?
+## v3.3.0
+- HMR speed-up > HMR is now a lot faster due to the fact the package doesn't use lucide-react which was slowing down HMR on certain machines
+- Errors tab > you can now see the HTML nesting errors that you might have on your page and open the files directly in VS code. This 
+can help you debug hydration issues a lot faster!
 
 ## v3.2.1
 
@@ -115,6 +123,10 @@ The **Routes** tab enables you to manage and explore the routes within your Remi
 ### Timeline Tab
 
 The **Timeline** side tab provides a timeline view of events occurring during the development process. This tab helps you track the sequence of actions and events, providing valuable insights into the execution flow of your application.
+
+### Errors Tab
+
+The **Errors** tab allows you to track down hydration issues in your application. It shows you the HTML nesting errors that you might have on your page and allows you to open the files directly in VS code. This can help you debug hydration issues a lot faster!
 
 ### Settings tab
 
@@ -231,6 +243,10 @@ If you're using a CJS custom server you can replace the following lines:
 
 ### CJS remix server setup (remix run server started by remix dev)
 
+> [!NOTE]  
+> This is only needed when you're not running a custom server and you're using the remix dev server
+
+
 Just add the following command to your package.json:
 ```diff
 - "dev": "remix dev",
@@ -238,6 +254,9 @@ Just add the following command to your package.json:
 ```
 
 ### ESM remix server setup (remix run server started by remix dev)
+
+> [!NOTE]  
+> This is only needed when you're not running a custom server and you're using the remix dev server
 
 Just add the following command to your package.json:
 ```diff
@@ -411,8 +430,24 @@ The migration should be really simple. These are the following things you need t
 ```
 4. You're good to go! (You can also add the server logger on top of that if you want)
 
- 
+
 ## Troubleshooting
+
+### Cloudflare
+
+I am aware of the fact that Remix Development Tools doesn't work with Cloudflare. I am working on a fix for this issue.
+
+### Types missing from "remix-dev-tools/server" import
+
+If your `moduleResolution` is set to `Node` in your `tsconfig.json` file you may encounter missing types when importing from `remix-dev-tools/server`. To fix this issue you need to add the following to your `tsconfig.json` file:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "Bundler"
+  }
+}
+```
 
 ### [ lower version than V3 only ] Dynamic imports are only supported when the "--module" flag is set to 'es2020', 'es2022', 'esnext', 'commonjs', 'amd', 'system', 'umd', 'node16', or 'nodenext'.ts(1323)
 

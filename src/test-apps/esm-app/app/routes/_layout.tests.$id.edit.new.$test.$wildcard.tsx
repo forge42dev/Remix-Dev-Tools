@@ -53,6 +53,9 @@ export default function IndexRoute() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix 2</h1>
+      <a>
+          <a></a>
+        </a>
       <button
         onClick={() =>
           lFetcher.submit(null, { method: "GET", action: "/tests/3/edit/new" })
