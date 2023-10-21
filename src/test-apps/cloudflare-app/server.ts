@@ -5,7 +5,7 @@ import * as build from "@remix-run/dev/server-build";
 let devBuild = build;
 
 if (process.env.NODE_ENV === "development") {
-  const { withServerDevTools } =  require("remix-development-tools/server");
+  const { withServerDevTools } = await import("remix-development-tools/server");
   devBuild = withServerDevTools(devBuild);
   logDevReady(devBuild);
 }
