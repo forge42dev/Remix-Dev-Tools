@@ -1,5 +1,8 @@
 import clsx from "clsx";
-import { CopySlash, Radio, X } from "lucide-react";
+import copySlashURL from "../icons/copy-slash.svg";
+import xURL from "../icons/x.svg";
+import radioURL from "../icons/radio.svg";
+
 import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from '../context/useRDTContext.js';
 import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
 import { useTabs } from '../hooks/useTabs.js';
@@ -92,7 +95,7 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
                 requiresForge: false,
                 hideTimeline: false,
                 component: <></>,
-                icon: <Radio size={16} />,
+                icon: <svg className="rdt-w-4 rdt-h-4"><use href={radioURL + "#icon"} /></svg>,
               }}
               className={twMerge(
                 clsx(
@@ -107,18 +110,22 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
           {!detachedWindow && setIsOpen && (
             <>
               {!detachedWindowOwner && (
-                <CopySlash
+                <svg
                   onClick={handleDetachment}
                   className="rdt-cursor-pointer rdt-transition-all hover:rdt-text-green-600"
-                />
+                >
+                  <use href={copySlashURL + "#icon"} />
+                </svg>
               )}
-              <X
+              <svg
                 onClick={() => {
                   setPersistOpen(false);
                   setIsOpen(false);
                 }}
                 className="rdt-h-6 rdt-w-6   rdt-cursor-pointer rdt-transition-all hover:rdt-text-red-600"
-              />
+              >
+                <use href={xURL + "#icon"} />
+              </svg>
             </>
           )}
         </div>

@@ -1,4 +1,8 @@
-import { GitMerge, Terminal, Layers, Settings } from "lucide-react";
+import gitMergeURL from "../icons/git-merge.svg";
+import terminalURL from "../icons/terminal.svg";
+import layersURL from "../icons/layers.svg";
+import settingsURL from "../icons/settings.svg";
+
 import { PageTab } from './PageTab.js';
 import { RoutesTab } from './RoutesTab.js';
 import { TerminalTab } from './TerminalTab.js';
@@ -15,12 +19,10 @@ export interface Tab {
   hideTimeline: boolean;
 }
 
-const TAB_SIZE = 16;
-
 export const tabs = [
   {
     name: "Active page",
-    icon: <Layers size={TAB_SIZE} />,
+    icon: <svg className="rdt-w-4 rdt-h-4"><use href={layersURL + "#icon"} /></svg>,
     id: "page",
     component: <PageTab />,
     requiresForge: false,
@@ -28,7 +30,7 @@ export const tabs = [
   },
   {
     name: "Routes",
-    icon: <GitMerge size={TAB_SIZE} />,
+    icon: <svg className="rdt-w-4 rdt-h-4"><use href={gitMergeURL + "#icon"} /></svg>,
     id: "routes",
     component: <RoutesTab />,
     requiresForge: false,
@@ -36,7 +38,7 @@ export const tabs = [
   },
   {
     name: "Terminal",
-    icon: <Terminal size={TAB_SIZE} />,
+    icon: <svg className="rdt-w-4 rdt-h-4"><use href={terminalURL + "#icon"} /></svg>,
     id: "terminal",
     component: <TerminalTab />,
     requiresForge: true,
@@ -44,7 +46,7 @@ export const tabs = [
   },
   {
     name: "Settings",
-    icon: <Settings size={TAB_SIZE} />,
+    icon: <svg className="rdt-w-4 rdt-h-4"><use href={settingsURL + "#icon"} /></svg>,
     id: "settings",
     component: <SettingsTab />,
     requiresForge: false,
