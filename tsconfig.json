@@ -31,6 +31,7 @@
     "./src/test-apps/**/*",
     "./plugins/**/*",
     "./src/external/**/*",
+    "./src/external/ws",
     "./src/external/react-d3-tree",
     "./scripts",
     "tsup*.ts",

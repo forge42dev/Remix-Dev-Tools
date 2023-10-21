@@ -1,0 +1,35 @@
+{
+  "$schema": "https://sly-cli.fly.dev/registry/config.json",
+  "libraries": [
+    {
+      "name": "simple-icons",
+      "directory": "./svg-icons",
+      "postinstall": [
+        "npm",
+        "run",
+        "build:icons"
+      ],
+      "transformers": []
+    },
+    {
+      "name": "lucide-icons",
+      "directory": "./svg-icons",
+      "postinstall": [
+        "npm",
+        "run",
+        "build:icons"
+      ],
+      "transformers": []
+    },
+    {
+      "name": "tailwindlabs/heroicons",
+      "directory": "./svg-icons",
+      "postinstall": [
+        "npm",
+        "run",
+        "build:icons"
+      ],
+      "transformers": []
+    }
+  ]
+}

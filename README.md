@@ -89,6 +89,7 @@ More features are coming soon!
 ### View source
 
 CTRL + Right-click any element in the browser to open it directly in your vscode instance!
+
 ### Active Page Tab
 
 The **Active Page** tab in Remix Development Tools allows you to gain insights into the current page you are working on. It provides valuable information and data that can assist you in debugging and understanding the behavior of your application. 

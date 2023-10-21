@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{tsx,ts,js}"],
+  content: ["./src/external/**/*.{tsx,ts,js}", "./src/RemixDevTools/**/*.{tsx,ts,js}"],
   theme: {
     extend: {
       colors: {

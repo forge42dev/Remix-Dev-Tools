@@ -74,10 +74,12 @@
     "remix": "npm run dev -w src/test-apps/cjs-app",
     "remix-esm": "npm run dev -w src/test-apps/esm-app",
     "remix-epic": "npm run dev -w src/test-apps/epic-app",
+    "remix-cf": "npm run dev -w src/test-apps/cloudflare-app",
     "remix-docs": "npm run dev -w src/documentation",
     "dev": "npm-run-all -s build -p remix cjs-watch",
     "dev:esm": "npm-run-all -s build -p remix-esm esm-watch",
     "dev:epic": "npm-run-all -s build -p remix-epic esm-watch",
+    "dev:cf": "npm-run-all -s build -p remix-cf esm-watch",
     "cjs-watch": "npm-run-all -p tsup:dev-server-cjs:watch tsup:rdt:watch",
     "esm-watch": "npm-run-all -p tsup:dev-server-esm:watch tsup:rdt:watch",
     "build": "run-s  tsup:* -- --clean",
@@ -106,7 +108,8 @@
     ".",
     "src/test-apps/cjs-app",
     "src/test-apps/esm-app",
-    "src/test-apps/epic-app"
+    "src/test-apps/epic-app",
+    "src/test-apps/cloudflare-app"
   ],
   "peerDependencies": {
     "@remix-run/react": ">=1.15",

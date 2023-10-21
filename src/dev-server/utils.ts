@@ -188,23 +188,27 @@ export const asyncAnalysis =
   async (args: DataFunctionArgs) => {
     const start = performance.now();
     const response = loaderOrAction(args);
-    response
-      .then((response: unknown) => {
-        unAwaited(() => {
-          const end = diffInMs(start);
-          storeAndEmitActionOrLoaderInfo(type, route, response, end);
-          if (type === "action") {
-            actionLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
-          } else {
-            loaderLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
-          }
-          analyzeDeferred(route.id, start, response);
-          analyzeHeaders(route, response);
+    return new Promise((resolve, reject) => {
+      response
+        .then((response: unknown) => {
+          unAwaited(() => {
+            const end = diffInMs(start);
+            storeAndEmitActionOrLoaderInfo(type, route, response, end);
+            if (type === "action") {
+              actionLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
+            } else {
+              loaderLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
+            }
+            analyzeDeferred(route.id, start, response);
+            analyzeHeaders(route, response);
+          });
+          resolve(response);
+        })
+        .catch((err) => {
+          errorHandler(route.id, err);
+          reject(err);
         });
-        return response;
-      })
-      .catch((err) => errorHandler(route.id, err));
-    return response;
+    });
   };
 
 export const hasExtension = (path: string) =>

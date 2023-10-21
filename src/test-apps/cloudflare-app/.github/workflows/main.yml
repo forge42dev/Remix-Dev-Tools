@@ -1,0 +1,135 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  changes:
+    name: 🔎 Determine deployable changes
+    runs-on: ubuntu-latest
+    outputs:
+      DEPLOYABLE: ${{steps.deploy_changes.outputs.DEPLOYABLE}}
+      CONTENT: ${{steps.content_changes.outputs.CONTENT}}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: "50"
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: 🔎 Determine deployable changes
+        id: deploy_changes
+        run: >-
+          echo ::set-output name=DEPLOYABLE::$(node ./scripts/is-deployable.js ${{
+          github.sha }})
+
+      - name: ❓ Deployable
+        run: >-
+          echo "DEPLOYABLE: ${{steps.deploy_changes.outputs.DEPLOYABLE}}"
+
+      - name: 🔎 Determine content changes
+        id: content_changes
+        run: >-
+          echo ::set-output name=CONTENT::$(node ./scripts/get-changed-content.js ${{
+          github.sha }})
+        env:
+          API_URL: ${{ secrets.API_URL }}
+
+      - name: ❓ Content
+        run: >-
+          echo "CONTENT: ${{steps.content_changes.outputs.CONTENT}}"
+
+  deploy:
+    name: Deploy
+    needs: [changes]
+    if: needs.changes.outputs.DEPLOYABLE == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: Deploy a Cloudflare Pages Project
+        uses: tomjschuster/cloudflare-pages-deploy-action@v0.0.12
+        with:
+          account-id: 37f727d1d4626f9f40b9f0f7b66168de
+          api-key: ${{ secrets.CF_API_KEY  }}
+          email: ${{ secrets.CF_ACCOUNT_EMAIL  }}
+          project-name: itsaydrian
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          production: true
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+
+      - name: 🥶 Cache dependencies
+        if: $${{ !env.ACT }}
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-
+            ${{ runner.OS }}-
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+
+      - name: 📦 Install npm packages
+        run: cd ./scripts/mdx && npm install
+
+      - name: 🚀 Update deploy sha
+        run: node ./scripts/mdx/update-deploy-sha.js
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          API_URL: ${{ secrets.API_URL }}
+          POST_API_KEY: ${{ secrets.POST_API_KEY }}
+
+  # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  compile:
+    name: 🛠 Compile MDX
+    if: needs.changes.outputs.CONTENT != ''
+    needs: [changes]
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: "50"
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+
+      - name: 🥶 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-
+            ${{ runner.OS }}-
+
+      - name: 📦 Install npm packages
+        run: cd ./scripts/mdx && npm install
+
+      - name: 🚀 Compile and post MDX
+        run: node ./scripts/mdx/compile-mdx.mjs --json --file ${{needs.changes.outputs.CONTENT}}
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          POST_API_KEY: ${{ secrets.POST_API_KEY }}
+
+      - name: 🚀 Update content sha
+        run: cd ./scripts/mdx && node ./update-content-sha.js
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          API_URL: ${{ secrets.API_URL }}
+          POST_API_KEY: ${{ secrets.POST_API_KEY }}

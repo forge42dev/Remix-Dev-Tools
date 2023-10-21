@@ -1,15 +1,15 @@
 import { ServerBuild } from "@remix-run/server-runtime";
 import { setSingleton, singleton } from "./singleton.js";
-import { WebSocketServer } from "ws";
 import { errorLog, successLog } from "./logger.js";
 import { augmentLoader } from "./loader.js";
 import { augmentAction } from "./action.js";
 import { setConfig, type DevToolsServerConfig } from "./config.js";
 import chalk from "chalk";
 import { tryParseJson } from "../RemixDevTools/utils/sanitize.js";
-import { exec } from "child_process";
-import { readFileSync } from "fs";
+import { exec } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { hasExtension } from "./utils.js";
+import { WebSocketServer } from "ws";
 
 export const augmentIfExists = (property: string, object: Record<string, any>, augment: any) => {
   if (object[property]) {
