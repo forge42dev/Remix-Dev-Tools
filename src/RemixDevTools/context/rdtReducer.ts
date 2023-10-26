@@ -85,6 +85,10 @@ export type RemixDevToolsState = {
     isHoveringRoute: boolean;
     routeViewMode: "list" | "tree";
     panelLocation: "top" | "bottom";
+    withServerDevTools: boolean;
+    wsPort: number;
+    requireUrlFlag: boolean;
+    urlFlag: string;
   };
   htmlErrors: HTMLError[];
   server?: ServerInfo;
@@ -114,6 +118,10 @@ export const initialState: RemixDevToolsState = {
     isHoveringRoute: false,
     routeViewMode: "tree",
     panelLocation: "bottom",
+    withServerDevTools: true,
+    wsPort: 8080,
+    requireUrlFlag: false,
+    urlFlag: "rdt",
   },
   htmlErrors: [],
   persistOpen: false,

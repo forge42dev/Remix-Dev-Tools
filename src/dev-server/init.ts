@@ -41,6 +41,7 @@ const installDevToolsGlobals = (config?: DevToolsServerConfig) => {
     ws.on("connection", (client) => {
       client.on("message", (message) => {
         const data = tryParseJson(message.toString());
+
         if (!isWsEventType(data)) return;
         if (data.type === "open-source") {
           const source = data.data.source;
@@ -78,6 +79,9 @@ const installDevToolsGlobals = (config?: DevToolsServerConfig) => {
 
     ["SIGINT", "SIGTERM"].forEach((event) => {
       process.on(event, () => {
+        ws.clients.forEach((client) => {
+          client.close();
+        });
         ws.close();
       });
     });

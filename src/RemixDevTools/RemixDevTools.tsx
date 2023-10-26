@@ -23,22 +23,22 @@ import "../input.css";
 import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
 import { useOpenElementSource } from "./hooks/useOpenElementSource.js";
 
-const DevTools = ({ plugins, wsPort }: RemixDevToolsProps) => {
+const DevTools = ({ plugins }: RemixDevToolsProps) => {
   useTimelineHandler();
   useResetDetachmentCheck();
   useBorderedRoutes();
   useSetRouteBoundaries();
   useSyncStateWhenDetached();
-  useDevServerConnection(wsPort);
+  useDevServerConnection();
   useOpenElementSource();
-
+  const url = useLocation().search;
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
   const { persistOpen } = usePersistOpen();
   const { position } = settings;
   const [isOpen, setIsOpen] = useState(isDetached || settings.defaultOpen || persistOpen);
   const leftSideOriented = position.includes("left");
-
+  if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel
   if (detachedWindowOwner) {
     return (
@@ -81,24 +81,18 @@ function useHydrated() {
 }
 
 export interface RemixDevToolsProps {
-  // Whether the dev tools require a url flag to be shown
-  requireUrlFlag?: boolean;
   // Additional tabs to add to the dev tools
   plugins?: Tab[];
-  // The port to use for the dev tools websocket that communicates with the backend dev tools
-  wsPort?: number;
 }
 
-const RemixDevTools = ({ requireUrlFlag, plugins, wsPort }: RemixDevToolsProps) => {
+const RemixDevTools = ({ plugins }: RemixDevToolsProps) => {
   const hydrated = useHydrated();
-  const url = useLocation().search;
 
   if (!hydrated) return null;
-  if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
     <RDTContextProvider>
-      <DevTools wsPort={wsPort} plugins={plugins} />
+      <DevTools plugins={plugins} />
     </RDTContextProvider>
   );
 };

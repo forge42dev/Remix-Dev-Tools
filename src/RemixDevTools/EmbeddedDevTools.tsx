@@ -8,7 +8,6 @@ import { ContentPanel } from "./layout/ContentPanel.js";
 import { MainPanel } from "./layout/MainPanel.js";
 import { Tabs } from "./layout/Tabs.js";
 import { REMIX_DEV_TOOLS } from "./utils/storage.js";
-import { useLocation } from "@remix-run/react";
 import { RDTContextProvider } from "./context/RDTContext.js";
 import { useState, useEffect } from "react";
 
@@ -46,12 +45,10 @@ function useHydrated() {
   return hydrated;
 }
 
-const EmbeddedDevTools = ({ requireUrlFlag, plugins, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const EmbeddedDevTools = ({ plugins, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
   const hydrated = useHydrated();
-  const url = useLocation().search;
 
   if (!hydrated) return null;
-  if (requireUrlFlag && !url.includes("rdt=true")) return null;
 
   return (
     <RDTContextProvider>

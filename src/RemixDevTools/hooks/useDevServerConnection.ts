@@ -3,7 +3,7 @@ import { useWebSocket } from "../../external/react-use-websocket/use-websocket.j
 import { useEffect } from "react";
 import { tryParseJson } from "../utils/sanitize.js";
 import { ActionEvent, LoaderEvent, isRdtEventArray } from "../../dev-server/event-queue.js";
-import { useDetachedWindowControls, useServerInfo } from "../context/useRDTContext.js";
+import { useDetachedWindowControls, useServerInfo, useSettingsContext } from "../context/useRDTContext.js";
 import { ServerInfo } from "../context/rdtReducer.js";
 import { cutArrayToLastN } from "../utils/common.js";
 import { ReadyState } from "../../external/react-use-websocket/constants.js";
@@ -49,13 +49,14 @@ const updateRouteInfo = (
   };
 };
 
-const useDevServerConnection = (wsPort: number | undefined = 8080) => {
+const useDevServerConnection = () => {
   const navigation = useNavigation();
+  const { settings } = useSettingsContext();
   const { server, setServerInfo } = useServerInfo();
-  const { detachedWindow } = useDetachedWindowControls();
-
+  const { detachedWindowOwner, isDetached } = useDetachedWindowControls();
+  const shouldConnect = isDetached ? detachedWindowOwner && settings.withServerDevTools : settings.withServerDevTools;
   const methods = useWebSocket(
-    `ws://localhost:${wsPort}`,
+    `ws://localhost:${settings.wsPort}`,
     {
       onMessage: (e) => {
         // Do not do anything with
@@ -73,7 +74,7 @@ const useDevServerConnection = (wsPort: number | undefined = 8080) => {
         }
       },
     },
-    wsPort !== undefined || detachedWindow
+    shouldConnect
   );
 
   // Pull the event queue from the server when the page is idle

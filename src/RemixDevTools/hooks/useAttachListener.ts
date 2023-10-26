@@ -12,6 +12,7 @@ const getAttachment = (target: ListenerAttachmentTarget) => {
       return typeof document != "undefined" ? document.body : null;
   }
 };
+
 /**
  * Helper hook that listens to the document scroll event and triggers a callback function
  * @param fn Function to be called when the event happens
