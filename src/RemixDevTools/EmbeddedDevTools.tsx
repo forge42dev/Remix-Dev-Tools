@@ -10,6 +10,7 @@ import { Tabs } from "./layout/Tabs.js";
 import { REMIX_DEV_TOOLS } from "./utils/storage.js";
 import { RDTContextProvider } from "./context/RDTContext.js";
 import { useState, useEffect } from "react";
+import { useLocation } from "@remix-run/react";
 
 export interface EmbeddedDevToolsProps extends RemixDevToolsProps {
   mainPanelClassName?: string;
@@ -22,6 +23,8 @@ const Embedded = ({ plugins, mainPanelClassName, className }: EmbeddedDevToolsPr
   const { settings } = useSettingsContext();
   const { position } = settings;
   const leftSideOriented = position.includes("left");
+  const url = useLocation().search;
+  if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   return (
     <div id={REMIX_DEV_TOOLS} className={clsx("remix-dev-tools", className)}>
       <MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
