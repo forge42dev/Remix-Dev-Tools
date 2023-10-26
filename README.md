@@ -306,10 +306,8 @@ const build = withServerDevTools(await import(BUILD_PATH), config)
 
 ## RemixDevTools props
 
-The `RemixDevTools` component accepts the following props: 
-- `requireUrlFlag`: Requires rdt=true to be present in the URL search to open the Remix Development Tools. Defaults to `false`. 
-- `plugins`: Allows you to provide additional tabs (plugins) to the Remix Development Tools. Defaults to `[]`.
-- `wsPort`: Allows you to specify over which port the client dev tools will communicate with the server dev tools. Defaults to `8080`.
+The `RemixDevTools` component accepts the following props:  
+- `plugins`: Allows you to provide additional tabs (plugins) to the Remix Development Tools. Defaults to `[]`. 
 
 ### Defining the config
 

@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { Checkbox } from '../components/Checkbox.js';
-import { Input } from '../components/Input.js';
-import { SelectWithOptions } from '../components/Select.js';
-import { Stack } from '../components/Stack.js';
-import { useSettingsContext } from '../context/useRDTContext.js';
-import { RouteBoundaryOptions } from '../context/rdtReducer.js';
-import { uppercaseFirstLetter } from '../utils/string.js';
+import { Checkbox } from "../components/Checkbox.js";
+import { Input } from "../components/Input.js";
+import { SelectWithOptions } from "../components/Select.js";
+import { Stack } from "../components/Stack.js";
+import { useSettingsContext } from "../context/useRDTContext.js";
+import { RouteBoundaryOptions } from "../context/rdtReducer.js";
+import { uppercaseFirstLetter } from "../utils/string.js";
 
 export const SettingsTab = () => {
   const { settings, setSettings } = useSettingsContext();
   const [minHeight, setMinHeight] = useState(settings.minHeight.toString());
   const [maxHeight, setMaxHeight] = useState(settings.maxHeight.toString());
   const [expansionLevel, setExpansionLevel] = useState(settings.expansionLevel.toString());
+  const [wsPort, setWsPort] = useState(settings.wsPort.toString());
   return (
     <Stack className="rdt-mb-4">
       <h1>
@@ -27,6 +28,14 @@ export const SettingsTab = () => {
         Open dev tools by default
       </Checkbox>
       <Checkbox
+        id="requireUrlFlag"
+        hint="Allows you to only show rdt when there is a flag in the URL search params set."
+        onChange={() => setSettings({ requireUrlFlag: !settings.requireUrlFlag })}
+        value={settings.requireUrlFlag}
+      >
+        Show dev tools only when URL flag is set
+      </Checkbox>
+      <Checkbox
         id="hideUntilHover"
         hint="The dev tools trigger will be hidden on the page until you hover over it."
         onChange={() => setSettings({ hideUntilHover: !settings.hideUntilHover })}
@@ -34,8 +43,45 @@ export const SettingsTab = () => {
       >
         Hide the trigger until hovered
       </Checkbox>
+      <Checkbox
+        id="withServerDevTools"
+        hint="Tell the dev tools if they should try to connect to their server counterpart, if you don't have that set up you can just disable this."
+        onChange={() => setSettings({ withServerDevTools: !settings.withServerDevTools })}
+        value={settings.withServerDevTools}
+      >
+        Connect to server dev tools
+      </Checkbox>
       <hr className="rdt-mt-2 rdt-border-gray-700" />
       <Stack gap="lg">
+        {settings.requireUrlFlag && (
+          <Input
+            name="urlFlag"
+            id="urlFlag"
+            label="URL flag to use"
+            hint={`This allows you to change the URL search param flag that will be used to show the dev tools when "Show dev tools only when URL flag is set" is set to true`}
+            value={settings.urlFlag}
+            onChange={(e) => setSettings({ urlFlag: e.target.value ?? "" })}
+            onBlur={(e) => {
+              setSettings({ urlFlag: e.target.value.trim() });
+            }}
+          />
+        )}
+        {settings.withServerDevTools && (
+          <Input
+            name="wsPort"
+            id="wsPort"
+            label="Server dev tools WS port (default: 8080)"
+            hint="This allows you to change the port the client dev tools will try to connect to."
+            value={wsPort}
+            onChange={(e) => setWsPort(e.target.value ?? "")}
+            onBlur={(e) => {
+              const value = parseInt(e.target.value);
+              if (value && !isNaN(value) && value >= 0) {
+                setSettings({ wsPort: value });
+              }
+            }}
+          />
+        )}
         <Input
           name="expansionLevel"
           id="expansionLevel"
