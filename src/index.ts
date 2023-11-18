@@ -4,6 +4,7 @@ import { type Tab } from "./RemixDevTools/tabs/index.js";
 export { useRemixForgeSocket } from "./RemixDevTools/hooks/useRemixForgeSocket.js";
 export { EmbeddedDevTools } from "./RemixDevTools/EmbeddedDevTools.js";
 export { withDevTools } from "./RemixDevTools/init/root.js";
+export { withViteDevTools } from "./RemixDevTools/init/root.js";
 export { defineClientConfig };
 // Type exports
 export type { EmbeddedDevToolsProps } from "./RemixDevTools/EmbeddedDevTools.js";

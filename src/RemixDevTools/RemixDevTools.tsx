@@ -22,8 +22,9 @@ import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetac
 import "../input.css";
 import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
 import { useOpenElementSource } from "./hooks/useOpenElementSource.js";
+import { RdtPlugin } from "../client.js";
 
-const DevTools = ({ plugins }: RemixDevToolsProps) => {
+const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
   useResetDetachmentCheck();
   useBorderedRoutes();
@@ -38,6 +39,7 @@ const DevTools = ({ plugins }: RemixDevToolsProps) => {
   const { position } = settings;
   const [isOpen, setIsOpen] = useState(isDetached || settings.defaultOpen || persistOpen);
   const leftSideOriented = position.includes("left");
+  const plugins = pluginArray?.map(plugin => typeof plugin === "function" ? plugin() : plugin)
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel
   if (detachedWindowOwner) {
@@ -82,7 +84,7 @@ function useHydrated() {
 
 export interface RemixDevToolsProps {
   // Additional tabs to add to the dev tools
-  plugins?: Tab[];
+  plugins?: (Tab | RdtPlugin)[];
 }
 
 const RemixDevTools = ({ plugins }: RemixDevToolsProps) => {

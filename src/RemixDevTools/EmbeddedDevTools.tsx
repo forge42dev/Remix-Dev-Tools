@@ -16,7 +16,7 @@ export interface EmbeddedDevToolsProps extends RemixDevToolsProps {
   mainPanelClassName?: string;
   className?: string;
 }
-const Embedded = ({ plugins, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
   useTimelineHandler();
   useBorderedRoutes();
   useSetRouteBoundaries();
@@ -24,6 +24,7 @@ const Embedded = ({ plugins, mainPanelClassName, className }: EmbeddedDevToolsPr
   const { position } = settings;
   const leftSideOriented = position.includes("left");
   const url = useLocation().search;
+  const plugins = pluginArray?.map(plugin => typeof plugin === "function" ? plugin() : plugin)
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   return (
     <div id={REMIX_DEV_TOOLS} className={clsx("remix-dev-tools", className)}>

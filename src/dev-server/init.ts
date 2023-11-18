@@ -10,6 +10,8 @@ import { tryParseJson } from "../RemixDevTools/utils/sanitize.js";
 import { exec } from "child_process";
 import { readFileSync } from "fs";
 import { hasExtension } from "./utils.js";
+import { ServerRouteManifest } from "@remix-run/server-runtime/dist/routes.js";
+import { WebSocket } from "vite";
 
 export const augmentIfExists = (property: string, object: Record<string, any>, augment: any) => {
   if (object[property]) {
@@ -25,8 +27,43 @@ export const getSocket = () => singleton<WebSocketServer | undefined>("rdt-ws", 
 const isWsEventType = (obj: unknown): obj is { type: string; data: any } => {
   return typeof obj === "object" && obj !== null && "type" in obj && "data" in obj;
 };
+export const handleWsMessage = (message: string, client: WebSocket) => {
+  const data = tryParseJson(message);
 
-const installDevToolsGlobals = (config?: DevToolsServerConfig) => {
+  if (!isWsEventType(data)) return;
+  if (data.type === "open-source") {
+    const source = data.data.source;
+    const line = data.data.line;
+    if (hasExtension(source)) return exec(`code -g ${source}:${line}`);
+    try {
+      readFileSync(source + ".tsx");
+      return exec(`code -g ${source}.tsx`);
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+    try {
+      readFileSync(source + ".jsx");
+      return exec(`code -g ${source}.jsx`);
+    } catch (e) {
+      return;
+    }
+  }
+  if (data.type === "pull_and_clear") {
+    const queue = singleton("rdtEventQueue", () => {
+      return [];
+    });
+
+    client.send(JSON.stringify({ type: "events", data: queue }));
+    setSingleton("rdtEventQueue", []);
+  }
+  if (data.type === "pull") {
+    const queue = singleton("rdtEventQueue", () => {
+      return [];
+    });
+
+    client.send(JSON.stringify({ type: "events", data: queue }));
+  }
+};
+export const installDevToolsGlobals = (config?: DevToolsServerConfig) => {
   const ws = singleton("rdt-ws", () => {
     if (config?.withWebsocket === false) return;
 
@@ -40,40 +77,7 @@ const installDevToolsGlobals = (config?: DevToolsServerConfig) => {
     });
     ws.on("connection", (client) => {
       client.on("message", (message) => {
-        const data = tryParseJson(message.toString());
-
-        if (!isWsEventType(data)) return;
-        if (data.type === "open-source") {
-          const source = data.data.source;
-          const line = data.data.line;
-          if (hasExtension(source)) return exec(`code -g ${source}:${line}`);
-          try {
-            readFileSync(source + ".tsx");
-            return exec(`code -g ${source}.tsx`);
-            // eslint-disable-next-line no-empty
-          } catch (e) {}
-          try {
-            readFileSync(source + ".jsx");
-            return exec(`code -g ${source}.jsx`);
-          } catch (e) {
-            return;
-          }
-        }
-        if (data.type === "pull_and_clear") {
-          const queue = singleton("rdtEventQueue", () => {
-            return [];
-          });
-
-          client.send(JSON.stringify({ type: "events", data: queue }));
-          setSingleton("rdtEventQueue", []);
-        }
-        if (data.type === "pull") {
-          const queue = singleton("rdtEventQueue", () => {
-            return [];
-          });
-
-          client.send(JSON.stringify({ type: "events", data: queue }));
-        }
+        handleWsMessage(message.toString(), client);
       });
     });
 
@@ -98,18 +102,22 @@ export const withServerDevTools = <T extends ServerBuild>(build: T, config?: Dev
   const routes = build.routes;
   return {
     ...build,
-    routes: Object.entries(routes).reduce((acc, [name, route]) => {
-      return {
-        ...acc,
-        [name]: {
-          ...route,
-          module: {
-            ...route.module,
-            ...(route.module.loader ? { loader: augmentLoader(route, route.module.loader as any) } : {}),
-            ...(route.module.action ? { action: augmentAction(route, route.module.action as any) } : {}),
-          },
-        },
-      };
-    }, {}),
+    routes: augmentLoadersAndActions(routes),
   };
+};
+
+export const augmentLoadersAndActions = <T extends ServerRouteManifest>(routes: T) => {
+  return Object.entries(routes).reduce((acc, [name, route]) => {
+    return {
+      ...acc,
+      [name]: {
+        ...route,
+        module: {
+          ...route.module,
+          ...(route.module.loader ? { loader: augmentLoader(route, route.module.loader as any) } : {}),
+          ...(route.module.action ? { action: augmentAction(route, route.module.action as any) } : {}),
+        },
+      },
+    };
+  }, {});
 };

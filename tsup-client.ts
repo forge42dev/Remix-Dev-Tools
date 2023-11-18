@@ -7,6 +7,9 @@ export default defineConfig({
   clean: false,
   dts: true,
   format: ["cjs", "esm"],
-  external: ["react"],
+  external: ["react", "react-dom", "react-runtime", "@remix-run/react"],
+  esbuildOptions(o) {
+    o.external = ["react", "react-dom", "react-runtime", "@remix-run/react"];
+  },
   noExternal: ["d3-hierarchy", "d3-selection", "d3-zoom", "d3-shape"],
 });

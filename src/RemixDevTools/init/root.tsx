@@ -26,6 +26,19 @@ export const withDevTools = (Component: any, config?: RemixDevToolsProps) => () 
     </>
   );
 };
+
+export const withViteDevTools = (Component: any, config?: RemixDevToolsProps) => () => {
+  function AppWithDevTools(props: any) {
+    if (typeof document === "undefined") return <Component />;
+    return (
+      <>
+        <Component {...props} />
+        {createPortal(<RemixDevTools {...config} />, document.body)}
+      </>
+    );
+  }
+  return AppWithDevTools;
+};
 //export const InjectedStyles = () => {
 // const blob = new Blob([css], { type: "text/css" });
 // const url = URL.createObjectURL(blob);
