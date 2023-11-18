@@ -1,185 +1,91 @@
 import { Plugin } from "vite";
-import { parse as parseBabel, traverse } from "@babel/core";
 import { parse } from "es-module-lexer";
-import generateDefault from "@babel/generator";
-import { RdtPlugin } from "../../client.js";
+import fs from "fs";
+import { join } from "path";
 
-const generate = generateDefault.default;
-
-export const remixDevTools: (args?: { plugins?: RdtPlugin[] }) => Plugin[] = (args) => [
-  {
-    name: "remix-development-tools",
-    transform(code, id) {
-      const plugins = args?.plugins ?? [];
-      // Wraps loaders/actions
-      if (id.includes("virtual:server-entry")) {
-        const updatedCode = [
-          `import { augmentLoadersAndActions } from "remix-development-tools/server";`,
-          code.replace("export const routes =", "const routeModules ="),
-          `export const routes = augmentLoadersAndActions(routeModules);`,
-        ].join("\n");
-
-        return updatedCode;
+function processPlugins(pluginDirectoryPath: string) {
+  const files = fs.readdirSync(pluginDirectoryPath);
+  const allExports: { name: string; path: string }[] = [];
+  files.forEach((file) => {
+    const filePath = join(pluginDirectoryPath, file);
+    const fileCode = fs.readFileSync(filePath, "utf8");
+    const lines = fileCode.split("\n");
+    lines.forEach((line) => {
+      if (line.includes("export const")) {
+        const [name] = line.split("export const ")[1].split(" =");
+        allExports.push({ name, path: join("..", filePath).replaceAll("\\", "/") });
       }
-      if (id.includes("root.tsx")) {
-        const [, exports] = parse(code);
-        const exportNames = exports.map((e) => {
-          return e.n;
-        });
-        const ast = parseBabel(code, {
-          sourceType: "module",
-        });
-        if (!ast) {
-          return code;
-        }
-        let hasInjected = false;
-        let hasInjectedLinks = false;
+    });
+  });
+  return allExports;
+}
 
-        traverse(ast, {
-          ExportNamedDeclaration(path) {
-            if (hasInjectedLinks) return;
-            const rdtStylesheetImport = parseBabel(
-              'import rdtStylesheet from "remix-development-tools/index.css?url"; \nconst rdtStyles = { rel: "stylesheet", href: rdtStylesheet }',
-
-              {
-                sourceType: "module",
-              }
-            );
-            const el = (
-              parseBabel(" rdtStyles ", {
-                sourceType: "module",
-              }) as any
-            ).program.body[0].expression;
-            const declaration = path.get("declaration");
-            if (declaration.isFunctionDeclaration() && declaration.node.id?.name === "links") {
-              const returnStatement = declaration.get("body").get("body");
-              if (returnStatement) {
-                const linksArray = (returnStatement[0].node as any).argument;
-                path.insertBefore(rdtStylesheetImport!);
-                if (linksArray && linksArray.type === "ArrayExpression") {
-                  linksArray.elements.push(el);
-                  hasInjectedLinks = true;
-                }
-              }
-            } else if (declaration.isVariableDeclaration()) {
-              const linksExport = declaration
-                .get("declarations")
-                .find((decl) => (decl.node.id as any)?.name === "links");
-
-              if (linksExport) {
-                const linksNode = linksExport.node.init as any;
-
-                // If links export is a function, modify the array
-                if (linksNode?.type === "ArrowFunctionExpression" || linksNode?.type === "FunctionDeclaration") {
-                  path.insertBefore(rdtStylesheetImport!);
-
-                  // Check if the function has a body
-                  if (linksNode.body && linksNode.body.type === "BlockStatement") {
-                    const returnStatement = linksNode.body.body.find((stmt: any) => stmt.type === "ReturnStatement");
-
-                    if (returnStatement) {
-                      const linksArray = returnStatement.argument;
-
-                      if (linksArray && linksArray.type === "ArrayExpression") {
-                        linksArray.elements.push(el);
-                        hasInjectedLinks = true;
-                      }
-                    }
-                  } else if (linksNode.body.type === "ArrayExpression") {
-                    linksNode.body.elements.push(el);
-                    hasInjectedLinks = true;
-                  } else {
-                    const linksArray = linksNode?.body?.body?.find((stmt: any) => stmt.type === "ReturnStatement")
-                      .argument;
-
-                    if (linksArray) {
-                      linksArray.elements.push(el);
-
-                      hasInjectedLinks = true;
-                    }
-                  }
-                }
-              }
-            }
-          },
-          ExportDefaultDeclaration(path) {
-            if (hasInjected) return;
-            const declaration = path.get("declaration");
-
-            if (
-              declaration.isFunctionDeclaration() ||
-              declaration.isArrowFunctionExpression() ||
-              declaration.isIdentifier()
-            ) {
-              // Wrap the existing export with withDevTools inside a function
-              const withDevToolsImport = parseBabel('import { withViteDevTools } from "remix-development-tools";', {
-                sourceType: "module",
-              });
-
-              path.insertBefore(withDevToolsImport!);
-
-              const wrapperFunction = parseBabel(
-                `
-              export default withViteDevTools(${generate(declaration.node).code}, { plugins: [${plugins.map(
-                (plugin) => plugin
-              )}] })();
-               
-            `,
-                { sourceType: "module" }
-              )?.program.body;
-
-              path.replaceWithMultiple(wrapperFunction!);
-
-              hasInjected = true;
-            } else if (declaration.isCallExpression()) {
-              // Check if it's export default something(App);
-              const arg = declaration.get("arguments")[0];
-              const withDevToolsImport = parseBabel('import { withViteDevTools } from "remix-development-tools";', {
-                sourceType: "module",
-              });
-
-              path.insertBefore(withDevToolsImport!);
-
-              const wrapperFunctionCode = `
-              export default withViteDevTools(${generate(declaration.node.callee).code}(${
-                generate(arg.node).code
-              }), { plugins: [${plugins.map((plugin) => plugin)}] })();
-            `;
-
-              const wrapperFunction = parseBabel(wrapperFunctionCode, { sourceType: "module" })?.program.body;
-
-              path.replaceWithMultiple(wrapperFunction!);
-
-              hasInjected = true;
-            }
-          },
-        });
-
-        if (hasInjected) {
-          let updatedCode = generate(ast).code.replaceAll("jsx(", "jsxDEV(").replaceAll("jsxs(", "jsxDEV(");
-          if (!exportNames.includes("links")) {
-            updatedCode = [
-              `import rdtStylesheet from "remix-development-tools/index.css?url";`,
-              `export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];`,
-              updatedCode,
-            ].join("\n");
-          }
-          updatedCode = `\nimport "remix-development-tools/index.css?inline";\n` + updatedCode;
-
-          return updatedCode;
-        } else {
-          let updatedCode = `\nimport "remix-development-tools/index.css?inline";\n` + code;
-          if (!exportNames.includes("links")) {
-            updatedCode = [
-              `import rdtStylesheet from "remix-development-tools/index.css?url";`,
-              `export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];`,
-              updatedCode,
-            ].join("\n");
-          }
+export const remixDevTools: (args?: { pluginDir?: string }) => Plugin[] = (args) => {
+  const pluginDir = args?.pluginDir || undefined;
+  const plugins = pluginDir ? processPlugins(pluginDir) : [];
+  const pluginNames = plugins.map((p) => p.name);
+  return [
+    {
+      name: "remix-development-tools",
+      apply(config) {
+        return config.mode === "development";
+      },
+      transform(code, id) {
+        // Wraps loaders/actions
+        if (id.includes("virtual:server-entry")) {
+          const updatedCode = [
+            `import { augmentLoadersAndActions } from "remix-development-tools/server";`,
+            code.replace("export const routes =", "const routeModules ="),
+            `export const routes = augmentLoadersAndActions(routeModules);`,
+          ].join("\n");
 
           return updatedCode;
         }
-      }
+        if (id.includes("root.tsx")) {
+          const [, exports] = parse(code);
+          const exportNames = exports.map((e) => e.n);
+          const hasLinksExport = exportNames.includes("links");
+          const lines = code.split("\n");
+          const imports = [
+            'import { withViteDevTools } from "remix-development-tools";',
+            'import rdtStylesheet from "remix-development-tools/index.css?url";',
+            plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n"),
+          ];
+
+          const augmentedLinksExport = hasLinksExport
+            ? `export const links = () => [...linksExport(), { rel: "stylesheet", href: rdtStylesheet }];`
+            : `export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];`;
+
+          const augmentedDefaultExport = `export default withViteDevTools(AppExport, { plugins: [${pluginNames.join(
+            ","
+          )}] })();`;
+
+          const updatedCode = lines.map((line) => {
+            // Handles default export augmentation
+            if (line.includes("export default function")) {
+              const exportName = line.split("export default function ")[1].split("(")[0].trim();
+              const newLine = line.replace(`export default function ${exportName}`, `function AppExport`);
+              return newLine;
+            } else if (line.includes("export default")) {
+              const newline = line.replace("export default", "const AppExport =");
+              return newline;
+            }
+            // Handles links export augmentation
+            if (line.includes("export const links")) {
+              return line.replace("export const links", "const linksExport");
+            }
+            if (line.includes("export let links")) {
+              return line.replace("export let links", "const linksExport");
+            }
+            if (line.includes("export function links")) {
+              return line.replace("export function links", "const linksExport");
+            }
+            return line;
+          });
+          // Returns the new code
+          return [...imports, ...updatedCode, augmentedLinksExport, augmentedDefaultExport].join("\n");
+        }
+      },
     },
-  },
-];
+  ];
+};
