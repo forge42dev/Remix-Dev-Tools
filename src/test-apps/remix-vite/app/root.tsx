@@ -6,10 +6,14 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { LinksFunction } from "@remix-run/server-runtime";
+import { LinksFunction, json } from "@remix-run/server-runtime";
 
 
 export const links: LinksFunction = () => []
+
+export const loader = () => {
+  return json({ message: "Hello World" });
+}
 
 export default function App() {
   return (

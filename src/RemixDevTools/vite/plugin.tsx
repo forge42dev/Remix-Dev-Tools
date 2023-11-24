@@ -1,7 +1,10 @@
-import { Plugin } from "vite";
+import { Connect, Plugin } from "vite";
 import { parse } from "es-module-lexer";
 import fs from "fs";
 import { join } from "path";
+import { cutArrayToLastN } from "../utils/common.js";
+import { IncomingMessage, ServerResponse } from "http";
+import { handleWsMessage } from "../../dev-server/init.js";
 
 function processPlugins(pluginDirectoryPath: string) {
   const files = fs.readdirSync(pluginDirectoryPath);
@@ -20,11 +23,73 @@ function processPlugins(pluginDirectoryPath: string) {
   return allExports;
 }
 
+export const handleDevToolsViteRequest = (
+  req: Connect.IncomingMessage,
+  res: ServerResponse<IncomingMessage>,
+  next: Connect.NextFunction,
+  cb: (data: any) => void
+) => {
+  if (!req.url?.includes("remix-dev-tools")) {
+    return next();
+  }
+
+  const chunks: any[] = [];
+  req.on("data", (chunk) => {
+    chunks.push(chunk);
+  });
+  req.on("end", () => {
+    const dataToParse = Buffer.concat(chunks);
+    const parsedData = JSON.parse(dataToParse.toString());
+    cb(parsedData);
+    res.write("OK");
+  });
+};
+
+const routeInfo = new Map<string, { loader: any[]; action: any[] }>();
+
 export const remixDevTools: (args?: { pluginDir?: string }) => Plugin[] = (args) => {
   const pluginDir = args?.pluginDir || undefined;
   const plugins = pluginDir ? processPlugins(pluginDir) : [];
   const pluginNames = plugins.map((p) => p.name);
   return [
+    {
+      enforce: "post",
+      name: "remix-development-tools-server",
+      apply(config) {
+        return config.mode === "development";
+      },
+      configureServer(server) {
+        server.middlewares.use((req, res, next) =>
+          handleDevToolsViteRequest(req, res, next, (parsedData) => {
+            const { type, data } = parsedData;
+            const id = data.id;
+            const existingData = routeInfo.get(id);
+            if (existingData) {
+              if (type === "loader") {
+                existingData.loader = cutArrayToLastN([...existingData.loader, data], 30);
+              }
+              if (type === "action") {
+                existingData.action = cutArrayToLastN([...existingData.action, data], 30);
+              }
+            } else {
+              if (type === "loader") {
+                routeInfo.set(id, { loader: [data], action: [] });
+              }
+              if (type === "action") {
+                routeInfo.set(id, { loader: [], action: [data] });
+              }
+            }
+            // TODO: Send data to client
+          })
+        );
+        // TODO: Make client sent messages do what they need to do.
+        server.ws.on("connection", (socket) => {
+          socket.on("message", (data) => {
+            handleWsMessage(data.toString(), socket);
+          });
+        });
+      },
+    },
     {
       name: "remix-development-tools",
       apply(config) {

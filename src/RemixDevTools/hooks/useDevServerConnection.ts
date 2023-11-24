@@ -85,6 +85,31 @@ const useDevServerConnection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation.state]);
 
+  useEffect(() => {
+    const cb = (dd: { port: number; type: string }) => {
+      const data = typeof dd === "object" ? dd : tryParseJson(dd);
+
+      if (isRdtEventArray(data)) {
+        const events = data.data;
+
+        const routes: ServerInfo["routes"] = {};
+        for (const event of events) {
+          updateRouteInfo(server, routes, event);
+          setServerInfo({ routes });
+        }
+      }
+    };
+
+    if (import.meta.hot) {
+      import.meta.hot.on("remix-devtools-plugin:port", cb);
+    }
+
+    return () => {
+      if (import.meta.hot) {
+        import.meta.hot.dispose(cb);
+      }
+    };
+  }, [server, setServerInfo]);
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",
     [ReadyState.OPEN]: "Open",

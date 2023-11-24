@@ -135,27 +135,65 @@ const logTrigger = (id: string, type: "action" | "loader", end: number) => {
   }
 };
 
-const storeAndEmitActionOrLoaderInfo = (
+const extractHeadersFromResponseOrRequest = (response: Response | Request): Record<string, string> => {
+  const headers = new Headers(response.headers);
+  return Object.fromEntries(headers.entries());
+};
+
+const extractDataFromResponseOrRequest = async (response: Response | Request): Promise<null | unknown> => {
+  const extractable = response.clone();
+  const headers = new Headers(extractable.headers);
+  const contentType = headers.get("Content-Type");
+  try {
+    if (contentType?.includes("application/json")) {
+      return extractable.json();
+    }
+    if (contentType?.includes("text/html")) {
+      return extractable.text();
+    }
+    if (contentType?.includes("x-www-form-urlencoded")) {
+      const formData = await extractable.formData();
+      return Object.fromEntries(formData.entries());
+    }
+  } catch (e) {
+    return null;
+  }
+  return null;
+};
+
+const storeAndEmitActionOrLoaderInfo = async (
   type: "action" | "loader",
   route: Omit<ServerRoute, "children">,
   response: unknown,
-  end: number
+  end: number,
+  args: DataFunctionArgs
 ) => {
-  const headers = new Headers(response instanceof Response ? response.headers : undefined);
-  const returnHeaders = {} as any;
-  for (const [key, value] of headers.entries()) {
-    returnHeaders[key] = value;
-  }
+  const isResponse = response instanceof Response;
+  const responseHeaders = isResponse ? extractHeadersFromResponseOrRequest(response) : null;
   // create the event
   const event = {
     type,
     data: {
       id: route.id,
       executionTime: end,
-      headers: returnHeaders,
       timestamp: new Date().getTime(),
+      responseHeaders,
+      requestHeaders: extractHeadersFromResponseOrRequest(args.request),
+      requestData: await extractDataFromResponseOrRequest(args.request),
+      responseData: isResponse ? await extractDataFromResponseOrRequest(response) : null,
     },
   };
+  // TODO Make this work better than hardcoding the url port
+  fetch("http://localhost:5173/remix-dev-tools", {
+    method: "POST",
+    body: JSON.stringify(event),
+  })
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    .then(() => {})
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    .catch(() => {});
+
+  // TODO: Remove after vite only transition
   // store it into queue
   storeEvent(event);
   const ws = getSocket();
@@ -174,7 +212,7 @@ export const syncAnalysis =
       unAwaited(() => {
         const end = diffInMs(start);
         logTrigger(route.id, type, end);
-        storeAndEmitActionOrLoaderInfo(type, route, response, end);
+        storeAndEmitActionOrLoaderInfo(type, route, response, end, args);
         analyzeHeaders(route, response);
       });
       return response;
@@ -192,7 +230,7 @@ export const asyncAnalysis =
       .then((response: unknown) => {
         unAwaited(() => {
           const end = diffInMs(start);
-          storeAndEmitActionOrLoaderInfo(type, route, response, end);
+          storeAndEmitActionOrLoaderInfo(type, route, response, end, args);
           if (type === "action") {
             actionLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`);
           } else {
