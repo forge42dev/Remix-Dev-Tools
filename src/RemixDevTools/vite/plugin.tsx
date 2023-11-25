@@ -4,7 +4,7 @@ import fs from "fs";
 import { join } from "path";
 import { cutArrayToLastN } from "../utils/common.js";
 import { IncomingMessage, ServerResponse } from "http";
-import { handleWsMessage } from "../../dev-server/init.js";
+import { handleGoToSource } from "../../dev-server/init.js";
 
 function processPlugins(pluginDirectoryPath: string) {
   const files = fs.readdirSync(pluginDirectoryPath);
@@ -79,13 +79,35 @@ export const remixDevTools: (args?: { pluginDir?: string }) => Plugin[] = (args)
                 routeInfo.set(id, { loader: [], action: [data] });
               }
             }
-            // TODO: Send data to client
+            server.ws.clients.forEach((client) => {
+              client.send("route-info", JSON.stringify({ type, data }));
+            });
           })
         );
-        // TODO: Make client sent messages do what they need to do.
+
         server.ws.on("connection", (socket) => {
           socket.on("message", (data) => {
-            handleWsMessage(data.toString(), socket);
+            try {
+              const json = JSON.parse(data.toString());
+              if (json.type === "custom" && "data" in json) {
+                if (json.data.type === "open-source") {
+                  handleGoToSource(json.data);
+                }
+              }
+
+              if (json.event === "all-route-info") {
+                server.ws.clients.forEach((client) => {
+                  client.send(
+                    "all-route-info",
+                    JSON.stringify({
+                      type: "all-route-info",
+                      data: Object.fromEntries(routeInfo.entries()),
+                    })
+                  );
+                });
+              }
+              // eslint-disable-next-line no-empty
+            } catch (e) {}
           });
         });
       },

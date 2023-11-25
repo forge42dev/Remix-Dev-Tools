@@ -27,26 +27,34 @@ export const getSocket = () => singleton<WebSocketServer | undefined>("rdt-ws", 
 const isWsEventType = (obj: unknown): obj is { type: string; data: any } => {
   return typeof obj === "object" && obj !== null && "type" in obj && "data" in obj;
 };
+
+export const handleGoToSource = (data: { type: string; data: any }) => {
+  if (!isWsEventType(data)) return;
+  if (data.type !== "open-source") return;
+
+  const source = data.data.source;
+
+  const line = data.data.line;
+  if (hasExtension(source)) return exec(`code -g "${source}:${line}"`);
+  try {
+    readFileSync(source + ".tsx");
+    return exec(`code -g "${source}.tsx"`);
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
+  try {
+    readFileSync(source + ".jsx");
+    return exec(`code -g "${source}.jsx"`);
+  } catch (e) {
+    return;
+  }
+};
+
 export const handleWsMessage = (message: string, client: WebSocket) => {
   const data = tryParseJson(message);
 
   if (!isWsEventType(data)) return;
-  if (data.type === "open-source") {
-    const source = data.data.source;
-    const line = data.data.line;
-    if (hasExtension(source)) return exec(`code -g ${source}:${line}`);
-    try {
-      readFileSync(source + ".tsx");
-      return exec(`code -g ${source}.tsx`);
-      // eslint-disable-next-line no-empty
-    } catch (e) {}
-    try {
-      readFileSync(source + ".jsx");
-      return exec(`code -g ${source}.jsx`);
-    } catch (e) {
-      return;
-    }
-  }
+  handleGoToSource(data);
+
   if (data.type === "pull_and_clear") {
     const queue = singleton("rdtEventQueue", () => {
       return [];

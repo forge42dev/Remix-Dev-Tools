@@ -1,4 +1,5 @@
 import {
+  Form,
   Links,
   LiveReload,
   Meta,
@@ -15,6 +16,10 @@ export const loader = () => {
   return json({ message: "Hello World" });
 }
 
+export const action = () => {
+  return json({ message: "Hello World" });
+}
+
 export default function App() {
   return (
     <html lang="en">
@@ -25,6 +30,11 @@ export default function App() {
         <Links />
       </head>
       <body>
+       <Form method="post">
+       <button type="submit">
+          Submit
+        </button>
+       </Form>
         <Outlet />
         <ScrollRestoration />
         <Scripts />

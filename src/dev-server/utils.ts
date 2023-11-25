@@ -180,9 +180,9 @@ const storeAndEmitActionOrLoaderInfo = async (
       responseHeaders,
       requestHeaders: extractHeadersFromResponseOrRequest(args.request),
       requestData: await extractDataFromResponseOrRequest(args.request),
-      responseData: isResponse ? await extractDataFromResponseOrRequest(response) : null,
     },
   };
+
   // TODO Make this work better than hardcoding the url port
   fetch("http://localhost:5173/remix-dev-tools", {
     method: "POST",

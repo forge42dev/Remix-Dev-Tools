@@ -9,11 +9,25 @@ interface RDTEvent<Type extends string, Data extends Record<string, unknown> | a
 
 export type LoaderEvent = RDTEvent<
   "loader",
-  { id: string; executionTime: number; headers: Record<string, string>; timestamp: number }
+  {
+    id: string;
+    executionTime: number;
+    requestData: any;
+    requestHeaders: Record<string, string>;
+    responseHeaders: Record<string, string>;
+    timestamp: number;
+  }
 >;
 export type ActionEvent = RDTEvent<
   "action",
-  { id: string; executionTime: number; headers: Record<string, string>; timestamp: number }
+  {
+    id: string;
+    executionTime: number;
+    requestData: any;
+    requestHeaders: Record<string, string>;
+    responseHeaders: Record<string, string>;
+    timestamp: number;
+  }
 >;
 
 export type RDTEventArray = RDTEvent<"events", (LoaderEvent | ActionEvent)[]>;

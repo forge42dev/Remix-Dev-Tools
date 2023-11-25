@@ -8,7 +8,7 @@ import { JsonRenderer } from "./jsonRenderer.js";
 import { ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js";
 import { Tag } from "./Tag.js";
 import { InfoCard } from "./InfoCard.js";
-import { useDevServerConnection } from "../hooks/useDevServerConnection.js"; 
+import { useDevServerConnection } from "../hooks/useDevServerConnection.js";
 import { Icon } from "./icon/Icon.js";
 
 const getLoaderData = (data: string | Record<string, any>) => {
@@ -28,9 +28,14 @@ const cleanupLoaderOrAction = (routeInfo: ServerRouteInfo["lastLoader"]) => {
   if (!Object.keys(routeInfo).length) return {};
   return {
     executionTime: `${routeInfo.executionTime}ms`,
-    headers: routeInfo.headers,
-    ...(routeInfo.headers?.["cache-control"] && {
-      cacheInfo: { ...parseCacheControlHeader(new Headers(routeInfo.headers)) },
+    requestData: routeInfo.requestData,
+    requestHeaders: routeInfo.requestHeaders,
+    ...(routeInfo.requestHeaders?.["cache-control"] && {
+      cacheInfo: { ...parseCacheControlHeader(new Headers(routeInfo.requestHeaders)) },
+    }),
+    responseHeaders: routeInfo.responseHeaders,
+    ...(routeInfo.responseHeaders?.["cache-control"] && {
+      cacheInfo: { ...parseCacheControlHeader(new Headers(routeInfo.responseHeaders)) },
     }),
   };
 };
@@ -46,8 +51,8 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
     lowestExecutionTime: `${routeInfo.lowestExecutionTime}ms`,
     highestExecutionTime: `${routeInfo.highestExecutionTime}ms`,
     averageExecutionTime: `${routeInfo.averageExecutionTime}ms`,
-    loaderCalls: routeInfo.loaders?.map((loader) => cleanupLoaderOrAction(loader)),
-    actionCalls: routeInfo.actions?.map((action) => cleanupLoaderOrAction(action)),
+    loaderCalls: routeInfo.loaders?.map((loader) => cleanupLoaderOrAction(loader)).reverse(),
+    actionCalls: routeInfo.actions?.map((action) => cleanupLoaderOrAction(action)).reverse(),
   };
 };
 
@@ -58,7 +63,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
   const serverInfo = server?.routes?.[route.id];
   const isRoot = route.id === "root";
   const { setSettings } = useSettingsContext();
-  const cacheControl = parseCacheControlHeader(new Headers(serverInfo?.lastLoader.headers));
+  const cacheControl = parseCacheControlHeader(new Headers(serverInfo?.lastLoader.responseHeaders));
   const onHover = (path: string, type: "enter" | "leave") => {
     setSettings({
       hoveredRoute: path,
@@ -80,7 +85,10 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
       onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
       className="rdt-mb-8 rdt-ml-8"
     >
-      <Icon name="CornerDownRight" className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900" />
+      <Icon
+        name="CornerDownRight"
+        className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900"
+      />
       <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
         {route.pathname}
         <Tag color={isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"}>
