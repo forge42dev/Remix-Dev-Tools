@@ -1,7 +1,7 @@
 import { useActionData, useFetchers, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { useDetachedWindowControls, useTimelineContext } from '../context/useRDTContext.js';
-import { TimelineEvent } from '../context/timeline/types.js';
+import { useDetachedWindowControls, useTimelineContext } from "../context/useRDTContext.js";
+import { TimelineEvent } from "../context/timeline/types.js";
 
 const uniqueId = () => (Math.random() * Date.now()).toString();
 
@@ -60,7 +60,7 @@ const useTimelineHandler = () => {
           method: formMethod,
           data,
           encType: formEncType,
-          responseData,
+          responseData: responseData as any,
           id: uniqueId(),
         });
         return;
@@ -74,7 +74,7 @@ const useTimelineHandler = () => {
           method: formMethod,
           data,
           encType: formEncType,
-          responseData,
+          responseData: responseData as any,
           id: uniqueId(),
         });
         return;

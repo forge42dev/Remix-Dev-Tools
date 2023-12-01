@@ -8,14 +8,11 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";   
-import  { useRemixForgeSocket, withDevTools  } from "remix-development-tools";
-import { cssBundleHref } from "@remix-run/css-bundle";
+import  { useRemixForgeSocket, withDevTools  } from "remix-development-tools"; 
 import rdtStyles from "remix-development-tools/index.css";
 export const links: LinksFunction = () => {
   return [
-    ...(cssBundleHref
-      ? [{ rel: "stylesheet", href: cssBundleHref }]
-      : []),
+ 
      ...(process.env.NODE_ENV === "development" ? [{rel: "stylesheet", href: rdtStyles }]: [])
   ];
 };
@@ -88,4 +85,4 @@ export const action = async () => {
   );
 } 
  
-export default withDevTools(App );
+export default withDevTools(App);

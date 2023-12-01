@@ -43,14 +43,16 @@ export const SettingsTab = () => {
       >
         Hide the trigger until hovered
       </Checkbox>
-      <Checkbox
-        id="withServerDevTools"
-        hint="Tell the dev tools if they should try to connect to their server counterpart, if you don't have that set up you can just disable this."
-        onChange={() => setSettings({ withServerDevTools: !settings.withServerDevTools })}
-        value={settings.withServerDevTools}
-      >
-        Connect to server dev tools
-      </Checkbox>
+      {typeof import.meta.hot === "undefined" && (
+        <Checkbox
+          id="withServerDevTools"
+          hint="Tell the dev tools if they should try to connect to their server counterpart, if you don't have that set up you can just disable this."
+          onChange={() => setSettings({ withServerDevTools: !settings.withServerDevTools })}
+          value={settings.withServerDevTools}
+        >
+          Connect to server dev tools
+        </Checkbox>
+      )}
       <hr className="rdt-mt-2 rdt-border-gray-700" />
       <Stack gap="lg">
         {settings.requireUrlFlag && (
@@ -66,7 +68,7 @@ export const SettingsTab = () => {
             }}
           />
         )}
-        {settings.withServerDevTools && (
+        {settings.withServerDevTools && typeof import.meta.hot === "undefined" && (
           <Input
             name="wsPort"
             id="wsPort"

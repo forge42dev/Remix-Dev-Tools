@@ -62,7 +62,8 @@ export async function run() {
   }
 
   function createDevRequestHandler(initialBuild: ServerBuild): RequestHandler {
-    let build = withServerDevTools(initialBuild);
+    // TODO : Investigate this type
+    let build = withServerDevTools(initialBuild as any);
     async function handleServerUpdate() {
       // 1. re-import the server build
       build = await reimportServer();

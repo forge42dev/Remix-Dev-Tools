@@ -11,7 +11,6 @@ export const meta: MetaFunction = () => {
 };
  
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  throw redirect("/added"); 
   const test = new Promise((resolve) => {
     setTimeout(() => {
       resolve("test");

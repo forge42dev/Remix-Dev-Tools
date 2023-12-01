@@ -1,7 +1,7 @@
-import { getExistingStateFromStorage } from '../../context/RDTContext.js';
-import { REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE } from '../../utils/storage.js';
-import { useAttachListener } from '../useAttachListener.js';
-import { useRDTContext } from '../../context/useRDTContext.js';
+import { getExistingStateFromStorage } from "../../context/RDTContext.js";
+import { REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE } from "../../utils/storage.js";
+import { useAttachListener } from "../useAttachListener.js";
+import { useRDTContext } from "../../context/useRDTContext.js";
 
 const refreshRequiredKeys = [REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE];
 
@@ -9,6 +9,10 @@ export const useSyncStateWhenDetached = () => {
   const { dispatch, state } = useRDTContext();
 
   useAttachListener("storage", "window", (e: any) => {
+    // Not in detached mode
+    if (!state.detachedWindow && !state.detachedWindowOwner) {
+      return;
+    }
     // Not caused by the dev tools
     if (!refreshRequiredKeys.includes(e.key)) {
       return;

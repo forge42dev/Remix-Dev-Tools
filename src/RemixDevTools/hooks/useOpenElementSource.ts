@@ -7,7 +7,7 @@ const useOpenElementSource = () => {
   useEffect(() => {
     const handleFocus = (e: any) => {
       e.stopPropagation();
-      if (!e.ctrlKey || !e.target?.getAttribute?.("data-rdt-source")) {
+      if (!e.altKey || !e.target?.getAttribute?.("data-rdt-source")) {
         return;
       }
 
@@ -26,7 +26,7 @@ const useOpenElementSource = () => {
   }, []);
 
   useAttachDocumentListener("contextmenu", (e: any) => {
-    if (!e.ctrlKey || !e) {
+    if (!e.altKey || !e) {
       return;
     }
 
@@ -36,7 +36,7 @@ const useOpenElementSource = () => {
     const rdtSource = target?.getAttribute("data-rdt-source");
 
     if (rdtSource) {
-      const [source, line, column] = rdtSource.split(":");
+      const [source, line, column] = rdtSource.split(":::");
       sendJsonMessage({
         type: "open-source",
         data: { source, line, column },

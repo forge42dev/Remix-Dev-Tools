@@ -164,7 +164,18 @@ export function useBorderedRoutes() {
       const fiberRoots = devTools.getFiberRoots(rendererID);
       for (const rootFiber of fiberRoots) {
         traverseComponentTree(rootFiber.current, (fiberNode: any) => {
-          if (isSourceElement(fiberNode)) {
+          // Vite implementation
+          if (isSourceElement(fiberNode) && typeof import.meta.hot !== "undefined") {
+            const originalSource = fiberNode?._debugSource;
+            const source = fiberNode?._debugOwner?._debugSource ?? fiberNode?._debugSource;
+            const line = source?.fileName?.startsWith("/") ? originalSource?.lineNumber : source?.lineNumber;
+            const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName;
+
+            fiberNode.stateNode?.setAttribute?.(
+              "data-rdt-source",
+              `${fileName}:::${line}` //
+            );
+          } else if (isSourceElement(fiberNode)) {
             const isJsx = isJsxFile(fiberNode);
 
             const originalSource = fiberNode?._debugSource;
@@ -173,7 +184,7 @@ export function useBorderedRoutes() {
             const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName;
             fiberNode.stateNode?.setAttribute?.(
               "data-rdt-source",
-              `${fileName}:${isJsx ? line - 20 : line}` //
+              `${fileName}:::${isJsx ? line - 20 : line}` //
             );
           }
           if (fiberNode?.stateNode && fiberNode?.elementType === "form") {

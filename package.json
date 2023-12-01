@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -33,6 +33,19 @@
       "types": "./dist/index.d.ts",
       "node": "./dist/index.cjs",
       "default": "./dist/index.js"
+    },
+    "./vite": {
+      "import": {
+        "types": "./dist/vite.d.ts",
+        "default": "./dist/vite.js"
+      },
+      "require": {
+        "types": "./dist/vite.d.cts",
+        "default": "./dist/vite.cjs"
+      },
+      "types": "./dist/vite.d.ts",
+      "node": "./dist/vite.cjs",
+      "default": "./dist/vite.js"
     },
     "./server": {
       "import": {
@@ -75,15 +88,19 @@
     "remix": "npm run dev -w src/test-apps/cjs-app",
     "remix-esm": "npm run dev -w src/test-apps/esm-app",
     "remix-epic": "npm run dev -w src/test-apps/epic-app",
-    "remix-docs": "npm run dev -w src/documentation",
+    "remix-docs": "npm run dev -w src/test-apps/documentation",
+    "remix-vite": "npm run dev -w src/test-apps/remix-vite",
     "dev": "npm-run-all -s build -p remix cjs-watch",
     "dev:esm": "npm-run-all -s build -p remix-esm esm-watch",
     "dev:epic": "npm-run-all -s build -p remix-epic esm-watch",
+    "dev:vite": "npm-run-all -s tsup:vite -p tsup:vite:watch remix-vite",
     "cjs-watch": "npm-run-all -p tsup:dev-server-cjs:watch tsup:rdt:watch",
     "esm-watch": "npm-run-all -p tsup:dev-server-esm:watch tsup:rdt:watch",
     "build": "run-s  tsup:* -- --clean",
     "tsup:rdt": "tsup",
     "tsup:client": "tsup --config tsup-client.ts",
+    "tsup:vite": "tsup --config tsup-vite.ts",
+    "tsup:vite:watch": "tsup --config tsup-vite.ts --watch",
     "tsup:rdt-server": "tsup --config tsup-server.ts",
     "tsup:dev-server-cjs": "tsup --config tsup-dev-server-cjs.ts",
     "tsup:dev-server-esm": "tsup --config tsup-dev-server-esm.ts",
@@ -109,6 +126,7 @@
     ".",
     "src/test-apps/cjs-app",
     "src/test-apps/esm-app",
+    "src/test-apps/remix-vite",
     "src/test-apps/epic-app"
   ],
   "peerDependencies": {
@@ -117,14 +135,16 @@
     "react-dom": ">=17"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.0.0",
-    "@remix-run/express": "^2.0.0",
-    "@remix-run/node": "^2.0.0",
-    "@remix-run/react": "^2.0.0",
+    "@remix-run/dev": "^0.0.0-nightly-6953c3f-20231123",
+    "@remix-run/express": "^2.2.0",
+    "@remix-run/node": "^2.2.0",
+    "@remix-run/react": "^2.3.0",
     "@remix-run/router": "^1.9.0",
-    "@remix-run/server-runtime": "^2.0.0",
+    "@remix-run/server-runtime": "^2.2.0",
     "@rollup/plugin-typescript": "^11.1.3",
     "@testing-library/react": "^14.0.0",
+    "@types/babel__core": "^7.20.4",
+    "@types/babel__generator": "^7.6.7",
     "@types/clone": "^2.1.2",
     "@types/d3-hierarchy": "^3.1.3",
     "@types/d3-selection": "^3.0.6",
@@ -156,7 +176,6 @@
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "prompt": "^1.3.0",
-    "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.2",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-typescript-paths": "^1.4.0",
@@ -167,7 +186,7 @@
     "tsup": "^7.2.0",
     "typescript": "^5.1.6",
     "unbuild": "^2.0.0",
-    "vite": "^4.4.7",
+    "vite": "^4.5.0",
     "vitest": "^0.33.0"
   },
   "dependencies": {
@@ -180,8 +199,10 @@
     "d3-shape": "^3.2.0",
     "d3-zoom": "^3.0.0",
     "date-fns": "^2.30.0",
+    "es-module-lexer": "^1.4.0",
     "tailwind-merge": "^1.14.0",
     "uuid": "^9.0.1",
-    "ws": "^8.14.2"
+    "ws": "^8.14.2",
+    "zod": "^3.22.4"
   }
 }

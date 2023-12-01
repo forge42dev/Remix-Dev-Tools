@@ -11,12 +11,13 @@ import { ReadyState } from "../../external/react-use-websocket/constants.js";
 const updateRouteInfo = (
   server: ServerInfo | undefined,
   routes: ServerInfo["routes"],
-  event: LoaderEvent | ActionEvent
+  event: LoaderEvent | ActionEvent,
+  includeServerInfo = true
 ) => {
   const { data, type } = event;
   const { id, ...rest } = data;
   // Get existing route
-  const existingRouteInfo = routes![id] ?? server?.routes?.[id];
+  const existingRouteInfo = !includeServerInfo ? routes?.[id] : routes![id] ?? server?.routes?.[id];
   let newRouteData = [...(existingRouteInfo?.[type === "loader" ? "loaders" : "actions"] || []), rest];
   // Makes sure there are no more than 20 entries per loader/action
   newRouteData = cutArrayToLastN(newRouteData, 20);
@@ -74,17 +75,45 @@ const useDevServerConnection = () => {
         }
       },
     },
-    shouldConnect
+    shouldConnect && typeof import.meta.hot === "undefined"
   );
 
   // Pull the event queue from the server when the page is idle
   useEffect(() => {
+    if (typeof import.meta.hot === "undefined") return;
     if (navigation.state !== "idle") return;
     // We send a pull & clear event to pull the event queue and clear it
     methods.sendMessage(JSON.stringify({ type: "pull_and_clear", data: {} }));
+    import.meta.hot.send("all-route-info");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation.state]);
 
+  useEffect(() => {
+    const cb2 = (data: any) => {
+      const events = JSON.parse(data).data;
+      const routes: ServerInfo["routes"] = {};
+      Object.values(events).forEach((routeInfo) => {
+        const { loader, action } = routeInfo as any;
+        const events = [
+          loader.map((e: any) => ({ type: "loader", data: e })),
+          action.map((e: any) => ({ type: "action", data: e })),
+        ].flat();
+        for (const event of events) {
+          updateRouteInfo(server, routes, event, false);
+        }
+      });
+      setServerInfo({ routes });
+    };
+    if (typeof import.meta.hot !== "undefined") {
+      import.meta.hot.on("all-route-info", cb2);
+    }
+
+    return () => {
+      if (typeof import.meta.hot !== "undefined") {
+        import.meta.hot.dispose(cb2);
+      }
+    };
+  }, [server, setServerInfo]);
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",
     [ReadyState.OPEN]: "Open",
@@ -92,10 +121,16 @@ const useDevServerConnection = () => {
     [ReadyState.CLOSED]: "Closed",
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[methods.readyState];
-  const isConnected = methods.readyState === ReadyState.OPEN;
+  const isConnected = methods.readyState === ReadyState.OPEN || typeof import.meta.hot !== "undefined";
   const isConnecting = methods.readyState === ReadyState.CONNECTING;
 
-  return { ...methods, connectionStatus, isConnected, isConnecting };
+  return {
+    ...methods,
+    sendJsonMessage: import.meta.hot ? (data: any) => import.meta.hot?.send("custom", data) : methods.sendJsonMessage,
+    connectionStatus: import.meta.hot ? "Open" : connectionStatus,
+    isConnected,
+    isConnecting,
+  };
 };
 
 export { useDevServerConnection };
