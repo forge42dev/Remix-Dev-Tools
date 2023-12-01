@@ -30,9 +30,6 @@ const cleanupLoaderOrAction = (routeInfo: ServerRouteInfo["lastLoader"]) => {
     executionTime: `${routeInfo.executionTime}ms`,
     requestData: routeInfo.requestData,
     requestHeaders: routeInfo.requestHeaders,
-    ...(routeInfo.requestHeaders?.["cache-control"] && {
-      cacheInfo: { ...parseCacheControlHeader(new Headers(routeInfo.requestHeaders)) },
-    }),
     responseHeaders: routeInfo.responseHeaders,
     ...(routeInfo.responseHeaders?.["cache-control"] && {
       cacheInfo: { ...parseCacheControlHeader(new Headers(routeInfo.responseHeaders)) },
@@ -44,13 +41,14 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
   return {
     loaderTriggerCount: routeInfo.loaderTriggerCount,
     actionTriggerCount: routeInfo.actionTriggerCount,
+    lowestExecutionTime: `${routeInfo.lowestExecutionTime}ms`,
+    highestExecutionTime: `${routeInfo.highestExecutionTime}ms`,
+    averageExecutionTime: `${routeInfo.averageExecutionTime}ms`,
     lastLoaderInfo: cleanupLoaderOrAction(routeInfo.lastLoader),
     ...(routeInfo.lastAction && {
       lastActionInfo: cleanupLoaderOrAction(routeInfo.lastAction),
     }),
-    lowestExecutionTime: `${routeInfo.lowestExecutionTime}ms`,
-    highestExecutionTime: `${routeInfo.highestExecutionTime}ms`,
-    averageExecutionTime: `${routeInfo.averageExecutionTime}ms`,
+
     loaderCalls: routeInfo.loaders?.map((loader) => cleanupLoaderOrAction(loader)).reverse(),
     actionCalls: routeInfo.actions?.map((action) => cleanupLoaderOrAction(action)).reverse(),
   };
@@ -63,7 +61,9 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
   const serverInfo = server?.routes?.[route.id];
   const isRoot = route.id === "root";
   const { setSettings } = useSettingsContext();
-  const cacheControl = parseCacheControlHeader(new Headers(serverInfo?.lastLoader.responseHeaders));
+  const cacheControl = serverInfo?.lastLoader.responseHeaders
+    ? parseCacheControlHeader(new Headers(serverInfo?.lastLoader.responseHeaders))
+    : undefined;
   const onHover = (path: string, type: "enter" | "leave") => {
     setSettings({
       hoveredRoute: path,

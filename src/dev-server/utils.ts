@@ -182,16 +182,19 @@ const storeAndEmitActionOrLoaderInfo = async (
       requestData: await extractDataFromResponseOrRequest(args.request),
     },
   };
-
-  // TODO Make this work better than hardcoding the url port
-  fetch("http://localhost:5173/remix-dev-tools", {
-    method: "POST",
-    body: JSON.stringify(event),
-  })
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    .then(() => {})
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    .catch(() => {});
+  const port =
+    // @ts-expect-error
+    typeof __REMIX_DEVELOPMENT_TOOL_SERVER_PORT__ === "number" ? __REMIX_DEVELOPMENT_TOOL_SERVER_PORT__ : undefined;
+  if (port) {
+    fetch(`http://localhost:${port}/remix-dev-tools`, {
+      method: "POST",
+      body: JSON.stringify(event),
+    })
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .then(() => {})
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .catch(() => {});
+  }
 
   // TODO: Remove after vite only transition
   // store it into queue

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RDTContextProvider } from "./context/RDTContext.js";
 import { Tab } from "./tabs/index.js";
 import { useTimelineHandler } from "./hooks/useTimelineHandler.js";
@@ -23,6 +23,8 @@ import "../input.css";
 import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
 import { useOpenElementSource } from "./hooks/useOpenElementSource.js";
 import { RdtPlugin } from "../client.js";
+import { useAttachBodyListener } from "./hooks/useAttachListener.js";
+import { useDebounce } from "./hooks/useDebounce.js";
 
 const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
@@ -32,6 +34,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useSyncStateWhenDetached();
   useDevServerConnection();
   useOpenElementSource();
+
   const url = useLocation().search;
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
@@ -39,7 +42,13 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   const { position } = settings;
   const [isOpen, setIsOpen] = useState(isDetached || settings.defaultOpen || persistOpen);
   const leftSideOriented = position.includes("left");
-  const plugins = pluginArray?.map(plugin => typeof plugin === "function" ? plugin() : plugin)
+  const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin));
+  const debounceSetOpen = useDebounce(() => setIsOpen(!isOpen), 100);
+  useAttachBodyListener("keydown", (e: any) => {
+    if (e.altKey && e.key === "a") {
+      debounceSetOpen();
+    }
+  });
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel
   if (detachedWindowOwner) {
@@ -69,18 +78,6 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
     </>
   );
 };
-let hydrating = true;
-
-function useHydrated() {
-  const [hydrated, setHydrated] = useState(() => !hydrating);
-
-  useEffect(function hydrate() {
-    hydrating = false;
-    setHydrated(true);
-  }, []);
-
-  return hydrated;
-}
 
 export interface RemixDevToolsProps {
   // Additional tabs to add to the dev tools
@@ -88,10 +85,6 @@ export interface RemixDevToolsProps {
 }
 
 const RemixDevTools = ({ plugins }: RemixDevToolsProps) => {
-  const hydrated = useHydrated();
-
-  if (!hydrated) return null;
-
   return (
     <RDTContextProvider>
       <DevTools plugins={plugins} />

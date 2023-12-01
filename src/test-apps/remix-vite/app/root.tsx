@@ -31,7 +31,8 @@ export default function App() {
       </head>
       <body>
        <Form method="post">
-       <button type="submit">
+        
+       <button type="submit">  
           Submit
         </button>
        </Form>

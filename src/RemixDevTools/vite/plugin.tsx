@@ -1,56 +1,22 @@
-import { Connect, Plugin } from "vite";
+import { Plugin } from "vite";
 import { parse } from "es-module-lexer";
-import fs from "fs";
-import { join } from "path";
+
 import { cutArrayToLastN } from "../utils/common.js";
-import { IncomingMessage, ServerResponse } from "http";
 import { handleGoToSource } from "../../dev-server/init.js";
-
-function processPlugins(pluginDirectoryPath: string) {
-  const files = fs.readdirSync(pluginDirectoryPath);
-  const allExports: { name: string; path: string }[] = [];
-  files.forEach((file) => {
-    const filePath = join(pluginDirectoryPath, file);
-    const fileCode = fs.readFileSync(filePath, "utf8");
-    const lines = fileCode.split("\n");
-    lines.forEach((line) => {
-      if (line.includes("export const")) {
-        const [name] = line.split("export const ")[1].split(" =");
-        allExports.push({ name, path: join("..", filePath).replaceAll("\\", "/") });
-      }
-    });
-  });
-  return allExports;
-}
-
-export const handleDevToolsViteRequest = (
-  req: Connect.IncomingMessage,
-  res: ServerResponse<IncomingMessage>,
-  next: Connect.NextFunction,
-  cb: (data: any) => void
-) => {
-  if (!req.url?.includes("remix-dev-tools")) {
-    return next();
-  }
-
-  const chunks: any[] = [];
-  req.on("data", (chunk) => {
-    chunks.push(chunk);
-  });
-  req.on("end", () => {
-    const dataToParse = Buffer.concat(chunks);
-    const parsedData = JSON.parse(dataToParse.toString());
-    cb(parsedData);
-    res.write("OK");
-  });
-};
+import { DevToolsServerConfig } from "../../dev-server/config.js";
+import { handleDevToolsViteRequest, processPlugins } from "./utils.js";
 
 const routeInfo = new Map<string, { loader: any[]; action: any[] }>();
 
-export const remixDevTools: (args?: { pluginDir?: string }) => Plugin[] = (args) => {
+export const remixDevTools: (args?: {
+  pluginDir?: string;
+  server?: Omit<DevToolsServerConfig, "wsPort" | "withWebsocket">;
+}) => Plugin[] = (args) => {
+  const serverConfig = args?.server || {};
   const pluginDir = args?.pluginDir || undefined;
   const plugins = pluginDir ? processPlugins(pluginDir) : [];
   const pluginNames = plugins.map((p) => p.name);
+  let port = 5173;
   return [
     {
       enforce: "post",
@@ -58,7 +24,19 @@ export const remixDevTools: (args?: { pluginDir?: string }) => Plugin[] = (args)
       apply(config) {
         return config.mode === "development";
       },
+      transform(code) {
+        if (code.includes("__REMIX_DEVELOPMENT_TOOL_SERVER_PORT__")) {
+          const modified = code
+            .replaceAll("__REMIX_DEVELOPMENT_TOOL_SERVER_PORT__", port.toString())
+            .replaceAll(`singleton("config", () => ({}));`, `(${JSON.stringify(serverConfig)})`);
+
+          return modified;
+        }
+      },
       configureServer(server) {
+        server.httpServer?.on("listening", () => {
+          port = server.config.server.port ?? 5173;
+        });
         server.middlewares.use((req, res, next) =>
           handleDevToolsViteRequest(req, res, next, (parsedData) => {
             const { type, data } = parsedData;
@@ -136,6 +114,7 @@ export const remixDevTools: (args?: { pluginDir?: string }) => Plugin[] = (args)
           const imports = [
             'import { withViteDevTools } from "remix-development-tools";',
             'import rdtStylesheet from "remix-development-tools/index.css?url";',
+            'import "remix-development-tools/index.css?inline";',
             plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n"),
           ];
 

@@ -29,7 +29,8 @@ export const withDevTools = (Component: any, config?: RemixDevToolsProps) => () 
 
 export const withViteDevTools = (Component: any, config?: RemixDevToolsProps) => () => {
   function AppWithDevTools(props: any) {
-    if (typeof document === "undefined") return <Component />;
+    const hydrated = useHydrated();
+    if (!hydrated) return <Component />;
     return (
       <>
         <Component {...props} />
