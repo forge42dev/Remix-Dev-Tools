@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [remixDevTools({pluginDir: "./plugins",  }),remix(), tsconfigPaths()],
   server: {
     open: true, 
-  port: 3000 
-  }
+    port: 3000 , 
+  }, 
 });

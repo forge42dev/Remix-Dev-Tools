@@ -5,8 +5,9 @@ import { cutArrayToLastN } from "../utils/common.js";
 import { handleGoToSource } from "../../dev-server/init.js";
 import { DevToolsServerConfig } from "../../dev-server/config.js";
 import { handleDevToolsViteRequest, processPlugins } from "./utils.js";
+import { ActionEvent, LoaderEvent } from "../../dev-server/event-queue.js";
 
-const routeInfo = new Map<string, { loader: any[]; action: any[] }>();
+const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>();
 
 export const remixDevTools: (args?: {
   pluginDir?: string;
@@ -29,7 +30,6 @@ export const remixDevTools: (args?: {
           const modified = code
             .replaceAll("__REMIX_DEVELOPMENT_TOOL_SERVER_PORT__", port.toString())
             .replaceAll(`singleton("config", () => ({}));`, `(${JSON.stringify(serverConfig)})`);
-
           return modified;
         }
       },

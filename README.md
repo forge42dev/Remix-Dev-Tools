@@ -16,17 +16,34 @@ also track down hydration issues with the **Errors** tab and view your routes in
 
 ## Getting Started
 
-Make sure that everything is guarded by the NODE_ENV check so it doesn't break your production build if you installed it as a dev dependency!
-
-To install and utilize Remix Development Tools, follow these steps:
-
 1. Install the package via npm:
 
 ```bash
 npm install remix-development-tools -D
 ```
 
-2. Add the following to your application `root.tsx` file:
+### Vite plugin
+
+```js
+import { remixDevTools } from "remix-development-tools/vite";
+
+// Add it to your plugins array in vite.config.js
+export default defineConfig({
+  plugins: [remixDevTools(), remix(), tsconfigPaths()], 
+});
+```
+
+That's it, you're done!
+
+### Remix bundler
+
+Make sure that everything is guarded by the NODE_ENV check so it doesn't break your production build if you installed it as a dev dependency!
+
+To install and utilize Remix Development Tools, follow these steps:
+
+ 
+
+1. Add the following to your application `root.tsx` file:
 
 ```diff
 // Import styles
@@ -143,6 +160,13 @@ Just add the following command to your package.json:
 
 
 ## What's new?
+
+## v3.5.0
+- Vite plugin for Remix Vite support!
+- You can now ALT + A to open up dev tools as a shortcut
+- Reorganization of server information in the active page tab
+- Server information now shows you more information like request/response headers and request body
+
 ## v3.3.0
 - HMR speed-up > HMR is now a lot faster due to the fact the package doesn't use lucide-react which was slowing down HMR on certain machines
 - Errors tab > you can now see the HTML nesting errors that you might have on your page and open the files directly in VS code. This 
@@ -209,7 +233,8 @@ More features are coming soon!
 
 ### View source
 
-CTRL + Right-click any element in the browser to open it directly in your vscode instance!
+ALT + Right-click any element in the browser to open it directly in your vscode instance!
+
 ### Active Page Tab
 
 The **Active Page** tab in Remix Development Tools allows you to gain insights into the current page you are working on. It provides valuable information and data that can assist you in debugging and understanding the behavior of your application. 
@@ -221,6 +246,7 @@ Key features include:
 - **Loader Data**: Monitor and track the loader data used by the application during page rendering.
 - **Route boundaries** See each Outlet and route boundaries by coloring the background. 
 - **Server info** - See each loader min/max/avg execution time, cache info, headers info and more!
+- **Open in VS Code** - Open up any route segment in VS Code directly from the dev tools!
 
 ### Routes Tab
 
@@ -265,6 +291,49 @@ Embedded mode allows you to embed the Remix Dev Tools in your application. This 
 page in your application only or you want to place it somewhere in the UI where it makes sense for your application.
 
 ## Server dev tools configuration
+
+### Vite server dev tools
+
+The vite plugin takes in the following config:
+
+```ts
+  interface Config { 
+    // allows you to not log anything to the console
+    silent?: boolean;
+    logs?: {
+      // allows you to not log cookie logs to the console
+      cookies?: boolean;
+      // allows you to not log defer logs to the console
+      defer?: boolean;
+      // allows you to not log action logs to the console
+      actions?: boolean;
+      // allows you to not log loader logs to the console
+      loaders?: boolean;
+      // allows you to not log cache logs to the console
+      cache?: boolean;
+      // allows you to not log when cache is cleared to the console
+      siteClear?: boolean;
+    };
+  }
+```
+
+It can be passed in the following way:
+  
+```ts
+
+import { remixDevTools } from "remix-development-tools/vite";
+export default defineConfig({
+  plugins: [
+    remixDevTools({
+      server: {
+        ... your config here ...
+      }
+  })], 
+});
+```
+
+### Remix bundler server dev tools
+
 Here are the server config options:
   
   ```ts
@@ -325,6 +394,25 @@ export default withDevTools(App, config)
  
 
 ## Plugins
+
+### Plugins in Vite
+
+
+Plugins work in a different way in Vite. You create a directory for plugins and just provide the path to the directory to the plugin. The plugin will automatically import all the plugins from the directory and add them to the dev tools. You only need to make sure your exports are named exports and not default exports and that they are uniquely named.
+  
+You can create a directory called `plugins` in your project and add your plugins there. Then you can add the following to your vite.config.js file:
+```ts
+
+import { remixDevTools } from "remix-development-tools/vite";
+export default defineConfig({
+  plugins: [
+    remixDevTools({
+      pluginsDir: "./plugins"
+  })], 
+});
+```
+
+### Plugins in Remix bundler
 
 Writing plugins for Remix Development Tools is easy. You can write a plugin that adds a new tab to the Remix Development Tools in the following way:
 1. Create a new file in your project called `remix-dev-tools-plugin.tsx`
