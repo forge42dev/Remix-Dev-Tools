@@ -141,7 +141,7 @@ const extractHeadersFromResponseOrRequest = (response: Response | Request): Reco
 };
 
 const extractDataFromResponseOrRequest = async (response: Response | Request): Promise<null | unknown> => {
-  const extractable = response.clone();
+  const extractable = new Response(response.body, response)
   const headers = new Headers(extractable.headers);
   const contentType = headers.get("Content-Type");
   try {
