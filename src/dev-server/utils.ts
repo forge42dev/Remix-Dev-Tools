@@ -135,16 +135,16 @@ const logTrigger = (id: string, type: "action" | "loader", end: number) => {
   }
 };
 
-const extractHeadersFromResponseOrRequest = (response: Response | Request): Record<string, string> => {
+const extractHeadersFromResponseOrRequest = (response: Response | Request) => {
   const headers = new Headers(response.headers);
   return Object.fromEntries(headers.entries());
 };
 
 const extractDataFromResponseOrRequest = async (response: Response | Request): Promise<null | unknown> => {
-  const extractable = new Response(response.body, response)
-  const headers = new Headers(extractable.headers);
-  const contentType = headers.get("Content-Type");
   try {
+    const extractable = new Response(response.body, response);
+    const headers = new Headers(extractable.headers);
+    const contentType = headers.get("Content-Type");
     if (contentType?.includes("application/json")) {
       return extractable.json();
     }
@@ -170,6 +170,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 ) => {
   const isResponse = response instanceof Response;
   const responseHeaders = isResponse ? extractHeadersFromResponseOrRequest(response) : null;
+  const requestHeaders = extractHeadersFromResponseOrRequest(args.request);
   // create the event
   const event = {
     type,
@@ -177,9 +178,9 @@ const storeAndEmitActionOrLoaderInfo = async (
       id: route.id,
       executionTime: end,
       timestamp: new Date().getTime(),
-      responseHeaders,
-      requestHeaders: extractHeadersFromResponseOrRequest(args.request),
       requestData: await extractDataFromResponseOrRequest(args.request),
+      requestHeaders,
+      responseHeaders,
     },
   };
   const port =

@@ -1,8 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
-import { Link, useFetcher,  useSubmit } from "@remix-run/react"; 
-import { Button } from "../components/Button";
+import { Link, Outlet, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,59 +9,52 @@ export const meta: MetaFunction = () => {
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
- 
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-   
-  const test = new Promise((resolve) => {
-    setTimeout(() => {
-      resolve("test");
-    }, 1000);
-  })
-  return defer({ message: "Hello World!", test });
-}; 
- 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  return redirect("/login");
+  return json({
+    should: "work",
+    with: {
+      nested: {
+        objects: {
+          really: {
+            deep: "inside",
+            array: [
+              "this",
+              "is",
+              "a",
+              "really",
+              "long",
+              "array",
+              "that",
+              "should",
+              "be",
+              "truncated",
+            ],
+          },
+        },
+      },
+    },
+  }, { headers: { "Cache-Control": "max-age=60, s-maxage=6000" } });
 };
- 
-export default function Index() {  
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  return new Response(JSON.stringify({ test: "died" }));
+};
+
+export default function IndexRoute() {
+  const string = useLoaderData<typeof loader>();
   const lFetcher = useFetcher();
+  const lFetcher2 = useFetcher();
   const pFetcher = useFetcher();
   const submit = useSubmit();
   const data = new FormData();
   data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
-      <Button
-        onClick={(e) => {
-          console.log(e);
-          lFetcher.submit(null, { method: "get", action: "/" })
-        }}
-      >
-        FETCHER Loader
-      </Button>
-      <button
-        onClick={() => pFetcher.submit(data, { method: "POST", action: "/" })}
-      >
-        FETCHER Action
-      </button>
-    
-     
-      <button onClick={() => submit(null, { method: "POST", action: "/" })}>
-        SUBMIT Action
-      </button>
-      <button onClick={() => submit(data, { method: "PATCH", action: "/" })}>
-        SUBMIT Action PATCH
-      </button>
-      <button onClick={() => submit(null, { method: "DELETE", action: "/" })}>
-        SUBMIT Action DELETE
-      </button>
-      <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
-        SUBMIT Action PUT
-      </button>
-     
+      <h1>Welcome to Remix 3</h1>
+       <Outlet />
       <Link to="/login">Login</Link>
+      <form></form>
       <ul>
         <li>
           <a
@@ -82,7 +74,12 @@ export default function Index() {
             Deep Dive Jokes App Tutorial
           </a>
         </li>
+        <a>
+          <a></a>
+        </a>
+        <form />
         <li>
+         
           <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
             Remix Docs
           </a>
@@ -91,3 +88,7 @@ export default function Index() {
     </div>
   );
 }
+
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  return null;
+};

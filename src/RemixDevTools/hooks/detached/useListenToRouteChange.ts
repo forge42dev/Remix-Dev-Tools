@@ -1,8 +1,9 @@
 import { useLocation, useNavigate, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { useAttachListener } from '../useAttachListener.js';
-import { getStorageItem, setStorageItem } from '../../utils/storage.js';
-import { useDetachedWindowControls } from '../../context/useRDTContext.js';
+import { useAttachListener } from "../useAttachListener.js";
+import { getStorageItem, setStorageItem } from "../../utils/storage.js";
+import { useDetachedWindowControls } from "../../context/useRDTContext.js";
+import { detachedModeSetup } from "../../context/RDTContext.js";
 
 export const LOCAL_STORAGE_ROUTE_KEY = "rdt_route";
 
@@ -22,8 +23,12 @@ export const useListenToRouteChange = () => {
 
   // Used by the owner window only
   useEffect(() => {
+    const { detachedWindowOwner } = detachedModeSetup();
+    if (!detachedWindowOwner) {
+      return;
+    }
     // If the route changes and this is the original window store the event into local storage
-    if (route !== locationRoute && detachedWindowOwner) {
+    if (route !== locationRoute) {
       setRouteInLocalStorage(locationRoute);
     }
   }, [locationRoute, detachedWindowOwner, route]);

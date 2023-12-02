@@ -31,7 +31,7 @@ export default function App() {
       </head>
       <body>
        <Form method="post">
-        
+        <input readOnly type="text" name="name" value={"name"} />
        <button type="submit">  
           Submit
         </button>

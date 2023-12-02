@@ -25,6 +25,7 @@ import { useOpenElementSource } from "./hooks/useOpenElementSource.js";
 import { RdtPlugin } from "../client.js";
 import { useAttachBodyListener } from "./hooks/useAttachListener.js";
 import { useDebounce } from "./hooks/useDebounce.js";
+import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.js";
 
 const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
@@ -34,7 +35,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useSyncStateWhenDetached();
   useDevServerConnection();
   useOpenElementSource();
-
+  useListenToRouteChange();
   const url = useLocation().search;
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
