@@ -37,7 +37,7 @@ export const actionLog = (message: string) => {
   if (config.logs?.actions === false) {
     return;
   }
-  log(`${chalk.red.bold("ACTION")} ${message}`);
+  log(`${chalk.yellowBright.bold("ACTION")} ${message}`);
 };
 
 export const successLog = (message: string) => {

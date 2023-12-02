@@ -2,7 +2,7 @@ import { TimelineEvent } from "./timeline/types.js";
 import type { Tabs } from "../tabs/index.js";
 import { Terminal } from "./terminal/types.js";
 import { ActionEvent, LoaderEvent } from "../../dev-server/event-queue.js";
-import { cutArrayToLastN } from "../utils/common.js";
+import { cutArrayToFirstN } from "../utils/common.js";
 
 export const defaultServerRouteState: ServerRouteInfo = {
   highestExecutionTime: 0,
@@ -268,7 +268,7 @@ export const rdtReducer = (
     case "SET_TIMELINE_EVENT":
       return {
         ...state,
-        timeline: cutArrayToLastN([payload, ...state.timeline], 30),
+        timeline: cutArrayToFirstN([payload, ...state.timeline], 30),
       };
 
     case "SET_WHOLE_STATE": {

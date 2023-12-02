@@ -2,7 +2,6 @@ import type { Dispatch } from "react";
 import React, { useMemo, createContext, useReducer, useEffect } from "react";
 import { RemixDevToolsActions, RemixDevToolsState, rdtReducer, initialState } from "./rdtReducer.js";
 import { useRemoveBody } from "../hooks/detached/useRemoveBody.js";
-import { useListenToRouteChange } from "../hooks/detached/useListenToRouteChange.js";
 import {
   setSessionItem,
   setStorageItem,
@@ -84,7 +83,7 @@ export const getExistingStateFromStorage = () => {
 export const RDTContextProvider = ({ children }: ContextProps) => {
   const [state, dispatch] = useReducer<typeof rdtReducer>(rdtReducer, getExistingStateFromStorage());
   const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
-  useListenToRouteChange();
+
   useRemoveBody(state);
 
   useEffect(() => {

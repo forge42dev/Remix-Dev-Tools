@@ -1,30 +1,29 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
-import { Link, useFetcher,  useSubmit } from "@remix-run/react"; 
-import { Button } from "../components/Button";
+import type { ActionArgs } from "@remix-run/node";
+import {   redirect, type LoaderArgs, defer } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/node";
+import { Link, useFetcher,   useSubmit } from "@remix-run/react";
+import { EmbeddedDevTools } from "remix-development-tools";
 
-export const meta: MetaFunction = () => {
+export const meta: V2_MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
- 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-   
+
+export const loader = async ({ request }: LoaderArgs) => {
   const test = new Promise((resolve) => {
     setTimeout(() => {
       resolve("test");
     }, 1000);
   })
   return defer({ message: "Hello World!", test });
-}; 
- 
-export const action = async ({ request }: ActionFunctionArgs) => {
+};
+
+export const action = async ({ request }: ActionArgs) => {
   return redirect("/login");
 };
- 
+
 export default function Index() {  
   const lFetcher = useFetcher();
   const pFetcher = useFetcher();
@@ -34,21 +33,16 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
-      <Button
-        onClick={(e) => {
-          console.log(e);
-          lFetcher.submit(null, { method: "get", action: "/" })
-        }}
+      <button
+        onClick={() => lFetcher.submit(null, { method: "get", action: "/" })}
       >
         FETCHER Loader
-      </Button>
+      </button>
       <button
         onClick={() => pFetcher.submit(data, { method: "POST", action: "/" })}
       >
         FETCHER Action
       </button>
-    
-     
       <button onClick={() => submit(null, { method: "POST", action: "/" })}>
         SUBMIT Action
       </button>
@@ -61,7 +55,9 @@ export default function Index() {
       <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
         SUBMIT Action PUT
       </button>
-     
+      <div style={{ height: 400, overflowY: "auto",  width: 1700 }}>
+        <EmbeddedDevTools className="!h-[400px] !overflow-y-auto" mainPanelClassName="w-40" />
+      </div>
       <Link to="/login">Login</Link>
       <ul>
         <li>
