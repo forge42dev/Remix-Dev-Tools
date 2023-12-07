@@ -72,8 +72,10 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
       <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
         <Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
         <MainPanel isOpen={isOpen}>
-          <Tabs plugins={plugins} setIsOpen={setIsOpen} />
-          <ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />
+          <div className="rdt-flex rdt-h-full">
+            <Tabs plugins={plugins} setIsOpen={setIsOpen} />
+            <ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />
+          </div>
         </MainPanel>
       </div>
     </>

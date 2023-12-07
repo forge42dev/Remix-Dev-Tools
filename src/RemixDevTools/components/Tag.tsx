@@ -2,11 +2,11 @@ import clsx from "clsx";
 import { ReactNode } from "react";
 
 export const TAG_COLORS = {
-  GREEN: "rdt-bg-green-500 rdt-text-white",
-  BLUE: "rdt-bg-blue-500 rdt-text-white",
-  TEAL: "rdt-bg-teal-400 rdt-text-white",
-  RED: "rdt-bg-red-500 rdt-text-white",
-  PURPLE: "rdt-bg-purple-500 rdt-text-white",
+  GREEN: "rdt-border-green-500 rdt-border rdt-border-solid rdt-text-white",
+  BLUE: "rdt-border-blue-500 rdt-border rdt-border-solid rdt-text-white",
+  TEAL: "rdt-border-teal-400 rdt-border rdt-border-solid rdt-text-white",
+  RED: "rdt-border-red-500 rdt-border rdt-border-solid rdt-text-white",
+  PURPLE: "rdt-border-purple-500 rdt-border rdt-border-solid rdt-text-white",
 } as const;
 
 interface TagProps {

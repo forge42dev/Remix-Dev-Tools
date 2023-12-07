@@ -17,7 +17,9 @@ export type IconName =
   | "Check"
   | "Activity"
   | "Accessibility"
-  | "Shield";
+  | "Shield"
+  | "Root"
+  | "Layout";
 
 export const iconNames = [
   "X",
@@ -37,4 +39,6 @@ export const iconNames = [
   "Activity",
   "Accessibility",
   "Shield",
+  "Root",
+  "Layout",
 ] as const;

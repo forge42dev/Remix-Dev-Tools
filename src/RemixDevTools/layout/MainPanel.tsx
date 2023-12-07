@@ -35,12 +35,12 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
         ...(!isEmbedded && { height: detachedWindow ? window.innerHeight : height }),
       }}
       className={clsx(
-        "rdt-duration-600 rdt-bg-main rdt-box-border rdt-flex rdt-w-screen rdt-flex-col rdt-overflow-auto rdt-text-white rdt-opacity-0 rdt-transition-all",
+        "rdt-duration-600 rdt-box-border rdt-flex rdt-w-screen rdt-flex-col rdt-overflow-auto rdt-bg-main rdt-text-white rdt-opacity-0 rdt-transition-all",
         isOpen ? "rdt-opacity-100 rdt-drop-shadow-2xl" : "rdt-h-0",
         isResizing && "rdt-cursor-grabbing ",
         !isEmbedded
           ? `rdt-fixed rdt-left-0 ${
-              panelLocation === "bottom" ? "rdt-bottom-0" : "rdt-border-main rdt-top-0 rdt-border-b-2"
+              panelLocation === "bottom" ? "rdt-bottom-0" : "rdt-top-0 rdt-border-b-2 rdt-border-main"
             }`
           : "",
         className

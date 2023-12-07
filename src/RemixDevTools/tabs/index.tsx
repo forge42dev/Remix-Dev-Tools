@@ -19,7 +19,7 @@ export interface Tab {
 export const tabs = [
   {
     name: "Active page",
-    icon: <Icon name="Layers" />,
+    icon: <Icon size="md" name="Layers" />,
     id: "page",
     component: <PageTab />,
     requiresForge: false,
@@ -27,7 +27,7 @@ export const tabs = [
   },
   {
     name: "Routes",
-    icon: <Icon name="GitMerge" />,
+    icon: <Icon size="md" name="GitMerge" />,
     id: "routes",
     component: <RoutesTab />,
     requiresForge: false,
@@ -35,7 +35,7 @@ export const tabs = [
   },
   {
     name: "Terminal",
-    icon: <Icon name="Terminal" />,
+    icon: <Icon size="md" name="Terminal" />,
     id: "terminal",
     component: <TerminalTab />,
     requiresForge: true,
@@ -43,7 +43,7 @@ export const tabs = [
   },
   {
     name: "Errors",
-    icon: <Icon name="Shield" />,
+    icon: <Icon size="md" name="Shield" />,
     id: "errors",
     component: <ErrorsTab />,
 
@@ -52,7 +52,7 @@ export const tabs = [
   },
   {
     name: "Settings",
-    icon: <Icon name="Settings" />,
+    icon: <Icon size="md" name="Settings" />,
     id: "settings",
     component: <SettingsTab />,
     requiresForge: false,

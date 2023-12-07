@@ -139,7 +139,7 @@ const extractHeadersFromResponseOrRequest = (response: Response | Request) => {
   const headers = new Headers(response.headers);
   return Object.fromEntries(headers.entries());
 };
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const extractDataFromResponseOrRequest = async (response: Response | Request): Promise<null | unknown> => {
   try {
     const extractable = new Response(response.body, response);
@@ -178,7 +178,7 @@ const storeAndEmitActionOrLoaderInfo = async (
       id: route.id,
       executionTime: end,
       timestamp: new Date().getTime(),
-      requestData: await extractDataFromResponseOrRequest(args.request),
+      //requestData: await extractDataFromResponseOrRequest(args.request),
       requestHeaders,
       responseHeaders,
     },

@@ -76,9 +76,9 @@ const TimelineTab = () => {
       {timeline.length > 0 && (
         <button
           onClick={() => clearTimeline()}
-          className="rdt-absolute rdt-right-3 rdt-top-0 rdt-z-20 rdt-cursor-pointer rdt-rounded-lg rdt-bg-red-500 rdt-px-3 rdt-py-1 rdt-text-sm rdt-font-semibold rdt-text-white"
+          className="rdt-absolute rdt-right-3 rdt-top-0 rdt-z-20 rdt-cursor-pointer rdt-rounded-lg rdt-border rdt-border-red-500 rdt-px-3 rdt-py-1 rdt-text-sm rdt-font-semibold rdt-text-white"
         >
-          Clear Timeline
+          Clear
         </button>
       )}
       <ol className="rdt-relative">

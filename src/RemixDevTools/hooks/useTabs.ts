@@ -38,5 +38,12 @@ export const useTabs = (isConnected: boolean, isConnecting: boolean, pluginsArra
     }
   }, [isConnected, isConnecting, activeTab, setSettings, plugins]);
 
-  return { visibleTabs, Component, allTabs, hideTimeline, isPluginTab: !tabs.find((tab) => activeTab === tab.id) };
+  return {
+    visibleTabs,
+    Component,
+    allTabs,
+    hideTimeline,
+    activeTab,
+    isPluginTab: !tabs.find((tab) => activeTab === tab.id),
+  };
 };

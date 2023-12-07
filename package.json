@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "3.5.1",
+  "version": "3.6.0",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -93,7 +93,7 @@
     "dev": "npm-run-all -s build -p remix cjs-watch",
     "dev:esm": "npm-run-all -s build -p remix-esm esm-watch",
     "dev:epic": "npm-run-all -s build -p remix-epic esm-watch",
-    "dev:vite": "npm-run-all -s tsup:vite -p tsup:vite:watch remix-vite",
+    "dev:vite": "npm-run-all -s tsup:vite -p tsup:vite:watch remix-vite esm-watch",
     "cjs-watch": "npm-run-all -p tsup:dev-server-cjs:watch tsup:rdt:watch",
     "esm-watch": "npm-run-all -p tsup:dev-server-esm:watch tsup:rdt:watch",
     "build": "run-s  tsup:* -- --clean",

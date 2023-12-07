@@ -9,7 +9,7 @@ const VsCodeButton = ({ onClick }: VsCodeButtonProps) => {
     <button
       onClick={onClick}
       className={clsx(
-        "rdt-ml-1 rdt-mr-2 rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-1 rdt-rounded rdt-border rdt-border-[#1F9CF0] rdt-px-2.5 rdt-py-0.5 rdt-text-sm rdt-font-medium rdt-text-[#1F9CF0]"
+        "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-1 rdt-rounded rdt-border rdt-border-[#1F9CF0] rdt-px-2.5 rdt-py-0.5 rdt-text-sm rdt-font-medium rdt-text-[#1F9CF0]"
       )}
     >
       <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">

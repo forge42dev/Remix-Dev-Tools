@@ -6,10 +6,11 @@ import { CacheInfo } from "./CacheInfo.js";
 import { VsCodeButton } from "./VScodeButton.js";
 import { JsonRenderer } from "./jsonRenderer.js";
 import { ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js";
-import { Tag } from "./Tag.js";
+
 import { InfoCard } from "./InfoCard.js";
 import { useDevServerConnection } from "../hooks/useDevServerConnection.js";
 import { Icon } from "./icon/Icon.js";
+import clsx from "clsx";
 
 const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {
@@ -54,6 +55,14 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
   };
 };
 
+export const ROUTE_COLORS = {
+  GREEN: "rdt-bg-green-500 rdt-ring-green-500 rdt-text-white",
+  BLUE: "rdt-bg-blue-500 rdt-ring-blue-500 rdt-text-white",
+  TEAL: "rdt-bg-teal-400 rdt-ring-teal-400 rdt-text-white",
+  RED: "rdt-bg-red-500 rdt-ring-red-500 rdt-text-white",
+  PURPLE: "rdt-bg-purple-500 rdt-ring-purple-500 rdt-text-white",
+} as const;
+
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
   const { server, setServerInfo } = useServerInfo();
   const { isConnected, sendJsonMessage } = useDevServerConnection();
@@ -85,39 +94,44 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
       onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
       className="rdt-mb-8 rdt-ml-8"
     >
-      <Icon
-        name="CornerDownRight"
-        className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900"
-      />
-      <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
+      <div
+        className={clsx(
+          "rdt-absolute -rdt-left-4 rdt-flex rdt-h-8 rdt-w-8 rdt-items-center rdt-justify-center rdt-rounded-full",
+          ROUTE_COLORS[isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"]
+        )}
+      >
+        <Icon name={isRoot ? "Root" : isLayout ? "Layout" : "CornerDownRight"} size="sm" />
+      </div>
+      <h3 className="rdt-text-md -rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-justify-between rdt-gap-2 rdt-font-semibold rdt-text-white">
         {route.pathname}
-        <Tag color={isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"}>
-          {isRoot ? "ROOT" : isLayout ? "LAYOUT" : "ROUTE"}
-        </Tag>
-        {isConnected && (
-          <VsCodeButton
-            onClick={() =>
-              sendJsonMessage({
-                type: "open-source",
-                data: { source: `app/${route.id}` },
-              })
-            }
-          />
-        )}
-        {cacheControl && serverInfo?.lastLoader.timestamp && (
-          <CacheInfo
-            key={JSON.stringify(serverInfo?.lastLoader ?? "")}
-            cacheControl={cacheControl}
-            cacheDate={new Date(serverInfo?.lastLoader.timestamp ?? "")}
-          />
-        )}
+
+        <div className="rdt-flex rdt-gap-2">
+          {cacheControl && serverInfo?.lastLoader.timestamp && (
+            <CacheInfo
+              key={JSON.stringify(serverInfo?.lastLoader ?? "")}
+              cacheControl={cacheControl}
+              cacheDate={new Date(serverInfo?.lastLoader.timestamp ?? "")}
+            />
+          )}
+          {isConnected && (
+            <VsCodeButton
+              onClick={() =>
+                sendJsonMessage({
+                  type: "open-source",
+                  data: { source: `app/${route.id}` },
+                })
+              }
+            />
+          )}
+        </div>
       </h3>
       <div className="rdt-mb-4">
-        <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500  ">
-          Route location: {route.id}
-        </time>
-        <div className="rdt-flex rdt-gap-3">
-          {loaderData && <InfoCard title="Route loader data">{<JsonRenderer data={loaderData} />}</InfoCard>}
+        <p className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500  ">
+          Route segment file: {route.id}
+        </p>
+
+        <div className="rdt-flex rdt-flex-wrap rdt-gap-6">
+          {loaderData && <InfoCard title="Loader data">{<JsonRenderer data={loaderData} />}</InfoCard>}
           {serverInfo && (
             <InfoCard onClear={clearServerInfoForRoute} title="Server Info">
               <JsonRenderer data={cleanServerInfo(serverInfo)} />

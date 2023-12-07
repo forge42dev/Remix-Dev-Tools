@@ -43,36 +43,33 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
         </>
       )}
       <div className="rdt-flex rdt-gap-2">
-        <span className="rdt-text-gray-500">Key:</span>
+        <span className="rdt-whitespace-nowrap rdt-text-gray-500">Route file:</span>
         {route.id}
       </div>
       <div className="rdt-mb-4 rdt-mt-4 rdt-flex rdt-flex-col rdt-gap-2">
         <span className="rdt-text-gray-500">Components contained in the route:</span>
         <div className="rdt-flex rdt-gap-2">
-          <Tag color={route.hasLoader ? "GREEN" : "RED"}>Loader</Tag>
-          <Tag color={route.hasAction ? "GREEN" : "RED"}>Action</Tag>
+          <Tag className="rdt-h-max" color={route.hasLoader ? "GREEN" : "RED"}>
+            Loader
+          </Tag>
+          <Tag className="rdt-h-max" color={route.hasAction ? "GREEN" : "RED"}>
+            Action
+          </Tag>
 
-          <div
-            className={clsx(
-              "rdt-flex rdt-gap-2 rdt-rounded-md rdt-border",
-              !hasErrorBoundary ? "rdt-border-red-500" : "rdt-border-green-500"
-            )}
+          <Tag
+            className={clsx(hasErrorBoundary && "rdt-rounded-br-none rdt-rounded-tr-none")}
+            color={hasErrorBoundary ? "GREEN" : "RED"}
           >
-            <Tag
-              className={clsx(hasErrorBoundary && "rdt-rounded-br-none rdt-rounded-tr-none")}
-              color={hasErrorBoundary ? "GREEN" : "RED"}
-            >
-              ErrorBoundary
-            </Tag>
-            {hasErrorBoundary ? (
-              <div className="rdt-mr-2">
-                {hasParentErrorBoundary
-                  ? `Covered by parent ErrorBoundary: ${route.errorBoundary.errorBoundaryId}`
-                  : "Contains ErrorBoundary"}
-              </div>
-            ) : null}
-          </div>
+            ErrorBoundary
+          </Tag>
         </div>
+        {hasErrorBoundary ? (
+          <div className="rdt-mr-2">
+            {hasParentErrorBoundary
+              ? `Covered by parent ErrorBoundary located in: ${route.errorBoundary.errorBoundaryId}`
+              : ""}
+          </div>
+        ) : null}
       </div>
       {hasWildcard && (
         <>

@@ -46,13 +46,14 @@ const Tab = ({
     <div
       onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabType }))}
       className={clsx(
-        "rdt-relative rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-gap-2 rdt-border-0 rdt-border-b rdt-border-r-2 rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-px-4 rdt-font-sans rdt-transition-all",
+        "rdt-relative  rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-justify-center rdt-border-0 rdt-border-b rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-p-2 rdt-font-sans rdt-transition-all",
         activeTab !== tab.id && "rdt-hover:opacity-50",
         activeTab === tab.id && "rdt-bg-[#212121]",
+        "hover:rdt-bg-[#212121]/50",
         className
       )}
     >
-      {tab.icon} {tab.name}
+      {tab.icon}
     </div>
   );
 };
@@ -82,36 +83,26 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
     }
   };
   return (
-    <div className="rdt-relative rdt-flex rdt-h-8 rdt-w-full rdt-bg-gray-800">
+    <div className="rdt-relative rdt-flex rdt-h-full rdt-bg-gray-800">
       <div
         ref={scrollRef}
-        className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-overflow-x-auto rdt-overflow-y-hidden"
+        className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-flex-col rdt-overflow-x-auto rdt-overflow-y-hidden"
       >
         {visibleTabs.map((tab) => (
           <Tab
             key={tab.id}
-            tab={
-              tab.id === "errors"
-                ? {
-                    ...tab,
-                    name: (
-                      <div className="rdt-inline-flex rdt-items-center rdt-gap-1">
-                        {tab.name}
-                        {htmlErrors.length > 0 && (
-                          <span className="rdt-animate-pulse rdt-font-bold rdt-text-red-600">
-                            ({htmlErrors.length})
-                          </span>
-                        )}
-                      </div>
-                    ),
-                  }
-                : tab
-            }
+            tab={tab}
             activeTab={activeTab}
-            className="rdt-cursor-pointer rdt-duration-300"
+            className={clsx(
+              "rdt-cursor-pointer rdt-duration-300",
+              tab.id === "errors" &&
+                activeTab !== "errors" &&
+                htmlErrors.length &&
+                "rdt-animate-pulse rdt-font-bold rdt-text-red-600 rdt-duration-1000"
+            )}
           />
         ))}
-        <div className={clsx("rdt-ml-auto rdt-flex rdt-items-center rdt-gap-2", detachedWindow ? "" : "rdt-pr-4")}>
+        <div className={clsx("rdt-mt-auto rdt-flex rdt-w-full rdt-flex-col rdt-items-center")}>
           {shouldShowConnectToForge && (
             <Tab
               tab={{
@@ -120,13 +111,13 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
                 requiresForge: false,
                 hideTimeline: false,
                 component: <></>,
-                icon: <Icon name="Radio" className="rdt-h-4 rdt-w-4" />,
+                icon: <Icon name="Radio" size="md" />,
               }}
               className={twMerge(
                 clsx(
                   isConnecting && "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default",
-                  "rdt-ml-auto rdt-h-full",
-                  detachedWindow ? "rdt-mr-0" : "rdt-mr-2 rdt-border-r-2"
+                  "rdt-mt-auto rdt-w-full rdt-pb-2",
+                  detachedWindow ? "rdt-mr-0" : "rdt-border-b"
                 )
               )}
               onClick={() => setSettings({ shouldConnectWithForge: true })}
@@ -135,19 +126,32 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
           {!detachedWindow && setIsOpen && (
             <>
               {!detachedWindowOwner && (
-                <Icon
-                  name="CopySlash"
-                  onClick={handleDetachment}
-                  className="rdt-cursor-pointer rdt-transition-all hover:rdt-text-green-600"
+                <Tab
+                  className="rdt-transition-all hover:rdt-text-green-600"
+                  tab={{
+                    icon: <Icon name="CopySlash" size="md" onClick={handleDetachment} />,
+                    id: "detach",
+                    name: "Detach",
+                    requiresForge: false,
+                    hideTimeline: false,
+                    component: <></>,
+                  }}
                 />
               )}
-              <Icon
-                name="X"
+              <Tab
+                className="hover:rdt-text-red-600"
+                tab={{
+                  icon: <Icon name="X" size="md" />,
+                  id: "close",
+                  name: "Close",
+                  requiresForge: false,
+                  hideTimeline: false,
+                  component: <></>,
+                }}
                 onClick={() => {
                   setPersistOpen(false);
                   setIsOpen(false);
                 }}
-                className="rdt-h-6 rdt-w-6   rdt-cursor-pointer rdt-transition-all hover:rdt-text-red-600"
               />
             </>
           )}
