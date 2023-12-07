@@ -5,7 +5,7 @@ import { cn } from "../util.js";
 export enum IconSize {
   xs = "12",
   sm = "16",
-  md = "24",
+  md = "20",
   lg = "32",
   xl = "40",
   "2xl" = "80",

@@ -46,7 +46,7 @@ const Tab = ({
     <div
       onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabType }))}
       className={clsx(
-        "rdt-relative  rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-justify-center rdt-border-0 rdt-border-b rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-p-2 rdt-font-sans rdt-transition-all",
+        "rdt-group rdt-relative rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-justify-center rdt-border-0 rdt-border-b rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-p-2 rdt-font-sans rdt-transition-all",
         activeTab !== tab.id && "rdt-hover:opacity-50",
         activeTab === tab.id && "rdt-bg-[#212121]",
         "hover:rdt-bg-[#212121]/50",
@@ -54,6 +54,14 @@ const Tab = ({
       )}
     >
       {tab.icon}
+      <div
+        className={clsx(
+          "rdt-duration-400 rdt-invisible rdt-text-white rdt-opacity-0 rdt-transition-all after:rdt-absolute after:-rdt-left-2 after:rdt-top-1/2 after:rdt-h-0 after:rdt-w-0 after:-rdt-translate-y-1/2 after:-rdt-rotate-90 after:rdt-border-x-4 after:rdt-border-b-[6px] after:rdt-border-x-transparent after:rdt-border-b-gray-700 group-hover:rdt-visible",
+          "rdt-absolute rdt-left-full rdt-z-50 rdt-ml-2 rdt-whitespace-nowrap rdt-rounded rdt-border rdt-border-gray-700 rdt-bg-gray-800 rdt-px-2 group-hover:rdt-opacity-100"
+        )}
+      >
+        {tab.name}
+      </div>
     </div>
   );
 };
@@ -84,14 +92,14 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
   };
   return (
     <div className="rdt-relative rdt-flex rdt-h-full rdt-bg-gray-800">
-      <div
-        ref={scrollRef}
-        className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-flex-col rdt-overflow-x-auto rdt-overflow-y-hidden"
-      >
+      <div ref={scrollRef} className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-flex-col  ">
         {visibleTabs.map((tab) => (
           <Tab
             key={tab.id}
-            tab={tab}
+            tab={{
+              ...tab,
+              name: tab.id === "errors" && htmlErrors.length ? `Errors (${htmlErrors.length})` : tab.name,
+            }}
             activeTab={activeTab}
             className={clsx(
               "rdt-cursor-pointer rdt-duration-300",
