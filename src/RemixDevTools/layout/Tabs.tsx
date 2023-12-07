@@ -49,11 +49,10 @@ const Tab = ({
         "rdt-group rdt-relative rdt-flex rdt-shrink-0 rdt-cursor-pointer rdt-items-center rdt-justify-center rdt-border-0 rdt-border-b rdt-border-solid rdt-border-b-[#212121] rdt-border-r-[#212121] rdt-p-2 rdt-font-sans rdt-transition-all",
         activeTab !== tab.id && "rdt-hover:opacity-50",
         activeTab === tab.id && "rdt-bg-[#212121]",
-        "hover:rdt-bg-[#212121]/50",
-        className
+        "hover:rdt-bg-[#212121]/50"
       )}
     >
-      {tab.icon}
+      <div className={className}>{tab.icon}</div>
       <div
         className={clsx(
           "rdt-duration-400 rdt-invisible rdt-text-white rdt-opacity-0 rdt-transition after:rdt-absolute after:-rdt-left-2 after:rdt-top-1/2 after:rdt-h-0 after:rdt-w-0 after:-rdt-translate-y-1/2 after:-rdt-rotate-90 after:rdt-border-x-4 after:rdt-border-b-[6px] after:rdt-border-x-transparent after:rdt-border-b-gray-700 group-hover:rdt-visible",
