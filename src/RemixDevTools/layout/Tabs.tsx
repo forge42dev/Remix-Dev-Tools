@@ -123,8 +123,8 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
               className={twMerge(
                 clsx(
                   isConnecting && "rdt-pointer-events-none rdt-animate-pulse rdt-cursor-default",
-                  "rdt-mt-auto rdt-w-full rdt-pb-2",
-                  detachedWindow ? "rdt-mr-0" : "rdt-border-b"
+                  "rdt-mt-auto rdt-w-full ",
+                  detachedWindow ? "rdt-mr-0" : ""
                 )
               )}
               onClick={() => setSettings({ shouldConnectWithForge: true })}
