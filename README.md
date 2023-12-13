@@ -69,7 +69,7 @@ If you're using CJS instead of ESM you can do the following instead:
 if(process.env.NODE_ENV === 'development') { 
 - const { withDevTools } = await import("remix-development-tools"); 
 + const { withDevTools } = require("remix-development-tools"); 
-  AppExport = withDevTools
+  AppExport = withDevTools(AppExport);
 }
 export default AppExport;
 
