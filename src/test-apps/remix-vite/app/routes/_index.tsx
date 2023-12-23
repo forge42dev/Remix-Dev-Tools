@@ -22,7 +22,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 }; 
  
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return redirect("/login");
+  return redirect("");
 };
  
 export default function Index() {  

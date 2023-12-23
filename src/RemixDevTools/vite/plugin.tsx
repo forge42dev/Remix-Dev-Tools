@@ -4,10 +4,48 @@ import { parse } from "es-module-lexer";
 import { cutArrayToLastN } from "../utils/common.js";
 import { handleGoToSource } from "../../dev-server/init.js";
 import { DevToolsServerConfig } from "../../dev-server/config.js";
-import { handleDevToolsViteRequest, processPlugins } from "./utils.js";
+import { createRouteTreeFromAst, handleDevToolsViteRequest, processPlugins, rewriteTypeFile } from "./utils.js";
 import { ActionEvent, LoaderEvent } from "../../dev-server/event-queue.js";
+import { writeFile } from "fs/promises";
 
 const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>();
+
+const type = [
+  "type Path = Record<string, any> & {",
+  "  path: string,",
+  "  children?: Array<Path>",
+  "}",
+  "",
+  "type GetParentPath<ParentPath extends string> = ",
+  "  ParentPath extends '' ? ",
+  "    '' ",
+  "    : ParentPath extends '/' ? ",
+  "      '/' ",
+  "      : `${ParentPath}/`",
+  "",
+  "type TParam<T extends string> = string & {} | `:${T}`",
+  "",
+  "type ExtractParams<T extends string> = ",
+  "  T extends `${infer Path extends string}:${infer Param extends string}` ",
+  "    ? Param extends `${infer NestedParam extends string}/${infer NestedPath extends string}` ",
+  "      ? `${Path}${TParam<NestedParam>}/${NestedPath}`",
+  "      : `${Path}${TParam<Param>}`",
+  "    : T",
+  "",
+  "type ExtractPath<P extends Path, ParentPath extends string> = {",
+  "  [K in keyof P]: K extends 'children' ? ",
+  "                    P[K] extends Array<Path> ? ",
+  "                      AllRoutes<P[K], `${GetParentPath<ParentPath>}${ExtractParams<P['path']>}`> ",
+  "                      : never ",
+  "                    : K extends 'path' ? ",
+  "                      `${GetParentPath<ParentPath>}${ExtractParams<P[K]>}` ",
+  "                      : never ",
+  "}[keyof P]",
+  "",
+  "type AllRoutes<R extends Array<Path>, ParentPath extends string = ''> = {",
+  "  [K in keyof R]: ExtractPath<R[K], ParentPath>",
+  "}[number]",
+];
 
 export const remixDevTools: (args?: {
   pluginDir?: string;
@@ -19,6 +57,59 @@ export const remixDevTools: (args?: {
   const pluginNames = plugins.map((p) => p.name);
   let port = 5173;
   return [
+    {
+      name: "remix-typed-navigation",
+      apply(config) {
+        return config.mode === "development";
+      },
+      transform(code, id) {
+        if (id.includes("virtual:server-entry")) {
+          const ast: any = this.parse(code, { sourceType: "module" });
+          // Server runtime to output the types to (this won't work in mono-repos)
+          const serverRuntimeDist = "./node_modules/@remix-run/server-runtime/dist";
+          // Router dist to output the types to (could include react-router too);
+          const routerDist = "./node_modules/@remix-run/router/dist";
+          // Locations of the type files we need to override
+          const navigateTypeDefFile = `${routerDist}/history.d.ts`;
+          const redirectTypeDefFile = `${serverRuntimeDist}/responses.d.ts`;
+          // name of our file that will contain the routes and typing
+          const routeFileName = "route-names";
+          const typeImport = `import { type Routes } from './${routeFileName}';`;
+          // Creates the route object identical to the export from the virtual module.
+          const routeTree = createRouteTreeFromAst(ast);
+          // Creates the file content
+          const routesFileContent = [
+            type.join("\n"),
+            "\n",
+            `const routes = ${JSON.stringify(routeTree, null, 2)} as const satisfies Path[];`,
+            "\n",
+            `export type Routes = AllRoutes<typeof routes>;`,
+          ].join("\n");
+          // Outputs the files
+          writeFile(`${serverRuntimeDist}/${routeFileName}.ts`, routesFileContent);
+          writeFile(`${routerDist}/${routeFileName}.ts`, routesFileContent);
+
+          rewriteTypeFile(
+            (file) =>
+              file
+                .replace("pathname: string;", "pathname: Routes;")
+                .replace("export type To = string | Partial<Path>;", "export type To = Routes | Partial<Path>;"),
+            navigateTypeDefFile,
+            typeImport
+          );
+          rewriteTypeFile(
+            (file) =>
+              file.replace(
+                "export type RedirectFunction = (url: string",
+                "export type RedirectFunction = (url: Routes"
+              ),
+            redirectTypeDefFile,
+            typeImport
+          );
+        }
+        return code;
+      },
+    },
     {
       enforce: "post",
       name: "remix-development-tools-server",
