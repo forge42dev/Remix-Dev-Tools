@@ -97,7 +97,7 @@ export const remixDevTools: (args?: {
       },
       transform(code, id) {
         // Wraps loaders/actions
-        if (id.includes("virtual:server-entry")) {
+        if (id.includes("virtual:server-entry") || id.includes("virtual:remix/server-build")) {
           const updatedCode = [
             `import { augmentLoadersAndActions } from "remix-development-tools/server";`,
             code.replace("export const routes =", "const routeModules ="),

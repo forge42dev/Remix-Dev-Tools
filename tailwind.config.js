@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{tsx,ts,js}"],
+  content: ["./src/**/*.{tsx,ts,js}", "!./src/test-apps/**/*", "!node_modules"],
   theme: {
     extend: {
       colors: {
@@ -35,6 +35,6 @@ export default {
     },
   },
   prefix: "rdt-",
-  plugins: [require("tailwindcss-animate")],
+  plugins: [await import("tailwindcss-animate")],
   important: true,
 };

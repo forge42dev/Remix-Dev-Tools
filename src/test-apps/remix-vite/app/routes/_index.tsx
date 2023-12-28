@@ -47,7 +47,9 @@ export default function Index() {
       >
         FETCHER Action
       </button>
-    
+        <form>
+          <form></form>
+        </form>
      
       <button onClick={() => submit(null, { method: "POST", action: "/" })}>
         SUBMIT Action

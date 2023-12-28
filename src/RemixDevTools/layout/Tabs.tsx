@@ -89,22 +89,28 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
       rdtWindow.RDT_MOUNTED = true;
     }
   };
+
+  const getErrorCount = () => {
+    return htmlErrors.length + (window.HYDRATION_OVERLAY.ERROR ? 1 : 0);
+  } 
+
+  const hasErrors = getErrorCount() > 0;
   return (
     <div className="rdt-relative rdt-flex rdt-h-full rdt-bg-gray-800">
-      <div ref={scrollRef} className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-flex-col  ">
+      <div ref={scrollRef} className="remix-dev-tools-tab rdt-flex rdt-h-full rdt-w-full rdt-flex-col">
         {visibleTabs.map((tab) => (
           <Tab
             key={tab.id}
             tab={{
               ...tab,
-              name: tab.id === "errors" && htmlErrors.length ? `Errors (${htmlErrors.length})` : tab.name,
+              name: tab.id === "errors" && hasErrors ? `Errors (${getErrorCount()})` : tab.name,
             }}
             activeTab={activeTab}
             className={clsx(
               "rdt-cursor-pointer",
               tab.id === "errors" &&
                 activeTab !== "errors" &&
-                htmlErrors.length &&
+                hasErrors &&
                 "rdt-animate-pulse rdt-font-bold rdt-text-red-600 rdt-duration-1000"
             )}
           />

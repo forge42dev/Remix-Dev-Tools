@@ -61,7 +61,9 @@ export default function Index() {
       <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
         SUBMIT Action PUT
       </button>
-     
+     <form>
+      <form></form>
+     </form>
       <Link to="/login">Login</Link>
       <ul>
         <li>

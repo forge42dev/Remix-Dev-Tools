@@ -147,19 +147,21 @@ Just add the following command to your package.json:
 ## How it looks
 ### Server logger
 ![server logger](./assets/logs.png) 
-### Routes Tab (List view)
-![routes](./assets/routes.gif)
-### Routes Tab (Tree view)
-![routes](./assets/tree-view.png)
+### Routes Tab  
+![routes](./assets/routes-tab.png)
 ### Errors Tab
-![routes](./assets/errors-tab.gif)
+![errors](./assets/error-tab.png)
 ### Timeline
 ![timeline](./assets/timeline.gif)
-### Route boundaries & Active page panel
-![route boundaries](./assets/boundaries.png)
+### Active Page
+![active page](./assets/active-tab.png)
 
 
 ## What's new?
+
+## v3.7.0
+
+- Hydration mismatch detector! You can now see which elements are mismatched on the client and server. This can help you debug hydration issues a lot faster!
 
 ## v3.5.0
 - Vite plugin for Remix Vite support!

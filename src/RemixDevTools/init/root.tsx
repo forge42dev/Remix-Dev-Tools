@@ -1,6 +1,8 @@
 import { RemixDevTools, RemixDevToolsProps } from "../RemixDevTools.js";
 import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
+import { hydrationDetector } from "./hydration.js";
+
 let hydrating = true;
 
 function useHydrated() {
@@ -13,9 +15,11 @@ function useHydrated() {
 
   return hydrated;
 }
-export const defineClientConfig = (config: RemixDevToolsProps) => config;
+
+export const defineClientConfig = (config: RemixDevToolsProps) => config; 
 
 export const withDevTools = (Component: any, config?: RemixDevToolsProps) => () => {
+  hydrationDetector(false);
   const hydrated = useHydrated();
   if (!hydrated) return <Component />;
 
@@ -28,6 +32,7 @@ export const withDevTools = (Component: any, config?: RemixDevToolsProps) => () 
 };
 
 export const withViteDevTools = (Component: any, config?: RemixDevToolsProps) => () => {
+  hydrationDetector(true);
   function AppWithDevTools(props: any) {
     const hydrated = useHydrated();
     if (!hydrated) return <Component />;
