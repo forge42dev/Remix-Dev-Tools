@@ -10,7 +10,9 @@ import {
 import { LinksFunction, json } from "@remix-run/server-runtime";
 
 
-export const links: LinksFunction = () => []
+export function links()  {
+  return  []
+}
 
 export const loader = () => {
   return json({ message: "Hello World" });

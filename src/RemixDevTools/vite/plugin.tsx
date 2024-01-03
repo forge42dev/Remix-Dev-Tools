@@ -144,7 +144,7 @@ export const remixDevTools: (args?: {
               return line.replace("export let links", "const linksExport");
             }
             if (line.includes("export function links")) {
-              return line.replace("export function links", "const linksExport");
+              return line.replace("export function links", "function linksExport");
             }
             return line;
           });
