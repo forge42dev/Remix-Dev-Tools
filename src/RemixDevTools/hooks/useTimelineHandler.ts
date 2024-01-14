@@ -6,9 +6,53 @@ import { TimelineEvent } from "../context/timeline/types.js";
 const uniqueId = () => (Math.random() * Date.now()).toString();
 
 const convertFormDataToObject = (formData: FormData | undefined) => {
-  const data = formData && formData.entries ? Object.fromEntries(formData.entries()) : undefined;
-  const finalData = data && Object.keys(data).length > 0 ? data : undefined;
-  return finalData;
+  const obj: any = {};
+  if(!formData){
+    return undefined;
+  }
+
+  for (const key of formData.keys()) {
+    if (key.includes(".")) {
+      const [prefix, suffix] = key.split(".");
+      if(isNaN(parseInt(suffix))){
+        obj[prefix] ??= {};
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [_, element] of formData.getAll(key).entries()) {
+          obj[prefix][suffix] = element;
+        }
+      } else {
+        obj[prefix] ??= []
+        for (const [index, element] of formData.getAll(key).entries()) {
+          if(index  > 1){
+           obj[prefix][suffix] = [...obj[prefix][suffix], element];
+          }
+          else if(index === 1){
+           obj[prefix][suffix] = [obj[prefix][suffix], element];
+          } else {
+            obj[prefix][suffix]  = element;
+          }
+       }
+      }
+     
+    } else {
+      for (const [index, element] of formData.getAll(key).entries()) {
+        if(index  > 1){
+         obj[key] = [...obj[key], element];
+        }
+        else if(index === 1){
+         obj[key] = [obj[key], element];
+        } else {
+
+          obj[key]  = element;
+        }
+     }
+    }
+  
+  }
+  if(Object.keys(obj).length === 0  ){
+    return undefined;
+  }
+  return obj;
 };
 
 const useTimelineHandler = () => {
