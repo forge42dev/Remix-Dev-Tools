@@ -85,26 +85,35 @@ export const remixDevTools: (args?: {
             "\n",
             `export type Routes = AllRoutes<typeof routes>;`,
           ].join("\n");
-          // Outputs the files
-          writeFile(`${serverRuntimeDist}/${routeFileName}.ts`, routesFileContent);
-          writeFile(`${routerDist}/${routeFileName}.ts`, routesFileContent);
-
-          rewriteTypeFile(
-            (file) =>
-              file
-                .replace("pathname: string;", "pathname: Routes;")
-                .replace("export type To = string | Partial<Path>;", "export type To = Routes | Partial<Path>;"),
-            navigateTypeDefFile,
-            typeImport
-          );
-          rewriteTypeFile(
-            (file) =>
-              file.replace(
-                "export type RedirectFunction = (url: string",
-                "export type RedirectFunction = (url: Routes"
-              ),
-            redirectTypeDefFile,
-            typeImport
+          // Outputs the file
+          writeFile(`./node_modules/${routeFileName}.ts`, routesFileContent);
+          writeFile(
+            "./route-gen.d.ts",
+            [
+              `import { TypedResponse } from "@remix-run/node";`,
+              `import { Routes } from "./node_modules/${routeFileName}";`,
+              `import type { To, Path } from "@remix-run/router";`,
+              "",
+              `declare module "@remix-run/router" {`,
+              `  interface Path extends Path {`,
+              "    // @ts-ignore",
+              `    pathname: Routes;`,
+              `  }`,
+              `  type To = Routes | Partial<Path>;`,
+              `}`,
+              `declare module "react-router" {`,
+              `  interface Path extends Path {`,
+              "    // @ts-ignore",
+              `    pathname: Routes;`,
+              `  }`,
+              `  type To = Routes | Partial<Path>;`,
+              `}`,
+              "",
+              `declare module "@remix-run/server-runtime" {`,
+              `  type RedirectFunction = (url: Routes, init?: number | ResponseInit) => TypedResponse<never>;`,
+              `}`,
+              `export {}`,
+            ].join("\n")
           );
         }
         return code;

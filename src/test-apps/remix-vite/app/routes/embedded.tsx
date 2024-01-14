@@ -1,17 +1,17 @@
-import type { ActionArgs } from "@remix-run/node";
-import {   redirect, type LoaderArgs, defer } from "@remix-run/node";
-import type { V2_MetaFunction } from "@remix-run/node";
-import { Link, useFetcher,   useSubmit } from "@remix-run/react";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import {   redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
+import { Link, useFetcher,   useNavigate,   useSubmit } from "@remix-run/react";
 import { EmbeddedDevTools } from "remix-development-tools";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const test = new Promise((resolve) => {
     setTimeout(() => {
       resolve("test");
@@ -20,15 +20,17 @@ export const loader = async ({ request }: LoaderArgs) => {
   return defer({ message: "Hello World!", test });
 };
 
-export const action = async ({ request }: ActionArgs) => {
-  return redirect("/login");
+export const action = async ({ request }: ActionFunctionArgs) => {
+  return redirect("/");
 };
-
+ 
 export default function Index() {  
   const lFetcher = useFetcher();
   const pFetcher = useFetcher();
   const submit = useSubmit();
   const data = new FormData();
+  const navigate = useNavigate()
+  navigate("/login")
   data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
