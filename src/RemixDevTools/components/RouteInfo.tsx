@@ -29,7 +29,7 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
           <Icon
             onClick={onClose}
             className="rdt-absolute rdt-right-2 rdt-top-2 rdt-cursor-pointer rdt-text-red-600"
-            name="Layers"
+            name="X"
           />
 
           <h1 className="rdt-text-xl rdt-font-semibold">{route.url}</h1>

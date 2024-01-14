@@ -31,6 +31,14 @@ export default function Index() {
   const submit = useSubmit();
   const data = new FormData();
   data.append("test", "test");
+  data.append("array", "test");
+  data.append("array", "test1");
+  data.append("person.name", "test1");
+  data.append("person.surname", "test1");
+  data.append("array2.0", "test1");
+  data.append("array2.1", "test1");
+  data.append("array2.2", "test1");
+  data.append("obj", JSON.stringify({ test: "test" }));
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
