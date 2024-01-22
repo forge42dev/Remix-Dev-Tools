@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "3.7.2",
+  "version": "3.7.3",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -136,12 +136,12 @@
     "react-dom": ">=17"
   },
   "devDependencies": {
-    "@remix-run/dev": "^0.0.0-nightly-6953c3f-20231123",
-    "@remix-run/express": "^2.2.0",
-    "@remix-run/node": "^2.2.0",
-    "@remix-run/react": "^2.3.0",
+    "@remix-run/dev": "^2.5.1",
+    "@remix-run/express": "^2.5.1",
+    "@remix-run/node": "^2.5.1",
+    "@remix-run/react": "^2.5.1",
     "@remix-run/router": "^1.9.0",
-    "@remix-run/server-runtime": "^2.2.0",
+    "@remix-run/server-runtime": "^2.5.1",
     "@rollup/plugin-typescript": "^11.1.3",
     "@testing-library/react": "^14.0.0",
     "@types/babel__core": "^7.20.4",
@@ -188,7 +188,7 @@
     "tsup": "^7.2.0",
     "typescript": "^5.1.6",
     "unbuild": "^2.0.0",
-    "vite": "^4.5.0",
+    "vite": "^5.0.0",
     "vitest": "^0.33.0"
   },
   "dependencies": {
@@ -202,7 +202,7 @@
     "d3-shape": "^3.2.0",
     "d3-zoom": "^3.0.0",
     "date-fns": "^2.30.0",
-    "es-module-lexer": "^1.4.0",
+    "es-module-lexer": "^1.4.1",
     "react-diff-viewer-continued": "^3.3.1",
     "tailwind-merge": "^1.14.0",
     "uuid": "^9.0.1",

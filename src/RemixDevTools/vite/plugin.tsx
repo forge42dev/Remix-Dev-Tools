@@ -127,6 +127,7 @@ export const remixDevTools: (args?: {
           )}] })();`;
 
           const updatedCode = lines.map((line) => {
+          
             // Handles default export augmentation
             if (line.includes("export default function")) {
               const exportName = line.split("export default function ")[1].split("(")[0].trim();
@@ -145,6 +146,11 @@ export const remixDevTools: (args?: {
             }
             if (line.includes("export function links")) {
               return line.replace("export function links", "function linksExport");
+            }
+            // export { links } from "/app/root.tsx" variant
+            if(line.includes("export {") && line.includes("links") && line.includes("/app/root")) {
+
+              return line.replace("links", "links as linksExport");
             }
             return line;
           });
