@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./assets/remix-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" width="240" height="240" alt="Remix Development Tools"  />
+<img src="./assets/remix-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" width="900" alt="Remix Development Tools"  />
 </p>
 
 # Remix Development Tools
