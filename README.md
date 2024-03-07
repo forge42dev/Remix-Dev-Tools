@@ -47,7 +47,10 @@ To install and utilize Remix Development Tools, follow these steps:
 
 ```diff
 // Import styles
-+ import rdtStylesheet from "remix-development-tools/index.css"; 
++ import rdtStylesheet from "remix-development-tools/index.css";
+// If you are using Vite version 5.1 or above, use the following CSS import instead of the one above.
+// import rdtStylesheet from "remix-development-tools/index.css?url";
+
 + export const links: LinksFunction = () => [
     // export the stylesheet in development only
 +   ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
@@ -509,6 +512,9 @@ The migration should be really simple. These are the following things you need t
 2. In your root import the stylesheet and the withDevTools function from the package.
 ```diff
 + import rdtStylesheet from "remix-development-tools/index.css";
+// If you are using Vite version 5.1 or above, use the following CSS import instead of the one above.
+// import rdtStylesheet from "remix-development-tools/index.css?url";
+
 + import { withDevTools } from "remix-development-tools";
 ```
 3. Wrap your app with the withDevTools function.
