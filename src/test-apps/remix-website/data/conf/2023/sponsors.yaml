@@ -1,0 +1,82 @@
+- name: "Fly.io"
+  link: "https://fly.io"
+  imgSrc: "/conf-images/2023/sponsors/fly.svg"
+  level: "premier"
+  about: |
+    Fly.io is a globally distributed cloud platform that makes it easy to deploy and scale your apps. Fly is built on top of the open source Flyctl CLI and the Fly Machines API.
+    Fly is a proud sponsor of the Remix community.
+
+- name: "Vercel"
+  link: "https://vercel.com"
+  imgSrc: "/conf-images/2023/sponsors/vercel.svg"
+  level: "gold"
+
+- name: "Nx"
+  link: "https://nx.dev"
+  imgSrc: "/conf-images/2023/sponsors/nx.svg"
+  level: "silver"
+
+- name: "Storyblok"
+  link: "https://www.storyblok.com"
+  imgSrc: "/conf-images/2023/sponsors/storyblok.svg"
+  level: "silver"
+
+- name: "Cockroach Labs"
+  link: "https://www.cockroachlabs.com/product"
+  imgSrc: "/conf-images/2023/sponsors/cockroachlabs.svg"
+  level: "silver"
+
+- name: "Seasoned"
+  link: "https://www.seasoned.cc/remix"
+  imgSrc: "/conf-images/2023/sponsors/seasoned.png"
+  level: "silver"
+
+- name: "Grafbase"
+  link: "https://grafbase.com/"
+  imgSrc: "/conf-images/2023/sponsors/grafbase.svg"
+  level: "silver"
+
+- name: "Graphabase"
+  link: "https://graphabase.com"
+  imgSrc: "/conf-images/2023/sponsors/graphabase.svg"
+  level: "silver"
+
+- name: "Turso"
+  link: "https://turso.tech"
+  imgSrc: "/conf-images/2023/sponsors/turso.svg"
+  level: "silver"
+
+- name: "Deepgram"
+  link: "https://deepgram.com"
+  imgSrc: "/conf-images/2023/sponsors/deepgram.svg"
+  level: "silver"
+
+- name: "Edgeio"
+  link: "https://edg.io"
+  imgSrc: "/conf-images/2023/sponsors/edgeio.svg"
+  level: "community"
+
+- name: "Netlify"
+  link: "https://www.netlify.com"
+  imgSrc: "/conf-images/2023/sponsors/netlify.svg"
+  level: "community"
+
+- name: "Sentry"
+  link: "https://sentry.io"
+  imgSrc: "/conf-images/2023/sponsors/sentry.svg"
+  level: "community"
+
+- name: "Appwrite"
+  link: "https://appwrite.io"
+  imgSrc: "/conf-images/2023/sponsors/appwrite.svg"
+  level: "community"
+
+- name: "Catchpoint"
+  link: "https://www.catchpoint.com"
+  imgSrc: "/conf-images/2023/sponsors/catchpoint.svg"
+  level: "community"
+
+- name: "Cloudflare"
+  link: "https://www.cloudflare.com"
+  imgSrc: "/conf-images/2023/sponsors/cloudflare.svg"
+  level: "community"

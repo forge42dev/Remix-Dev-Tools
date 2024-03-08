@@ -1,0 +1,193 @@
+.__hero {
+  --bg-img-light: url(https://res.cloudinary.com/remix-run/image/upload/v1676950297/remix.run/conf-2023/conf-2023-light.png);
+  --bg-img-twinkle: url(https://res.cloudinary.com/remix-run/image/upload/v1676950297/remix.run/conf-2023/conf-2023-twinkle.png);
+  --overlay-gradient: linear-gradient(
+    90deg,
+    theme(colors.blue.brand) 0%,
+    theme(colors.pink.brand) 16.67%,
+    theme(colors.red.brand) 33.33%,
+    theme(colors.yellow.brand) 50%,
+    theme(colors.red.brand) 66.67%,
+    theme(colors.pink.brand) 82.33%,
+    theme(colors.blue.brand) 100%
+  );
+  position: relative;
+
+  & .__fx-wrapper,
+  & .__fx-lights,
+  & .__fx-twinkle,
+  & .__fx-colors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  & .__fx-wrapper {
+    /* z-index: -1; */
+  }
+
+  & .__fx-lights {
+    opacity: 0.375;
+  }
+
+  & .__fx-lights__inner {
+    position: relative;
+    width: 100%;
+    height: 150%;
+    overflow-x: hidden;
+  }
+
+  & .__fx-lights__inner::before {
+    content: "";
+    position: absolute;
+    width: 150%;
+    height: 100%;
+    top: -25%;
+    left: -25%;
+    z-index: -1;
+    background-image: var(--bg-img-light);
+    background-size: 26px;
+    transform: rotate(-7deg);
+  }
+
+  & .__fx-twinkle {
+    background-image: var(--bg-img-twinkle);
+    background-repeat: repeat;
+    background-position: 0 0;
+    background-size: 180px;
+    animation: heroFxTwinkle 240s cubic-bezier(0.38, 0.54, 0.46, 0.63) infinite;
+    opacity: 0.6;
+  }
+
+  & .__fx-twinkle::before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: inherit;
+    background-repeat: repeat;
+    background-position: 0 0;
+    background-size: 360px;
+    animation: heroFxTwinkle 120s linear infinite;
+    animation-direction: reverse;
+    opacity: 0.9;
+  }
+
+  & .__fx-colors {
+    background-image: linear-gradient(
+      90deg,
+      rgb(57 146 255) 0%,
+      rgb(216 59 210) 16.67%,
+      rgb(244 66 80) 33.33%,
+      rgb(254 204 27) 50%,
+      rgb(244 66 80) 66.67%,
+      rgb(216 59 210) 82.33%,
+      rgb(57 146 255) 100%
+    );
+    mix-blend-mode: soft-light;
+    opacity: 0.8;
+    animation: heroFxColors 240s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .remix-logo-num-2,
+  .remix-logo-num-3 {
+    animation-duration: 3300ms;
+    animation-timing-function: cubic-bezier(0.05, 0.5, 0.32, 0.99);
+    transform: translateY(0);
+  }
+
+  .remix-logo-num-3 {
+    animation-name: logoNumberTick;
+  }
+
+  .remix-logo-num-2 {
+    animation-name: logoNumberTick, logoNumberFadeOut;
+    opacity: 0;
+  }
+}
+
+@keyframes logoNumberTick {
+  0% {
+    transform: translateY(19.7%);
+  }
+  20% {
+    transform: translateY(19.7%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoNumberFadeOut {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.925;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes heroFxTwinkle {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -10000px 2500px;
+  }
+}
+
+@keyframes heroFxColors {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 10000px 0;
+  }
+}
+
+.schedule-row {
+  grid-template-rows: auto min-content;
+  grid-template-areas:
+    "time img"
+    "heading img"
+    "description description";
+  grid-template-columns: 1fr 3.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-areas:
+      "time heading img"
+      "time description img";
+    grid-template-columns: 9rem 1fr 140px;
+  }
+}
+
+.schedule-row-item--time {
+  grid-area: time;
+}
+
+.schedule-row-item--img {
+  grid-area: img;
+}
+
+.schedule-row-item--heading {
+  grid-area: heading;
+}
+
+.schedule-row-item--description {
+  grid-area: description;
+}

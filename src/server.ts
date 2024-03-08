@@ -1,4 +1,3 @@
-import { defineServerConfig } from "./dev-server/config.js";
-import { augmentLoadersAndActions, withServerDevTools } from "./dev-server/init.js";
-
-export { augmentLoadersAndActions, withServerDevTools, defineServerConfig };
+export { defineServerConfig } from "./server/config.js"; 
+export { augmentLoadersAndActions } from "./server/loader.js";
+export { remixDevTools } from "./vite/plugin.js"  

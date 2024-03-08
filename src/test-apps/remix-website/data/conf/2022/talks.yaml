@@ -1,0 +1,320 @@
+- title: Keynote
+  time: 9:10 AM
+  type: regular
+  description: Michael will kick the inaugural Remix Conference off!
+  speakers:
+    - Michael Jackson
+
+- title: "Instantaneously Interactive: Remix as a Browser Framework"
+  time: 10:00 AM
+  type: regular
+  description: >-
+    Your Remix app is so performant that–even without a solid internet
+    connection–navigation on your site seems to happen almost instantaneously.
+    Whether rendered on the client side or server side, pages load data quickly
+    and all the information you users are interested in is on the screen without
+    the wait. But why?
+
+
+    In this talk, we discuss the optimizations in Remix for data fetching and
+    rendering apps in the browser that enhance both the user experience and
+    developer experience.
+
+  speakers:
+    - Shaundai Person
+
+- title: "State Machines On The Edge"
+  time: 10:25 AM
+  type: regular
+  description: >-
+    Modeling business logic with state machines has numerous benefits, from
+    eliminating bugs caused by impossible states to visualizing the logic to
+    communicate with non-technical shareholders to simply communicating user
+    flow between technical colleagues. In this talk, I'm going to demonstrate,
+    via live coding, how to combine the strengths of Remix and XState to create
+    a checkout flow entirely on the backend. No. JavaScript. Required.
+  speakers:
+    - Erik Rasmussen
+
+- title: Remixing Hydrogen
+  time: 11:15 AM
+  type: regular
+  description: >-
+    Let's talk about some of the headaches of building headless Shopify
+    e-commerce stores, and how Hydrogen-UI + Remix make it better. Pre-built
+    Shopify components? Check. GraphQL auto-completion? Oh yeah. Speedy
+    websites? Blazing fast.
+  speakers:
+    - Anthony Frehner
+
+- title: Deno and Remix
+  time: 11:40 AM
+  type: regular
+  description: >-
+    In this talk Ryan will give an overview of Deno, a modern JavaScript
+    runtime, and Deno Deploy, a serverless at edge JavaScript hosting service.
+    He'll give a peak behind the sceenes at the technology powering Deno Deploy,
+    and of course demo how to deploy a Remix app on it.
+  speakers:
+    - Ryan Dahl
+
+- title: Remix 3D Blast
+  time: 12:05 PM
+  type: lightning
+  description: >-
+    Whether you want to progressively enhance a traditional website or build an
+    immersive 3D experience, Remix gives us a powerful and fun framework to
+    create with WebGL and three.js. After deploying a 3D Remix experience to
+    production, I've found that all the patterns that Remix provides are just as
+    valuable even when we're not rendering to the DOM. In this talk, I'll show
+    off some zany 3D antics to explain how Remix and react-three-fiber can work
+    together to help you build fantastic experiences for your users.
+
+
+    We'll focus on: getting react-three-fiber set up in a Remix app; using
+    nested routes and layouts to render a scene; moving scene state to the
+    server with loaders and actions; streaming dynamic 3D resources to the
+    client using resource routes; and finally, transitions and optimistic UI...
+    in 3D! 💿 Rachel the Remix Disc will offer some nifty optimization tips
+    along the way.
+
+
+    It'll be a GL-and-web-fundamentals-fuelled blast!
+  speakers:
+    - Nick Small
+
+- title: "Web Vitals: The importance of measuring a user great web experience"
+  time: 12:10 PM
+  type: lightning
+  description: >-
+    Nowadays, building a working web application is much more than deploying it
+    to production. The impact on the way your app is delivered to your end-users
+    is also important.
+
+
+    Making your app experience better translates into more engagement,
+    conversions, and revenue. That's why it is also vital (pun intended) to know
+    how your application behaves, and that's where Web Vitals help us get a
+    clear overview of how our app is doing.
+  speakers:
+    - Erick Tamayo
+
+- title: "Making slow responses seem fast with stale-while-revalidate"
+  time: 12:15 PM
+  type: lightning
+  description: >-
+    The Cache-Control header has been around since HTTP/1.1 in 1997, yet for
+    many of us, it's not something we think about every day. The
+    stale-while-revalidate extension was proposed as early as 2010, but was only
+    widely supported in modern browsers in 2019. In this talk, I will show you
+    the power of stale-while-revalidate and how you can take advantage of it in
+    your Remix project to make your slow responses seem really fast!
+  speakers:
+    - Scott Smerchek
+
+- title: "Building tech for social good with low-code tools"
+  time: 2:25 PM
+  type: lightning
+  description: >-
+    In this talk we are going to be talking about how to build hybrid apps that
+    use a combination of frameworks like Remix and mixing them with no-code
+    backends like Zapier and Airtable, so that they can be managed and modified
+    by non-technical people.
+
+
+    I will specifically go over how I replaced the admissions process at my
+    children's preschool with a website and made them paperfree.
+  speakers:
+    - Vic Vijayakumar
+
+- title: "Expanding Remix with Rust"
+  time: 2:30 PM
+  type: lightning
+  description: >-
+    Remix's unique use of Loader and Action functions offers the unique
+    opportunity to expand your data processing with Rust. Rust offers near
+    native performance, memory safety through either the Node FFI or via
+    compilation into WebAssembly. Learn the tricks to setup your Rust project to
+    work with Remix, either on the server or the client, and take advantage of
+    the most loved language with your favorite web framework!
+  speakers:
+    - Ben Wishovich
+
+- title: "Full Stack Fast: Data on the Edge"
+  time: 2:35 PM
+  type: lightning
+  description: >-
+    Why force your users to settle for either loading skeletons or slow page
+    renders? Remix can bring your application rendering to the edge, but what
+    about your data? Why should every request have to call back to a single
+    database cluster in Virginia? For the best performance and experience for
+    your users, store your data on the edge, alongside the rest of your
+    application.
+
+
+    We'll discuss how the original colocated server and database configuration
+    worked, how it evolved with Jamstack, improved with next-gen data services,
+    and how today's technology supports a new architecture altogether. But
+    distributed systems are notoriously hard to design for, and edge-based
+    storage is no different, with the challenges of synchronicity being a
+    particularly difficult problem. I'll highlight the benefits of edge-based
+    storage, how it compares to the other options, and I'll showcase a truly
+    global Remix application built with Cloudflare's KV, Durable Objects and R2.
+  speakers:
+    - Greg Brimble
+
+- title: Remix your UI & UX to another level
+  time: 2:45 PM
+  type: regular
+  description: >-
+    Build performant web apps with a full-stack framework, Remix. Remix focuses
+    on the UI to enjoy fast & resilient UX. Experience the "Remix magic" that
+    enables no fetching & pre-fetch all in parallel before users make actions.
+    As Remix focuses on UI & UX, why not share the "Remix magic" with the
+    business users? In this talk, we're going to see together the combination of
+    the new generation of a full-stack framework, Remix & a visual editor
+    integrated headless CMS (Storyblok). Are you ready to explore a whole new
+    level of experience?
+  speakers:
+    - Arisa Fukuzaki
+
+- title: "Magically create forms + actions with Remix Forms"
+  time: 3:10 PM
+  type: regular
+  description: >-
+    One of the beautiful things about Remix is how easy it is to enhance it to
+    make our lives easier. In this talk, I'll show you how I built [Remix
+    Forms](https://remix-forms.seasoned.cc/) and how I use it to:
+
+    - Code only the parts of my forms that stray from our standard UI. The rest
+    is magically rendered for me.
+
+    - Never have to think again about client-side + server-side validations,
+    pending indicators, and focus management (with focus on the first field with
+    error even for server-side failures!)
+
+    - Get form data, validate values, redirect or return errors with one helper.
+    I focus on the mutation, not on the wiring.
+
+    - Catch any typo or mistake right away with bulletproof typing, even for
+    custom inputs.
+
+    - Enjoy the autocomplete magic that comes along with it :)
+  speakers:
+    - Daniel Weinmann
+
+- title: "Incremental Remix"
+  time: 3:35 PM
+  type: regular
+  description: >-
+    Remix is fantastic for building brand-new apps. But the truth is most of us
+    are slogging away on crusty old ones. How can we incorporate Remix into our
+    stacks without rewriting everything? And how can we effectively sell our
+    teams on the benefits of adoption? In this talk we'll explore some
+    strategies that will let you gradually adopt Remix, progressively enhancing
+    your tech stack.
+  speakers:
+    - Jon Jensen
+
+- title: "Outstanding Search Experiences with Remix and Algolia"
+  time: 4:25 PM
+  type: regular
+  description: >-
+    Outstanding search starts with two principles: immediate feedback and
+    relevant results.
+
+    Search-as-you-type experiences have become the standard since Google
+    introduced Google Suggest and Google Instant on their search page in the
+    2000s. Users not only love the immediate feedback of instant experiences,
+    they expect it. They also expect search to be excellent at understanding
+    their intent, even when they misspell or forget words.
+
+    Services like Algolia are designed to deliver instant, as-you-type, relevant
+    results right from the first keystrokes. But what happens when the user's
+    network is slow? What's relevant when the user didn't express intent yet? In
+    this talk, we'll see how you can combine Algolia's client-side search with
+    the power of Remix's server runtime to create snappy and delightful yet
+    reliable and resilient search experiences that serve everyone.
+  speakers:
+    - Sarah Dayan
+
+- title: "Switching to Remix at Neighbor"
+  time: 4:50 PM
+  type: regular
+  description: >-
+    Neighbor is a marketplace that allows you to make extra cash by storing your
+    neighbors' things in your extra space. After several years of using a
+    standard React frontend generated by create-react-app, we've decided to move
+    to Remix. I will discuss some of the crazy things we've done at Neighbor to
+    work around the limitations of a standard CRA-generated application, why we
+    chose to use Remix over other alternatives, and discuss some of the gotchas
+    and learning that came out of the migration. If you work at a medium to
+    large business and are interested in moving to Remix, this talk is
+    especially for you. I will mostly stick to big picture concepts rather than
+    diving deep into the code.
+  speakers:
+    - Dennis Beatty
+
+- title: Remix & high performance eCommerce
+  type: backup
+  description: >-
+    Performances are key. That statement is true for any web application but
+    even more for eCommerce applications that convert performances into revenue.
+
+    Why are eCommerce projects more complex than others? What are the key topics
+    and the special things that you need to take into account when building an
+    eCommerce application in 2022.
+
+    In this talk we will deep dive into all the things that must be dynamic and
+    how to achieve performances.
+
+    All explained with a Remix project example.
+  speakers:
+    - Sébastien Morel
+
+- title: "How To WebPageTest"
+  time: 9:35 AM
+  type: regular
+  description: >-
+    You cannot improve what you do not measure, and measuring page performance
+    is at the heart of providing marvellous user experiences. "How To
+    WebPageTest" is a talk where I will demonstrate how modern profiling using
+    WebPageTest will provide the best insights. I'll show you tips and tricks on
+    how to interpret the results, and I'll also expose you to key features that
+    are best in class in performance testing.
+  speakers:
+    - Henri Helvetica
+
+- title: "Remixing a Symfony"
+  type: backup
+  description: >-
+    In late 2020, I ran a Lighthouse test on a simple content page on Harvie,
+    our farm management platform and Symfony app, and received a performance
+    score of 31/100. The JavaScript bundle, the API requests, the database
+    lookups, even with minimal UI to render, had a baseline score in the
+    thirties! Along with customer feedback, this helped to catalyze a renewed
+    commitment to performance at Harvie. Through numerous discussions, we walked
+    through each step of page load, from networking to rendering, and identified
+    where we could improve. After a year of rewrites and upgrades, our remaining
+    detriment to overall performance was our frontend. We had been converting
+    our Symfony twig templates into React SPA components and fell into the
+    common problem of creating "request waterfalls", while our user had to stare
+    at a loading screen. We needed a change, and for us, that was Remix. In this
+    talk, I'll walk you through our team's journey with performance and how
+    Remix has become a natural progression of that.
+  speakers:
+    - Emily Kauffman
+
+- title: "Intro To Remix - Working with Nested Routes and Parameterized Routes"
+  type: backup
+  description: >-
+    We will walk through a simple demonstration of a remix application using
+    nested routes and parameterized routes. The use of nested routes helps me
+    with component design and separation when architecting  an application.
+    Parameterized routes / Dynamic Routes contain state information that can
+    through the parameters that are defined on the route. This provides powerful
+    flexibility when designing your app and app's components. Putting the two
+    together in an simple solution to be a reference when you build something
+    amazing.
+  speakers:
+    - Aaron K Saunders

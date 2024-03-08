@@ -1,17 +1,17 @@
-import type { ActionArgs } from "@remix-run/node";
-import {   redirect, type LoaderArgs, defer } from "@remix-run/node";
-import type { V2_MetaFunction } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import {   redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { Link, useFetcher,   useSubmit } from "@remix-run/react";
-import { EmbeddedDevTools } from "remix-development-tools";
+import { EmbeddedDevTools } from "remix-development-tools/client";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const test = new Promise((resolve) => {
     setTimeout(() => {
       resolve("test");
@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return defer({ message: "Hello World!", test });
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   return redirect("/login");
 };
 

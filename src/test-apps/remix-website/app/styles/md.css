@@ -1,0 +1,318 @@
+:root {
+  --base00: theme("colors.gray.50");
+  --base01: theme("colors.gray.200");
+  --base02: theme("colors.gray.300");
+  --base03: theme("colors.gray.400");
+  --base04: theme("colors.gray.500");
+  --base05: theme("colors.gray.600");
+  --base06: theme("colors.gray.700");
+  --base07: theme("colors.gray.800");
+  --base08: theme("colors.red.700");
+  --base09: theme("colors.pink.brand");
+  --base0A: theme("colors.blue.brand");
+  --base0B: theme("colors.green.500");
+  --base0C: theme("colors.aqua.brand");
+  --base0D: theme("colors.blue.700");
+  --base0E: theme("colors.pink.brand");
+  --base0F: theme("colors.gray.700");
+
+  &:where(.dark) {
+    --base00: theme("colors.gray.800");
+    --base01: theme("colors.gray.700");
+    --base02: theme("colors.gray.600");
+    --base03: theme("colors.gray.500");
+    --base04: theme("colors.gray.400");
+    --base05: theme("colors.gray.300");
+    --base06: theme("colors.gray.200");
+    --base07: theme("colors.gray.100");
+    --base08: theme("colors.yellow.brand");
+    --base09: theme("colors.pink.brand");
+    --base0A: theme("colors.blue.brand");
+    --base0B: theme("colors.green.brand");
+    --base0C: theme("colors.aqua.300");
+    --base0D: theme("colors.blue.300");
+    --base0E: theme("colors.pink.300");
+    --base0F: theme("colors.gray.200");
+  }
+}
+
+/* :nuthin {
+  --base00: #ffffff;
+  --base01: #f5f5f5;
+  --base02: #c8c8fa;
+  --base03: #969896;
+  --base04: #e8e8e8;
+  --base05: #333333;
+  --base06: #ffffff;
+  --base07: #ffffff;
+  --base08: #ed6a43;
+  --base09: #0086b3;
+  --base0A: #795da3;
+  --base0B: #183691;
+  --base0C: #183691;
+  --base0D: #795da3;
+  --base0E: #a71d5d;
+  --base0F: #333333;
+} */
+
+.md-prose {
+  @apply text-base sm:text-lg;
+
+  & p {
+    @apply my-8;
+  }
+
+  & h2 {
+    @apply font-display text-2xl font-extrabold dark:text-gray-200 md:text-5xl;
+  }
+
+  & h3 {
+    @apply font-display text-xl font-extrabold dark:text-gray-200 md:text-3xl;
+  }
+
+  & h4 {
+    @apply font-bold;
+  }
+
+  & strong {
+    @apply dark:text-gray-200;
+  }
+
+  & hr {
+    @apply dark:border-gray-700;
+  }
+
+  & a {
+    @apply text-blue-brand;
+    &:hover {
+      @apply underline;
+    }
+    &:active {
+      @apply text-red-brand;
+    }
+  }
+
+  & code,
+  & kbd,
+  & pre {
+    word-wrap: normal;
+    @apply overflow-auto rounded-lg border border-gray-100 p-3 text-sm leading-none dark:border-gray-900 md:p-4;
+  }
+
+  & pre {
+    @apply mb-4 mt-0 bg-[color:var(--base00)] leading-relaxed;
+  }
+
+  & code,
+  & kbd {
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  & kbd {
+    @apply inline-block rounded border border-gray-200 bg-gray-100 align-middle font-mono leading-[10px] dark:border-gray-800 dark:bg-gray-900;
+    box-shadow: inset 0 -1px 0 hsl(0, 0%, 0%, 0.5);
+  }
+
+  & pre > code {
+    @apply m-0 whitespace-pre break-normal border-0 bg-transparent p-0;
+  }
+
+  & .codeblock-line {
+    @apply relative block pr-4;
+  }
+
+  & code {
+    @apply rounded bg-gray-50 px-1 py-[2px] text-[color:inherit] dark:bg-gray-800;
+  }
+
+  & :is(a, h1, h2, h3, h4, h5, h6) code,
+  & :is(a, h1, h2, h3, h4, h5, h6) kbd {
+    @apply text-[color:inherit];
+  }
+
+  & :is(h1, h2, h3, h4, h5, h6) code {
+    font-size: 90%;
+    padding-top: max(0.125rem, 0.125em);
+    padding-bottom: max(0.125rem, 0.125em);
+    padding-right: max(0.25rem, 0.25em);
+    padding-left: max(0.25rem, 0.25em);
+  }
+
+  & pre code {
+    display: grid;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: initial;
+    border: 0;
+    border-radius: initial;
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & ul {
+    list-style: disc;
+  }
+
+  & video {
+    @apply my-8 w-full;
+  }
+
+  & ol,
+  & ul {
+    @apply my-8 mb-4 pl-8;
+  }
+
+  & ol ol,
+  & ul ol {
+    list-style-type: lower-roman;
+  }
+
+  & ol ul,
+  & ul ul {
+    list-style-type: circle;
+  }
+
+  & ol ol ol,
+  & ol ul ol,
+  & ul ol ol,
+  & ul ul ol {
+    list-style-type: lower-alpha;
+  }
+
+  & ol ol ul,
+  & ol ul ul,
+  & ul ol ul,
+  & ul ul ul {
+    list-style-type: square;
+  }
+
+  & dd {
+    @apply ml-0;
+  }
+
+  & ol ol,
+  & ol ul,
+  & ul ol,
+  & ul ul {
+    @apply my-0;
+  }
+
+  & li {
+    word-wrap: break-all;
+
+    & > p {
+      @apply m-0;
+    }
+
+    & > p + p {
+      @apply mt-4;
+    }
+
+    & + li {
+      @apply mt-1;
+    }
+  }
+
+  & dl {
+    @apply mb-4 mt-0 p-0;
+
+    & dt {
+      @apply mt-4 p-0 text-base font-semibold italic;
+    }
+
+    & dd {
+      @apply mb-4 px-4 py-0;
+    }
+  }
+
+  & blockquote {
+    @apply border-l-4 pl-4 italic;
+  }
+
+  & details {
+    @apply my-8;
+  }
+
+  & summary {
+    cursor: pointer;
+  }
+
+  & figcaption {
+    @apply text-center text-sm font-bold lg:text-base;
+  }
+
+  & table {
+    text-indent: 0;
+    border-spacing: 0;
+    @apply my-10 w-full max-w-full border-collapse overflow-auto border-[color:inherit] text-left;
+  }
+
+  & table th {
+    @apply sticky top-0 bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-300;
+    @apply border-0 border-b border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800 md:pr-6;
+  }
+
+  & table tbody {
+    @apply align-baseline;
+  }
+
+  & table td {
+    @apply whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4 text-sm text-black dark:text-white md:pr-6;
+  }
+
+  & .codeblock-line {
+    @apply relative block;
+  }
+
+  & .codeblock-line[data-highlight="true"]::after {
+    content: " ";
+    @apply pointer-events-none absolute left-0 right-0 top-0 -mx-3 bg-green-400 opacity-10 dark:bg-green-600;
+  }
+
+  & :is(h1, h2, h3, h4, h5, h6) {
+    @apply relative my-8;
+    scroll-snap-margin-top: 1em;
+    scroll-margin-top: 1em;
+
+    & a {
+      @apply absolute -left-6 -right-0 top-0 z-10 flex h-full items-center leading-none;
+    }
+
+    &:hover a,
+    & a:hover {
+      @apply no-underline;
+    }
+
+    & .icon-link {
+      @apply flex h-full items-center align-middle text-blue-brand;
+    }
+
+    & a .icon-link::before {
+      @apply invisible inline-block h-4 w-4;
+      content: " ";
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke='gray' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'%3E%3C/path%3E%3C/svg%3E");
+    }
+
+    & a:hover .icon-link,
+    & a .icon-link:hover,
+    &:hover a .icon-link,
+    & a:hover .icon-link::before,
+    & a .icon-link:hover::before,
+    &:hover a .icon-link::before {
+      @apply visible opacity-100;
+    }
+  }
+
+  > p img {
+    @apply md:rounded-xl;
+  }
+  > p:has(img) {
+    @apply -mx-6 md:-mx-8 lg:-mx-12;
+  }
+}

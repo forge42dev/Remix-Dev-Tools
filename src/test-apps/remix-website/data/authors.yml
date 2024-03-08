@@ -1,0 +1,27 @@
+- name: Michael Jackson
+  avatar: /authors/profile-michael-jackson.png
+  title: Co-Founder
+- name: Ryan Florence
+  avatar: /authors/profile-ryan-florence.png
+  title: Co-Founder
+- name: Kent C. Dodds
+  avatar: /authors/profile-kent-c-dodds.png
+  title: Co-Founder
+- name: Chance Strickland
+  avatar: /authors/profile-chance-strickland.png
+  title: Software Engineer
+- name: Jim Nielsen
+  avatar: /authors/profile-jim-nielsen.png
+  title: Director of Design
+- name: Matt Brophy
+  avatar: /authors/profile-matt-brophy.png
+  title: Staff Developer
+- name: Pedro Cattori
+  avatar: /authors/profile-pedro-cattori.png
+  title: Staff Developer
+- name: Mark Dalgleish
+  avatar: /authors/profile-mark-dalgleish.png
+  title: Staff Developer
+- name: Brooks Lybrand
+  avatar: /authors/profile-brooks-lybrand.png
+  title: Developer Relations Manager

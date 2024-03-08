@@ -1,0 +1,55 @@
+/*****************************************************************************
+    Copied and simplified from styles/docs.css -- eventually would like to
+    figure out a good system for creating a single source of truth for these
+    styles, the docs styles, and the blog styles
+*****************************************************************************/
+
+.code-block {
+  & code,
+  & pre {
+    word-wrap: normal;
+    @apply overflow-auto p-3 text-sm leading-none md:p-4;
+  }
+
+  & pre {
+    @apply border border-gray-100 leading-relaxed dark:border-gray-800;
+  }
+
+  & code {
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  & pre > code {
+    @apply m-0 whitespace-pre break-normal border-0 bg-transparent p-0;
+  }
+
+  & .codeblock-line {
+    @apply relative block pr-4;
+  }
+
+  & pre code {
+    display: grid;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: initial;
+    border: 0;
+    border-radius: initial;
+  }
+
+  & [data-code-block-copy] {
+    @apply absolute right-4 top-[1.125rem] h-5 w-5 cursor-pointer bg-white/80 opacity-0 dark:bg-gray-900/80;
+  }
+
+  &:hover [data-code-block-copy],
+  & [data-code-block-copy]:focus {
+    @apply opacity-100;
+  }
+
+  & [data-code-block-copy][data-copied="true"] {
+    @apply opacity-100;
+  }
+}

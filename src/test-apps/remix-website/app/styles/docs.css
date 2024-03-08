@@ -1,0 +1,577 @@
+/*****************************************************************************/
+/* syntax highlighting */
+:root {
+  --base00: theme("colors.gray.50");
+  --base01: theme("colors.gray.200");
+  --base02: theme("colors.gray.300");
+  --base03: theme("colors.gray.400");
+  --base04: theme("colors.gray.500");
+  --base05: theme("colors.gray.600");
+  --base06: theme("colors.gray.700");
+  --base07: theme("colors.gray.800");
+  --base08: theme("colors.red.700");
+  --base09: theme("colors.pink.brand");
+  --base0A: theme("colors.blue.500");
+  --base0B: theme("colors.green.500");
+  --base0C: theme("colors.aqua.400");
+  --base0D: theme("colors.blue.700");
+  --base0E: theme("colors.pink.brand");
+  --base0F: theme("colors.gray.700");
+
+  &:where(.dark) {
+    --base00: theme("colors.gray.800");
+    --base01: theme("colors.gray.700");
+    --base02: theme("colors.gray.600");
+    --base03: theme("colors.gray.500");
+    --base04: theme("colors.gray.400");
+    --base05: theme("colors.gray.300");
+    --base06: theme("colors.gray.200");
+    --base07: theme("colors.gray.100");
+    --base08: theme("colors.red.300");
+    --base09: theme("colors.pink.brand");
+    --base0A: theme("colors.blue.300");
+    --base0B: theme("colors.yellow.brand");
+    --base0C: theme("colors.aqua.300");
+    --base0D: theme("colors.blue.300");
+    --base0E: theme("colors.pink.300");
+    --base0F: theme("colors.gray.300");
+  }
+}
+
+/*****************************************************************************/
+/* layout */
+
+.markdown {
+  &.has-toc {
+    @media screen and (min-width: theme(screens.xl)) {
+      --w-content: theme(screens.lg);
+      --w-toc: theme(spacing.72);
+      --w-gap: theme(spacing.8);
+      max-width: calc(var(--w-content) + var(--w-gap) + var(--w-toc));
+    }
+
+    @media screen and (min-width: theme(screens.2xl)) {
+      --w-toc: theme(spacing.96);
+      --w-gap: theme(spacing.12);
+    }
+  }
+}
+
+/* TODO: Remove markdown-title styles if the title is located within the
+  markdown container  */
+.markdown-title {
+  @media screen and (min-width: theme(screens.lg)) {
+    max-width: theme(screens.lg);
+  }
+}
+
+/*****************************************************************************/
+/* prose */
+
+.md-prose {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  grid-area: main;
+  @apply min-w-0 flex-auto break-words text-base leading-normal text-gray-700 dark:text-gray-300;
+
+  & > :first-child {
+    @apply mt-0;
+  }
+
+  & > :last-child {
+    @apply mb-0;
+  }
+
+  /*****************************************************************************/
+  /* general text styles */
+
+  & p {
+    @apply mb-4 mt-0;
+  }
+
+  & strong {
+    @apply font-semibold;
+  }
+
+  & .icon {
+    @apply inline-block fill-current align-text-bottom;
+  }
+
+  /*****************************************************************************/
+  /* lists */
+
+  & ol {
+    @apply list-decimal;
+  }
+
+  & ul {
+    @apply list-disc;
+  }
+
+  & ol,
+  & ul {
+    @apply my-0 mb-4 pl-8;
+  }
+
+  & ol ol,
+  & ul ol {
+    list-style-type: lower-roman;
+  }
+
+  & ol ul,
+  & ul ul {
+    list-style-type: circle;
+  }
+
+  & ol ol ol,
+  & ol ul ol,
+  & ul ol ol,
+  & ul ul ol {
+    list-style-type: lower-alpha;
+  }
+
+  & ol ol ul,
+  & ol ul ul,
+  & ul ol ul,
+  & ul ul ul {
+    list-style-type: square;
+  }
+
+  & dd {
+    @apply ml-0;
+  }
+
+  & ol ol,
+  & ol ul,
+  & ul ol,
+  & ul ul {
+    @apply my-0;
+  }
+
+  & li {
+    word-wrap: break-all;
+
+    & > p {
+      @apply m-0;
+    }
+
+    & > p + p {
+      @apply mt-4;
+    }
+
+    & + li {
+      @apply mt-1;
+    }
+  }
+
+  & dl {
+    @apply mb-4 mt-0 p-0;
+
+    & dt {
+      @apply mt-4 p-0 text-base font-semibold italic;
+    }
+
+    & dd {
+      @apply mb-4 px-4 py-0;
+    }
+  }
+
+  /*****************************************************************************/
+  /* links */
+  & a {
+    @apply text-blue-600 decoration-1 underline-offset-2 hover:underline dark:text-blue-500;
+  }
+
+  & a:not([href]) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /*****************************************************************************/
+  /* headings */
+  & :is(h1, h2, h3, h4, h5, h6) {
+    @apply mb-4 mt-8;
+  }
+
+  &:not(docs-card) > :is(h1, h2, h3, h4, h5, h6) {
+    @apply text-black dark:text-gray-100;
+  }
+
+  & h1 {
+    @apply my-8 text-2xl font-black xs:text-3xl sm:text-4xl md:text-5xl;
+  }
+
+  & h2 {
+    @apply text-xl font-bold md:text-2xl;
+  }
+
+  & h3 {
+    @apply text-lg font-bold md:text-xl;
+  }
+
+  & h4,
+  & h5,
+  & h6 {
+    @apply text-lg font-bold md:text-xl;
+  }
+
+  & h1 code,
+  & h2 code,
+  & h3 code {
+    /* @apply bg-gray-100/50; */
+  }
+
+  /*****************************************************************************/
+  /* heading anchors */
+  & :is(h1, h2, h3, h4, h5, h6) {
+    @apply relative;
+    scroll-snap-margin-top: 1em;
+    scroll-margin-top: 1em;
+
+    /* only apply these styles for links starting with a hash -- if a header does not start with a hash, it was generated from HTML, not markdown headers */
+    & a[href^="#"] {
+      @apply absolute -left-6 -right-0 top-0 z-10 flex h-full items-center leading-none;
+    }
+
+    &:hover a[href^="#"],
+    & a[href^="#"]:hover {
+      @apply no-underline;
+    }
+
+    & .icon-link {
+      @apply flex h-full items-center align-middle text-blue-brand;
+    }
+
+    & a .icon-link::before {
+      @apply invisible inline-block h-4 w-4 bg-gray-500 bg-cover opacity-0 transition-opacity;
+      content: "";
+      mask: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+      mask-size: cover;
+    }
+
+    & a:hover .icon-link,
+    & a .icon-link:hover,
+    &:hover a .icon-link,
+    & a:hover .icon-link::before,
+    & a .icon-link:hover::before,
+    &:hover a .icon-link::before {
+      @apply visible opacity-100;
+    }
+  }
+
+  /*****************************************************************************/
+  /* details / summary */
+  & details {
+    @apply mb-4 mt-0 block;
+  }
+
+  & summary {
+    cursor: pointer;
+    display: list-item;
+  }
+
+  & details[open] summary {
+    @apply mb-2;
+  }
+
+  /*****************************************************************************/
+  /* images */
+  & img {
+    @apply max-w-full border-0 bg-white dark:bg-black;
+  }
+
+  /*****************************************************************************/
+  /* code */
+
+  & code,
+  & kbd,
+  & pre {
+    word-wrap: normal;
+    @apply overflow-auto rounded-lg p-3 text-sm leading-none md:p-4;
+  }
+
+  & pre {
+    @apply my-4 border border-gray-100 leading-relaxed dark:border-gray-800;
+  }
+
+  & code,
+  & kbd {
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  /* TODO */
+  & kbd {
+    @apply inline-block rounded border border-gray-200 bg-gray-100 align-middle font-mono leading-[10px] dark:border-gray-800 dark:bg-gray-900;
+    box-shadow: inset 0 -1px 0 hsl(0, 0%, 0%, 0.5);
+  }
+
+  & pre > code {
+    @apply m-0 whitespace-pre break-normal border-0 bg-transparent p-0;
+  }
+
+  & .codeblock-line {
+    @apply relative block pr-4;
+  }
+
+  & :not(pre) > code {
+    @apply rounded bg-gray-100/50 px-1.5 pb-0.5 pt-px text-sm text-gray-700 dark:bg-gray-800/50;
+  }
+
+  & :is(a, h1, h2, h3, h4, h5, h6) code,
+  & :is(a, h1, h2, h3, h4, h5, h6) kbd {
+    @apply text-inherit;
+  }
+
+  & :is(h1, h2, h3, h4, h5, h6) code {
+    font-size: 90%;
+    padding-top: max(0.125rem, 0.125em);
+    padding-bottom: max(0.125rem, 0.125em);
+    padding-right: max(0.25rem, 0.25em);
+    padding-left: max(0.25rem, 0.25em);
+  }
+
+  & pre code {
+    display: grid;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: initial;
+    border: 0;
+    border-radius: initial;
+  }
+
+  & [data-code-block] {
+    position: relative;
+  }
+
+  & [data-code-block-copy] {
+    @apply absolute right-4 top-[1.125rem] h-5 w-5 cursor-pointer bg-gray-500 opacity-0 hover:bg-black dark:bg-gray-400 dark:hover:bg-gray-100;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2' vector-effect='non-scaling-stroke'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1' vector-effect='non-scaling-stroke'%3E%3C/path%3E%3C/svg%3E");
+    mask-size: cover;
+  }
+
+  & [data-code-block]:hover [data-code-block-copy],
+  & [data-code-block-copy]:focus {
+    @apply opacity-100;
+  }
+
+  & [data-code-block-copy][data-copied="true"] {
+    @apply bg-black opacity-100 dark:bg-gray-100;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12' vector-effect='non-scaling-stroke'%3E%3C/polyline%3E%3C/svg%3E");
+    mask-size: cover;
+  }
+
+  & pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"]) {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+
+  &
+    pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
+    [data-line-number]::before {
+    content: attr(data-line-number);
+    @apply mr-6 inline-block w-8 pl-0 text-right text-gray-300 dark:text-gray-600;
+  }
+
+  & pre[data-good] {
+    @apply bg-green-50 dark:bg-green-900/10;
+  }
+
+  & pre[data-good],
+  & pre[data-good][data-filename]:before {
+    @apply border-green-200 dark:border-green-900/50;
+  }
+
+  &
+    pre[data-line-numbers="true"][data-good]:not(
+      [data-lang="bash"],
+      [data-lang="sh"]
+    )
+    [data-line-number]::before {
+    @apply text-green-700 dark:text-green-400;
+  }
+
+  & pre[data-bad] {
+    @apply bg-red-50 dark:bg-red-900/10;
+  }
+
+  & pre[data-bad],
+  & pre[data-bad][data-filename]:before {
+    @apply border-red-200 dark:border-red-900/50;
+  }
+
+  &
+    pre[data-line-numbers="true"][data-bad]:not(
+      [data-lang="bash"],
+      [data-lang="sh"]
+    )
+    [data-line-number]::before {
+    @apply text-red-700 dark:text-red-400;
+  }
+
+  & pre[data-filename]::before {
+    @apply mb-4 block border-b border-gray-100 bg-no-repeat pb-4 pl-11 dark:border-gray-800;
+    content: attr(data-filename);
+  }
+
+  & pre[data-filename]::after {
+    @apply absolute left-[1.125rem] top-5 h-4 w-4 bg-gray-400 dark:bg-gray-500;
+    content: "";
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z' vector-effect='non-scaling-stroke'%3E%3C/path%3E%3Cpolyline points='13 2 13 9 20 9' vector-effect='non-scaling-stroke'%3E%3C/polyline%3E%3C/svg%3E");
+    mask-size: cover;
+  }
+
+  & .codeblock-line[data-highlight="true"]::after {
+    content: " ";
+    @apply pointer-events-none absolute left-0 top-0 w-full bg-green-400 opacity-10 dark:bg-green-300 dark:opacity-20;
+  }
+
+  & pre[data-good] .codeblock-line[data-highlight="true"]::after {
+    @apply bg-green-700 dark:bg-green-400;
+  }
+
+  & pre[data-bad] .codeblock-line[data-highlight="true"]::after {
+    @apply bg-red-700 dark:bg-red-400;
+  }
+
+  /*****************************************************************************/
+  /* tables */
+
+  & table {
+    text-indent: 0;
+    border-spacing: 0;
+    @apply my-10 block w-full max-w-full border-collapse overflow-auto border-[color:inherit] text-left;
+  }
+
+  & table th {
+    @apply sticky top-0 w-full bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-300;
+    @apply border-0 border-b border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800;
+  }
+
+  & table tbody {
+    @apply align-baseline;
+  }
+
+  & table td {
+    @apply w-full whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4 text-sm text-black dark:text-white;
+  }
+
+  /*****************************************************************************/
+  /* blocks */
+
+  & docs-info,
+  & docs-success,
+  & docs-warning,
+  & docs-error {
+    @apply relative mb-3 mt-0 block rounded-lg border-l-2 border-r-2 border-current px-4 py-2;
+  }
+
+  & docs-info::before,
+  & docs-success::before,
+  & docs-warning::before,
+  & docs-error::before {
+    @apply pointer-events-none absolute inset-0 opacity-10 content-[""];
+  }
+
+  & docs-info > :last-child,
+  & docs-success > :last-child,
+  & docs-warning > :last-child,
+  & docs-error > :last-child {
+    @apply mb-0;
+  }
+
+  & docs-warning {
+    @apply text-yellow-800 dark:text-yellow-100;
+  }
+
+  & docs-warning::before {
+    @apply bg-yellow-400 opacity-[0.15];
+  }
+
+  & docs-info {
+    @apply text-blue-brand dark:text-blue-300;
+  }
+
+  & docs-info::before {
+    @apply bg-blue-brand;
+  }
+
+  & docs-error {
+    @apply text-red-700 dark:text-red-300;
+  }
+
+  & docs-error::before {
+    @apply bg-red-700 dark:bg-red-300;
+  }
+
+  & docs-success {
+    @apply text-green-600 dark:text-green-300;
+  }
+
+  & docs-success::before {
+    @apply bg-green-brand;
+  }
+
+  & docs-info a,
+  & docs-success a,
+  & docs-warning a,
+  & docs-error a {
+    text-decoration: underline;
+  }
+
+  & docs-cards {
+    @apply flex grid-cols-2 flex-col gap-6 md:grid;
+
+    & > a {
+      @apply relative block dark:text-inherit;
+      color: unset;
+    }
+
+    & > a:hover {
+      text-decoration: unset;
+    }
+  }
+
+  & docs-card {
+    @apply block h-full w-full rounded-lg border-[3px] border-gray-50 p-4 hover:border-gray-100 dark:border-gray-700 hover:dark:border-gray-600 sm:p-6;
+
+    & > :first-child {
+      @apply mt-0;
+    }
+
+    & > :last-child {
+      @apply mb-0;
+    }
+  }
+
+  /*****************************************************************************/
+  /* blockquotes */
+
+  & blockquote {
+    @apply mx-0 mb-4 mt-0 border-l-4 border-gray-200 p-0 pl-4 text-gray-600 dark:border-gray-800 dark:text-gray-400;
+  }
+
+  & blockquote > :first-child {
+    margin-top: 0;
+  }
+
+  & blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+  /*****************************************************************************/
+  /* hr */
+
+  & hr {
+    @apply mx-0 my-6 h-[1px] overflow-visible border-0 bg-gray-200 p-0 dark:bg-gray-800;
+  }
+}
+
+.md-toc {
+  & :where(li code) {
+    @apply rounded-sm bg-gray-100/50 px-1.5 pb-0.5 pt-px text-xs text-gray-600 group-hover:text-gray-100 dark:bg-gray-800/50 dark:text-gray-300;
+  }
+}

@@ -1,0 +1,58 @@
+/* this was copy/paste/modified from @docsearch/css/dist/_variables.css */
+:root {
+  &:where(.dark) {
+    --docsearch-text-color: #f5f6f7;
+    --docsearch-container-background: rgba(9, 10, 17, 0.8);
+    --docsearch-modal-background: #15172a;
+    --docsearch-modal-shadow: inset 1px 1px 0 0 #2c2e40, 0 3px 8px 0 #000309;
+    --docsearch-searchbox-background: #090a11;
+    --docsearch-searchbox-focus-background: #000;
+    --docsearch-hit-color: #bec3c9;
+    --docsearch-hit-shadow: none;
+    --docsearch-hit-background: #090a11;
+    --docsearch-key-gradient: linear-gradient(-26.5deg, #565872, #31355b);
+    --docsearch-key-shadow: inset 0 -2px 0 0 #282d55, inset 0 0 1px 1px #51577d,
+      0 2px 2px 0 rgba(3, 4, 9, 0.3);
+    --docsearch-footer-background: #1e2136;
+    --docsearch-footer-shadow: inset 0 1px 0 0 rgba(73, 76, 106, 0.5),
+      0 -4px 8px 0 rgba(0, 0, 0, 0.2);
+    --docsearch-logo-color: #fff;
+    --docsearch-muted-color: #7f8497;
+  }
+}
+
+.DocSearch-Button {
+  @apply ml-0 h-10 bg-gray-100 px-3 hover:bg-gray-200 hover:shadow-none focus:bg-gray-200 focus-visible:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
+
+  @media screen and (min-width: theme(screens.lg)) {
+    width: 100%;
+  }
+  @media not screen and (min-width: theme(screens.lg)) {
+    @apply w-10 place-content-center px-0;
+    .DocSearch-Button-Keys,
+    .DocSearch-Button-Placeholder {
+      display: none;
+    }
+  }
+  @media print {
+    display: none;
+  }
+}
+
+.DocSearch-Button-Placeholder {
+  @apply text-sm font-normal text-black dark:text-gray-200;
+}
+
+.DocSearch-Button-Keys {
+  @apply justify-end gap-1;
+}
+
+.DocSearch-Button-Key {
+  all: unset;
+
+  @apply grid h-5 w-3.5 place-items-center rounded bg-white px-1 text-xs text-gray-600 dark:bg-gray-600 dark:text-gray-200;
+}
+
+.DocSearch-Container {
+  cursor: auto;
+}

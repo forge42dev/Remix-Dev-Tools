@@ -1,0 +1,34 @@
+.speaker-prose a {
+  text-decoration: underline;
+}
+.speaker-prose > p,
+.speaker-prose > ul,
+.speaker-prose > ol {
+  margin-top: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.speaker-prose > :first-child {
+  margin-top: 0;
+}
+
+.speaker-prose > :last-child {
+  margin-bottom: 0;
+}
+
+.speaker-prose ul,
+.speaker-prose ol {
+  padding-left: 1rem;
+  margin-left: 1rem;
+  list-style-position: inside;
+}
+.speaker-prose ul {
+  list-style: disc;
+}
+.speaker-prose ol {
+  list-style: decimal;
+}
+.speaker-prose ul li::marker,
+.speaker-prose ol li::marker {
+  color: rgb(164 164 164 / 1);
+}
