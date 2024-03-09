@@ -50,7 +50,7 @@ export function Header({
 
 function HeaderMenuMobile({ className = "" }: { className: string }) {
   let baseClasses =
-    "bg-gray-100 hover:bg-gray-200 [[open]>&]:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:[[open]>&]:bg-gray-700";
+    "bg-gray-100 hover:bg-gray-200 [[open]>&]:bg-gray-200 dark:bg-slate-950 dark:hover:bg-gray-700 dark:[[open]>&]:bg-gray-700";
 
   return (
     <DetailsMenu className={cx("relative cursor-pointer", className)}>

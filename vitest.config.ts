@@ -4,6 +4,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "happy-dom",
-    exclude: ["**/node_modules/**", "**/dist/**", "**/public/**", "**/cjs-app/**", "**/esm-app/**", "**/test-apps/**"],
+    exclude: ["**/node_modules/**", "**/dist/**", "**/docs/**", "**/public/**", "**/cjs-app/**", "**/esm-app/**", "**/test-apps/**"],
   },
 });

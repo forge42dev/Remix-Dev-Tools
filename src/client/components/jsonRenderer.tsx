@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSettingsContext } from "../context/useRDTContext.js";
 import JsonView from "../../external/react-json-view/index.js";
 import { customTheme } from "../../external/react-json-view/theme/custom.js";
@@ -13,6 +13,13 @@ const isPromise = (value: any): value is Promise<any> => {
 
 const JsonRenderer = ({ data }: JsonRendererProps) => {
   const { settings } = useSettingsContext();
+  const ref = useRef(true);
+  useEffect(() => {
+    ref.current = true;
+    return () => {
+      ref.current = false;
+    }
+  },[])
   const originalData = useMemo(
     () =>
       typeof data === "string"
@@ -21,6 +28,7 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
             .map(([key, value]) => {
               if (isPromise(value)) {
                 value.then((res) => {
+                  if(!ref.current) return;
                   setJson((json: any) => ({
                     ...json,
                     [key]: res,
@@ -35,6 +43,7 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
             }, {}),
     [data]
   );
+  
   const [json, setJson] = useState(originalData);
 
   useEffect(() => {

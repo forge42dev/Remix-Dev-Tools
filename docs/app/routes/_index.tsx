@@ -1,0 +1,98 @@
+import type { MetaFunction } from '@remix-run/node'
+import { Link } from '@remix-run/react'
+import { ClientOnly } from 'remix-utils/client-only'
+import { FeaturesSection } from '~/components/FeaturesSection'
+import { Button } from '~/components/ui/Button'
+import { LampContainer } from '~/components/ui/Lamp'
+import { MaskContainer } from '~/components/ui/MaskContainer'
+import { Meteors } from '~/components/ui/Meteors'
+import { SparklesCore } from '~/components/ui/Sparkles'
+import { InfiniteMovingCards } from '~/components/ui/infinite-cards'
+import { Navbar } from '~/components/ui/navbar-menu'
+import { TypewriterEffect } from '~/components/ui/typewritter'
+
+export const loader = () => {
+  // To add a landing page to your docs, remove this line.
+  // return redirect('/docs/main')
+  return null
+}
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'New Remix App' },
+    { name: 'description', content: 'Welcome to Remix!' },
+  ]
+}
+
+export default function Index() {
+  return (
+    <div className="placeholder-index relative h-full min-h-screen w-screen overflow-x-hidden bg-slate-950">
+      <Navbar />
+
+      <div className="fixed top-0 z-30">
+        <Meteors />
+      </div>
+
+      <LampContainer>
+        <h1 className="bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold !leading-normal text-transparent md:text-7xl">
+          Own <br /> your <span className="mr-4 text-green-500"> Remix</span>
+          application
+        </h1>
+      </LampContainer>
+      <FeaturesSection />
+      <OpenSourceReveal />
+      <div className="mb-40 flex w-full items-center justify-center">
+        <InfiniteMovingCards
+          className="w-full"
+          items={[
+            {
+              title: 'Raphaël Moreau',
+              name: 'Software Engineer',
+              quote:
+                'Remix dev tools are really helpful when I struggle with something that doesn’t work as I expect. You have everything you need to debug right in your browser (really helpful when I can’t use a second monitor). The features I can’t work without are the active page data with the loader/action data and the server responses (no need to search for a console.log in the terminal or the browser console) and the error tab with the hydration mismatch view 🔥. (I love everything but it would be suspicious if I listed it all)',
+            },
+            {
+              title: 'Alem Tuzlak',
+              name: 'The guy who created this',
+              quote:
+                'Remix development tools is the best tool I have created so far. You should definitely try it out in your Remix project and this is not a paid testimonial 😂',
+            },
+          ]}
+        />
+      </div>
+      <div className="flex min-h-[20vh] w-full flex-col items-center gap-12 overflow-x-hidden pb-20">
+        <TypewriterEffect
+          words={'Want to get started? Click the button below!'
+            .split(' ')
+            .map(word => ({ text: word, className: '!text-white' }))}
+        />
+        <Button>
+          <Link to="/docs/main" unstable_viewTransition className="text-white">
+            Get Started
+          </Link>
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+export function OpenSourceReveal() {
+  return (
+    <div className="flex h-[40rem] w-full items-center justify-center overflow-hidden bg-slate-950">
+      <MaskContainer
+        revealText={
+          <p className="mx-auto flex max-w-4xl flex-col gap-2 text-center text-3xl font-bold text-slate-500">
+            <span>Want to open up an element directly in your editor? 🚀</span>
+
+            <span>You're one hover away from learning how!</span>
+          </p>
+        }
+        className="h-[40rem]"
+      >
+        Click <span className="text-red-500">Shift + Right Click</span> to
+        directly go to element source in
+        <span className="ml-2 text-blue-500">VS Code</span> 🔥
+      </MaskContainer>
+    </div>
+  )
+}

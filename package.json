@@ -81,6 +81,7 @@
   "homepage": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "scripts": {
+    "docs": "cd docs && npm run dev",
     "prepublishOnly": "npm run build",
     "remix-vite": "npm run dev -w src/test-apps/remix-vite",
     "remix-website": "npm run dev -w src/test-apps/remix-website",
@@ -188,6 +189,7 @@
     "date-fns": "^2.30.0",
     "es-module-lexer": "^1.4.1",
     "react-diff-viewer-continued": "^3.3.1",
+    "remix-utils": "^7.5.0",
     "tailwind-merge": "^1.14.0",
     "uuid": "^9.0.1",
     "zod": "^3.22.4"

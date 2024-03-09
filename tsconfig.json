@@ -33,6 +33,7 @@
     "./src/external/**/*",
     "./src/external/react-d3-tree",
     "./scripts",
+    "./docs",
     "tsup*.ts",
     "./src/external/react-use-websocket",
   ],

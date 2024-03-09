@@ -194,7 +194,7 @@ function ResourcePoster({
       <div className="relative">
         <div
           className={cx(
-            "aspect-h-1 aspect-w-2 relative w-full overflow-hidden rounded-t-lg bg-gray-100 dark:bg-gray-900",
+            "aspect-h-1 aspect-w-2 relative w-full overflow-hidden rounded-t-lg bg-gray-100 dark:bg-slate-950",
             to && "hover:opacity-90",
           )}
         >

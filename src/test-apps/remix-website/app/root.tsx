@@ -126,7 +126,7 @@ function Document({
           "flex min-h-screen w-full flex-col overflow-x-hidden antialiased selection:bg-blue-200 selection:text-black dark:selection:bg-blue-800 dark:selection:text-white",
           forceDark
             ? [darkBg || "bg-gray-900", "text-gray-200"]
-            : "bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-200",
+            : "bg-white text-gray-900 dark:bg-slate-950 dark:text-gray-200",
         )}
       >
         <GlobalLoading />

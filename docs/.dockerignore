@@ -1,0 +1,12 @@
+node_modules
+
+/.cache
+/.github
+/build
+.env
+
+./test-results
+./coverage
+./playwright-report/**
+./tests
+./scripts

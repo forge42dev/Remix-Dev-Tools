@@ -184,7 +184,7 @@ function Header() {
   return (
     <div
       className={cx(
-        "relative border-b border-gray-100/50 bg-white text-black dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100",
+        "relative border-b border-gray-100/50 bg-white text-black dark:border-gray-800 dark:bg-slate-950 dark:text-gray-100",
         // This hides some of the underlying text when the user scrolls to the
         // bottom which results in the overscroll bounce
         "before:absolute before:bottom-0 before:left-0 before:hidden before:h-[500%] before:w-full before:bg-inherit lg:before:block",
@@ -348,7 +348,7 @@ function DocSearchSection({ className }: { className?: string }) {
       <div className="absolute -top-24 hidden h-24 w-full bg-white dark:bg-gray-900 lg:block" />
       <div
         className={cx(
-          "relative lg:bg-white lg:dark:bg-gray-900",
+          "relative lg:bg-white lg:dark:bg-slate-950",
           // This hides some of the underlying text when the user scrolls to the
           // bottom which results in the overscroll bounce
           "before:absolute before:bottom-0 before:left-0 before:-z-10 before:hidden before:h-[200%] before:w-full before:bg-inherit lg:before:block",
@@ -356,7 +356,7 @@ function DocSearchSection({ className }: { className?: string }) {
       >
         <DocSearch />
       </div>
-      <div className="absolute top-full hidden h-6 w-full bg-gradient-to-b from-white dark:from-gray-900 lg:block" />
+      <div className="absolute top-full hidden h-6 w-full bg-gradient-to-b from-white dark:from-slate-950 lg:block" />
     </div>
   );
 }
@@ -603,7 +603,7 @@ function NavMenuMobile() {
       <DetailsMenu className="group relative flex h-full flex-col">
         <summary
           tabIndex={0}
-          className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
+          className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-slate-950 dark:hover:bg-gray-800 dark:active:bg-gray-700"
         >
           <div className="flex items-center gap-2">
             <svg aria-hidden className="h-5 w-5 group-open:hidden">
@@ -617,7 +617,7 @@ function NavMenuMobile() {
             {doc ? doc.attrs.title : "Navigation"}
           </div>
         </summary>
-        <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-2 pt-5 shadow-2xl dark:border-gray-700 dark:bg-gray-900 dark:shadow-black">
+        <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-2 pt-5 shadow-2xl dark:border-gray-700 dark:bg-slate-950 dark:shadow-black">
           <Menu />
         </div>
       </DetailsMenu>
@@ -697,7 +697,7 @@ function MenuCategoryLink({
         "group",
         isActive
           ? "bg-gray-50 font-semibold text-blue-brand dark:bg-gray-800"
-          : "text-inherit hover:text-gray-900 active:text-blue-brand dark:hover:text-gray-50 dark:active:text-blue-brand",
+          : "text-inherit hover:text-slate-950 active:text-blue-brand dark:hover:text-gray-50 dark:active:text-blue-brand",
       )}
     >
       {children}
