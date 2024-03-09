@@ -57,6 +57,12 @@ export default function Index() {
               quote:
                 'Remix development tools is the best tool I have created so far. You should definitely try it out in your Remix project and this is not a paid testimonial 😂',
             },
+            {
+              title: 'xHomu',
+              name: 'Software Engineer',
+              quote:
+                "From hydration error to hunting down nested routes, with RDT, the solution to the worst Remix pain points is always just a click away. Don't build a Remix app without it! ",
+            },
           ]}
         />
       </div>
