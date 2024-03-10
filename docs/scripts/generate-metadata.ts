@@ -20,7 +20,7 @@ const __dirname =
  */
 const INDEX_FILE = 'index.md'
 
-const postDirectory = resolve(__dirname, './docs/posts')
+const postDirectory = resolve(__dirname, 'posts')
 const versions = await readFile(
   resolve(postDirectory, 'versions.json'),
   'utf-8'
