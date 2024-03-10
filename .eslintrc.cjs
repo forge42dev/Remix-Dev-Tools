@@ -2,10 +2,7 @@ module.exports = {
   env: { browser: true, es2020: true },
   ignorePatterns: [
     "node_modules",
-    "dist",
-    "src/cjs-app",
-    "src/esm-app",
-    "src/documentation",
+    "dist", 
     ".eslintrc.cjs",
     "tailwind.config.js",
     "src/external",

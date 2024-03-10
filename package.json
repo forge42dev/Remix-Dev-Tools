@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "3.7.3",
+  "version": "4.0.0",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -35,18 +35,18 @@
       "node": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
-    "./vite": {
+    "./client": {
       "import": {
-        "types": "./dist/vite.d.ts",
-        "default": "./dist/vite.js"
+        "types": "./dist/client.d.ts",
+        "default": "./dist/client.js"
       },
       "require": {
-        "types": "./dist/vite.d.cts",
-        "default": "./dist/vite.cjs"
+        "types": "./dist/client.d.cts",
+        "default": "./dist/client.cjs"
       },
-      "types": "./dist/vite.d.ts",
-      "node": "./dist/vite.cjs",
-      "default": "./dist/vite.js"
+      "types": "./dist/client.d.ts",
+      "node": "./dist/client.cjs",
+      "default": "./dist/client.js"
     },
     "./server": {
       "import": {
@@ -68,10 +68,6 @@
       "default": "./dist/index.css"
     }
   },
-  "bin": {
-    "rdt-serve": "./dist/cli.js",
-    "rdt-cjs-serve": "./dist/cli.cjs"
-  },
   "files": [
     "dist"
   ],
@@ -82,34 +78,24 @@
   "bugs": {
     "url": "https://github.com/Code-Forge-Net/Remix-Dev-Tools/issues"
   },
-  "homepage": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
+  "homepage": "https://remix-development-tools.fly.dev/",
   "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "scripts": {
+    "docs": "cd docs && npm run dev",
     "prepublishOnly": "npm run build",
-    "remix": "npm run dev -w src/test-apps/cjs-app",
-    "remix-esm": "npm run dev -w src/test-apps/esm-app",
-    "remix-epic": "npm run dev -w src/test-apps/epic-app",
-    "remix-docs": "npm run dev -w src/test-apps/documentation",
     "remix-vite": "npm run dev -w src/test-apps/remix-vite",
-    "dev": "npm-run-all -s build -p remix cjs-watch",
-    "dev:esm": "npm-run-all -s build -p remix-esm esm-watch",
-    "dev:epic": "npm-run-all -s build -p remix-epic esm-watch",
-    "dev:vite": "npm-run-all -s tsup:vite -p tsup:vite:watch remix-vite esm-watch",
-    "cjs-watch": "npm-run-all -p tsup:dev-server-cjs:watch tsup:rdt:watch",
-    "esm-watch": "npm-run-all -p tsup:dev-server-esm:watch tsup:rdt:watch",
+    "remix-website": "npm run dev -w src/test-apps/remix-website",
+    "runner": "npm-run-all -s build -p watch-all",
+    "dev": "npm run runner remix-vite ",
+    "dev:w": "npm run runner remix-website ",
     "build": "run-s  tsup:* -- --clean",
-    "tsup:rdt": "tsup",
+    "watch-all": "npm-run-all -p tsup:index:watch tsup:client:watch tsup:server:watch -- --watch",
+    "tsup:index": "tsup",
+    "tsup:index:watch": "tsup --watch",
     "tsup:client": "tsup --config tsup-client.ts",
-    "tsup:vite": "tsup --config tsup-vite.ts",
-    "tsup:vite:watch": "tsup --config tsup-vite.ts --watch",
-    "tsup:rdt-server": "tsup --config tsup-server.ts",
-    "tsup:dev-server-cjs": "tsup --config tsup-dev-server-cjs.ts",
-    "tsup:dev-server-esm": "tsup --config tsup-dev-server-esm.ts",
-    "tsup:rdt:watch": "tsup --watch",
-    "tsup:rdt-server:watch": "tsup --config tsup-server.ts --watch",
-    "tsup:client:watch": "tsup --config tsup-client.ts --watch",
-    "tsup:dev-server-cjs:watch": "tsup --config tsup-dev-server-cjs.ts --watch",
-    "tsup:dev-server-esm:watch": "tsup --config tsup-dev-server-esm.ts --watch",
+    "tsup:client:watch": "npm run tsup:client -- --watch",
+    "tsup:server": "tsup --config tsup-server.ts",
+    "tsup:server:watch": "tsup --config tsup-server.ts --watch",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext ts,tsx --report-unused-disable-directives --fix",
     "prettier": "prettier --check .",
@@ -125,23 +111,22 @@
   },
   "workspaces": [
     ".",
-    "src/test-apps/cjs-app",
-    "src/test-apps/esm-app",
     "src/test-apps/remix-vite",
-    "src/test-apps/epic-app"
+    "src/test-apps/remix-website"
   ],
   "peerDependencies": {
     "@remix-run/react": ">=1.15",
     "react": ">=17",
-    "react-dom": ">=17"
+    "react-dom": ">=17",
+    "vite": ">=5.0.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.5.1",
-    "@remix-run/express": "^2.5.1",
-    "@remix-run/node": "^2.5.1",
-    "@remix-run/react": "^2.5.1",
+    "@remix-run/dev": "^2.8.0",
+    "@remix-run/express": "^2.8.0",
+    "@remix-run/node": "^2.8.0",
+    "@remix-run/react": "^2.8.0",
     "@remix-run/router": "^1.9.0",
-    "@remix-run/server-runtime": "^2.5.1",
+    "@remix-run/server-runtime": "^2.8.0",
     "@rollup/plugin-typescript": "^11.1.3",
     "@testing-library/react": "^14.0.0",
     "@types/babel__core": "^7.20.4",
@@ -188,7 +173,7 @@
     "tsup": "^7.2.0",
     "typescript": "^5.1.6",
     "unbuild": "^2.0.0",
-    "vite": "^5.0.0",
+    "vite": "^5.1.0",
     "vitest": "^0.33.0"
   },
   "dependencies": {
@@ -204,9 +189,9 @@
     "date-fns": "^2.30.0",
     "es-module-lexer": "^1.4.1",
     "react-diff-viewer-continued": "^3.3.1",
+    "remix-utils": "^7.5.0",
     "tailwind-merge": "^1.14.0",
     "uuid": "^9.0.1",
-    "ws": "^8.14.2",
     "zod": "^3.22.4"
   }
 }

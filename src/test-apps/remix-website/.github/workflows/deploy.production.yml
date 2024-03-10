@@ -1,0 +1,61 @@
+name: 🚀 Deploy (production)
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".vscode/**"
+      - "scripts/**"
+      - "README.md"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+jobs:
+  test:
+    name: ⚡ Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Install deps
+        uses: bahmutov/npm-install@v1
+
+      - name: ⚡ Run vitest
+        run: npm run test -- --coverage
+
+  deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🎈 Setup Fly
+        uses: superfly/flyctl-actions/setup-flyctl@1.5
+
+      - name: 🚀 Deploy Production
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: flyctl deploy --remote-only --config ./fly.production.toml --build-arg SOURCE_REPO="remix-run/remix" --build-arg RELEASE_PACKAGE="remix" --strategy rolling
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  purge:
+    name: 🧹 Purge CDN
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    steps:
+      - name: 🧹 Purge All
+        run: |
+          curl -D - -X POST --location "https://api.fastly.com/service/${{ secrets.FASTLY_SERVICE_ID }}/purge_all" -H "Accept: application/json" -H "Fastly-Key: ${{ secrets.FASTLY_API_TOKEN }}" -H "fastly-soft-purge: 1"

@@ -1,0 +1,41 @@
+/* When you bail on tailwind, start the className with __ so that they are easy to identify in the HTML as escape hatches, we don't want very many of these! */
+
+.__carousel {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.__carousel::-webkit-scrollbar {
+  @apply h-3 w-3;
+}
+
+.__carousel::-webkit-scrollbar-thumb {
+  background: white;
+  @apply rounded-lg bg-gray-500;
+}
+.__carousel::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.__slide {
+  scroll-snap-align: start;
+}
+
+.__mutation_code pre {
+  @apply h-[50vh] overflow-hidden bg-gray-800 py-2 sm:py-4;
+
+  & .codeblock-line {
+    @apply relative block px-2 leading-relaxed sm:px-8;
+  }
+
+  & .codeblock-line[data-highlight="true"]::after {
+    pointer-events: none;
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: theme("colors.green.brand");
+    opacity: 0.2;
+  }
+}

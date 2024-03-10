@@ -1,0 +1,160 @@
+.__layout {
+  background-image: linear-gradient(
+    180deg,
+    theme(colors.blue.800) 0px,
+    theme(colors.blue.800) 20px,
+    theme(colors.blue.700) 350px,
+    theme(colors.blue.700) 1000px,
+    theme(colors.blue.800) 2000px,
+    theme(colors.blue.900) 3000px
+  );
+}
+.__hero {
+  --img-jpg-1x: url("/conf-images/utah-sky-sm.jpg");
+  --img-jpg-2x: url("/conf-images/utah-sky-sm.jpg");
+  --img-avif-1x: url("/conf-images/utah-sky-sm.avif");
+  --img-avif-2x: url("/conf-images/utah-sky-md.avif");
+}
+@media (min-width: 640px) {
+  .__hero {
+    --img-jpg-1x: url("/conf-images/utah-sky-md.jpg");
+    --img-jpg-2x: url("/conf-images/utah-sky-md.jpg");
+    --img-avif-1x: url("/conf-images/utah-sky-md.avif");
+    --img-avif-2x: url("/conf-images/utah-sky-md.avif");
+  }
+}
+@media (min-width: 768px) {
+  .__hero {
+    --img-jpg-1x: url("/conf-images/utah-sky-md.jpg");
+    --img-jpg-2x: url("/conf-images/utah-sky-md.jpg");
+    --img-avif-1x: url("/conf-images/utah-sky-md.avif");
+    --img-avif-2x: url("/conf-images/utah-sky-lg.avif");
+  }
+}
+@media (min-width: 1024px) {
+  .__hero {
+    --img-jpg-1x: url("/conf-images/utah-sky-md.jpg");
+    --img-jpg-2x: url("/conf-images/utah-sky-md.jpg");
+    --img-avif-1x: url("/conf-images/utah-sky-md.avif");
+    --img-avif-2x: url("/conf-images/utah-sky-lg.avif");
+  }
+}
+.__hero {
+  --hero-text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  background-image: var(--img-jpg-1x);
+  background-image: image-set(
+    var(--img-jpg-1x) 1x type("image/jpeg"),
+    var(--img-jpg-2x) 2x type("image/jpeg"),
+    var(--img-avif-1x) 1x type("image/avif"),
+    var(--img-avif-2x) 2x type("image/avif")
+  );
+  background-image: -webkit-image-set(
+    var(--img-jpg-1x) 1x,
+    var(--img-jpg-2x) 2x
+  );
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background: linear-gradient(
+      180deg,
+      #073966 0%,
+      rgba(26, 101, 179, 0.43) 100%
+    );
+  }
+}
+
+.__hero-text-shadow {
+  text-shadow: var(--hero-text-shadow);
+}
+
+.__section-speakers {
+  position: relative;
+  background-image: linear-gradient(
+    180deg,
+    theme(colors.blue.900) 0px,
+    theme(colors.blue.800) 200px,
+    theme(colors.blue.800) 200px,
+    theme(colors.blue.700) 100%
+  );
+
+  &::before {
+    position: absolute;
+    display: block;
+    content: "";
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+      180deg,
+      hsl(302deg 67% 54% / 0) 0px,
+      hsl(302deg 67% 54% / 0) 100px,
+      hsl(302deg 67% 54% / 0.375) 100%
+    );
+  }
+}
+
+.__speaker-img {
+  border: 1px solid theme("colors.blue.brand");
+}
+
+.__speaker-link:hover .__speaker-img {
+  border-color: theme("colors.pink.brand");
+}
+
+.animated-remix-conf-logo .remix {
+  --transform-start: matrix(1, 0, 0, 1, -800, -220);
+  --transform-end: matrix(1, 0, 0, 1, -227, -220);
+  animation-name: fadeSlideIn27;
+  animation-duration: 1.4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
+  transform: var(--transform-end);
+}
+
+.animated-remix-conf-logo .conf {
+  --transform-start: matrix(11.3585, 0, 0, 11.3585, -1500, -735.56);
+  --transform-end: matrix(11.3585, 0, 0, 11.3585, -1948.42, -735.56);
+  animation-name: fadeSlideIn64;
+  animation-duration: 1.8s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
+  transform: var(--transform-end);
+}
+
+@keyframes fadeSlideIn27 {
+  from {
+    opacity: 0;
+    transform: var(--transform-start);
+  }
+  27% {
+    opacity: 0;
+    transform: var(--transform-start);
+  }
+  to {
+    opacity: 1;
+    transform: var(--transform-end);
+  }
+}
+
+@keyframes fadeSlideIn64 {
+  from {
+    opacity: 0;
+    transform: var(--transform-start);
+  }
+  64% {
+    opacity: 0;
+    transform: var(--transform-start);
+  }
+  to {
+    opacity: 1;
+    transform: var(--transform-end);
+  }
+}

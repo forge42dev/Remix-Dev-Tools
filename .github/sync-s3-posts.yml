@@ -1,0 +1,51 @@
+name: 🔁 Sync docs with S3
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: 🛡️ Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: 📦 Install dependencies
+      run: npm ci
+
+    - name: ⚡ Generate docs metadata
+      run: npm run generate:metadata
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_OWNER: ${{ github.repository_owner }}
+        GITHUB_REPO: ${{ github.event.repository.name}}
+
+    - name: 🏁 Check for changes
+      id: git-check
+      run: |
+        if git diff HEAD^ HEAD -- posts/; then
+          echo "No changes detected."
+          echo "{changes}={false}" >> $GITHUB_OUTPUT
+        else
+          echo "Changes detected."
+          echo "{changes}={true}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: 🪣 Sync to S3
+      if: steps.git-check.outputs.changes == 'true'
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --acl public-read --follow-symlinks --delete
+      env:
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: 'eu-north-1'
+        SOURCE_DIR: 'posts'
+        DEST_DIR: 'posts'

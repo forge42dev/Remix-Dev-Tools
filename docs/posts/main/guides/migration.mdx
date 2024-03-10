@@ -1,0 +1,100 @@
+---
+title: "Migration guide"
+description: "Migration guide from older version of remix-development-tools"
+---
+
+import Info from "./info.tsx";
+
+## v3.x => v4.x
+
+### Vite plugin
+
+If you're migrating your `remix-development-tools` from v3.x to v4.x and you were already running it as
+a Vite plugin here is all you need to do:
+
+```diff
+import { defineConfig } from 'vite';
+import { vitePlugin as remix } from '@remix-run/dev';
+- import { remixDevTools } from 'remix-development-tools/vite'
++ import { remixDevTools } from 'remix-development-tools'
+
+export default defineConfig({
+  plugins: [remixDevTools(), remix()],
+})
+```
+
+### Remix compiler
+
+<Info>
+This section is only valid if you were not using the Vite plugin for Remix.
+</Info>
+
+If you were using the Remix compiler and not the Vite plugin, you will first need to do the following:
+- Migrate your app to use the Vite plugin.
+- Migrate your app from CJS to ESM (if applicable).
+
+After you've done these things you need to remove everything from your `root.tsx` file that is
+related to `remix-development-tools`.
+
+```diff
+// Import styles
+- import rdtStylesheet from "remix-development-tools/index.css"; 
+export const links: LinksFunction = () => [ 
+-   ...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
+] 
+ 
+- let AppExport = App;
+// This imports the dev tools only if you're in development
+- if(process.env.NODE_ENV === 'development') { 
+-   const { withDevTools } = await import("remix-development-tools"); 
+-   AppExport = withDevTools(AppExport);
+- }
+
+- export default AppExport;
+```
+
+After this is done you might also need to remove the `remix-development-tools` package from your
+custom server. An example of that would be something like this:
+```diff
+  // Somewhere in your server.ts file
+  const build = await import(BUILD_PATH)
+  let devBuild = build
+  let devToolsConfig  = null; 
+-  if(process.env.NODE_ENV === 'development') {
+-    const { withServerDevTools, defineServerConfig } = await import("remix-development-tools/server"); 
+-     // Allows you to define the configuration for the dev tools
+-      devToolsConfig = defineServerConfig({ 
+-      //... your config here ...
+-    })
+-    // wrap the build with the dev tools
+-    devBuild = withServerDevTools(build, devToolsConfig)
+-  }
+ 
+if(process.env.NODE_ENV === "development"){
+  // .... somewhere later in your code ...
+  // This makes sure the build is wrapped on reload, you will need this if you're running with the --manual flag
+  async function reloadBuild() {
+    devBuild = await import(`${BUILD_PATH}?update=${Date.now()}`)
+    // wrap the build with dev tools on re-import
+-    devBuild = withServerDevTools(devBuild, devToolsConfig)
+    broadcastDevReady(devBuild)
+  }
+}
+```
+
+After all of this is done. You just need to add the `remix-development-tools` to your `vite.config.ts` file.
+
+```diff
+import { defineConfig } from 'vite';
+import { vitePlugin as remix } from '@remix-run/dev';
++ import { remixDevTools } from 'remix-development-tools'
+
+export default defineConfig({
+  plugins: [
++   remixDevTools(),
+    remix()
+  ]
+})
+```
+
+And that's it! You should be good to go. If you have any issues, please reach out to us.

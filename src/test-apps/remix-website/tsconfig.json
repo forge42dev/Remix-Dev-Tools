@@ -1,0 +1,23 @@
+{
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "types": ["vitest/globals", "vite-plugin-arraybuffer/types"],
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2019",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "~/*": ["./app/*"],
+    },
+    "noEmit": true,
+    "baseUrl": ".",
+    "allowJs": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+  },
+}

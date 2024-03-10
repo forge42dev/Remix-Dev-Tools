@@ -5,12 +5,12 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
     ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
     "jsx": "react-jsx",
-    "module": "NodeNext" /* Specify what module code is generated. */,
+    "module": "ESNext" /* Specify what module code is generated. */,
     "rootDir": "./src" /* Specify the root folder within your source files. */,
-    "moduleResolution": "NodeNext" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "moduleResolution": "Bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "types": ["vitest/globals"],
     "declaration": true /* Generate .d.ts files from TypeScript and JavaScript files in your project. */,
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
@@ -20,7 +20,7 @@
     // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
   },
   "exclude": [
     "./bin/**/*.test.ts",
@@ -33,7 +33,8 @@
     "./src/external/**/*",
     "./src/external/react-d3-tree",
     "./scripts",
+    "./docs",
     "tsup*.ts",
-    "./src/external/react-use-websocket"
-  ]
+    "./src/external/react-use-websocket",
+  ],
 }

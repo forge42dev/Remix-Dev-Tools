@@ -1,0 +1,46 @@
+name: 💅 Format
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    if: github.repository == 'remix-run/remix-website'
+    name: 💅 Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.FORMAT_PAT }}
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Install deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 💅 Format
+        run: npm run format --if-present
+
+      - name: 🗝️ Commit
+        run: |
+          git config --local user.email "hello@remix.run"
+          git config --local user.name "Remix Run Bot"
+
+          git add .
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "💿 no formatting changed"
+            exit 0
+          fi
+          git commit -m "chore: format [skip ci]"
+          git push
+          echo "💿 pushed formatting changes https://github.com/$GITHUB_REPOSITORY/commit/$(git rev-parse HEAD)"

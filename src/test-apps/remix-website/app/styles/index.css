@@ -1,0 +1,18 @@
+:root {
+  --base00: theme("colors.gray.800");
+  --base01: theme("colors.gray.700");
+  --base02: theme("colors.gray.600");
+  --base03: theme("colors.gray.500");
+  --base04: theme("colors.gray.400");
+  --base05: theme("colors.gray.300");
+  --base06: theme("colors.gray.200");
+  --base07: theme("colors.gray.100");
+  --base08: theme("colors.blue.300");
+  --base09: theme("colors.pink.brand");
+  --base0A: theme("colors.yellow.brand");
+  --base0B: theme("colors.green.brand");
+  --base0C: theme("colors.aqua.brand");
+  --base0D: theme("colors.blue.brand");
+  --base0E: theme("colors.pink.brand");
+  --base0F: theme("colors.gray.200");
+}

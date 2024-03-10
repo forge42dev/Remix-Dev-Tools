@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import clsx from "clsx";
-import type { Plugin } from "remix-development-tools";
+import clsx from "clsx"; 
 // TODO Replace these with your own toast library
 //import { toast } from "react-toastify";
 // TODO Replace these with your own array of all icon names available through a project, either generate through a script or use epic-stack script
@@ -78,7 +77,7 @@ const IconLibrary = () => {
 };
 
 // TODO Import this into your root.tsx and call it inside of the plugins array for RemixDevTools
-export const iconLibraryPlugin: Plugin = () => ({
+export const iconLibraryPlugin  = () => ({
   // TODO Replace with your own icon
   icon: <Icon name="camera" size="sm" />,
   component: <IconLibrary />,

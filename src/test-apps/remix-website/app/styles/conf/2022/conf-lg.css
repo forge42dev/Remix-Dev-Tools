@@ -1,0 +1,6 @@
+.__hero {
+  --img-jpg-1x: url("/conf-images/utah-sky-md.jpg");
+  --img-jpg-2x: url("/conf-images/utah-sky-md.jpg");
+  --img-avif-1x: url("/conf-images/utah-sky-md.avif");
+  --img-avif-2x: url("/conf-images/utah-sky-lg.avif");
+}
