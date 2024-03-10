@@ -78,7 +78,7 @@
   "bugs": {
     "url": "https://github.com/Code-Forge-Net/Remix-Dev-Tools/issues"
   },
-  "homepage": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
+  "homepage": "https://remix-development-tools.fly.dev/",
   "readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
   "scripts": {
     "docs": "cd docs && npm run dev",
