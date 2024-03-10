@@ -19,7 +19,18 @@ function useHydrated() {
 
 export const defineClientConfig = (config: RdtClientConfig) => config; 
 
- 
+export const withDevTools = (Component: any, config?: RemixDevToolsProps) => () => {
+  hydrationDetector();
+  const hydrated = useHydrated();
+  if (!hydrated) return <Component />;
+
+  return (
+    <>
+      <Component />
+      {createPortal(<RemixDevTools {...config} />, document.body)}
+    </>
+  );
+};
 
 /**
  * 
