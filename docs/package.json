@@ -23,7 +23,6 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.499.0",
     "@epic-web/client-hints": "^1.2.2",
     "@epic-web/invariant": "^1.0.0",
     "@headlessui/react": "^1.7.18",
