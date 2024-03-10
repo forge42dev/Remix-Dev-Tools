@@ -1,27 +1,12 @@
 import { readFile } from 'fs/promises'
 import { existsSync } from 'fs'
-import { resolve, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { resolve } from 'path'
 import { z } from 'zod'
-import { S3 } from '@aws-sdk/client-s3'
 
-// A nice todo would be implementing a cache for fetching from S3, if you can help with that, please do! :)
-// Thx
-
-const s3 = new S3({
-  apiVersion: '2012-10-17',
-  region: 'eu-north-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-  },
-  maxAttempts: 3,
+const envSchema = z.object({
+  APP_ROOT_PATH: z.string().default(process.cwd()),
 })
-
-const _dirname =
-  typeof __dirname !== 'undefined'
-    ? __dirname
-    : dirname(fileURLToPath(import.meta.url))
+const { APP_ROOT_PATH: appRootPath } = envSchema.parse(process.env)
 
 const FrontMatterTypeSchema = z.object({
   title: z.string(),
@@ -52,41 +37,24 @@ const stripTrailingSlashes = (str: string): string => {
 }
 
 export const getParsedMetadata = async (tag: string) => {
-  if (process.env.NODE_ENV === 'development') {
-    const content = await readFile(
-      resolve(_dirname, '../../../', `posts/${tag}/metadata.json`),
-      'utf-8'
-    )
+  const content = await readFile(
+    resolve(appRootPath, `posts/${tag}/metadata.json`),
+    'utf-8'
+  )
 
-    if (!content) {
-      return null
-    }
-
-    return MetadataSchema.parse(JSON.parse(content))
+  if (!content) {
+    return null
   }
-
-  const promise = await s3.getObject({
-    Bucket: process.env.AWS_S3_BUCKET || '',
-    Key: `posts/${tag}/metadata.json`,
-  })
-
-  const content =
-    (await promise.Body?.transformToString()) ||
-    '{\npaths: {},\nhasIndex: false,\nsections: [],\nmeta: {},\n}'
 
   return MetadataSchema.parse(JSON.parse(content))
 }
 
 export const tagHasIndex = async (tag: string) => {
-  if (process.env.NODE_ENV === 'development') {
-    // use metadata to handle the cross-checking
-    // const metadata = await getParsedMetadata(tag)
-    // return metadata?.hasIndex
-    // or
-    return existsSync(resolve(_dirname, '../../../', `posts/${tag}/_index.mdx`))
-  }
-
-  return ((await getParsedMetadata(tag)) ?? {}).hasIndex
+  // use metadata to handle the cross-checking
+  // const metadata = await getParsedMetadata(tag)
+  // return metadata?.hasIndex
+  // or
+  return existsSync(resolve(appRootPath, `posts/${tag}/_index.mdx`))
 }
 
 /**
@@ -104,39 +72,17 @@ export const getPostContent = async (tag: string, slug: string) => {
       'No docs metadata found! Make sure to generate a metadata for your doc posts!'
     )
   }
-
-  /**
-   * If we are in development mode, we can just read the file from the file system.
-   */
-  if (process.env.NODE_ENV === 'development') {
-    const content = await readFile(
-      resolve(
-        _dirname,
-        '../../../',
-        `posts/${tag}/${
-          slug === '/'
-            ? '_index'
-            : `${metadata.paths[stripTrailingSlashes(slug)]}`
-        }.mdx`
-      ),
-      'utf-8'
-    )
-
-    if (!content) {
-      return null
-    }
-
-    return content
-  }
-
-  const promise = await s3.getObject({
-    Bucket: process.env.AWS_S3_BUCKET || '',
-    Key: `posts/${tag}/${
-      slug === '/' ? '_index' : `${metadata.paths[stripTrailingSlashes(slug)]}`
-    }.mdx`,
-  })
-
-  const content = await promise.Body?.transformToString()
+  const content = await readFile(
+    resolve(
+      appRootPath,
+      `posts/${tag}/${
+        slug === '/'
+          ? '_index'
+          : `${metadata.paths[stripTrailingSlashes(slug)]}`
+      }.mdx`
+    ),
+    'utf-8'
+  )
 
   if (!content) {
     return null
@@ -161,27 +107,8 @@ export const getFirstPost = async (tag: string) => {
 }
 
 export const getVersions = async () => {
-  if (process.env.NODE_ENV === 'development') {
-    const content = await readFile(
-      resolve(_dirname, '../../../', 'posts/versions.json'),
-      'utf-8'
-    )
-
-    if (!content) {
-      return null
-    }
-
-    return (JSON.parse(content) as Array<{ tag: string }>).map(
-      version => version.tag
-    )
-  }
-
-  const promise = await s3.getObject({
-    Bucket: process.env.AWS_S3_BUCKET || '',
-    Key: 'posts/versions.json',
-  })
-
-  const content = await promise.Body?.transformToString()
+  const path = resolve(appRootPath, 'posts/versions.json')
+  const content = await readFile(path, 'utf-8')
 
   if (!content) {
     return null
