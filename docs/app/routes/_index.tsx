@@ -17,18 +17,10 @@ export const loader = () => {
   return null
 }
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'New Remix App' },
-    { name: 'description', content: 'Welcome to Remix!' },
-  ]
-}
-
 export default function Index() {
   return (
     <div className="placeholder-index relative h-full min-h-screen w-screen overflow-x-hidden bg-slate-950">
       <Navbar />
-
       <div className="fixed top-0 z-30">
         <Meteors />
       </div>
@@ -43,6 +35,7 @@ export default function Index() {
       <OpenSourceReveal />
       <div className="mb-40 flex w-full items-center justify-center">
         <InfiniteMovingCards
+          speed="normal"
           className="w-full"
           items={[
             {

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from '@remix-run/react'
 import { cn } from '~/utils/cn'
-import { MovingBorder } from './Button'
 
 const transition = {
   type: 'spring',

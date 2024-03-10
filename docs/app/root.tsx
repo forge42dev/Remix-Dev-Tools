@@ -7,8 +7,7 @@ import {
   ScrollRestoration,
 } from '@remix-run/react'
 import { json } from '@remix-run/node'
-import type { LoaderFunctionArgs } from '@remix-run/node'
-
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { ClientHints, getHints } from './components/ClientHint'
 import { useTheme } from './hooks/useTheme'
 import { getTheme } from './utils/server/theme.server'
@@ -30,6 +29,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     versions,
   })
 }
+export const meta: MetaFunction<typeof loader> = () => {
+  return [
+    {
+      property: 'og:site_name',
+      content: 'Remix Development Tools',
+    },
+    {
+      property: 'og:title',
+      content: 'Remix Development Tools Documentation',
+    },
+    {
+      property: 'og:image',
+      content: '/rdt.png',
+    },
+  ]
+}
 
 export default function Document() {
   const theme = useTheme()
@@ -43,7 +58,7 @@ export default function Document() {
         <Meta />
         <Links />
       </head>
-      <body className="overflow-x-hidden bg-background-color">
+      <body className="bg-background-color">
         <Outlet />
         <ScrollRestoration />
         <Scripts />

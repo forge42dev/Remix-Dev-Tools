@@ -11,7 +11,7 @@ import {
   useRouteError,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   load as loadFathom,
   type LoadOptions as FathomLoadOptions,
@@ -74,6 +74,8 @@ export function links() {
     { rel: "alternate", type: "application/rss+xml", href: "/blog/rss.xml" },
   ];
 }
+
+
 
 interface DocumentProps {
   title?: string;

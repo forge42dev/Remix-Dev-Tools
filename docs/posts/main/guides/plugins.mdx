@@ -1,0 +1,107 @@
+---
+title: "Plugins"
+description: "Remix Development Tools plugins"
+---
+
+import Warn from "./warn.tsx";
+
+<Warn title="Work in Progress">
+  Plugins are not yet available on version 4.0.0. This documentation is valid up to version 4.0.0.
+
+  We plan to bring back plugin support in the upcoming releases.
+</Warn>
+
+## Plugins in Vite (v3 only)
+Plugins work in a different way in Vite. You create a directory for plugins and just provide the path to the directory to the plugin. The plugin will automatically import all the plugins from the directory and add them to the dev tools. You only need to make sure your exports are named exports and not default exports and that they are uniquely named.
+
+You can create a directory called plugins in your project and add your plugins there. Then you can add the following to your vite.config.js file:
+```ts
+import { remixDevTools } from "remix-development-tools/vite";
+export default defineConfig({
+  plugins: [
+    remixDevTools({
+      pluginsDir: "./plugins"
+  })], 
+});
+```
+
+## Plugins in Remix bundler (v3 only)
+Writing plugins for Remix Development Tools is easy. You can write a plugin that adds a new tab to the Remix Development Tools in the following way:
+
+Create a new file in your project called remix-dev-tools-plugin.tsx
+Implement your jsx component and add the logic you wish to add to the Remix Development Tools.
+Export a function with the following contract:
+```tsx
+  const MyComponent = () => {
+    // Implement your logic here
+    return <div>My Component</div>
+  }
+
+  export function remixDevToolsPlugin(yourOptions?: { ... }): JSX.Element {
+    return {
+      // can't be page, terminal or routes, must be unique
+      id: "my-plugin",
+      // Name that is shown in the tab next to the icon
+      name: "My Plugin",
+      // Icon to be shown in the tab
+      icon: <MyIcon size={16} />,
+      // The component to be rendered when the tab is active
+      component: <MyComponent />,
+      // Whether the tab requires the Remix Forge VS Code extension to be connected to be shown
+      requiresForge: false,
+      // Whether the timeline should be shown on the tab
+      hideTimeline: false,
+    }
+  }
+
+```
+
+Import it in your root.tsx file and pass it to your Remix Development Tools:
+
+```diff
+import { remixDevToolsPlugin } from "./remix-dev-tools-plugin";
+
+-  withDevTools(App);
++  withDevTools(App, { plugins: [remixDevToolsPlugin()] })
+```
+ 
+You should now see your plugin in the Remix Development Tools as a new tab.
+
+## Using Remix Forge with your plugin
+If you want to use Remix Forge with your plugin you can do so by setting the requiresForge property to true in your plugin. This will make sure that the plugin is only shown when the Remix Forge VS Code extension is connected.
+
+Follow the above guide to create a plugin.
+Import the following hook from remix-development-tools:
+```tsx
+import { useRemixForgeSocket } from "remix-development-tools"; 
+ 
+  const MyComponent = () => {
+    const socket = useRemixForgeSocket();
+    // Implement your logic here
+    return <div>My Component</div>
+  }
+```
+
+You can now use the socket to send messages to the Remix Forge VS Code extension. For now it accepts reading/deleting/opening files in VS Code
+```tsx
+  const MyComponent = () => {
+    const socket = useRemixForgeSocket();
+    const runCommand = () => {
+      socket.sendJsonMessage({ subtype: "read_file", path: "package.json" })
+    }
+    // Implement your logic here
+    return <div onClick={runCommand}>My Component</div>
+  }
+  ```
+The following contract is returned from the extension:
+ ```tsx
+  interface RemixForgeResponse {
+    type: "plugin";
+    subtype: "read_file" | "open_file" | "delete_file" | "write_file";
+    error: boolean;
+    data: string | null;
+  }
+  ```
+Make sure you check if the type and subtype match your needs before using the data.
+Refer to react-use-websocket for more information on how to use the socket and what options it accepts because that is what is used under the hood.
+After you're done share your plugin with the community by opening a discussion!

@@ -9,12 +9,15 @@
     "errors-tab": "features/errors-tab",
     "settings-tab": "features/settings-tab",
     "detach": "features/detach",
-    "examples": "features/examples"
+    "examples": "features/examples",
+    "migration": "guides/migration",
+    "plugins": "guides/plugins"
   },
   "sections": [
     "Getting Started",
     "Configuration",
-    "Features"
+    "Features",
+    "Guides"
   ],
   "meta": {
     "installation": {
@@ -86,6 +89,20 @@
       "description": "Explanation on detach mode and how to use it.",
       "section": "Features",
       "slug": "detach"
+    },
+    "migration": {
+      "title": "Migrating to v4",
+      "alternateTitle": "Migrating to v4",
+      "description": "How to migrate your project to v4.",
+      "section": "Guides",
+      "slug": "migration"
+    },
+    "plugins": {
+      "title": "Plugins",
+      "alternateTitle": "Plugins",
+      "description": "Using plugins with remix-development-tools.",
+      "section": "Guides",
+      "slug": "plugins"
     }
   },
   "hasIndex": true
