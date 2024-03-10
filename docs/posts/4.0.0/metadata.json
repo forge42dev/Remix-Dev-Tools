@@ -11,7 +11,8 @@
     "detach": "features/detach",
     "examples": "features/examples",
     "migration": "guides/migration",
-    "plugins": "guides/plugins"
+    "plugins": "guides/plugins",
+    "contributing": "guides/contributing"
   },
   "sections": [
     "Getting Started",
@@ -103,6 +104,13 @@
       "description": "Using plugins with remix-development-tools.",
       "section": "Guides",
       "slug": "plugins"
+    },
+    "contributing": {
+      "title": "Contributing",
+      "alternateTitle": "Contributing",
+      "description": "Contributing to remix-development-tools.",
+      "section": "Guides",
+      "slug": "contributing"
     }
   },
   "hasIndex": true

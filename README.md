@@ -27,9 +27,7 @@ https://remix-development-tools.fly.dev/
 
 ```bash
 npm install remix-development-tools -D
-```
-
-### Vite plugin
+``` 
 
 ```js
 import { remixDevTools } from "remix-development-tools/vite";
@@ -40,90 +38,8 @@ export default defineConfig({
 });
 ```
 
-That's it, you're done!
- 
+That's it, you're done! 
 
-## Troubleshooting
-  
-
-### [ lower version than V3 only ] Dynamic imports are only supported when the "--module" flag is set to 'es2020', 'es2022', 'esnext', 'commonjs', 'amd', 'system', 'umd', 'node16', or 'nodenext'.ts(1323)
-
-To fix this issue you need to add the following to your `tsconfig.json` file:
-
-```json
-{
-  "compilerOptions": {
-    // Or whatever module you are using
-    "module": "commonjs"
-  }
-}
-```
-### [ lower version than V3 only ] Hydration issues and Remix Development tools crashing with i18n
-
-Make sure you're passing the same context to the `i18n.getRouteNamespaces()` function as you're passing to the `<RemixServer>` component. 
-
-```diff
-+  const context =
-+    process.env.NODE_ENV === "development"
-+      ? await import("remix-development-tools").then(({ initServer }) => initServer(remixContext))
-+      : remixContext;
-   ...
--  let ns = i18n.getRouteNamespaces(remixContext);
-+  let ns = i18n.getRouteNamespaces(context);
-   ...
-   <I18nextProvider i18n={instance}> 
-+    <RemixServer abortDelay={ABORT_DELAY} context={context} url={request.url} />
-   </I18nextProvider>
-```
-### [ lower version than V3 only ] HMR is failing with RDT
-
-Wrap the `RemixDevTools` component in a `Suspense` component.
-
-```diff
-export default function App() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-+       {RemixDevTools && <Suspense><RemixDevTools /></Suspense>}
-      </body>
-    </html>
-  );
-}
-```
-
-## Contributing
-
-Contributions to Remix Development Tools are welcome! To contribute, please follow these guidelines:
-
-1. Fork the repository and clone it locally.
-2. Create a new branch for your feature or bug fix. 
-4. Run `npm run dev` to start the development server with a vanilla Remix app setup. 
-5. Implement your changes, adhering to the existing code style and best practices.
-5. Please add tests for any new features or bug fixes.
-6. Commit and push your changes to your forked repository.
-7. Open a pull request, providing a clear description of your changes and their purpose.
-
-### Contributing on Remix Forge integrations
-
-If you want to contribute to the VS Code extension integration follow the steps above and then:
-1. Clone the repo for Remix Forge locally.
-2. Open it in VS Code.
-3. Run `npm install`
-4. Run `npm run dev`
-5. Click `F5` which will launch a debugger instance of VS Code.
-6. In the debugger instance of VS Code, start the remix dev tools
-7. Click `Connect to Remix Forge` in the Remix Dev Tools
-8. Code on!
 
 ## Support
 
