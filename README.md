@@ -27,7 +27,7 @@ https://remix-development-tools.fly.dev/
 
 ```bash
 npm install remix-development-tools -D
-``` 
+```
 
 ```js
 import { remixDevTools } from "remix-development-tools";
