@@ -130,7 +130,7 @@ const SelectWithOptions = <T extends string>({
     <Stack className={className} gap="sm">
       {label && <Label>{label}</Label>}
       <Select value={value} onValueChange={onSelect}>
-        <SelectTrigger className="rdt-w-full">
+        <SelectTrigger className="rdt-w-full rdt-text-white">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

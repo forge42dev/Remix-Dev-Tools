@@ -135,8 +135,8 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
          
           const imports = [
             'import { withViteDevTools } from "remix-development-tools/client";',
-            'import rdtStylesheet from "remix-development-tools/index.css?url";',
-            'import "remix-development-tools/index.css?inline";',
+            'import rdtStylesheet from "remix-development-tools/client.css?url";',
+            'import "remix-development-tools/client.css?inline";',
          //   plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n"),
           ];
 

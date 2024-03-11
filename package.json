@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -61,11 +61,11 @@
       "node": "./dist/server.cjs",
       "default": "./dist/server.js"
     },
-    "./index.css": {
-      "import": "./dist/index.css",
-      "require": "./dist/index.css",
-      "node": "./dist/index.css",
-      "default": "./dist/index.css"
+    "./client.css": {
+      "import": "./dist/client.css",
+      "require": "./dist/client.css",
+      "node": "./dist/client.css",
+      "default": "./dist/client.css"
     }
   },
   "files": [

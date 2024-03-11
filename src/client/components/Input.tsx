@@ -11,7 +11,7 @@ export const Label = ({
   ...props
 }: React.HTMLProps<HTMLLabelElement>) => {
   return (
-    <label className={clsx("rdt-block rdt-text-sm", className)} {...props}>
+    <label className={clsx("rdt-block rdt-text-white rdt-text-sm", className)} {...props}>
       {children}
     </label>
   );
@@ -29,7 +29,7 @@ const Input = ({ className, name, label, hint, ...props }: InputProps) => {
         name={name}
         id={name}
         className={clsx(
-          "rdt-w-full rdt-rounded rdt-border rdt-border-gray-400 rdt-bg-[#121212] rdt-px-2 rdt-py-1 rdt-text-sm",
+          "rdt-w-full rdt-rounded rdt-text-white rdt-border rdt-border-gray-400 rdt-bg-[#121212] rdt-px-2 rdt-py-1 rdt-text-sm",
           className
         )}
         {...props}
