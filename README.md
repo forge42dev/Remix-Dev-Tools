@@ -30,7 +30,7 @@ npm install remix-development-tools -D
 ``` 
 
 ```js
-import { remixDevTools } from "remix-development-tools/vite";
+import { remixDevTools } from "remix-development-tools";
 
 // Add it to your plugins array in vite.config.js
 export default defineConfig({
