@@ -51,10 +51,12 @@ const useOpenElementSource = () => {
         const source = fiberNode?._debugOwner?._debugSource ?? fiberNode?._debugSource;
         const line = source?.fileName?.startsWith("/") ? originalSource?.lineNumber : source?.lineNumber;
         const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName;
-        return sendJsonMessage({
-          type: "open-source",
-          data: { source: fileName, line, column: 0 },
-        });
+        if(fileName && line){ 
+          return sendJsonMessage({
+            type: "open-source",
+            data: { source: fileName, line, column: 0 },
+          });
+        }
       }
     } 
   });
