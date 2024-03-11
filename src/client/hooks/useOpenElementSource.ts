@@ -38,12 +38,25 @@ const useOpenElementSource = () => {
 
     if (rdtSource) {
       const [source, line, column] = rdtSource.split(":::"); 
-      sendJsonMessage({
+      return sendJsonMessage({
         type: "open-source",
         data: { source, line, column },
       });
     }
-    return;
+    for (const key in e.target) {
+      if (key.startsWith("__reactFiber")) {
+        const fiberNode = (e.target as any)[key];
+       
+        const originalSource = fiberNode?._debugSource;
+        const source = fiberNode?._debugOwner?._debugSource ?? fiberNode?._debugSource;
+        const line = source?.fileName?.startsWith("/") ? originalSource?.lineNumber : source?.lineNumber;
+        const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName;
+        return sendJsonMessage({
+          type: "open-source",
+          data: { source: fileName, line, column: 0 },
+        });
+      }
+    } 
   });
 };
 
