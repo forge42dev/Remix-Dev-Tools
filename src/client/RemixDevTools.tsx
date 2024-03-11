@@ -37,6 +37,8 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useDevServerConnection();
   useOpenElementSource();
   useListenToRouteChange();
+  
+  const { setPersistOpen } = usePersistOpen();
   const url = useLocation().search;
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
   const { settings } = useSettingsContext();
@@ -45,7 +47,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   const [isOpen, setIsOpen] = useState(isDetached || settings.defaultOpen || persistOpen);
   const leftSideOriented = position.includes("left");
   const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin));
-  const debounceSetOpen = useDebounce(() => setIsOpen(!isOpen), 100);
+  const debounceSetOpen = useDebounce(() => {setIsOpen(!isOpen); setPersistOpen(!isOpen)}, 100);
   useAttachBodyListener("keydown", (e: any) => { 
     
     if(isOpen && e.key === "Escape"){
@@ -55,6 +57,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
       debounceSetOpen();
     }
   });
+
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel
   if (detachedWindowOwner) {

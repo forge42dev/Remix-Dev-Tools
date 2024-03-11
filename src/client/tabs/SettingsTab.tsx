@@ -29,11 +29,11 @@ export const SettingsTab = () => {
       </Checkbox>
       <Checkbox
         id="requireUrlFlag"
-        hint="Allows you to only show rdt when there is a flag in the URL search params set."
+        hint={`Allows you to only show rdt when there is a flag in the URL search params set. (${settings.urlFlag}=true)`}
         onChange={() => setSettings({ requireUrlFlag: !settings.requireUrlFlag })}
         value={settings.requireUrlFlag}
       >
-        Show dev tools only when URL flag is set
+        Show dev tools only when URL flag is set ?{settings.urlFlag}=true
       </Checkbox>
       <Checkbox
         id="hideUntilHover"
