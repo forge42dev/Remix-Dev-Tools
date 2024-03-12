@@ -65,10 +65,13 @@ export default function Index() {
             .split(' ')
             .map(word => ({ text: word, className: '!text-white' }))}
         />
-        <Button>
-          <Link to="/docs/main" unstable_viewTransition className="text-white">
-            Get Started
-          </Link>
+        <Button
+          as={Link}
+          to="/docs/main"
+          className="text-white"
+          unstable_viewTransition
+        >
+          Get Started
         </Button>
       </div>
     </div>
