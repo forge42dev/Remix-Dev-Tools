@@ -1,3 +1,4 @@
+import path from "node:path";
 import { Plugin, normalizePath } from "vite";
 import { parse } from "es-module-lexer";
 
@@ -7,7 +8,6 @@ import { DevToolsServerConfig } from "../server/config.js";
 import { handleDevToolsViteRequest, /**processPlugins */ } from "./utils.js";
 import { ActionEvent, LoaderEvent } from "../server/event-queue.js"; 
 import { RdtClientConfig } from "../client/context/RDTContext.js"; 
-import path from "node:path";
 
 declare global {
   interface Window {
@@ -36,7 +36,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   const include = args?.includeInProd??false;
 //  const plugins = pluginDir ? processPlugins(pluginDir) : [];
  // const pluginNames = plugins.map((p) => p.name);
-  let rootDir = process.cwd();
+  let rootDir:string;
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
   return [
