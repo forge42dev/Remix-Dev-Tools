@@ -7,6 +7,7 @@ import { DevToolsServerConfig } from "../server/config.js";
 import { handleDevToolsViteRequest, /**processPlugins */ } from "./utils.js";
 import { ActionEvent, LoaderEvent } from "../server/event-queue.js"; 
 import { RdtClientConfig } from "../client/context/RDTContext.js"; 
+import path from "node:path";
 
 declare global {
   interface Window {
@@ -21,7 +22,8 @@ type RemixViteConfig = {
   client?: Partial<RdtClientConfig>;
   server?: DevToolsServerConfig,
   pluginDir?: string;
-  includeInProd?: boolean
+  includeInProd?: boolean;
+  appDirectory?: string;
 };
  
 export const defineRdtConfig = (config: RemixViteConfig) =>  config
@@ -29,10 +31,12 @@ export const defineRdtConfig = (config: RemixViteConfig) =>  config
 export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   const serverConfig = args?.server || {};
   const clientConfig = args?.client || {};
+  const appDirectory = args?.appDirectory ?? 'app';
 //  const pluginDir = args?.pluginDir || undefined;
   const include = args?.includeInProd??false;
 //  const plugins = pluginDir ? processPlugins(pluginDir) : [];
  // const pluginNames = plugins.map((p) => p.name);
+  let rootDir = process.cwd();
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
   return [
@@ -107,13 +111,13 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
       },
       
       async configResolved(resolvedViteConfig){
+        rootDir = resolvedViteConfig.root;
         const remixIndex = resolvedViteConfig.plugins.findIndex(p => p.name === "remix");
         const devToolsIndex = resolvedViteConfig.plugins.findIndex(p => p.name === "remix-development-tools");
       
         if(remixIndex >= 0 && devToolsIndex > remixIndex){
           throw new Error("remixDevTools plugin has to be before the remix plugin!")
         }
-         
       },
       transform(code, id) {
         
@@ -127,7 +131,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
 
           return updatedCode;
         }
-        if (id.endsWith("root.tsx")) {
+        if (id === path.resolve(rootDir, appDirectory, "root.tsx")) {
           const [, exports] = parse(code);
           const exportNames = exports.map((e) => e.n);
           const hasLinksExport = exportNames.includes("links");
