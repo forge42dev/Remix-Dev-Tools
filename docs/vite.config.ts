@@ -6,7 +6,11 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   plugins: [
-    remixDevTools({ includeInProd: true, server: { silent: true } }),
+    remixDevTools({
+      includeInProd: true,
+      client: { position: 'middle-right' },
+      server: { silent: true },
+    }),
     remix(),
     tsconfigPaths(),
   ],
