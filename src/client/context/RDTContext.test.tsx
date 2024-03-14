@@ -12,8 +12,7 @@ import {
   REMIX_DEV_TOOLS_SETTINGS,
   REMIX_DEV_TOOLS_DETACHED,
   REMIX_DEV_TOOLS_CHECK_DETACHED,
-} from '../utils/storage.js';
-import { initialState } from './rdtReducer.js';
+} from '../utils/storage.js'; 
 import * as detachedMethods from '../utils/detached.js';
 
 vi.mock("@remix-run/react", () => ({
@@ -66,12 +65,12 @@ describe("getSettings", () => {
     vi.clearAllMocks();
   });
 
-  it("should return default settings when storage is empty", () => {
+  it("should return no settings when storage is empty", () => {
     vi.spyOn(localStorage, "getItem").mockReturnValueOnce(null);
 
     const settings = getSettings();
 
-    expect(settings).toEqual(initialState.settings);
+    expect(settings).toEqual({});
   });
 
   it("should return merged settings when storage has values", () => {
@@ -83,10 +82,7 @@ describe("getSettings", () => {
 
     const settings = getSettings();
 
-    expect(settings).toEqual({
-      ...initialState.settings,
-      ...storedSettings,
-    });
+    expect(settings).toEqual(storedSettings);
   });
 });
 
