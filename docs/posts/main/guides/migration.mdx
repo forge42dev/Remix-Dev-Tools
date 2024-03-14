@@ -33,6 +33,12 @@ If you were using the Remix compiler and not the Vite plugin, you will first nee
 - Migrate your app to use the Vite plugin.
 - Migrate your app from CJS to ESM (if applicable).
 
+First thing you need to do after the above is change your package.json scripts to use the `remix vite:dev` command.
+```diff
+- "dev": "remix dev -c \"rdt-serve ./build/index.js\" --manual",
++ "dev": "remix vite:dev",
+```
+
 After you've done these things you need to remove everything from your `root.tsx` file that is
 related to `remix-development-tools`.
 
