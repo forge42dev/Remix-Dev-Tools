@@ -38,7 +38,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   return [
    
     {
-      enforce: "post",
+      enforce: "pre",
       name: "remix-development-tools-server",
       apply(config) {
         return shouldInject(config.mode);
