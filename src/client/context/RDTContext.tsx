@@ -61,7 +61,6 @@ export const getSettings = () => {
   const settingsString = getStorageItem(REMIX_DEV_TOOLS_SETTINGS);
   const settings = tryParseJson<RemixDevToolsState["settings"]>(settingsString);
   return {
-    ...initialState.settings,
     ...settings,
   };
 };
