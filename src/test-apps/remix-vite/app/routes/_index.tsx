@@ -54,9 +54,7 @@ export default function Index() {
         onClick={() => pFetcher.submit(data, { method: "POST", action: "/" })}
       >
         FETCHER Action
-      </button>
-       
-     
+      </button>  
       <button onClick={() => submit(null, { method: "POST", action: "/" })}>
         SUBMIT Action
       </button>

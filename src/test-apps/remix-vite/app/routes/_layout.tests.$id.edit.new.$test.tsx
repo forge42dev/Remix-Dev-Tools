@@ -16,9 +16,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     with: {
       nested: {
         objects: {
-           
+            
         },
-      },
+      }, 
     },
   }, { headers: { "Cache-Control": "max-age=3600, private" } });
 };
@@ -34,7 +34,7 @@ export default function IndexRoute() {
   const pFetcher = useFetcher();
   const submit = useSubmit();
   const data = new FormData();
-  data.append("test", "test");
+  data.append("test", "test"); 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix 4</h1>
