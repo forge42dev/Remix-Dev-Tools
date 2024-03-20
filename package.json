@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -21,18 +21,14 @@
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      },
       "types": "./dist/index.d.ts",
-      "node": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./client": {
@@ -40,12 +36,7 @@
         "types": "./dist/client.d.ts",
         "default": "./dist/client.js"
       },
-      "require": {
-        "types": "./dist/client.d.cts",
-        "default": "./dist/client.cjs"
-      },
       "types": "./dist/client.d.ts",
-      "node": "./dist/client.cjs",
       "default": "./dist/client.js"
     },
     "./server": {
@@ -53,12 +44,7 @@
         "types": "./dist/server.d.ts",
         "default": "./dist/server.js"
       },
-      "require": {
-        "types": "./dist/server.d.cts",
-        "default": "./dist/server.cjs"
-      },
       "types": "./dist/server.d.ts",
-      "node": "./dist/server.cjs",
       "default": "./dist/server.js"
     },
     "./client.css": {
