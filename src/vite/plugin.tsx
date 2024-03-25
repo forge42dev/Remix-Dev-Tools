@@ -4,9 +4,10 @@ import { parse } from "es-module-lexer";
 import { cutArrayToLastN } from "../client/utils/common.js";
  
 import { DevToolsServerConfig } from "../server/config.js";
-import { handleDevToolsViteRequest, /**processPlugins */ } from "./utils.js";
+import { handleDevToolsViteRequest, processPlugins, } from "./utils.js";
 import { ActionEvent, LoaderEvent } from "../server/event-queue.js"; 
 import { RdtClientConfig } from "../client/context/RDTContext.js"; 
+import chalk from "chalk";
 
 declare global {
   interface Window {
@@ -29,19 +30,15 @@ export const defineRdtConfig = (config: RemixViteConfig) =>  config
 export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   const serverConfig = args?.server || {};
   const clientConfig = args?.client || {};
-//  const pluginDir = args?.pluginDir || undefined;
-  const include = args?.includeInProd??false;
-//  const plugins = pluginDir ? processPlugins(pluginDir) : [];
- // const pluginNames = plugins.map((p) => p.name);
+  const include = args?.includeInProd ?? false; 
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
-  return [
-   
+  return [ 
     {
       enforce: "pre",
       name: "remix-development-tools-server",
       apply(config) {
-        return shouldInject(config.mode);
+        return config.mode === "development";
       }, 
       transform(code) {
         const RDT_PORT = "__REMIX_DEVELOPMENT_TOOL_SERVER_PORT__";
@@ -55,8 +52,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
           port = server.config.server.port ?? 5173;
         });
         server.middlewares.use((req, res, next) =>
-          {
- 
+          { 
               handleDevToolsViteRequest(req, res, next, (parsedData) => {
               const { type, data } = parsedData;
               const id = data.id;
@@ -99,13 +95,43 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         }
       },
     },
-    {
-      name: "remix-development-tools",
+    { 
+      name: "better-console-logs",
+      enforce: "pre",
+      apply(config){
+        return config.mode === "development";
+      },
+      async transform(code, id) {
+        // Ignore anything external
+        if(id.includes("node_modules") || id.includes("?raw") || id.includes("dist") || id.includes("build") || !id.includes("app")) return;
       
+        if(code.includes("console.")) {
+          const lines = code.split("\n");
+          return lines.map((line, lineNumber) => {
+            const column = line.indexOf("console.");
+            const logMessage = `"${chalk.magenta("LOG")} Logged in ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()),"")}:${lineNumber+1}:${column+1}`)}"`;
+            if (line.includes("console.log")) {
+              const newLine = `console.log(${logMessage});\nconsole.log`;
+              return line.replace("console.log", newLine);
+            }
+            else if (line.includes("console.error")) {
+              const newLine = `console.error(${logMessage});\nconsole.error`;
+              return line.replace("console.error", newLine);
+            }
+            else if (line.includes("console.table")) {
+              const newLine =  `console.table(${logMessage});\nconsole.table`;
+              return line.replace("console.table",newLine);
+            }
+            return line;
+          }).join("\n");
+          
+        }
+      }},
+    {
+      name: "remix-development-tools", 
       apply(config) { 
         return shouldInject(config.mode);
-      },
-      
+      }, 
       async configResolved(resolvedViteConfig){
         const remixIndex = resolvedViteConfig.plugins.findIndex(p => p.name === "remix");
         const devToolsIndex = resolvedViteConfig.plugins.findIndex(p => p.name === "remix-development-tools");
@@ -115,10 +141,12 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         }
          
       },
-      transform(code, id) {
-        
+      async transform(code, id) { 
+        const pluginDir = args?.pluginDir || undefined;
+          const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : [];
+         const pluginNames = plugins.map((p) => p.name);
         // Wraps loaders/actions
-        if (id.includes("virtual:server-entry") || id.includes("virtual:remix/server-build")) {
+        if ((id.includes("virtual:server-entry") || id.includes("virtual:remix/server-build")) && process.env.NODE_ENV === "development") {
           const updatedCode = [
             `import { augmentLoadersAndActions } from "remix-development-tools/server";`,
             code.replace("export const routes =", "const routeModules ="),
@@ -136,7 +164,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
           const imports = [
             'import { withViteDevTools } from "remix-development-tools/client";',
             'import rdtStylesheet from "remix-development-tools/client.css?url";', 
-         //   plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n"),
+            plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n"),
           ];
 
           const augmentedLinksExport = hasLinksExport
@@ -144,10 +172,10 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
             : `export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];`;
 
           const augmentedDefaultExport = `export default withViteDevTools(AppExport, { config: ${JSON.stringify(clientConfig)}, plugins: [${
-            //pluginNames.join(
-            //","
-          //)
-        ""}] })();`;
+             pluginNames.join(
+             ","
+           )
+         }] })();`;
           
           const updatedCode = lines.map((line) => {
           
@@ -171,8 +199,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
               return line.replace("export function links", "function linksExport");
             }
             // export { links } from "/app/root.tsx" variant
-            if(line.includes("export {") && line.includes("links") && line.includes("/app/root")) {
-
+            if(line.includes("export {") && line.includes("links") && line.includes("/app/root")) { 
               return line.replace("links", "links as linksExport");
             }
             return line;

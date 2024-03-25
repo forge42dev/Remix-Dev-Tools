@@ -1,6 +1,5 @@
 import type { MetaFunction } from '@remix-run/node'
-import { Link } from '@remix-run/react'
-import { ClientOnly } from 'remix-utils/client-only'
+import { Link } from '@remix-run/react' 
 import { FeaturesSection } from '~/components/FeaturesSection'
 import { Button } from '~/components/ui/Button'
 import { LampContainer } from '~/components/ui/Lamp'

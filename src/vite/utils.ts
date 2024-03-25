@@ -1,10 +1,11 @@
-import fs from "fs";
-import { join } from "path";
+
 
 import type { IncomingMessage, ServerResponse } from "http";
 import { Connect } from "vite";
 
-export function processPlugins(pluginDirectoryPath: string) {
+export async function processPlugins(pluginDirectoryPath: string) {
+  const fs = await import("fs");
+  const { join } = await import("path"); 
   const files = fs.readdirSync(pluginDirectoryPath);
   const allExports: { name: string; path: string }[] = [];
   files.forEach((file) => {

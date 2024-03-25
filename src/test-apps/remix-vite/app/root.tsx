@@ -8,6 +8,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { LinksFunction, json } from "@remix-run/server-runtime";
+import { userSomething } from "./modules/user.server";
 
 
 export function links()  {
@@ -15,6 +16,8 @@ export function links()  {
 }
 
 export const loader = () => {
+  console.log("loader?")
+  userSomething();
   return json({ message: "Hello World" });
 }
 
@@ -23,6 +26,7 @@ export const action = () => {
 }
 
 export default function App() {
+  console.log("App?") 
   return (
     <html lang="en">
       <head>
