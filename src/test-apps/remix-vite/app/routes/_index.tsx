@@ -3,14 +3,34 @@ import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node"
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useFetcher,  useSubmit } from "@remix-run/react"; 
 import { Button } from "../components/Button";
+class Redis {
+  constructor(url: string, options: any) {
+    console.log("Redis constructor", url, options);
 
+  }
+  on(event: string, cb: any) {
+    console.log("Redis on", event, cb);
+  }
+  removeAllListeners(event: string) {
+    console.log("Redis removeAllListeners", event);
+  }
+}
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
- 
+export const redis = new Redis("url", {
+  commandTimeout: 5000,
+  enableAutoPipelining: true,
+  maxRetriesPerRequest: 3,
+});
+redis.on("connect", () => console.debug("Redis connected"));
+redis.on("close", () => console.debug("Redis connection closed"));
+redis.on("reconnecting", () => console.log("Redis reconnecting"));
+redis.removeAllListeners("error");
+redis.on("error", (error: Error) => console.error("Redis error", error));
 export const loader = async ({ request }: LoaderFunctionArgs) => {
    
   const test = new Promise((resolve) => {

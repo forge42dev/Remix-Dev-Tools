@@ -108,6 +108,14 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         if(code.includes("console.")) {
           const lines = code.split("\n");
           return lines.map((line, lineNumber) => {
+            // Do not add for arrow functions
+            if(line.replaceAll(" ", "").includes("=>console.")) {
+              return line;
+            }
+            // Do not add if it is a return statement
+            if(line.includes("return console.")) {
+              return line;
+            }
             const column = line.indexOf("console.");
             const logMessage = `"${chalk.magenta("LOG")} Logged in ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()),"")}:${lineNumber+1}:${column+1}`)}"`;
             if (line.includes("console.log")) {
