@@ -11,5 +11,5 @@ export default defineConfig({
   server: {
     open: true,
   },
-  plugins: [remixDevTools(),tsconfigPaths(), splitVendorChunkPlugin(), arraybuffer(), remix()],
+  plugins: [remixDevTools({ unstable_console: true }),tsconfigPaths(), splitVendorChunkPlugin(), arraybuffer(), remix()],
 });

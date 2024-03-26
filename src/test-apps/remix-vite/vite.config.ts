@@ -11,7 +11,8 @@ const config = defineRdtConfig({
   requireUrlFlag: true
   },server: {},
   pluginDir: "./plugins",
-  includeInProd: true
+  includeInProd: true,
+  unstable_console: true
 }, ); 
 
 export default defineConfig({

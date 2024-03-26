@@ -22,7 +22,8 @@ type RemixViteConfig = {
   client?: Partial<RdtClientConfig>;
   server?: DevToolsServerConfig,
   pluginDir?: string;
-  includeInProd?: boolean
+  includeInProd?: boolean;
+  unstable_console?: boolean;
 };
  
 export const defineRdtConfig = (config: RemixViteConfig) =>  config
@@ -31,6 +32,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   const serverConfig = args?.server || {};
   const clientConfig = args?.client || {};
   const include = args?.includeInProd ?? false; 
+  const unstable_console = args?.unstable_console ?? false;
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
   return [ 
@@ -95,7 +97,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         }
       },
     },
-    { 
+    ...(unstable_console ? [{ 
       name: "better-console-logs",
       enforce: "pre",
       apply(config){
@@ -119,22 +121,22 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
             const column = line.indexOf("console.");
             const logMessage = `"${chalk.magenta("LOG")} Logged in ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()),"")}:${lineNumber+1}:${column+1}`)}"`;
             if (line.includes("console.log(")) {
-              const newLine = `console.log(${logMessage});\nconsole.log`;
+              const newLine = `console.log(${logMessage});console.log`;
               return line.replace("console.log", newLine);
             }
             else if (line.includes("console.error(")) {
-              const newLine = `console.error(${logMessage});\nconsole.error`;
+              const newLine = `console.error(${logMessage});console.error`;
               return line.replace("console.error", newLine);
             }
             else if (line.includes("console.table(")) {
-              const newLine =  `console.table(${logMessage});\nconsole.table`;
+              const newLine =  `console.table(${logMessage});console.table`;
               return line.replace("console.table",newLine);
             }
             return line;
           }).join("\n");
           
         }
-      }},
+      }} satisfies Plugin] : []),
     {
       name: "remix-development-tools", 
       apply(config) { 
