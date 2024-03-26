@@ -30,7 +30,13 @@ redis.on("connect", () => console.debug("Redis connected"));
 redis.on("close", () => console.debug("Redis connection closed"));
 redis.on("reconnecting", () => console.log("Redis reconnecting"));
 redis.removeAllListeners("error");
-redis.on("error", (error: Error) => console.error("Redis error", error));
+redis.on("error", console.error);
+// console.log(redis);
+/**
+ * 
+ * @param param0 
+ * @returns 
+ */
 export const loader = async ({ request }: LoaderFunctionArgs) => {
    
   const test = new Promise((resolve) => {
