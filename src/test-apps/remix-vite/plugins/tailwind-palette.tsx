@@ -210,7 +210,7 @@ const colorVariants = {
 // Color groups
 const colors = Object.keys(colorVariants) as (keyof typeof colorVariants)[];
 
-const TailwindColorPallette = () => {
+const TailwindColorPalette = () => {
   return (
     <div className="font-display flex flex-col p-4 md:p-8">
       <div className="flex justify-between overflow-auto">
@@ -235,8 +235,8 @@ const TailwindColorPallette = () => {
   );
 };
 
-export const tailwindPallettePlugin = () => ({
-  // Adds pallette icon, you can change
+export const tailwindPalettePlugin = () => ({
+  // Adds palette icon, you can change
   icon: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -257,10 +257,10 @@ export const tailwindPallettePlugin = () => ({
     </svg>
   ),
   // Name of the tab
-  name: "Color Pallette",
+  name: "Color Palette",
   // id of the tab, must be unique
-  id: "pallette",
+  id: "palette",
   requiresForge: false,
   hideTimeline: false,
-  component: <TailwindColorPallette />,
+  component: <TailwindColorPalette />,
 });
