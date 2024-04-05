@@ -2,7 +2,7 @@
 
 This plugin allows you to see all your project icons in a new tab in remix development tools, copy the code and change their classes.
 
-<video controls="controls" src="./Icon library.mp4" ></video>
+<video controls="controls" src="./icon-library.mp4" ></video>
 
 ## How to use
 
