@@ -87,6 +87,18 @@ export const HoveredLink = ({ children, ...rest }: any) => {
   )
 }
 
+const ExternalLink = ({ url, text }: { url: string; text: string }) => {
+  return (
+    <a
+      className="text-neutral-200 hover:text-slate-400 dark:text-neutral-200"
+      target="_blank"
+      href={url}
+    >
+      {text}
+    </a>
+  )
+}
+
 export function Navbar({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null)
   return (
@@ -105,52 +117,28 @@ export function Navbar({ className }: { className?: string }) {
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Links">
           <div className="flex flex-col space-y-4 text-sm">
-            <a
-              className="text-neutral-700 hover:text-black dark:text-neutral-200 "
-              target="_blank"
-              href="https://remix.run/"
-            >
-              Remix.run
-            </a>
-            <a
-              className="text-neutral-700 hover:text-black dark:text-neutral-200 "
-              target="_blank"
-              href="https://github.com/Code-Forge-Net/Remix-Dev-Tools"
-            >
-              Github
-            </a>
-            <a
-              className="text-neutral-700 hover:text-black dark:text-neutral-200 "
-              target="_blank"
-              href="https://github.com/sponsors/AlemTuzlak"
-            >
-              Sponsor
-            </a>
+            <ExternalLink url="https://remix.run" text="Remix.run" />
+            <ExternalLink
+              url="https://github.com/Code-Forge-Net/Remix-Dev-Tools"
+              text="Github"
+            />
+            <ExternalLink
+              url="https://github.com/sponsors/AlemTuzlak"
+              text="Sponsor"
+            />
           </div>
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Connect">
           <div className="flex flex-col space-y-4 text-sm">
-            <a
-              className="text-neutral-700 hover:text-black dark:text-neutral-200 "
-              target="_blank"
-              href="https://twitter.com/AlemTuzlak59192"
-            >
-              Twitter
-            </a>
-            <a
-              className="text-neutral-700 hover:text-black dark:text-neutral-200 "
-              target="_blank"
-              href="https://github.com/AlemTuzlak"
-            >
-              Github
-            </a>
-            <a
-              className="text-neutral-700 hover:text-black dark:text-neutral-200 "
-              target="_blank"
-              href="https://www.youtube.com/channel/UCQVWDtZHhWTDEtr-7bAgKqg"
-            >
-              YouTube
-            </a>
+            <ExternalLink
+              url="https://twitter.com/AlemTuzlak59192"
+              text="Twitter"
+            />
+            <ExternalLink url="https://github.com/AlemTuzlak" text="Github" />
+            <ExternalLink
+              url="https://www.youtube.com/channel/UCQVWDtZHhWTDEtr-7bAgKqg"
+              text="YouTube"
+            />
           </div>
         </MenuItem>
       </Menu>
