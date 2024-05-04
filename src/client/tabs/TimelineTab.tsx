@@ -37,11 +37,10 @@ const FormEventComponent = (event: FormEvent) => {
       ? `Redirect from "${event.to}" to "${event.from}"`
       : `Submission to url: "${event.to}"`;
   const responseData = event.responseData;
-  delete responseData?.remixDevTools;
   return (
     <div className="rdt-mb-4">
       <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500">
-        {firstPart} | encType: {event.encType}
+        {firstPart} | encType: {event.encType} {"fetcherKey" in event && typeof event.fetcherKey !== "undefined" ? `| Fetcher Key: ${event.fetcherKey}` : ""}
       </time>
       <div className="rdt-flex rdt-gap-8">
         {event.data && event.type !== "ACTION_RESPONSE" && (
