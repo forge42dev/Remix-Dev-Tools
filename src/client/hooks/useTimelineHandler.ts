@@ -160,7 +160,7 @@ const useTimelineHandler = () => {
     fetchers.forEach((fetcher, i) => {
       if (fetcher.state === "idle") return;
 
-      const { data, formAction, formData, formEncType, formMethod } = fetcher;
+      const { data, formAction, formData, formEncType, formMethod, key: fetcherKey } = fetcher;
 
       if (formAction && formMethod) {
         const form = convertFormDataToObject(formData);
@@ -168,6 +168,7 @@ const useTimelineHandler = () => {
           type: fetcher.state === "loading" ? "FETCHER_RESPONSE" : "FETCHER_SUBMIT",
           to: formAction,
           method: formMethod,
+          ...(fetcherKey ? {   fetcherKey } : {}),
           data: form,
           encType: formEncType,
           responseData: fetcher.state === "submitting" ? undefined : data,

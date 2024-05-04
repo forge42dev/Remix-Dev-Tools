@@ -52,8 +52,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
  
 export default function Index() {  
-  const lFetcher = useFetcher();
-  const pFetcher = useFetcher();
+  const lFetcher = useFetcher({ key: "lfetcher"});
+  const pFetcher = useFetcher({ key: "test"});
   const submit = useSubmit();
   const data = new FormData();
   data.append("test", "test");

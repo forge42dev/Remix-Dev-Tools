@@ -16,11 +16,13 @@ interface FetcherRedirectEvent extends Omit<NormalRedirectEvent, "type"> {
 interface FetcherSubmissionEvent
   extends Omit<FormSubmissionEvent, "type" | "from"> {
   type: "FETCHER_SUBMIT";
+  key?: string;
   responseData?: Record<string, any>;
 }
 interface FetcherSubmissionResponseEvent
   extends Omit<FormSubmissionEvent, "type" | "from"> {
   type: "FETCHER_RESPONSE";
+  key?: string;
   responseData?: Record<string, any>;
 }
 interface FormSubmissionEvent {
