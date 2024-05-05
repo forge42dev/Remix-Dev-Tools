@@ -4,7 +4,7 @@ import { ServerRoute } from "@remix-run/server-runtime/dist/routes.js";
 import { DevToolsServerConfig, getConfig } from "./config.js";
 import { diffInMs, secondsToHuman } from "./perf.js";
 import { DataFunctionArgs } from "@remix-run/server-runtime";
- 
+import type { ResponseStubImpl } from "@remix-run/server-runtime/dist/routeModules.js";
 
 const analyzeCookies = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
   if (config.logs?.cookies === false) {
@@ -105,9 +105,13 @@ export const unAwaited = async (promise: () => any) => {
   promise();
 };
 
+
+function isResponseStub(value: any): value is ResponseStubImpl { 
+  return value && typeof value === "object" && "headers" in value;
+}
 const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
   unAwaited(() => {
-    if (e instanceof Response) {
+    if (e instanceof Response || isResponseStub(e)) {
       const headers = new Headers(e.headers);
       const location = headers.get("Location");
       if (location) {
@@ -115,9 +119,12 @@ const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
         redirectLog(`${chalk.blueBright(routeId)} redirected to ${chalk.green(location)}`);
       } else {
         errorLog(`${chalk.blueBright(routeId)} threw a response!`);
-        errorLog(`${chalk.blueBright(routeId)} responded with ${chalk.white(e.status)} ${chalk.white(e.statusText)}`);
+        if(e.status){
+          errorLog(`${chalk.blueBright(routeId)} responded with ${chalk.white(e.status)} ${isResponseStub(e) ? "" : chalk.white(e.statusText)}`);
+        }
       }
-    } else {
+    }
+     else {
       errorLog(`${chalk.blueBright(routeId)} threw an error!`);
       errorLog(`${e?.message}`);
     }

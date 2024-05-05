@@ -37,8 +37,8 @@ redis.on("error", console.error);
  * @param param0 
  * @returns 
  */
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-   
+export const loader = async ({ request , response }: LoaderFunctionArgs) => {
+ 
   const test = new Promise((resolve) => {
     setTimeout(() => {
       resolve("test");
@@ -46,6 +46,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   })
   return defer({ message: "Hello World!", test });
 }; 
+ 
  
 export const action = async ({ request }: ActionFunctionArgs) => {
   return redirect("/login");

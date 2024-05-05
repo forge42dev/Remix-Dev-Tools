@@ -17,7 +17,7 @@ export const errorLog = (message: string) => {
 };
 
 export const redirectLog = (message: string) => {
-  log(`${chalk.redBright.bold("REDIRECT")} ${message}`);
+  log(`${chalk.yellowBright.bold("REDIRECT")} ${message}`);
 };
 
 export const infoLog = (message: string) => {

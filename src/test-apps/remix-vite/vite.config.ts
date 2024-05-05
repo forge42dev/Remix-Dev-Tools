@@ -16,7 +16,9 @@ const config = defineRdtConfig({
 }, ); 
 
 export default defineConfig({
-  plugins: [remixDevTools(config),remix(), tsconfigPaths()],
+  plugins: [remixDevTools(config),remix({ future: {
+    unstable_singleFetch: true
+  } }), tsconfigPaths()],
   server: {
     open: true, 
     port: 3000 , 

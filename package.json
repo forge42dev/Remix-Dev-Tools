@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "4.1.5",
+  "version": "4.1.6",
   "license": "MIT",
   "keywords": [
     "remix",
@@ -107,12 +107,12 @@
     "vite": ">=5.0.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.8.0",
-    "@remix-run/express": "^2.8.0",
-    "@remix-run/node": "^2.8.0",
-    "@remix-run/react": "^2.8.0",
+    "@remix-run/dev": "^2.9.1",
+    "@remix-run/express": "^2.9.1",
+    "@remix-run/node": "^2.9.1",
+    "@remix-run/react": "^2.9.1",
     "@remix-run/router": "^1.9.0",
-    "@remix-run/server-runtime": "^2.8.0",
+    "@remix-run/server-runtime": "^2.9.1",
     "@rollup/plugin-typescript": "^11.1.3",
     "@testing-library/react": "^14.0.0",
     "@types/babel__core": "^7.20.4",
