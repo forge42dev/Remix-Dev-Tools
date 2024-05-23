@@ -1,9 +1,9 @@
 import chalk from "chalk";
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js";
-import { ServerRoute } from "@remix-run/server-runtime/dist/routes.js";
+import { ServerRoute } from "@react-router/server-runtime/dist/routes.js";
 import { DevToolsServerConfig, getConfig } from "./config.js";
 import { diffInMs, secondsToHuman } from "./perf.js";
-import { DataFunctionArgs } from "@remix-run/server-runtime";
+import { DataFunctionArgs } from "@react-router/server-runtime";
 import type { ResponseStubImpl } from "@remix-run/server-runtime/dist/routeModules.js";
 
 const analyzeCookies = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {

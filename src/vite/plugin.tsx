@@ -155,8 +155,8 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         const pluginDir = args?.pluginDir || undefined;
           const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : [];
          const pluginNames = plugins.map((p) => p.name);
-        // Wraps loaders/actions
-        if ((id.includes("virtual:server-entry") || id.includes("virtual:remix/server-build")) && process.env.NODE_ENV === "development") {
+        // Wraps loaders/actions 
+        if ((id.includes("virtual:server-entry") || id.includes("virtual:react-router/server-build")) && process.env.NODE_ENV === "development") {
           const updatedCode = [
             `import { augmentLoadersAndActions } from "remix-development-tools/server";`,
             code.replace("export const routes =", "const routeModules ="),

@@ -3,7 +3,7 @@ import { RDTContextProvider, RdtClientConfig } from "./context/RDTContext.js";
 import { Tab } from "./tabs/index.js";
 import { useTimelineHandler } from "./hooks/useTimelineHandler.js";
 import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext.js";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { Trigger } from "./components/Trigger.js";
 import { MainPanel } from "./layout/MainPanel.js";
 import { Tabs } from "./layout/Tabs.js";

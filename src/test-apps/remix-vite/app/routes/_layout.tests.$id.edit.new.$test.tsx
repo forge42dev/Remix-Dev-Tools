@@ -1,7 +1,7 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
-import { Link, Outlet, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
+import type { ActionFunctionArgs } from "@react-router/node";
+import { json, type LoaderFunctionArgs } from "@react-router/node";
+import type { MetaFunction } from "@react-router/node";
+import { Link, Outlet, useFetcher, useLoaderData, useSubmit } from "react-router";
 
 export const meta: MetaFunction = () => {
   return [

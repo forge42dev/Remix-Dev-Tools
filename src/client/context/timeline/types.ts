@@ -1,4 +1,4 @@
-import { FormEncType } from "@remix-run/react";
+import { FormEncType } from "react-router";
 
 interface NormalRedirectEvent {
   type: "REDIRECT";

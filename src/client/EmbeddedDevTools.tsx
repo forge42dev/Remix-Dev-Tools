@@ -10,7 +10,7 @@ import { Tabs } from "./layout/Tabs.js";
 import { REMIX_DEV_TOOLS } from "./utils/storage.js";
 import { RDTContextProvider } from "./context/RDTContext.js";
 import { useState, useEffect } from "react";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 
 export interface EmbeddedDevToolsProps extends RemixDevToolsProps {
   mainPanelClassName?: string;

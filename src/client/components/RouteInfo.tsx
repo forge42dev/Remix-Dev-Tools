@@ -5,7 +5,7 @@ import { ExtendedRoute, constructRoutePath } from "../utils/routing.js";
 import type { MouseEvent } from "react";
 import { Tag } from "./Tag.js";
 import { Icon } from "./icon/Icon.js";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 
 interface RouteInfoProps {
   route: ExtendedRoute;

@@ -1,9 +1,9 @@
-import { EntryRoute } from "@remix-run/react/dist/routes.js";
+import { UNSAFE_EntryRoute } from "react-router";
 import { RouteWildcards } from "../context/rdtReducer.js";
 import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize.js";
 
 export type RouteType = "ROOT" | "LAYOUT" | "ROUTE";
-type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">;
+type Route = Pick<UNSAFE_EntryRoute, "id" | "index" | "path" | "parentId">;
 
 export function getRouteType(route: Route) {
   if (route.id === "root") {
@@ -18,7 +18,7 @@ export function getRouteType(route: Route) {
   }
 
   // Find an index route with parentId set to this route
-  const childIndexRoute = Object.values(window.__remixManifest.routes).find((r) => r.parentId === route.id && r.index);
+  const childIndexRoute = Object.values(window.__remixManifest.routes).find((r: any) => r.parentId === route.id && r.index);
 
   return childIndexRoute ? "LAYOUT" : "ROUTE";
 }
@@ -51,7 +51,7 @@ export function getRouteColor(route: Route) {
       return ROUTE_FILLS["GREEN"];
   }
 }
-export type ExtendedRoute = EntryRoute & {
+export type ExtendedRoute = UNSAFE_EntryRoute & {
   url: string;
   errorBoundary: { hasErrorBoundary: boolean; errorBoundaryId: string | null };
 };
@@ -74,7 +74,7 @@ export const constructRoutePath = (route: ExtendedRoute, routeWildcards: RouteWi
 
 export const createExtendedRoutes = () => {
   return Object.values(window.__remixManifest.routes)
-    .map((route) => {
+    .map((route: any) => {
       return {
         ...route,
         url: convertRemixPathToUrl(window.__remixManifest.routes, route),

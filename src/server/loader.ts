@@ -1,5 +1,5 @@
-import { LoaderFunctionArgs } from "@remix-run/server-runtime";
-import { ServerRoute, ServerRouteManifest } from "@remix-run/server-runtime/dist/routes.js";
+import { LoaderFunctionArgs } from "@react-router/server-runtime";
+import { ServerRoute, ServerRouteManifest } from "@react-router/server-runtime/dist/routes.js";
 import { asyncAnalysis, isAsyncFunction, syncAnalysis } from "./utils.js";
 import { augmentAction } from "./action.js";
 

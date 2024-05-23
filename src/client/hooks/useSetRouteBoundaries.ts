@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer.js";
 import { useSettingsContext, useDetachedWindowControls } from "../context/useRDTContext.js";
 import { useAttachListener } from "./useAttachListener.js";
-import { useMatches } from "@remix-run/react";
+import { useMatches } from "react-router";
 import { ROUTE_CLASS } from "./useBorderedRoutes.js";
 
 export const useSetRouteBoundaries = () => {

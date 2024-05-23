@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node" 
+import type { LoaderFunctionArgs } from "@react-router/node" 
 
 export const action = async ({ request }: LoaderFunctionArgs) => {
   return null;

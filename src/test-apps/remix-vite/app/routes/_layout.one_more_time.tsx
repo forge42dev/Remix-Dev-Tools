@@ -1,7 +1,7 @@
-import type { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
-import type { HeadersFunction, LinksFunction, LoaderArgs, ActionArgs } from "@remix-run/node";
-import { useLoaderData, isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import type { ShouldRevalidateFunction } from "@remix-run/react";
+ 
+import type { HeadersFunction, LinksFunction,   MetaFunction } from "@react-router/node";
+import { useLoaderData, isRouteErrorResponse, useRouteError } from "react-router";
+import type { ShouldRevalidateFunction } from "react-router";
 
 export const links: LinksFunction = () => (
   [
@@ -9,7 +9,7 @@ export const links: LinksFunction = () => (
   ]
 );
 
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   // your meta here
 ];
 
@@ -22,14 +22,7 @@ export const headers: HeadersFunction = () => (
     // your headers here
   }
 );
-
-export const loader = async ({ request }: LoaderArgs) => {
-  return null;
-};
-
-export const action = async ({ request }: ActionArgs) => {
-  return null;
-};
+ 
 
 export default function RouteComponent(){
   const data = useLoaderData<typeof loader>()

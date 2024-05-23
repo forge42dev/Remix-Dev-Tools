@@ -1,4 +1,4 @@
-import { UIMatch } from "@remix-run/router";
+import { UIMatch } from "react-router";
 import { parseCacheControlHeader } from "../../server/parser.js";
 import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js";
 import { isLayoutRoute } from "../utils/routing.js";

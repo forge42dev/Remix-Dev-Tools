@@ -1,4 +1,4 @@
 /// <reference types="vite/client" />
-/// <reference types="@remix-run/dev" />
-/// <reference types="@remix-run/node" />
-/// <reference types="@remix-run/react" />
+/// <reference types="@react-router/dev" />
+/// <reference types="@react-router/node" />
+/// <reference types="@react-router/react" />

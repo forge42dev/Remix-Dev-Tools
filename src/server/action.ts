@@ -1,5 +1,5 @@
-import { ActionFunctionArgs } from "@remix-run/server-runtime";
-import { ServerRoute } from "@remix-run/server-runtime/dist/routes.js";
+import { ActionFunctionArgs } from "@react-router/server-runtime";
+import { ServerRoute } from "@react-router/server-runtime/dist/routes.js";
 import { asyncAnalysis, isAsyncFunction, syncAnalysis } from "./utils.js";
 
 const asyncAction = (

@@ -15,7 +15,7 @@ import {
 } from '../utils/storage.js'; 
 import * as detachedMethods from '../utils/detached.js';
 
-vi.mock("@remix-run/react", () => ({
+vi.mock("react-router", () => ({
   useLocation: () => ({
     pathname: "/",
   }),
