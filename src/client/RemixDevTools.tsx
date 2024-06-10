@@ -21,9 +21,7 @@ import {
 import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached.js";
 import "../input.css";
 import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
-import { useOpenElementSource } from "./hooks/useOpenElementSource.js";
- 
-import { useAttachBodyListener } from "./hooks/useAttachListener.js";
+import { useOpenElementSource } from "./hooks/useOpenElementSource.js"; 
 import { useDebounce } from "./hooks/useDebounce.js";
 import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.js";
 import { RdtPlugin } from "../index.js"; 
