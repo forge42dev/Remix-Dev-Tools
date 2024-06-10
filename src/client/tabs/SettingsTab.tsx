@@ -12,6 +12,7 @@ export const SettingsTab = () => {
   const [minHeight, setMinHeight] = useState(settings.minHeight.toString());
   const [maxHeight, setMaxHeight] = useState(settings.maxHeight.toString());
   const [expansionLevel, setExpansionLevel] = useState(settings.expansionLevel.toString());
+  const [openHotkey, setOpenHotkey] = useState(settings.openHotkey.toString());
  
   return (
     <Stack className="rdt-mb-4">
@@ -71,6 +72,20 @@ export const SettingsTab = () => {
             const value = parseInt(e.target.value);
             if (value && !isNaN(value) && value >= 0) {
               setSettings({ expansionLevel: value });
+            }
+          }}
+        />
+        <Input
+          name="openHotkey"
+          id="openHotkey"
+          label="Depth of expansion for JSON objects"
+          hint="This allows you to change the depth of expanded properties of json objects."
+          value={openHotkey}
+          onChange={(e) => setOpenHotkey(e.target.value ?? "")}
+          onBlur={(e) => {
+            const value =  (e.target.value);
+            if (value  ) {
+              setSettings({ openHotkey: value });
             }
           }}
         />

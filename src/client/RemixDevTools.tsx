@@ -27,6 +27,7 @@ import { useAttachBodyListener } from "./hooks/useAttachListener.js";
 import { useDebounce } from "./hooks/useDebounce.js";
 import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.js";
 import { RdtPlugin } from "../index.js"; 
+import { useHotkeys } from "react-hotkeys-hook";
 
 const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
@@ -48,15 +49,10 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   const leftSideOriented = position.includes("left");
   const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin));
   const debounceSetOpen = useDebounce(() => {setIsOpen(!isOpen); setPersistOpen(!isOpen)}, 100);
-  useAttachBodyListener("keydown", (e: any) => { 
-    
-    if(isOpen && e.key === "Escape"){
-      debounceSetOpen();
-    }
-    if (e.shiftKey && e.key.toLowerCase() === "a") {
-      debounceSetOpen();
-    }
-  });
+  useHotkeys(settings.openHotkey, () => debounceSetOpen());
+  useHotkeys("esc", () =>  isOpen ? debounceSetOpen() : null);
+
+  
 
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel

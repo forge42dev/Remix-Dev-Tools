@@ -165,7 +165,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
 
           return updatedCode;
         }
-        if (id.endsWith("/root.tsx")) {
+        if (id.endsWith("/root.tsx") || id.endsWith("/root.jsx")) {
           const [, exports] = parse(code);
           const exportNames = exports.map((e) => e.n);
           const hasLinksExport = exportNames.includes("links");

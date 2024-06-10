@@ -86,7 +86,7 @@ export type RemixDevToolsState = {
     routeViewMode: "list" | "tree";
     panelLocation: "top" | "bottom";
     withServerDevTools: boolean;
-    
+    openHotkey: string;
     requireUrlFlag: boolean;
     urlFlag: string;
   };
@@ -119,7 +119,7 @@ export const initialState: RemixDevToolsState = {
     routeViewMode: "tree",
     panelLocation: "bottom",
     withServerDevTools: true,
-    
+    openHotkey: "shift+a",
     requireUrlFlag: false,
     urlFlag: "rdt",
   },
@@ -218,6 +218,7 @@ type SetHtmlErrors = {
   type: "SET_HTML_ERRORS";
   payload: HTMLError[];
 };
+
 
 /** Aggregate of all action types */
 export type RemixDevToolsActions =
