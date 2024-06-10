@@ -78,8 +78,8 @@ export const SettingsTab = () => {
         <Input
           name="openHotkey"
           id="openHotkey"
-          label="Depth of expansion for JSON objects"
-          hint="This allows you to change the depth of expanded properties of json objects."
+          label="Hotkey to open/close development tools"
+          hint="This allows you to change the default hotkey used to open development tools."
           value={openHotkey}
           onChange={(e) => setOpenHotkey(e.target.value ?? "")}
           onBlur={(e) => {
