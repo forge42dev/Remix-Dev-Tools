@@ -92,6 +92,10 @@ export const analyzeDeferred = (id: string, start: number, response: any) => {
       response.data[key].then(() => {
         const end = diffInMs(start);
         infoLog(`Deferred value ${chalk.white(key)} resolved in ${chalk.blueBright(id)} - ${chalk.white(`${end}ms`)}`);
+       
+      }).catch((e: any) => {
+        errorLog(`Deferred value ${chalk.white(key)} rejected in ${chalk.blueBright(id)}`);
+        errorLog(e?.message ? e.message : e)
       });
     });
   }
