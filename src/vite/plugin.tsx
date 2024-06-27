@@ -23,7 +23,7 @@ type RemixViteConfig = {
   server?: DevToolsServerConfig,
   pluginDir?: string;
   includeInProd?: boolean;
-  unstable_console?: boolean;
+  improvedConsole?: boolean;
 };
  
 export const defineRdtConfig = (config: RemixViteConfig) =>  config
@@ -32,7 +32,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   const serverConfig = args?.server || {};
   const clientConfig = args?.client || {};
   const include = args?.includeInProd ?? false; 
-  const unstable_console = args?.unstable_console ?? false;
+  const improvedConsole = args?.improvedConsole ?? true;
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
   return [ 
@@ -97,7 +97,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         }
       },
     },
-    ...(unstable_console ? [{ 
+    ...(improvedConsole ? [{ 
       name: "better-console-logs",
       enforce: "pre",
       apply(config){
@@ -119,18 +119,14 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
             }
           
             const column = line.indexOf("console.");
-            const logMessage = `"${chalk.magenta("LOG")} Logged in ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()),"")}:${lineNumber+1}:${column+1}`)}"`;
+            const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()),"")}:${lineNumber+1}:${column+1}`)} ↓\\n → "`;
             if (line.includes("console.log(")) {
-              const newLine = `console.log(${logMessage});console.log`;
-              return line.replace("console.log", newLine);
+              const newLine = `console.log(${logMessage},`;
+              return line.replace("console.log(", newLine);
             }
             else if (line.includes("console.error(")) {
-              const newLine = `console.error(${logMessage});console.error`;
-              return line.replace("console.error", newLine);
-            }
-            else if (line.includes("console.table(")) {
-              const newLine =  `console.table(${logMessage});console.table`;
-              return line.replace("console.table",newLine);
+              const newLine = `console.error(${logMessage},`;
+              return line.replace("console.error(", newLine);
             }
             return line;
           }).join("\n");
