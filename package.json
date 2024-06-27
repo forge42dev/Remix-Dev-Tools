@@ -2,7 +2,7 @@
   "name": "remix-development-tools",
   "description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
   "author": "Alem Tuzlak",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "license": "MIT",
   "keywords": [
     "remix",
