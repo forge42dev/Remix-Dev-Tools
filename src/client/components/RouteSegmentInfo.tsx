@@ -102,7 +102,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
       >
         <Icon name={isRoot ? "Root" : isLayout ? "Layout" : "CornerDownRight"} size="sm" />
       </div>
-      <h3 className="rdt-text-md -rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-justify-between rdt-gap-2 rdt-font-semibold rdt-text-white">
+      <h2 className="rdt-text-md -rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-justify-between rdt-gap-2 rdt-font-semibold rdt-text-white">
         {route.pathname}
 
         <div className="rdt-flex rdt-gap-2">
@@ -124,7 +124,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
             />
           )}
         </div>
-      </h3>
+      </h2>
       <div className="rdt-mb-4">
         <p className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500  ">
           Route segment file: {route.id}
