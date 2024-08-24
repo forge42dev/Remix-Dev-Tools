@@ -6,7 +6,8 @@ import { Button } from "../components/Button";
 class Redis {
   constructor(url: string, options: any) {
     console.log("Redis constructor", url, options);
-
+    console.error("Redis constructor", url, options);
+   
   }
   on(event: string, cb: any) {
     console.log("Redis on", event, cb);
@@ -39,12 +40,17 @@ redis.on("error", console.error);
  */
 export const loader = async ({ request , response }: LoaderFunctionArgs) => {
  
-  const test = new Promise((resolve) => {
+  const test = new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
     }, 1000);
   })
-  return defer({ message: "Hello World!", test });
+    const test1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject("test");
+    }, 1000);
+  })
+  return defer({ message: "Hello World!", test, test1 });
 }; 
  
  
