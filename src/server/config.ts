@@ -13,4 +13,4 @@ export interface DevToolsServerConfig {
 }
 
 export const defineServerConfig = (config: DevToolsServerConfig) => config; 
-export const getConfig = () => singleton("config", () => ({}) as DevToolsServerConfig);
+export const getConfig = () => typeof process !== "undefined" ? (process as any).rdt_config : singleton("config", () => ({}));

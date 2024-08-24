@@ -9,10 +9,12 @@ const config = defineRdtConfig({
   panelLocation: "top",
   position: "top-right",
   requireUrlFlag: false
-  },server: {},
+  },server: {
+    silent: true,
+  },
   pluginDir: "./plugins",
   includeInProd: true,
-  unstable_console: true
+  
 }, ); 
 export default defineConfig({
   plugins: [remixDevTools( config),remix({ future: {
