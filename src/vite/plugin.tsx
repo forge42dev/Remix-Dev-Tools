@@ -119,7 +119,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
             }
           
             const column = line.indexOf("console.");
-            const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()),"")}:${lineNumber+1}:${column+1}`)} ↓\\n → "`;
+            const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()),"")}:${lineNumber+1}:${column+1}`)}\\n → "`;
             if (line.includes("console.log(")) {
               const newLine = `console.log(${logMessage},`;
               return line.replace("console.log(", newLine);
