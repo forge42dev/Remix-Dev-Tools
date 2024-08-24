@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RDTContextProvider, RdtClientConfig } from "./context/RDTContext.js";
 import { Tab } from "./tabs/index.js";
 import { useTimelineHandler } from "./hooks/useTimelineHandler.js";
@@ -27,6 +27,17 @@ import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.
 import { RdtPlugin } from "../index.js"; 
 import { useHotkeys } from "react-hotkeys-hook";
 
+const recursivelyChangeTabIndex = (node: Element | HTMLElement, remove = true) => {
+  if(remove){
+    node.setAttribute("tabIndex","-1");
+  } else { 
+    node.removeAttribute("tabIndex");
+  }
+  for(const child of node.children) { 
+    recursivelyChangeTabIndex(child, remove);
+  } 
+};
+
 const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
   useResetDetachmentCheck();
@@ -50,7 +61,11 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useHotkeys(settings.openHotkey, () => debounceSetOpen());
   useHotkeys("esc", () =>  isOpen ? debounceSetOpen() : null);
 
-  
+  useEffect(() => {
+    const el = document.getElementById(REMIX_DEV_TOOLS);
+    if(!el) return;
+    recursivelyChangeTabIndex(el , !isOpen); 
+  },[isOpen])  
 
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel
