@@ -35,6 +35,10 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   const improvedConsole = args?.improvedConsole ?? true;
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
+  // Set the server config on the process object so that it can be accessed by the plugin
+  if(typeof process !== "undefined"){
+    (process as any).rdt_config = serverConfig;
+  }
   return [ 
     {
       enforce: "pre",
@@ -45,7 +49,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
       transform(code) {
         const RDT_PORT = "__REMIX_DEVELOPMENT_TOOL_SERVER_PORT__";
         if (code.includes(RDT_PORT)) {
-          const modified = code.replaceAll(RDT_PORT, port.toString()).replaceAll(`singleton("config", () => ({}));`, `(${JSON.stringify(serverConfig)})`); 
+          const modified = code.replaceAll(RDT_PORT, port.toString()); 
           return modified;
         }
       },
