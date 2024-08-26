@@ -3,7 +3,7 @@ import { RDTContextProvider, RdtClientConfig } from "./context/RDTContext.js";
 import { Tab } from "./tabs/index.js";
 import { useTimelineHandler } from "./hooks/useTimelineHandler.js";
 import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext.js";
-import { useLocation } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { Trigger } from "./components/Trigger.js";
 import { MainPanel } from "./layout/MainPanel.js";
 import { Tabs } from "./layout/Tabs.js";
@@ -26,6 +26,7 @@ import { useDebounce } from "./hooks/useDebounce.js";
 import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.js";
 import { RdtPlugin } from "../index.js"; 
 import { useHotkeys } from "react-hotkeys-hook";
+import clsx from "clsx";
 
 const recursivelyChangeTabIndex = (node: Element | HTMLElement, remove = true) => {
   if(remove){
@@ -37,6 +38,27 @@ const recursivelyChangeTabIndex = (node: Element | HTMLElement, remove = true) =
     recursivelyChangeTabIndex(child, remove);
   } 
 };
+
+const LiveUrls = () =>{
+  const { settings } = useSettingsContext();
+  const location = useLocation();
+  const envsPosition = settings.liveUrlsPosition;
+  const envsClassName = {
+    "rdt-bottom-0": envsPosition === "bottom-left" || envsPosition === "bottom-right",
+    "rdt-top-0": envsPosition === "top-left" || envsPosition === "top-right",
+    "rdt-right-0": envsPosition === "bottom-right" || envsPosition === "top-right",
+    "rdt-left-0": envsPosition === "bottom-left" || envsPosition === "top-left",
+  }
+  if(settings.liveUrls.length === 0) return null;
+  return <div className={clsx("rdt-flex rdt-fixed rdt-items-center rdt-gap-2 rdt-px-2", envsClassName)}>
+    {settings.liveUrls.map((env) => { 
+      return <Link key={env.name} referrerPolicy="no-referrer" target="_blank" to={env.url+location.pathname} className="rdt-flex rdt-transition-all hover:rdt-text-black rdt-items-center rdt-gap-2 rdt-text-sm rdt-font-semibold rdt-text-gray-400">
+        {env.name}
+      </Link>
+    })}
+  </div>
+ 
+}
 
 const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
@@ -85,9 +107,10 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   }
 
   return (
-    <>
+    
       <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
         <Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
+        <LiveUrls />
         <MainPanel isOpen={isOpen}>
           <div className="rdt-flex rdt-h-full">
             <Tabs plugins={plugins} setIsOpen={setIsOpen} />
@@ -95,7 +118,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
           </div>
         </MainPanel>
       </div>
-    </>
+    
   );
 };
 

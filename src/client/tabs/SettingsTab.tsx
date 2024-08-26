@@ -137,6 +137,19 @@ export const SettingsTab = () => {
             hint="This will determine where your trigger position on the screen is when the tools are collapsed."
           />
           <SelectWithOptions
+            label="Environments position"
+            onSelect={(value) => setSettings({ liveUrlsPosition: value as any })}
+            value={settings.position}
+            className="rdt-w-full"
+            options={[
+              { label: "Bottom Right", value: "bottom-right" },
+              { label: "Bottom Left", value: "bottom-left" },
+              { label: "Top Right", value: "top-right" },
+              { label: "Top Left", value: "top-left" }, 
+            ]}
+            hint="This will determine where your environments position on the screen is."
+          />
+          <SelectWithOptions
             label="Panel position"
             onSelect={(value) => setSettings({ panelLocation: value })}
             value={settings.panelLocation}

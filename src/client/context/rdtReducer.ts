@@ -69,25 +69,79 @@ export type RemixDevToolsState = {
   timeline: TimelineEvent[];
   terminals: Terminal[];
   settings: {
+    /**
+     * The live urls to show in the corner which allow you to open the app in a different environment (eg. staging, production)
+     * @default []
+     */
+    liveUrls: { url: string, name: string }[];
+    /**
+     * The position of the live urls
+     * @default "bottom-left"
+     */
+    liveUrlsPosition: "bottom-left" | "bottom-right" | "top-left" | "top-right";
+    /**
+     * The route boundary gradient color to use
+     * @default "silver"
+     */
     routeBoundaryGradient: keyof typeof ROUTE_BOUNDARY_GRADIENTS;
     routeWildcards: RouteWildcards;
     activeTab: Tabs;
     shouldConnectWithForge: boolean;
     port: number;
     height: number;
+    /**
+     * The maximum height of the panel
+     * @default 800
+     */
     maxHeight: number;
+    /**
+     * The minimum height of the panel
+     * @default 200
+     */
     minHeight: number;
+    /**
+     * Whether the dev tools should be open by default
+     * @default false
+     */
     defaultOpen: boolean;
+    /**
+     * Whether the dev tools trigger should be hidden until the user hovers over it
+     * @default false
+     */
     hideUntilHover: boolean;
+    /**
+     * The position of the trigger button 
+     * @default "bottom-right"
+     */
     position: TriggerPosition;
+    /**
+     * The initial expansion level of the JSON viewer objects
+     * @default 0
+     */
     expansionLevel: number;
     hoveredRoute: string;
     isHoveringRoute: boolean;
     routeViewMode: "list" | "tree";
+    /**
+     * The location of the panel once it is open
+     * @default "bottom"
+     */
     panelLocation: "top" | "bottom";
     withServerDevTools: boolean;
+    /**
+     * The hotkey to open the dev tools
+     * @default "shift+a"
+     */
     openHotkey: string;
+    /**
+     * Whether to require the URL flag to open the dev tools
+     * @default false
+     */
     requireUrlFlag: boolean;
+    /**
+     * The URL flag to open the dev tools, used in conjunction with requireUrlFlag (if set to true)
+     * @default "rdt"
+     */
     urlFlag: string;
   };
   htmlErrors: HTMLError[];
@@ -102,6 +156,8 @@ export const initialState: RemixDevToolsState = {
   terminals: [{ id: 0, locked: false, output: [], history: [] }],
   server: undefined,
   settings: {
+    liveUrls: [],
+    liveUrlsPosition: "bottom-left",
     routeBoundaryGradient: "silver",
     routeWildcards: {},
     activeTab: "page",

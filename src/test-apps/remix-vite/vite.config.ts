@@ -8,7 +8,13 @@ const config = defineRdtConfig({
   defaultOpen: false,
   panelLocation: "top",
   position: "top-right",
-  requireUrlFlag: false
+  requireUrlFlag: false,
+  liveUrls: [
+    { url: "https://forge42.dev", name: "Production" }, 
+    {
+    url: "https://forge42.dev/staging",
+    name: "Staging",
+  }],
   },server: {
     silent: true,
   },

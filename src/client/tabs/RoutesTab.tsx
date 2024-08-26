@@ -52,6 +52,7 @@ const RoutesTab = () => {
                 routeWildcards,
                 setActiveRoute,
                 activeRoutes,
+                navigate
               })
             }
             orientation="vertical"

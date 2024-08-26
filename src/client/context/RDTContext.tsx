@@ -70,22 +70,22 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig) => {
   const settings = getSettings();
   const { detachedWindow, detachedWindowOwner } = detachedModeSetup();
   const state: RemixDevToolsState = {
-    ...initialState,
- 
+    ...initialState, 
     ...(existingState ? JSON.parse(existingState) : {}),
     settings: {
       ...initialState.settings,
       ...config,
       ...settings,
+      liveUrls: config?.liveUrls ?? initialState.settings.liveUrls, 
     },
     detachedWindow,
     detachedWindowOwner,
   };
-
+ 
   return state;
 };
 
-export type RdtClientConfig = Pick<RemixDevToolsState["settings"], "defaultOpen" | "expansionLevel" | "position" | "height" | "minHeight" | "maxHeight" | "hideUntilHover" | "panelLocation" | "requireUrlFlag" | "urlFlag" | "routeBoundaryGradient">  
+export type RdtClientConfig = Pick<RemixDevToolsState["settings"], "defaultOpen" | "expansionLevel" | "liveUrls" | "position" | "height" | "minHeight" | "maxHeight" | "hideUntilHover" | "panelLocation" | "requireUrlFlag" | "urlFlag" | "routeBoundaryGradient">  
 
 
 export const RDTContextProvider = ({ children, config }: ContextProps) => { 
