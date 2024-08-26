@@ -52,7 +52,7 @@ const LiveUrls = () =>{
   if(settings.liveUrls.length === 0) return null;
   return <div className={clsx("rdt-flex rdt-fixed rdt-items-center rdt-gap-2 rdt-px-2", envsClassName)}>
     {settings.liveUrls.map((env) => { 
-      return <Link key={env.name} referrerPolicy="no-referrer" target="_blank" to={env.url+location.pathname} className="rdt-flex rdt-transition-all hover:rdt-text-black rdt-items-center rdt-gap-2 rdt-text-sm rdt-font-semibold rdt-text-gray-400">
+      return <Link key={env.name} referrerPolicy="no-referrer" target="_blank" to={env.url+location.pathname} className="rdt-flex rdt-transition-all hover:rdt-text-gray-500 rdt-items-center rdt-gap-2 rdt-text-sm rdt-font-semibold rdt-text-gray-400">
         {env.name}
       </Link>
     })}
