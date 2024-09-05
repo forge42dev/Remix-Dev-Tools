@@ -1,13 +1,14 @@
 import { Plugin, normalizePath } from "vite";
 import { parse } from "es-module-lexer";
-
 import { cutArrayToLastN } from "../client/utils/common.js";
- 
 import { DevToolsServerConfig } from "../server/config.js";
-import { handleDevToolsViteRequest, processPlugins, } from "./utils.js";
+import { checkPath, handleDevToolsViteRequest, processPlugins, } from "./utils.js";
 import { ActionEvent, LoaderEvent } from "../server/event-queue.js"; 
 import { RdtClientConfig } from "../client/context/RDTContext.js"; 
 import chalk from "chalk";
+import path from 'path';
+import fs from 'fs';
+import { OpenSourceData } from './types.js';
 
 declare global {
   interface Window {
@@ -24,6 +25,8 @@ type RemixViteConfig = {
   pluginDir?: string;
   includeInProd?: boolean;
   improvedConsole?: boolean;
+  /** The directory where the remix app is located. Defaults to the "./app" relative to where vite.config is being defined. */
+  remixDir?: string;
 };
  
 export const defineRdtConfig = (config: RemixViteConfig) =>  config
@@ -33,6 +36,8 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   const clientConfig = args?.client || {};
   const include = args?.includeInProd ?? false; 
   const improvedConsole = args?.improvedConsole ?? true;
+    const remixDir = args?.remixDir || "./app";
+
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
   // Set the server config on the process object so that it can be accessed by the plugin
@@ -91,13 +96,54 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
           }))
         });
 
-        if(!server.config.isProduction){
-           const { exec } = await import ("node:child_process") 
-          server.hot.on("open-source", (data) => { 
-          const source = data.data.source; 
-          const line = data.data.line;
-          exec(`code -g "${normalizePath(source)}:${line}"`)
-          })
+        if (!server.config.isProduction) {
+          const { exec } = await import("node:child_process");
+
+          server.hot.on("open-source", ({ data }: OpenSourceData) => {
+            const { source, line, routeID } = data;
+            const lineNum = line ? `:${line}` : "";
+
+            if (source) {
+              exec(`code -g "${normalizePath(source)}${lineNum}"`);
+              return;
+            }
+
+            if (!source && routeID) {
+              const routePath = path.join(remixDir, routeID);
+              const checkedPath = checkPath(routePath);
+
+              if (!checkedPath) return;
+              const { type, validPath } = checkedPath;
+
+              const reactExtensions = ["tsx", "jsx"];
+              const allExtensions = ["ts", "js", ...reactExtensions];
+              const isRoot = routeID === "root";
+
+              if (isRoot) {
+                if (!fs.existsSync(remixDir)) return;
+                const filesInRemixPath = fs.readdirSync(remixDir);
+                const rootFile = filesInRemixPath.find((file) => reactExtensions.some((ext) => file === `root.${ext}`));
+
+                rootFile && exec(`code -g "${path.join(remixDir, rootFile)}${lineNum}"`);
+                return;
+              }
+
+              // If its not the root route, then we find the file or folder in the routes folder
+              // We know that the route ID is in the form of "routes/contact" or "routes/user.profile" when is not root
+              // so the ID alraedy contains the "routes" segment, so we just need to find the file or folder in the routes folder
+              if (type === "directory") {
+                const filesInFolderRoute = fs.readdirSync(validPath);
+                const routeFile = filesInFolderRoute.find((file) =>
+                  allExtensions.some((ext) => file === `route.${ext}`)
+                );
+                routeFile && exec(`code -g "${path.join(remixDir, routeID, routeFile)}${lineNum}"`);
+                return;
+              }
+
+              exec(`code -g "${path.join(validPath)}${lineNum}"`);
+              return;
+            }
+          });
         }
       },
     },

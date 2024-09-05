@@ -1,11 +1,10 @@
-
-
 import type { IncomingMessage, ServerResponse } from "http";
 import { Connect } from "vite";
+import fs from "fs";
 
 export async function processPlugins(pluginDirectoryPath: string) {
   const fs = await import("fs");
-  const { join } = await import("path"); 
+  const { join } = await import("path");
   const files = fs.readdirSync(pluginDirectoryPath);
   const allExports: { name: string; path: string }[] = [];
   files.forEach((file) => {
@@ -40,10 +39,28 @@ export const handleDevToolsViteRequest = (
     const dataToParse = Buffer.concat(chunks);
    try { const parsedData = JSON.parse(dataToParse.toString());
     cb(parsedData);} 
-    // eslint-disable-next-line no-empty
+      // eslint-disable-next-line no-empty
     catch(e){
 
     }
     res.write("OK");
   });
 };
+
+export function checkPath(routePath: string, extensions = [".tsx", ".jsx", ".ts", ".js"]) {
+  // Check if the path exists as a directory
+  if (fs.existsSync(routePath) && fs.lstatSync(routePath).isDirectory()) {
+    return { validPath: routePath, type: "directory" } as const;
+  }
+
+  // Check if the path exists as a file with one of the given extensions
+  for (const ext of extensions) {
+    const filePath = `${routePath}${ext}`;
+    if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+      return { validPath: filePath, type: "file" } as const;
+    }
+  }
+
+  // If neither a file nor a directory is found
+  return null;
+}

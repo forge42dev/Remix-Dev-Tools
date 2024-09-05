@@ -6,11 +6,11 @@ import { CacheInfo } from "./CacheInfo.js";
 import { VsCodeButton } from "./VScodeButton.js";
 import { JsonRenderer } from "./jsonRenderer.js";
 import { ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js";
-
 import { InfoCard } from "./InfoCard.js";
 import { useDevServerConnection } from "../hooks/useDevServerConnection.js";
 import { Icon } from "./icon/Icon.js";
 import clsx from "clsx";
+import { OpenSourceData } from "../../vite/types.js";
 
 const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {
@@ -118,8 +118,8 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
               onClick={() =>
                 sendJsonMessage({
                   type: "open-source",
-                  data: { source: `app/${route.id}` },
-                })
+                  data: { routeID: route.id },
+                } satisfies OpenSourceData)
               }
             />
           )}
