@@ -29,7 +29,7 @@
 .remix-dev-tools hr {
   height: 0;
   /* 1 */
-  color: inherit;
+  color: initial;
   /* 2 */
   border-top-width: 1px;
   /* 3 */
@@ -70,8 +70,8 @@ Remove the default font size and weight for headings.
 .remix-dev-tools h4,
 .remix-dev-tools h5,
 .remix-dev-tools h6 {
-  font-size: inherit;
-  font-weight: inherit;
+  font-size: initial;
+  font-weight: initial;
 }
 
 /*
@@ -79,7 +79,7 @@ Reset links to optimize for opt-in styling instead of opt-out.
 */
 
 .remix-dev-tools a {
-  color: inherit;
+  color: initial;
   text-decoration: inherit;
 }
 
@@ -144,7 +144,7 @@ Prevent `sub` and `sup` elements from affecting the line height in all browsers.
 .remix-dev-tools table {
   text-indent: 0;
   /* 1 */
-  border-color: inherit;
+  border-color: initial;
   /* 2 */
   border-collapse: collapse;
   /* 3 */
@@ -169,7 +169,7 @@ Prevent `sub` and `sup` elements from affecting the line height in all browsers.
   /* 1 */
   line-height: inherit;
   /* 1 */
-  color: inherit;
+  color: initial;
   /* 1 */
   margin: 0;
   /* 2 */
