@@ -63,31 +63,29 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
           port = server.config.server.port ?? 5173;
         });
         server.middlewares.use((req, res, next) =>
-          { 
-              handleDevToolsViteRequest(req, res, next, (parsedData) => {
-              const { type, data } = parsedData;
-              const id = data.id;
-              const existingData = routeInfo.get(id);
-              if (existingData) {
-                if (type === "loader") {
-                  existingData.loader = cutArrayToLastN([...existingData.loader, data], 30);
-                }
-                if (type === "action") {
-                  existingData.action = cutArrayToLastN([...existingData.action, data], 30);
-                }
-              } else {
-                if (type === "loader") {
-                  routeInfo.set(id, { loader: [data], action: [] });
-                }
-                if (type === "action") {
-                  routeInfo.set(id, { loader: [], action: [data] });
-                }
+          handleDevToolsViteRequest(req, res, next, (parsedData) => {
+            const { type, data } = parsedData;
+            const id = data.id;
+            const existingData = routeInfo.get(id);
+            if (existingData) {
+              if (type === "loader") {
+                existingData.loader = cutArrayToLastN([...existingData.loader, data], 30);
               }
-              server.hot.channels.forEach((client) => {
-                client.send("route-info", JSON.stringify({ type, data }));
-              });
-            })
-          }
+              if (type === "action") {
+                existingData.action = cutArrayToLastN([...existingData.action, data], 30);
+              }
+            } else {
+              if (type === "loader") {
+                routeInfo.set(id, { loader: [data], action: [] });
+              }
+              if (type === "action") {
+                routeInfo.set(id, { loader: [], action: [data] });
+              }
+            }
+            server.hot.channels.forEach((client) => {
+              client.send("route-info", JSON.stringify({ type, data }));
+            });
+          })
         );
         server.hot.on("all-route-info", (data, client) => {
           client.send("all-route-info",  JSON.stringify({
@@ -98,17 +96,19 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
 
         if (!server.config.isProduction) {
           const { exec } = await import("node:child_process");
-
+          const openInVsCode  = (path: string, lineNum: string) => {
+            exec(`code -g "${normalizePath(path)}${lineNum}"`);
+          }
+         
           server.hot.on("open-source", ({ data }: OpenSourceData) => {
             const { source, line, routeID } = data;
             const lineNum = line ? `:${line}` : "";
 
-            if (source) {
-              exec(`code -g "${normalizePath(source)}${lineNum}"`);
-              return;
+            if (source) { 
+              return openInVsCode(source, lineNum);
             }
 
-            if (!source && routeID) {
+            if (routeID) {
               const routePath = path.join(remixDir, routeID);
               const checkedPath = checkPath(routePath);
 
@@ -118,30 +118,29 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
               const reactExtensions = ["tsx", "jsx"];
               const allExtensions = ["ts", "js", ...reactExtensions];
               const isRoot = routeID === "root";
+              const findFileByExtension = (prefix: string, filePaths: string[]) =>{
+                const file = filePaths.find(file => allExtensions.some(ext => file === `${prefix}.${ext}`));
+                return file
+              }
 
               if (isRoot) {
                 if (!fs.existsSync(remixDir)) return;
                 const filesInRemixPath = fs.readdirSync(remixDir);
-                const rootFile = filesInRemixPath.find((file) => reactExtensions.some((ext) => file === `root.${ext}`));
-
-                rootFile && exec(`code -g "${path.join(remixDir, rootFile)}${lineNum}"`);
+                const rootFile = findFileByExtension("root", filesInRemixPath);
+                rootFile && openInVsCode(path.join(remixDir, rootFile), lineNum);  
                 return;
               }
 
               // If its not the root route, then we find the file or folder in the routes folder
               // We know that the route ID is in the form of "routes/contact" or "routes/user.profile" when is not root
-              // so the ID alraedy contains the "routes" segment, so we just need to find the file or folder in the routes folder
+              // so the ID already contains the "routes" segment, so we just need to find the file or folder in the routes folder
               if (type === "directory") {
                 const filesInFolderRoute = fs.readdirSync(validPath);
-                const routeFile = filesInFolderRoute.find((file) =>
-                  allExtensions.some((ext) => file === `route.${ext}`)
-                );
-                routeFile && exec(`code -g "${path.join(remixDir, routeID, routeFile)}${lineNum}"`);
+                const routeFile = findFileByExtension("route", filesInFolderRoute);
+                routeFile && openInVsCode(path.join(remixDir, routeID, routeFile), lineNum);
                 return;
               }
-
-              exec(`code -g "${path.join(validPath)}${lineNum}"`);
-              return;
+              return openInVsCode(path.join(validPath), lineNum); 
             }
           });
         }
