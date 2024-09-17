@@ -1,13 +1,13 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
-import { Link, useFetcher,  useSubmit } from "@remix-run/react"; 
+import { Link, useFetcher, useSubmit } from "@remix-run/react";
 import { Button } from "../components/Button";
+
 class Redis {
   constructor(url: string, options: any) {
     console.log("Redis constructor", url, options);
     console.error("Redis constructor", url, options);
-   
   }
   on(event: string, cb: any) {
     console.log("Redis on", event, cb);
@@ -22,43 +22,38 @@ export const meta: MetaFunction = () => {
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
+
 export const redis = new Redis("url", {
   commandTimeout: 5000,
   enableAutoPipelining: true,
   maxRetriesPerRequest: 3,
 });
+
 redis.on("connect", () => console.debug("Redis connected"));
 redis.on("close", () => console.debug("Redis connection closed"));
 redis.on("reconnecting", () => console.log("Redis reconnecting"));
 redis.removeAllListeners("error");
 redis.on("error", console.error);
-// console.log(redis);
-/**
- * 
- * @param param0 
- * @returns 
- */
-export const loader = async ({ request , response }: LoaderFunctionArgs) => {
- 
+
+export const loader = async ({ request, response }: LoaderFunctionArgs) => {
   const test = new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
     }, 1000);
-  })
-    const test1 = new Promise((resolve, reject) => {
+  });
+  const test1 = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject("test");
     }, 1000);
-  })
+  });
   return defer({ message: "Hello World!", test, test1 });
-}; 
- 
- 
+};
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   return redirect("/login");
 };
- 
-export default function Index() {  
+
+export default function Index() {
   const lFetcher = useFetcher({ key: "lfetcher"});
   const pFetcher = useFetcher({ key: "test"});
   const submit = useSubmit();
@@ -100,8 +95,23 @@ export default function Index() {
       <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
         SUBMIT Action PUT
       </button> 
-     
-      <Link to="/login">Login</Link>
+
+      <h2>Test Links</h2>
+
+      <ul>
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
+        <li>
+          <Link to="/file">File Route (file.tsx)</Link>
+        </li>
+        <li>
+          <Link to="/folder">Folder Route (folder/route.tsx)</Link>
+        </li>
+      </ul>
+
+      <h2>Resources</h2>
+
       <ul>
         <li>
           <a
