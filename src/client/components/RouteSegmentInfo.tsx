@@ -3,7 +3,7 @@ import { parseCacheControlHeader } from "../../server/parser.js";
 import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js";
 import { isLayoutRoute } from "../utils/routing.js";
 import { CacheInfo } from "./CacheInfo.js";
-import { VsCodeButton } from "./VScodeButton.js";
+import { EditorButton } from './EditorButton.js';
 import { JsonRenderer } from "./jsonRenderer.js";
 import { ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js";
 import { InfoCard } from "./InfoCard.js";
@@ -69,7 +69,8 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
   const loaderData = getLoaderData(route.data as any);
   const serverInfo = server?.routes?.[route.id];
   const isRoot = route.id === "root";
-  const { setSettings } = useSettingsContext();
+  const { setSettings, settings } = useSettingsContext();
+  const editorName = settings.editorName;
   const cacheControl = serverInfo?.lastLoader.responseHeaders
     ? parseCacheControlHeader(new Headers(serverInfo?.lastLoader.responseHeaders))
     : undefined;
@@ -114,7 +115,8 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
             />
           )}
           {isConnected && import.meta.env.DEV && (
-            <VsCodeButton
+            <EditorButton
+              name={editorName}
               onClick={() =>
                 sendJsonMessage({
                   type: "open-source",

@@ -9,6 +9,7 @@ import chalk from "chalk";
 import path from 'path';
 import fs from 'fs';
 import { OpenSourceData } from './types.js';
+import { exec } from "node:child_process";
 
 declare global {
   interface Window {
@@ -17,6 +18,21 @@ declare global {
 }
 
 const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>();
+
+type EditorConfig = {
+  name: string;
+  open(path: string | undefined, lineNumber: string): void;
+}
+
+const DEFAULT_EDITOR_CONFIG: EditorConfig = {
+  name: "VSCode",
+  open: (path: string | undefined, lineNumber: string) => {
+    if(!path){
+      return;
+    }
+    exec(`code -g "${normalizePath(path)}${lineNumber}"`);
+  }
+}
 
 
 type RemixViteConfig = {
@@ -27,16 +43,21 @@ type RemixViteConfig = {
   improvedConsole?: boolean;
   /** The directory where the remix app is located. Defaults to the "./app" relative to where vite.config is being defined. */
   remixDir?: string;
+  editor?: EditorConfig;
 };
  
 export const defineRdtConfig = (config: RemixViteConfig) =>  config
  
 export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
+  const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG;
   const serverConfig = args?.server || {};
-  const clientConfig = args?.client || {};
+  const clientConfig = args?.client || {
+    editorName: editor.name,
+  };
   const include = args?.includeInProd ?? false; 
   const improvedConsole = args?.improvedConsole ?? true;
-    const remixDir = args?.remixDir || "./app";
+  const remixDir = args?.remixDir || "./app";
+
 
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
@@ -95,12 +116,12 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         });
 
         if (!server.config.isProduction) {
-          const { exec } = await import("node:child_process");
-          const openInVsCode  = (path: string | undefined, lineNum: string) => {
+          const openInEditor: EditorConfig['open'] = (path: string | undefined, lineNum: string) => {
             if(!path){
               return;
             }
-            exec(`code -g "${normalizePath(path)}${lineNum}"`);
+
+            editor.open(path, lineNum);
           }
          
           server.hot.on("open-source", ({ data }: OpenSourceData) => {
@@ -108,7 +129,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
             const lineNum = line ? `:${line}` : "";
 
             if (source) { 
-              return openInVsCode(source, lineNum);
+              return openInEditor(source, lineNum);
             }
 
             if (routeID) {
@@ -130,7 +151,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
                 if (!fs.existsSync(remixDir)) return;
                 const filesInRemixPath = fs.readdirSync(remixDir);
                 const rootFile = findFileByExtension("root", filesInRemixPath);
-                rootFile && openInVsCode(path.join(remixDir, rootFile), lineNum);  
+                rootFile && openInEditor(path.join(remixDir, rootFile), lineNum);
                 return;
               }
 
@@ -140,10 +161,10 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
               if (type === "directory") {
                 const filesInFolderRoute = fs.readdirSync(validPath);
                 const routeFile = findFileByExtension("route", filesInFolderRoute);
-                routeFile && openInVsCode(path.join(remixDir, routeID, routeFile), lineNum);
+                routeFile && openInEditor(path.join(remixDir, routeID, routeFile), lineNum);
                 return;
               }
-              return openInVsCode(validPath, lineNum); 
+              return openInEditor(validPath, lineNum);
             }
           });
         }

@@ -85,7 +85,7 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig) => {
   return state;
 };
 
-export type RdtClientConfig = Pick<RemixDevToolsState["settings"], "defaultOpen" | "expansionLevel" | "liveUrls" | "position" | "height" | "minHeight" | "maxHeight" | "hideUntilHover" | "panelLocation" | "requireUrlFlag" | "urlFlag" | "routeBoundaryGradient">  
+export type RdtClientConfig = Pick<RemixDevToolsState["settings"], "defaultOpen" | "expansionLevel" | "liveUrls" | "position" | "height" | "minHeight" | "maxHeight" | "hideUntilHover" | "panelLocation" | "requireUrlFlag" | "urlFlag" | "routeBoundaryGradient" | "editorName">
 
 
 export const RDTContextProvider = ({ children, config }: ContextProps) => { 

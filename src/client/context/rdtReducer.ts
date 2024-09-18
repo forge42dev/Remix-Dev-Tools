@@ -83,6 +83,7 @@ export type RemixDevToolsState = {
      * The route boundary gradient color to use
      * @default "silver"
      */
+    editorName: string;
     routeBoundaryGradient: keyof typeof ROUTE_BOUNDARY_GRADIENTS;
     routeWildcards: RouteWildcards;
     activeTab: Tabs;
@@ -158,6 +159,7 @@ export const initialState: RemixDevToolsState = {
   settings: {
     liveUrls: [],
     liveUrlsPosition: "bottom-left",
+    editorName: "VSCode",
     routeBoundaryGradient: "silver",
     routeWildcards: {},
     activeTab: "page",
