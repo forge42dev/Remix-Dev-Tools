@@ -96,7 +96,10 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
 
         if (!server.config.isProduction) {
           const { exec } = await import("node:child_process");
-          const openInVsCode  = (path: string, lineNum: string) => {
+          const openInVsCode  = (path: string | undefined, lineNum: string) => {
+            if(!path){
+              return;
+            }
             exec(`code -g "${normalizePath(path)}${lineNum}"`);
           }
          
@@ -140,7 +143,7 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
                 routeFile && openInVsCode(path.join(remixDir, routeID, routeFile), lineNum);
                 return;
               }
-              return openInVsCode(path.join(validPath), lineNum); 
+              return openInVsCode(validPath, lineNum); 
             }
           });
         }
