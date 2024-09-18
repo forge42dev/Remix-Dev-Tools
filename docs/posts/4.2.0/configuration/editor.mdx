@@ -1,0 +1,61 @@
+---
+title: Remix Development Tools Editor Configuration
+description: Configuration options for the Remix Development Tools to interface with your editor
+---
+
+Everyone uses their own editors, so it's important to be able to configure the editor that Remix Development Tools will open your files in.
+
+```ts
+type EditorConfig = {
+  name: string;
+  open(path: string | undefined, lineNumber: string): void;
+}
+```
+
+## `name`
+
+The name of the editor that will be displayed on the Open in Editor button.
+
+## `open`
+
+This function will be called when the user clicks the Open in Editor button. It will receive the path to the file and the line number to open the file at.
+
+```ts
+import { exec } from "node:child_process";
+import { normalizePath } from "vite";
+
+function open(path: string | undefined, lineNumber: string) {
+  if(!path) return;
+  exec(`code -g "${normalizePath(path)}${lineNumber}"`);
+}
+```
+
+## Editors
+
+Below are some examples of configurations for popular editors.
+
+### VS Code
+
+To use VS Code as your editor, you don't need to do anything, it's the default editor.
+
+### WebStorm
+
+To use WebStorm as your editor, you can use the following configuration:
+
+```ts
+import { exec } from "node:child_process";
+import { cwd } from "node:process";
+
+const editor = {
+  name: "WebStorm",
+  open(path, lineNumber) {
+    if (!path) return;
+    exec(
+      `webstorm "${cwd()}/${path}" --line ${lineNumber}`.replace(
+        /\$/g,
+        "\\$",
+      ),
+    );
+  },
+};
+```

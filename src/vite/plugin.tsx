@@ -34,7 +34,6 @@ const DEFAULT_EDITOR_CONFIG: EditorConfig = {
   }
 }
 
-
 type RemixViteConfig = {
   client?: Partial<RdtClientConfig>;
   server?: DevToolsServerConfig,
