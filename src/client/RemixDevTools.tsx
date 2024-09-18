@@ -59,7 +59,9 @@ const LiveUrls = () =>{
   </div>
  
 }
-
+import.meta.hot?.on("client-loader", (data: any) => {
+  console.log("client.loader", data);
+});
 const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
   useResetDetachmentCheck();
@@ -89,6 +91,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
     recursivelyChangeTabIndex(el , !isOpen); 
   },[isOpen])  
 
+ 
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel
   if (detachedWindowOwner) {

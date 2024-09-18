@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
-import { Link, useFetcher, useSubmit } from "@remix-run/react";
+import { ClientLoaderFunctionArgs, Link, useFetcher, useSubmit } from "@remix-run/react";
 import { Button } from "../components/Button";
 
 class Redis {
@@ -21,19 +21,8 @@ export const meta: MetaFunction = () => {
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
-};
-
-export const redis = new Redis("url", {
-  commandTimeout: 5000,
-  enableAutoPipelining: true,
-  maxRetriesPerRequest: 3,
-});
-
-redis.on("connect", () => console.debug("Redis connected"));
-redis.on("close", () => console.debug("Redis connection closed"));
-redis.on("reconnecting", () => console.log("Redis reconnecting"));
-redis.removeAllListeners("error");
-redis.on("error", console.error);
+}; 
+ 
 
 export const loader = async ({ request, response }: LoaderFunctionArgs) => {
   const test = new Promise((resolve, reject) => {
@@ -49,6 +38,7 @@ export const loader = async ({ request, response }: LoaderFunctionArgs) => {
   return defer({ message: "Hello World!", test, test1 });
 };
 
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   return redirect("/login");
 };
@@ -58,15 +48,7 @@ export default function Index() {
   const pFetcher = useFetcher({ key: "test"});
   const submit = useSubmit();
   const data = new FormData();
-  data.append("test", "test");
-  data.append("array", "test");
-  data.append("array", "test1");
-  data.append("person.name", "test1");
-  data.append("person.surname", "test1");
-  data.append("array2.0", "test1");
-  data.append("array2.1", "test1");
-  data.append("array2.2", "test1");
-  data.append("obj", JSON.stringify({ test: "test" }));
+ 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>

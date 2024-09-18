@@ -1,4 +1,5 @@
 import {
+  ClientLoaderFunctionArgs,
   Form,
   Links,
   LiveReload,
@@ -20,7 +21,10 @@ export const loader = () => {
   userSomething();
   return json({ message: "Hello World" });
 }
-
+export const clientLoader = async ({ request, serverLoader }: ClientLoaderFunctionArgs) => {
+  const data = await serverLoader();
+  return  data
+};
 export const action = () => {
   return json({ message: "Hello World" });
 }

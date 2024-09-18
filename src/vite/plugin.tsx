@@ -47,6 +47,21 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
   return [ 
     {
       enforce: "pre",
+      name: "remix-development-tools-client",
+      apply(config) {
+        return config.mode === "development";
+      },
+      transform(code, id) {
+        if(code.includes("clientLoader") && !id.includes("node_modules")){
+          const modified = code.replace("clientLoader", "__clientLoader")+"\n\n"+"export const clientLoader = async (args) => { const data = await __clientLoader(args); import.meta.hot.send('client-loader',{ type: 'client-loader', data: {hi:'hi'} }); return data; }; clientLoader.hydrate = true;";
+ 
+          return modified;
+        } 
+         
+      },
+    },
+    {
+      enforce: "pre",
       name: "remix-development-tools-server",
       apply(config) {
         return config.mode === "development";
@@ -91,6 +106,14 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
           client.send("all-route-info",  JSON.stringify({
             type: "all-route-info",
             data: Object.fromEntries(routeInfo.entries()),
+          }))
+        });
+
+        server.hot.on("client-loader", (data, client) => {
+          console.log(data);
+          client.send("client-loader",  JSON.stringify({
+            type: "client-loader",
+            data: data,
           }))
         });
 
@@ -262,6 +285,8 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
           // Returns the new code
           return [...imports, ...updatedCode, augmentedLinksExport, augmentedDefaultExport].join("\n");
         }
+
+        
       },
     },
   ];
