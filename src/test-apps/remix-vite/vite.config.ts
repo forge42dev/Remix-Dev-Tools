@@ -9,6 +9,7 @@ const config = defineRdtConfig({
   panelLocation: "top",
   position: "top-right",
   requireUrlFlag: false,
+  
   liveUrls: [
     { url: "https://forge42.dev", name: "Production" }, 
     {
@@ -20,6 +21,7 @@ const config = defineRdtConfig({
   },
   pluginDir: "./plugins",
   includeInProd: true,
+ 
   
 }, ); 
 export default defineConfig({

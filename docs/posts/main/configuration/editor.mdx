@@ -8,7 +8,7 @@ Everyone uses their own editors, so it's important to be able to configure the e
 ```ts
 type EditorConfig = {
   name: string;
-  open(path: string | undefined, lineNumber: string): void;
+  open(path: string, lineNumber: string | undefined): void;
 }
 ```
 
@@ -24,9 +24,8 @@ This function will be called when the user clicks the Open in Editor button. It 
 import { exec } from "node:child_process";
 import { normalizePath } from "vite";
 
-function open(path: string | undefined, lineNumber: string) {
-  if(!path) return;
-  exec(`code -g "${normalizePath(path)}${lineNumber}"`);
+function open(path: string, lineNumber: string | undefined) { 
+  exec(`code -g "${normalizePath(path)}${lineNumber ? `:${lineNumber}` : ""}"`);
 }
 ```
 
@@ -48,13 +47,31 @@ import { cwd } from "node:process";
 
 const editor = {
   name: "WebStorm",
-  open(path, lineNumber) {
-    if (!path) return;
+  open(path, lineNumber) { 
     exec(
-      `webstorm "${cwd()}/${path}" --line ${lineNumber}`.replace(
+      `webstorm "${process.cwd()}/${path}" --line ${lineNumber ? `--line ${lineNumber}` : ""}`.replace(
         /\$/g,
         "\\$",
       ),
+    );
+  },
+};
+```
+
+### GoLand
+
+To use WebStorm as your editor, you can use the following configuration:
+
+```ts
+import { exec } from "node:child_process";
+import { cwd } from "node:process";
+
+const editor = {
+  name: "WebStorm",
+  open(path, lineNumber) {
+    if (!path) return;
+    exec(
+      `goland "${process.cwd()}/${path}" ${lineNumber ? `--line ${lineNumber}` : ""}` 
     );
   },
 };
