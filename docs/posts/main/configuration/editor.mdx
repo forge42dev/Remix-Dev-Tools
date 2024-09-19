@@ -19,6 +19,8 @@ The name of the editor that will be displayed on the Open in Editor button.
 ## `open`
 
 This function will be called when the user clicks the Open in Editor button. It will receive the path to the file and the line number to open the file at.
+This function will both handle the case where you shift + right click an element on the page AND the open in X button in the UI, they return different values
+so be sure to cover both of them.
 
 ```ts
 import { exec } from "node:child_process";
