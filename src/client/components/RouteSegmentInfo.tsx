@@ -10,7 +10,7 @@ import { InfoCard } from "./InfoCard.js";
 import { useDevServerConnection } from "../hooks/useDevServerConnection.js";
 import { Icon } from "./icon/Icon.js";
 import clsx from "clsx";
-import { OpenSourceData } from "../../vite/types.js";
+import { OpenSourceData } from "../../vite/editor.js";
 
 const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {

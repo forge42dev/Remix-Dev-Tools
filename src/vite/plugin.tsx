@@ -5,9 +5,8 @@ import { DevToolsServerConfig } from "../server/config.js";
 import {   handleDevToolsViteRequest, processPlugins, } from "./utils.js";
 import { ActionEvent, LoaderEvent } from "../server/event-queue.js"; 
 import { RdtClientConfig } from "../client/context/RDTContext.js"; 
-import chalk from "chalk"; 
-import { OpenSourceData } from './types.js'; 
-import { DEFAULT_EDITOR_CONFIG, EditorConfig, handleOpenSource } from "./editor.js";
+import chalk from "chalk";  
+import { DEFAULT_EDITOR_CONFIG, EditorConfig, handleOpenSource , OpenSourceData} from "./editor.js";
 
 declare global {
   interface Window {
