@@ -1,0 +1,56 @@
+---
+title: "Setting up Remix Development Tools"
+alternateTitle: "Beginner's Guide"
+description: "Follow this page to learn how to set up Remix Development Tools in your Remix project."
+---
+
+import Warn from "./warn.tsx";
+ 
+ 
+## Installation
+Adding Remix Development Tools to your project is easy. First install it into your project by running:
+
+```bash
+npm install remix-development-tools -D
+```
+
+This will install it as a dev dependency in your project.
+
+## Enabling the tools
+
+After you have installed the tools, you need to go to your `vite.config.ts` file which will probably look something like this:
+
+```ts 
+import { vitePlugin as remix } from '@remix-run/dev'
+import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
+
+export default defineConfig({
+  plugins: [remix(), tsconfigPaths()],
+}) 
+
+```
+
+All you have to do is add the plugin into the `plugins` array in your `vite.config.ts` file. 
+
+```diff 
+import { vitePlugin as remix } from '@remix-run/dev'
+import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
++import { remixDevTools } from "remix-development-tools";
+
+export default defineConfig({
+-  plugins: [remix(), tsconfigPaths()], 
++  plugins: [remixDevTools(), remix(), tsconfigPaths()],
+}) 
+
+```
+<Warn title="Warning">
+Make sure your plugin is BEFORE the remix one!
+</Warn>
+
+**That's it!** 
+
+You should now see the Remix Development Tools in your browser when you run your app.
+ 
+

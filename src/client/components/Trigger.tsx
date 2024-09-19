@@ -55,7 +55,7 @@ export const Trigger = ({
       <Logo
         className={clsx(
           "rdt-h-14 rdt-w-14 rdt-rounded-full rdt-transition-all rdt-duration-200",
-          "rdt-hover:cursor-pointer rdt-hover:ring-2 rdt-ring-slate-600"
+          "hover:rdt-cursor-pointer hover:rdt-ring-2 hover:rdt-ring-offset-2 rdt-ring-[#212121]"
         )}
       />
     </div>
