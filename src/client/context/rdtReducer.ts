@@ -70,6 +70,14 @@ export type RemixDevToolsState = {
   terminals: Terminal[];
   settings: {
     /**
+     * The breakpoints to show in the corner so you can see the current breakpoint that you defined
+     */
+    breakpoints: { name: string, min: number, max: number}[],
+    /**
+     * Whether to show the breakpoint indicator
+     */
+    showBreakpointIndicator: boolean,
+    /**
      * The live urls to show in the corner which allow you to open the app in a different environment (eg. staging, production)
      * @default []
      */
@@ -156,6 +164,15 @@ export const initialState: RemixDevToolsState = {
   terminals: [{ id: 0, locked: false, output: [], history: [] }],
   server: undefined,
   settings: {
+    breakpoints: [
+      { name: "", min: 0, max: 639 }, 
+      { name: "sm", min: 640, max: 767 },
+      { name: "md", min: 768, max: 1023 },
+      { name: "lg", min: 1024, max: 1279 },
+      { name: "xl", min: 1280, max: 1535 },
+      { name: "2xl", min: 1536, max: 9999 }, 
+    ],
+    showBreakpointIndicator: true,
     liveUrls: [],
     liveUrlsPosition: "bottom-left",
     routeBoundaryGradient: "silver",

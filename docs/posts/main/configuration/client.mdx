@@ -27,7 +27,9 @@ type RdtClientConfig = {
     panelLocation: "top" | "bottom";
     requireUrlFlag: boolean;
     urlFlag: string;
+    breakpoints: {name: string, min: number, max: number }[],
     routeBoundaryGradient: "sea" | "hyper" | "gotham" | "gray" | "watermelon" | "ice" | "silver";
+    showBreakpointIndicator: boolean;
 }
 ```
 
@@ -134,6 +136,20 @@ This changes the color of the route boundary gradient in the **Active Page** tab
 
 The default value is `ice`.
 
+## Breakpoints
+
+This option allows you to define custom breakpoints that show in the bottom left corner of the panel to help you determine the current screen breakpoint you have defined.
+By default the breakpoints are set to tailwind breakpoints but you can change them to whatever you want.
+
+Eg:
+```ts
+    breakpoints: [{name: "lg", min: 0, max: 768}, {name: "xl", min: 768, max: 1024}, {name: "2xl", min: 1024, max: Infinity}],
+```
+
+## Show breakpoint indicator
+
+This option allows you to show/hide the current breakpoint in the bottom left corner of the panel.
+
 ## Creating a custom configuration
 
 To create a custom configuration you can use the following code snippet:
@@ -154,6 +170,8 @@ To create a custom configuration you can use the following code snippet:
       requireUrlFlag: true,
       urlFlag: "customFlag",
       routeBoundaryGradient: "gotham",
+      breakpoints: [{name: "lg", min: 0, max: 768}, {name: "xl", min: 768, max: 1024}, {name: "2xl", min: 1024, max: Infinity}],
+      showBreakpointIndicator: false
     }
   });
 

@@ -44,6 +44,14 @@ export const SettingsTab = () => {
       >
         Hide the trigger until hovered
       </Checkbox>
+      <Checkbox
+        id="showBreakpointIndicator"
+        hint="Whether to show the breakpoint indicator or not"
+        onChange={() => setSettings({ showBreakpointIndicator: !settings.showBreakpointIndicator })}
+        value={settings.showBreakpointIndicator}
+      >
+        Show breakpoint indicator
+      </Checkbox>
       
       <hr className="rdt-mt-2 rdt-border-gray-700" />
       <Stack gap="lg">

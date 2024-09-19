@@ -59,6 +59,46 @@ const LiveUrls = () =>{
   </div>
  
 }
+type WindowSize = {
+  width: number;
+  height: number;
+};
+const useOnWindowResize = () => {
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  return windowSize
+}
+
+const Breakpoints = () => {
+  const { width } = useOnWindowResize();
+  const { settings } = useSettingsContext();
+  const breakpoints = settings.breakpoints;
+  const show= settings.showBreakpointIndicator;
+  const breakpoint = breakpoints.find(bp => bp.min <= width && bp.max >= width);
+  if(!breakpoint || !breakpoint.name || !show){
+    return null;
+  }
+  return <div className={clsx("rdt-flex rdt-fixed rdt-bottom-0 rdt-left-0 rdt-mb-5 rdt-rounded-full rdt-bg-[#212121] rdt-size-10 rdt-text-white rdt-flex rdt-items-center rdt-justify-center rdt-items-center rdt-gap-2 rdt-mx-1")}>
+    {breakpoint?.name}
+  </div>
+}
 
 const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useTimelineHandler();
@@ -111,6 +151,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
       <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
         <Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
         <LiveUrls />
+        <Breakpoints />
         <MainPanel isOpen={isOpen}>
           <div className="rdt-flex rdt-h-full">
             <Tabs plugins={plugins} setIsOpen={setIsOpen} />
