@@ -2,13 +2,11 @@ import { Plugin, normalizePath } from "vite";
 import { parse } from "es-module-lexer";
 import { cutArrayToLastN } from "../client/utils/common.js";
 import { DevToolsServerConfig } from "../server/config.js";
-import { checkPath, handleDevToolsViteRequest, processPlugins, } from "./utils.js";
+import {   handleDevToolsViteRequest, processPlugins, } from "./utils.js";
 import { ActionEvent, LoaderEvent } from "../server/event-queue.js"; 
 import { RdtClientConfig } from "../client/context/RDTContext.js"; 
-import chalk from "chalk";
-import path from 'path';
-import fs from 'fs';
-import { OpenSourceData } from './types.js';
+import chalk from "chalk";  
+import { DEFAULT_EDITOR_CONFIG, EditorConfig, handleOpenSource , OpenSourceData} from "./editor.js";
 
 declare global {
   interface Window {
@@ -16,8 +14,7 @@ declare global {
   }
 }
 
-const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>();
-
+const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>();  
 
 type RemixViteConfig = {
   client?: Partial<RdtClientConfig>;
@@ -27,16 +24,23 @@ type RemixViteConfig = {
   improvedConsole?: boolean;
   /** The directory where the remix app is located. Defaults to the "./app" relative to where vite.config is being defined. */
   remixDir?: string;
+  editor?: EditorConfig;
 };
  
 export const defineRdtConfig = (config: RemixViteConfig) =>  config
  
 export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
+
   const serverConfig = args?.server || {};
-  const clientConfig = args?.client || {};
+  const clientConfig = {
+    ...args?.client,
+    editorName: args?.editor?.name,
+  } 
+ 
   const include = args?.includeInProd ?? false; 
   const improvedConsole = args?.improvedConsole ?? true;
-    const remixDir = args?.remixDir || "./app";
+  const remixDir = args?.remixDir || "./app";
+
 
   const shouldInject = (mode: string | undefined) => mode === "development" || include;
   let port = 5173;
@@ -95,57 +99,15 @@ export const remixDevTools: (args?:RemixViteConfig) => Plugin[] = (args) => {
         });
 
         if (!server.config.isProduction) {
-          const { exec } = await import("node:child_process");
-          const openInVsCode  = (path: string | undefined, lineNum: string) => {
+          const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG;
+          const openInEditor = (path: string | undefined, lineNum: string | undefined) => {
             if(!path){
               return;
             }
-            exec(`code -g "${normalizePath(path)}${lineNum}"`);
+            editor.open(path, lineNum);
           }
          
-          server.hot.on("open-source", ({ data }: OpenSourceData) => {
-            const { source, line, routeID } = data;
-            const lineNum = line ? `:${line}` : "";
-
-            if (source) { 
-              return openInVsCode(source, lineNum);
-            }
-
-            if (routeID) {
-              const routePath = path.join(remixDir, routeID);
-              const checkedPath = checkPath(routePath);
-
-              if (!checkedPath) return;
-              const { type, validPath } = checkedPath;
-
-              const reactExtensions = ["tsx", "jsx"];
-              const allExtensions = ["ts", "js", ...reactExtensions];
-              const isRoot = routeID === "root";
-              const findFileByExtension = (prefix: string, filePaths: string[]) =>{
-                const file = filePaths.find(file => allExtensions.some(ext => file === `${prefix}.${ext}`));
-                return file
-              }
-
-              if (isRoot) {
-                if (!fs.existsSync(remixDir)) return;
-                const filesInRemixPath = fs.readdirSync(remixDir);
-                const rootFile = findFileByExtension("root", filesInRemixPath);
-                rootFile && openInVsCode(path.join(remixDir, rootFile), lineNum);  
-                return;
-              }
-
-              // If its not the root route, then we find the file or folder in the routes folder
-              // We know that the route ID is in the form of "routes/contact" or "routes/user.profile" when is not root
-              // so the ID already contains the "routes" segment, so we just need to find the file or folder in the routes folder
-              if (type === "directory") {
-                const filesInFolderRoute = fs.readdirSync(validPath);
-                const routeFile = findFileByExtension("route", filesInFolderRoute);
-                routeFile && openInVsCode(path.join(remixDir, routeID, routeFile), lineNum);
-                return;
-              }
-              return openInVsCode(validPath, lineNum); 
-            }
-          });
+          server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({data, openInEditor, remixDir}));
         }
       },
     },
