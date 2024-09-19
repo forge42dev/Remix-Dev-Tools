@@ -65,7 +65,7 @@ export const getSettings = () => {
   };
 };
 
-export const getExistingStateFromStorage = (config?: RdtClientConfig) => {
+export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorName?: string }) => {
   const existingState = getStorageItem(REMIX_DEV_TOOLS_STATE);
   const settings = getSettings();
   const { detachedWindow, detachedWindowOwner } = detachedModeSetup();
@@ -76,6 +76,7 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig) => {
       ...initialState.settings,
       ...config,
       ...settings,
+      editorName: config?.editorName ?? initialState.settings.editorName,
       liveUrls: config?.liveUrls ?? initialState.settings.liveUrls, 
       breakpoints: config?.breakpoints ?? initialState.settings.breakpoints,
        
@@ -88,7 +89,6 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig) => {
 };
 
 export type RdtClientConfig = Pick<RemixDevToolsState["settings"], "defaultOpen" | "breakpoints" | "showBreakpointIndicator" | "expansionLevel" | "liveUrls" | "position" | "height" | "minHeight" | "maxHeight" | "hideUntilHover" | "panelLocation" | "requireUrlFlag" | "urlFlag" | "routeBoundaryGradient">  
-
 
 export const RDTContextProvider = ({ children, config }: ContextProps) => { 
   const [state, dispatch] = useReducer<typeof rdtReducer>(rdtReducer, getExistingStateFromStorage(config));
