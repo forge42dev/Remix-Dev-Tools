@@ -9,8 +9,15 @@ This plugin allows you to see all tailwind colors in a new tab in remix developm
 
 ### Vite
 1. Create a plugin directory in your project. (eg on the root you can create a `your-path-here` folder)
-2. Copy the code from the plugin located in this folder. and paste it into there (eg `your-path-here/tailwind-palette.tsx`)
-3. Specify the plugin directory in your vite config via the `pluginsDir` option:
+2. Add the plugin directory path to the tailwind config file.
+     ```ts
+     //tailwind.config.ts
+     export default {
+        content: ["./your-path-here/**/*.{ts,tsx}"]
+     }
+     ```
+4. Copy the code from the plugin located in this folder. and paste it into there (eg `your-path-here/tailwind-palette.tsx`)
+5. Specify the plugin directory in your vite config via the `pluginsDir` option:
   
 ```js
   // vite.config.js
