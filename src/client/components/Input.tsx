@@ -11,25 +11,25 @@ export const Label = ({
   ...props
 }: React.HTMLProps<HTMLLabelElement>) => {
   return (
-    <label className={clsx("rdt-block rdt-text-white rdt-text-sm", className)} {...props}>
+    <label className={clsx("block text-white text-sm", className)} {...props}>
       {children}
     </label>
   );
 };
 
 export const Hint = ({ children }: React.HTMLProps<HTMLParagraphElement>) => {
-  return <p className="rdt-text-sm rdt-text-gray-500">{children}</p>;
+  return <p className="text-sm text-gray-500">{children}</p>;
 };
 
 const Input = ({ className, name, label, hint, ...props }: InputProps) => {
   return (
-    <div className="rdt-flex rdt-w-full rdt-flex-col rdt-gap-1">
+    <div className="flex w-full flex-col gap-1">
       {label && <Label htmlFor={name}>{label}</Label>}
       <input
         name={name}
         id={name}
         className={clsx(
-          "rdt-w-full rdt-rounded rdt-text-white rdt-border rdt-border-gray-400 rdt-bg-[#121212] rdt-px-2 rdt-py-1 rdt-text-sm",
+          "w-full rounded text-white border border-gray-400 bg-[#121212] px-2 py-1 text-sm",
           className
         )}
         {...props}

@@ -44,15 +44,15 @@ const LiveUrls = () =>{
   const location = useLocation();
   const envsPosition = settings.liveUrlsPosition;
   const envsClassName = {
-    "rdt-bottom-0": envsPosition === "bottom-left" || envsPosition === "bottom-right",
-    "rdt-top-0": envsPosition === "top-left" || envsPosition === "top-right",
-    "rdt-right-0": envsPosition === "bottom-right" || envsPosition === "top-right",
-    "rdt-left-0": envsPosition === "bottom-left" || envsPosition === "top-left",
+    "bottom-0": envsPosition === "bottom-left" || envsPosition === "bottom-right",
+    "top-0": envsPosition === "top-left" || envsPosition === "top-right",
+    "right-0": envsPosition === "bottom-right" || envsPosition === "top-right",
+    "left-0": envsPosition === "bottom-left" || envsPosition === "top-left",
   }
   if(settings.liveUrls.length === 0) return null;
-  return <div className={clsx("rdt-flex rdt-fixed rdt-items-center rdt-gap-2 rdt-px-2", envsClassName)}>
+  return <div className={clsx("flex fixed items-center gap-2 px-2", envsClassName)}>
     {settings.liveUrls.map((env) => { 
-      return <Link key={env.name} referrerPolicy="no-referrer" target="_blank" to={env.url+location.pathname} className="rdt-flex rdt-transition-all hover:rdt-text-gray-500 rdt-items-center rdt-gap-2 rdt-text-sm rdt-font-semibold rdt-text-gray-400">
+      return <Link key={env.name} referrerPolicy="no-referrer" target="_blank" to={env.url+location.pathname} className="flex transition-all hover:text-gray-500 items-center gap-2 text-sm font-semibold text-gray-400">
         {env.name}
       </Link>
     })}
@@ -95,7 +95,7 @@ const Breakpoints = () => {
   if(!breakpoint || !breakpoint.name || !show){
     return null;
   }
-  return <div className={clsx("rdt-flex rdt-fixed rdt-bottom-0 rdt-left-0 rdt-mb-5 rdt-rounded-full rdt-bg-[#212121] rdt-size-10 rdt-text-white rdt-flex rdt-items-center rdt-justify-center rdt-items-center rdt-gap-2 rdt-mx-1")}>
+  return <div className={clsx("flex fixed bottom-0 left-0 mb-5 rounded-full bg-[#212121] size-10 text-white flex items-center justify-center items-center gap-2 mx-1")}>
     {breakpoint?.name}
   </div>
 }
@@ -146,14 +146,13 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
     );
   }
 
-  return (
-    
+  return ( 
       <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
         <Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
         <LiveUrls />
         <Breakpoints />
         <MainPanel isOpen={isOpen}>
-          <div className="rdt-flex rdt-h-full">
+          <div className="flex h-full">
             <Tabs plugins={plugins} setIsOpen={setIsOpen} />
             <ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />
           </div>

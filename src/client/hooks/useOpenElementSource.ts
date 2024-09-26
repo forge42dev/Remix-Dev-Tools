@@ -12,7 +12,7 @@ const useOpenElementSource = () => {
     e.stopPropagation();
     e.preventDefault();
     const target = e.target as HTMLElement;
-    const rdtSource = target?.getAttribute("data-rdt-source");
+    const rdtSource = target?.getAttribute("data-source");
 
     if (rdtSource) {
       const [source, line, column] = rdtSource.split(":::"); 

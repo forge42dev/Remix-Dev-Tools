@@ -1,7 +1,8 @@
-import { Options, ReadyState, useWebSocket } from "../../external/react-use-websocket/index.js";
+import { Options, ReadyState,  } from "react-use-websocket";
 import { useSettingsContext, useTerminalContext } from "../context/useRDTContext.js";
 import { useState } from "react";
-
+import useWebSocket from "react-use-websocket";
+ 
 const RETRY_COUNT = 2;
 
 export const useRemixForgeSocket = (options?: Options) => {

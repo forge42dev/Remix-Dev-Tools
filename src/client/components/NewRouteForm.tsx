@@ -53,8 +53,8 @@ const NewRouteForm = () => {
     setNewRouteInfo({ ...newRouteInfo, ...info });
   };
   return (
-    <div className="rdt-mb-2 rdt-rounded-lg rdt-border rdt-border-gray-500/20 rdt-p-2">
-      <label className="rdt-mb-2 rdt-block ">Route path:</label>
+    <div className="mb-2 rounded-lg border border-gray-500/20 p-2">
+      <label className="mb-2 block ">Route path:</label>
       <Input
         onBlur={() =>
           setNewInfo({
@@ -62,13 +62,13 @@ const NewRouteForm = () => {
           })
         }
         onChange={(e) => setNewInfo({ path: e.target.value })}
-        className="rdt-mb-1"
+        className="mb-1"
       />
-      <span className="rdt-mb-4 rdt-block rdt-text-gray-500">
+      <span className="mb-4 block text-gray-500">
         This will be added to your routes folder under your entered name,
         exclude the extension
       </span>
-      <label className="rdt-mb-2 rdt-block">Additional options:</label>
+      <label className="mb-2 block">Additional options:</label>
       <Checkbox
         value={newRouteInfo.loader}
         onChange={() =>
@@ -153,8 +153,8 @@ const NewRouteForm = () => {
         onClick={handleSubmit}
         disabled={!newRouteInfo.path}
         className={clsx(
-          "rdt-mr-2 rdt-mt-2 rdt-self-end rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm",
-          !newRouteInfo.path && "rdt-opacity-50"
+          "mr-2 mt-2 self-end text-white rounded border border-gray-400 px-2 py-1 text-sm",
+          !newRouteInfo.path && "opacity-50"
         )}
       >
         Add route

@@ -56,11 +56,11 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
 };
 
 export const ROUTE_COLORS = {
-  GREEN: "rdt-bg-green-500 rdt-ring-green-500 rdt-text-white",
-  BLUE: "rdt-bg-blue-500 rdt-ring-blue-500 rdt-text-white",
-  TEAL: "rdt-bg-teal-400 rdt-ring-teal-400 rdt-text-white",
-  RED: "rdt-bg-red-500 rdt-ring-red-500 rdt-text-white",
-  PURPLE: "rdt-bg-purple-500 rdt-ring-purple-500 rdt-text-white",
+  GREEN: "bg-green-500 ring-green-500 text-white",
+  BLUE: "bg-blue-500 ring-blue-500 text-white",
+  TEAL: "bg-teal-400 ring-teal-400 text-white",
+  RED: "bg-red-500 ring-red-500 text-white",
+  PURPLE: "bg-purple-500 ring-purple-500 text-white",
 } as const;
 
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
@@ -93,20 +93,20 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
     <li
       onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
       onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
-      className="rdt-mb-8 rdt-ml-8"
+      className="mb-8 ml-8"
     >
       <div
         className={clsx(
-          "rdt-absolute -rdt-left-4 rdt-flex rdt-h-8 rdt-w-8 rdt-items-center rdt-justify-center rdt-rounded-full",
+          "absolute -left-4 flex h-8 w-8 items-center justify-center rounded-full",
           ROUTE_COLORS[isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"]
         )}
       >
         <Icon name={isRoot ? "Root" : isLayout ? "Layout" : "CornerDownRight"} size="sm" />
       </div>
-      <h2 className="rdt-text-md -rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-justify-between rdt-gap-2 rdt-font-semibold rdt-text-white">
+      <h2 className="text-md -mt-3 mb-1 text-white flex items-center justify-between gap-2 font-semibold text-white">
         {route.pathname}
 
-        <div className="rdt-flex rdt-gap-2">
+        <div className="flex gap-2">
           {cacheControl && serverInfo?.lastLoader.timestamp && (
             <CacheInfo
               key={JSON.stringify(serverInfo?.lastLoader ?? "")}
@@ -127,12 +127,12 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
           )}
         </div>
       </h2>
-      <div className="rdt-mb-4">
-        <p className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500  ">
+      <div className="mb-4">
+        <p className="mb-2 block text-sm font-normal leading-none text-gray-500  ">
           Route segment file: {route.id}
         </p>
 
-        <div className="rdt-flex rdt-flex-wrap rdt-gap-6">
+        <div className="flex flex-wrap gap-6">
           {loaderData && <InfoCard title="Loader data">{<JsonRenderer data={loaderData} />}</InfoCard>}
           {serverInfo && import.meta.env.DEV && (
             <InfoCard onClear={clearServerInfoForRoute} title="Server Info">

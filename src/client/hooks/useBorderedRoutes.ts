@@ -3,14 +3,14 @@ import { useNavigation } from "@remix-run/react";
 import { HTMLError } from "../context/rdtReducer.js";
 import { useHtmlErrors } from "../context/useRDTContext.js";
 
-export const ROUTE_CLASS = "rdt-outlet-route";
+export const ROUTE_CLASS = "outlet-route";
 
 const isSourceElement = (fiberNode: any) => {
   return (
     fiberNode?.elementType &&
     fiberNode?.stateNode &&
     fiberNode?._debugSource &&
-    !fiberNode?.stateNode?.getAttribute?.("data-rdt-source")
+    !fiberNode?.stateNode?.getAttribute?.("data-source")
   );
 };
 
@@ -172,7 +172,7 @@ export function useBorderedRoutes() {
             const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName;
 
             fiberNode.stateNode?.setAttribute?.(
-              "data-rdt-source",
+              "data-source",
               `${fileName}:::${line}` //
             );
           } else if (isSourceElement(fiberNode)) {
@@ -183,7 +183,7 @@ export function useBorderedRoutes() {
             const line = source?.fileName?.startsWith("/") ? originalSource?.lineNumber : source?.lineNumber;
             const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName;
             fiberNode.stateNode?.setAttribute?.(
-              "data-rdt-source",
+              "data-source",
               `${fileName}:::${isJsx ? line - 20 : line}` //
             );
           }

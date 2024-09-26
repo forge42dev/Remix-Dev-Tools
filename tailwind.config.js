@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{tsx,ts,js}",   "!node_modules"],
+  content: ["./src/**/*.{tsx,ts,js}"],
   theme: {
     extend: {
       colors: {
@@ -33,8 +33,7 @@ export default {
         "fade-in": "fade-in 0.5s ease-in",
       },
     },
-  },
-  prefix: "rdt-",
+  }, 
   plugins: [await import("tailwindcss-animate")],
-  important: true,
+ 
 };

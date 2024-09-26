@@ -10,7 +10,7 @@ const EditorButton = ({ name, onClick }: EditorButtonProps) => {
     <button
       onClick={onClick}
       className={clsx(
-        "rdt-flex rdt-cursor-pointer rdt-items-center rdt-gap-1 rdt-rounded rdt-border rdt-border-[#1F9CF0] rdt-px-2.5 rdt-py-0.5 rdt-text-sm rdt-font-medium rdt-text-[#1F9CF0]"
+        "flex cursor-pointer items-center gap-1 rounded border border-[#1F9CF0] px-2.5 py-0.5 text-sm font-medium text-[#1F9CF0]"
       )}
     >
       Open in {name}

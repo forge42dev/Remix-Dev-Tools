@@ -35,12 +35,12 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
         ...(!isEmbedded && { height: detachedWindow ? window.innerHeight : height }),
       }}
       className={clsx(
-        "rdt-duration-600 rdt-box-border rdt-flex rdt-w-screen rdt-flex-col rdt-overflow-auto rdt-bg-main rdt-text-white rdt-opacity-0 rdt-transition-all",
-        isOpen ? "rdt-opacity-100 rdt-drop-shadow-2xl" : "rdt-h-0",
-        isResizing && "rdt-cursor-grabbing ",
+        "duration-600 box-border flex w-screen flex-col overflow-auto bg-main text-white opacity-0 transition-all",
+        isOpen ? "opacity-100 drop-shadow-2xl" : "h-0",
+        isResizing && "cursor-grabbing ",
         !isEmbedded
-          ? `rdt-fixed rdt-left-0 ${
-              panelLocation === "bottom" ? "rdt-bottom-0" : "rdt-top-0 rdt-border-b-2 rdt-border-main"
+          ? `fixed left-0 ${
+              panelLocation === "bottom" ? "bottom-0" : "top-0 border-b-2 border-main"
             }`
           : "",
         className
@@ -51,8 +51,8 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
           onMouseDown={enableResize}
           onMouseUp={disableResize}
           className={clsx(
-            "rdt-absolute rdt-z-50 rdt-h-1 rdt-w-full",
-            isResizing ? "rdt-cursor-grabbing" : "rdt-cursor-ns-resize"
+            "absolute z-50 h-1 w-full",
+            isResizing ? "cursor-grabbing" : "cursor-ns-resize"
           )}
         />
       )}
@@ -62,8 +62,8 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
           onMouseDown={enableResize}
           onMouseUp={disableResize}
           className={clsx(
-            "rdt-absolute rdt-bottom-0 rdt-z-50 rdt-h-1 rdt-w-full",
-            isResizing ? "rdt-cursor-grabbing" : "rdt-cursor-ns-resize"
+            "absolute bottom-0 z-50 h-1 w-full",
+            isResizing ? "cursor-grabbing" : "cursor-ns-resize"
           )}
         />
       )}

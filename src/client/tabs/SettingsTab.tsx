@@ -15,10 +15,10 @@ export const SettingsTab = () => {
   const [openHotkey, setOpenHotkey] = useState(settings.openHotkey.toString());
  
   return (
-    <Stack className="rdt-mb-4">
+    <Stack className="mb-4">
       <h1>
-        <span className="rdt-text-2xl rdt-font-semibold">Settings</span>
-        <hr className="rdt-mt-2 rdt-border-gray-400" />
+        <span className="text-2xl font-semibold">Settings</span>
+        <hr className="mt-2 border-gray-400" />
       </h1>
       <Checkbox
         id="defaultOpen"
@@ -53,7 +53,7 @@ export const SettingsTab = () => {
         Show breakpoint indicator
       </Checkbox>
       
-      <hr className="rdt-mt-2 rdt-border-gray-700" />
+      <hr className="mt-2 border-gray-700" />
       <Stack gap="lg">
         {settings.requireUrlFlag && (
           <Input
@@ -97,7 +97,7 @@ export const SettingsTab = () => {
             }
           }}
         />
-        <div className="rdt-flex rdt-flex-col rdt-gap-2 lg:rdt-flex-row">
+        <div className="flex flex-col gap-2 lg:!flex-row">
           <Input
             name="minHeight"
             label="Min height of the dev tools (px)"
@@ -128,12 +128,12 @@ export const SettingsTab = () => {
           />
         </div>
 
-        <div className="rdt-flex rdt-flex-col rdt-gap-2 lg:rdt-flex-row">
+        <div className="flex flex-col gap-2 lg:!flex-row">
           <SelectWithOptions
             label="Trigger position"
             onSelect={(value) => setSettings({ position: value })}
             value={settings.position}
-            className="rdt-w-full"
+            className="w-full"
             options={[
               { label: "Bottom Right", value: "bottom-right" },
               { label: "Bottom Left", value: "bottom-left" },
@@ -147,8 +147,8 @@ export const SettingsTab = () => {
           <SelectWithOptions
             label="Environments position"
             onSelect={(value) => setSettings({ liveUrlsPosition: value as any })}
-            value={settings.position}
-            className="rdt-w-full"
+            value={settings.liveUrlsPosition}
+            className="w-full"
             options={[
               { label: "Bottom Right", value: "bottom-right" },
               { label: "Bottom Left", value: "bottom-left" },
@@ -161,7 +161,7 @@ export const SettingsTab = () => {
             label="Panel position"
             onSelect={(value) => setSettings({ panelLocation: value })}
             value={settings.panelLocation}
-            className="rdt-w-full"
+            className="w-full"
             options={[
               { label: "Top", value: "top" },
               { label: "Bottom", value: "bottom" },

@@ -16,13 +16,13 @@ const Translations: Record<TimelineEvent["type"], string> = {
 
 const RedirectEventComponent = (event: RedirectEvent) => {
   return (
-    <div className="rdt-mb-4">
-      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500">
+    <div className="mb-4">
+      <time className="mb-2 block text-sm font-normal leading-none text-gray-500">
         Navigated to url: "{event.to + event.search}"
       </time>
-      <p className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">{event.hash}</p>
+      <p className="mb-4 text-base font-normal text-gray-400">{event.hash}</p>
       {event.responseData && (
-        <p className="rdt-mb-4 rdt-text-base rdt-font-normal rdt-text-gray-400">
+        <p className="mb-4 text-base font-normal text-gray-400">
           Data received:
           <JsonRenderer data={event.responseData} />
         </p>
@@ -38,19 +38,19 @@ const FormEventComponent = (event: FormEvent) => {
       : `Submission to url: "${event.to}"`;
   const responseData = event.responseData;
   return (
-    <div className="rdt-mb-4">
-      <time className="rdt-mb-2 rdt-block rdt-text-sm rdt-font-normal rdt-leading-none rdt-text-gray-500">
+    <div className="mb-4">
+      <time className="mb-2 block text-sm font-normal leading-none text-gray-500">
         {firstPart} | encType: {event.encType} {"fetcherKey" in event && typeof event.fetcherKey !== "undefined" ? `| Fetcher Key: ${event.fetcherKey}` : ""}
       </time>
-      <div className="rdt-flex rdt-gap-8">
+      <div className="flex gap-8">
         {event.data && event.type !== "ACTION_RESPONSE" && (
-          <div className="rdt-mb-4 rdt-truncate rdt-text-base rdt-font-normal rdt-text-gray-400">
+          <div className="mb-4 truncate text-base font-normal text-gray-400">
             Data sent:
             <JsonRenderer data={event.data} />
           </div>
         )}
         {responseData && (
-          <div className="rdt-mb-4 rdt-truncate rdt-text-base rdt-font-normal rdt-text-gray-400">
+          <div className="mb-4 truncate text-base font-normal text-gray-400">
             Server Response Data:
             <JsonRenderer data={responseData} />
           </div>
@@ -71,23 +71,23 @@ export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
 const TimelineTab = () => {
   const { timeline, clearTimeline } = useTimelineContext();
   return (
-    <div className="rdt-relative rdt-flex rdt-h-full rdt-flex-col rdt-overflow-y-auto rdt-p-6 rdt-px-6">
+    <div className="relative flex h-full flex-col overflow-y-auto p-6 px-6">
       {timeline.length > 0 && (
         <button
           onClick={() => clearTimeline()}
-          className="rdt-absolute rdt-right-3 rdt-top-0 rdt-z-20 rdt-cursor-pointer rdt-rounded-lg rdt-border rdt-border-red-500 rdt-px-3 rdt-py-1 rdt-text-sm rdt-font-semibold rdt-text-white"
+          className="absolute right-3 top-0 z-20 cursor-pointer rounded-lg border border-red-500 px-3 py-1 text-sm font-semibold text-white"
         >
           Clear
         </button>
       )}
-      <ol className="rdt-relative">
+      <ol className="relative">
         {timeline.map((event) => {
           return (
-            <li key={event.id} className="rdt-mb-2 rdt-ml-8 rdt-animate-fade-in-left">
-              <span className="rdt-absolute -rdt-left-3 rdt-mt-2 rdt-flex rdt-h-6 rdt-w-6 rdt-animate-fade-in rdt-items-center rdt-justify-center rdt-rounded-full rdt-bg-blue-900 rdt-ring-4 rdt-ring-blue-900">
+            <li key={event.id} className="mb-2 ml-8 animate-fade-in-left">
+              <span className="absolute -left-3 mt-2 flex h-6 w-6 animate-fade-in items-center justify-center rounded-full bg-blue-900 ring-4 ring-blue-900">
                 <Icon name="Activity" />
               </span>
-              <h3 className="-rdt-mt-3 rdt-mb-1 rdt-flex rdt-items-center rdt-gap-2 rdt-text-lg rdt-font-semibold rdt-text-white">
+              <h3 className="-mt-3 mb-1 flex items-center gap-2 text-lg font-semibold text-white">
                 {Translations[event.type]}
                 {event?.method && <Tag color={METHOD_COLORS[event.method]}>{event.method}</Tag>}
               </h3>

@@ -5,15 +5,15 @@ interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const GAPS = {
-  sm: "rdt-gap-1",
-  md: "rdt-gap-2",
-  lg: "rdt-gap-4",
+  sm: "gap-1",
+  md: "gap-2",
+  lg: "gap-4",
 };
 
 const Stack = ({ gap = "md", className, children, ...props }: StackProps) => {
   return (
     <div
-      className={clsx("rdt-flex rdt-flex-col", GAPS[gap], className)}
+      className={clsx("flex flex-col", GAPS[gap], className)}
       {...props}
     >
       {children}

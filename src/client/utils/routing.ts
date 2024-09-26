@@ -36,9 +36,9 @@ export function isRootRoute(route: Route) {
 }
 
 export const ROUTE_FILLS = {
-  GREEN: "rdt-fill-green-500 rdt-text-white",
-  BLUE: "rdt-fill-blue-500 rdt-text-white",
-  PURPLE: "rdt-fill-purple-500 rdt-text-white",
+  GREEN: "fill-green-500 text-white",
+  BLUE: "fill-blue-500 text-white",
+  PURPLE: "fill-purple-500 text-white",
 } as const;
 
 export function getRouteColor(route: Route) {

@@ -33,28 +33,28 @@ const ErrorsTab = () => {
   }, []);
 
   return (
-    <div className="rdt-flex rdt-flex-col rdt-gap-1">
+    <div className="flex flex-col gap-1">
         {htmlErrors.length > 0 ? (
         <>
-          <h1 className="rdt-text-xl">HTML Nesting Errors</h1>
-          <hr className="rdt-mb-1 rdt-border-gray-600/30" />
+          <h1 className="text-xl">HTML Nesting Errors</h1>
+          <hr className="mb-1 border-gray-600/30" />
         </>
       ) : (
-        <h1 className="rdt-text-xl">No errors detected!</h1>
+        <h1 className="text-xl">No errors detected!</h1>
       )}
       {htmlErrors.map((error) => {
         return (
           <div
             key={JSON.stringify(error)}
-            className="rdt-flex rdt-justify-start rdt-gap-2 rdt-rounded-lg rdt-border rdt-border-solid rdt-border-red-600/20 rdt-p-2"
+            className="flex justify-start gap-2 rounded-lg border border-solid border-red-600/20 p-2"
           >
-            <Icon size="md" className="rdt-text-red-600" name="Shield" />
-            <div className="rdt-flex rdt-flex-col">
+            <Icon size="md" className="text-red-600" name="Shield" />
+            <div className="flex flex-col">
               <div>
-                <span className="rdt-font-bold rdt-text-red-600">{error.child.tag}</span> element can't be nested inside
-                of <span className="rdt-font-bold rdt-text-red-600">{error.parent.tag}</span> element
+                <span className="font-bold text-red-600">{error.child.tag}</span> element can't be nested inside
+                of <span className="font-bold text-red-600">{error.parent.tag}</span> element
               </div>
-              <div className="rdt-flex rdt-items-center rdt-gap-1 rdt-text-sm rdt-text-gray-500">
+              <div className="flex items-center gap-1 text-sm text-gray-500">
                 The parent element is located inside of the
                 <div
                   onClick={() =>
@@ -63,13 +63,13 @@ const ErrorsTab = () => {
                       data: { source: error.parent.file.replace(".tsx", "") },
                     })
                   }
-                  className="rdt-cursor-pointer rdt-text-white"
+                  className="cursor-pointer text-white"
                 >
                   {error.parent.file}
                 </div>
                 file
               </div>
-              <div className="rdt-flex rdt-items-center rdt-gap-1 rdt-text-sm rdt-text-gray-500">
+              <div className="flex items-center gap-1 text-sm text-gray-500">
                 The child element is located inside of the
                 <div
                   onClick={() =>
@@ -78,7 +78,7 @@ const ErrorsTab = () => {
                       data: { source: error.child.file.replace(".tsx", "") },
                     })
                   }
-                  className="rdt-cursor-pointer rdt-text-white"
+                  className="cursor-pointer text-white"
                 >
                   {error.child.file}
                 </div>
@@ -88,9 +88,9 @@ const ErrorsTab = () => {
           </div>
         );
       })}
-      {hasHydrationMismatch && <div className="rdt-relative rdt-mt-4 rdt-w-full rdt-border-2 rdt-rounded rdt-border-gray-800">
-        <h1 className="rdt-text-xl rdt-p-2 rdt-text-center">Hydration mismatch comparison</h1>
-        <hr className="rdt-mb-1 rdt-border-gray-600/30" />
+      {hasHydrationMismatch && <div className="relative mt-4 w-full border-2 rounded border-gray-800">
+        <h1 className="text-xl p-2 text-center">Hydration mismatch comparison</h1>
+        <hr className="mb-1 border-gray-600/30" />
         <DiffViewer
           oldValue={SSRHtml}
           newValue={CSRHtml}

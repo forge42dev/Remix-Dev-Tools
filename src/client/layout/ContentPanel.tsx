@@ -15,13 +15,13 @@ const ContentPanel = ({ plugins }: ContentPanelProps) => {
   const { Component, hideTimeline, isPluginTab, activeTab } = useTabs(isConnected, isConnecting, plugins);
 
   return (
-    <div className="rdt-flex rdt-h-full rdt-w-full rdt-overflow-y-hidden">
+    <div className="flex h-full w-full overflow-y-hidden">
       <div
         className={clsx(
-          "rdt-z-20 rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-bg-main rdt-p-2",
-          "rdt-pl-2",
-          isPluginTab && "rdt-unset",
-          activeTab === "page" && "rdt-pt-0"
+          "z-20 h-full w-full overflow-y-auto bg-main p-2",
+          "pl-2",
+          isPluginTab && "unset",
+          activeTab === "page" && "pt-0"
         )}
       >
         {Component}
@@ -29,8 +29,8 @@ const ContentPanel = ({ plugins }: ContentPanelProps) => {
 
       {!hideTimeline && (
         <Fragment>
-          <div className="rdt-w-1 rdt-bg-gray-500/20"></div>
-          <div className={clsx("rdt-z-10 rdt-h-full rdt-w-1/3 rdt-p-2")}>
+          <div className="w-1 bg-gray-500/20"></div>
+          <div className={clsx("z-10 h-full w-1/3 p-2")}>
             <TimelineTab />
           </div>
         </Fragment>

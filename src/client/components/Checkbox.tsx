@@ -17,7 +17,7 @@ const Checkbox = ({
 }: CheckboxProps) => {
   return (
     <div>
-      <div className="rdt-flex rdt-items-center rdt-gap-2 rdt-py-1">
+      <div className="flex items-center gap-2 py-1">
         <input
           value={value ? "checked" : undefined}
           checked={value}
@@ -26,11 +26,11 @@ const Checkbox = ({
           type="checkbox"
           {...props}
         ></input>
-        <label className="rdt-text-md rdt-cursor-pointer" htmlFor={id}>
+        <label className="text-md cursor-pointer" htmlFor={id}>
           {children}
         </label>
       </div>
-      {hint && <p className="rdt-text-sm rdt-text-gray-500">{hint}</p>}
+      {hint && <p className="text-sm text-gray-500">{hint}</p>}
     </div>
   );
 };

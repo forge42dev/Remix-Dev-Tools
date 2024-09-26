@@ -12,7 +12,7 @@ import clsx from "clsx";
 import { RouteInfo } from "../components/RouteInfo.js";
 import { RouteNode } from "../components/RouteNode.js";
 import { RouteToggle } from "../components/RouteToggle.js";
-import Tree from "../../external/react-d3-tree/index.js";
+import Tree from "react-d3-tree";
 
 const RoutesTab = () => {
   const matches = useMatches();
@@ -35,16 +35,16 @@ const RoutesTab = () => {
   };
 
   return (
-    <div className={clsx("rdt-relative rdt-h-full rdt-w-full ", !isTreeView && "rdt-pt-8")}>
+    <div className={clsx("relative h-full w-full ", !isTreeView && "pt-8")}>
       <RouteToggle />
       {isTreeView ? (
-        <div className="rdt-flex rdt-h-full rdt-w-full">
+        <div className="flex h-full w-full">
           <Tree
             translate={{ x: window.innerWidth / 2 - (isTreeView && activeRoute ? 0 : 0), y: 30 }}
             pathClassFunc={(link) =>
               activeRoutes.includes((link.target.data.attributes as any).id)
-                ? "rdt-stroke-yellow-500"
-                : "rdt-stroke-gray-400"
+                ? "stroke-yellow-500"
+                : "stroke-gray-400"
             }
             renderCustomNodeElement={(props) =>
               RouteNode({
@@ -63,15 +63,15 @@ const RoutesTab = () => {
               openNewRoute={openNewRoute}
               onClose={() => setActiveRoute(null)}
               route={activeRoute}
-              className="rdt-w-[600px] rdt-border-l rdt-border-l-slate-800 rdt-p-2 rdt-px-4"
+              className="w-[600px] border-l border-l-slate-800 p-2 px-4"
             />
           )}
         </div>
       ) : (
-        <Accordion className="rdt-h-full rdt-w-full rdt-overflow-y-auto rdt-pr-4" type="single" collapsible>
+        <Accordion className="h-full w-full overflow-y-auto pr-4" type="single" collapsible>
           {isConnected && (
             <AccordionItem value="add-new">
-              <AccordionTrigger>Add a new route to the project</AccordionTrigger>
+              <AccordionTrigger className="text-white">Add a new route to the project</AccordionTrigger>
               <AccordionContent>
                 <NewRouteForm />
               </AccordionContent>
@@ -83,12 +83,12 @@ const RoutesTab = () => {
             return (
               <AccordionItem key={route.id} value={route.id}>
                 <AccordionTrigger>
-                  <div className="justify-center rdt-flex rdt-w-full rdt-items-center rdt-gap-2">
-                    <span className="rdt-text-gray-500">Route:</span> {route.url}{" "}
-                    <span className="rdt-ml-auto rdt-text-xs rdt-text-gray-500">Url: "{pathToOpen}"</span>
+                  <div className="justify-center text-white flex w-full items-center gap-2">
+                    <span className="text-gray-500">Route:</span> {route.url}{" "}
+                    <span className="ml-auto text-xs text-gray-500">Url: "{pathToOpen}"</span>
                     <div
                       title={pathToOpen}
-                      className="rdt-mr-2 rdt-whitespace-nowrap rdt-rounded rdt-border rdt-border-gray-400 rdt-px-2 rdt-py-1 rdt-text-sm"
+                      className="mr-2 whitespace-nowrap rounded border border-gray-400 px-2 py-1 text-sm"
                       onClick={openNewRoute(path)}
                     >
                       Open in browser

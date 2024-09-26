@@ -15,7 +15,7 @@ export const useSetRouteBoundaries = () => {
       const hovering = isHovering ?? settings.isHoveringRoute;
       // Classes to apply/remove
       const classes = [
-        "rdt-transition-all rdt-duration-400 rdt-rounded rdt-apply-tw",
+        "transition-all duration-400 rounded apply-tw",
         ROUTE_BOUNDARY_GRADIENTS[settings.routeBoundaryGradient],
       ].join(" ");
 

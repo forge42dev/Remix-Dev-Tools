@@ -17,8 +17,8 @@ export const Trigger = ({
     event: "enter" | "leave"
   ) => {
     if (!hideUntilHover) return;
-    const classesToRemove = "rdt-opacity-0";
-    const classesToAdd = "rdt-opacity-100";
+    const classesToRemove = "opacity-0";
+    const classesToAdd = "opacity-100";
     if (event === "enter") {
       e.currentTarget.classList.remove(classesToRemove);
       e.currentTarget.classList.add(classesToAdd);
@@ -39,23 +39,23 @@ export const Trigger = ({
       onMouseEnter={(e) => handleHover(e, "enter")}
       onMouseLeave={(e) => handleHover(e, "leave")}
       className={clsx(
-        "rdt-fixed rdt-m-1.5 rdt-h-14 rdt-w-14 rdt-cursor-pointer rdt-rounded-full rdt-transition-all ",
-        hideUntilHover && "rdt-opacity-0",
-        position === "bottom-right" && "rdt-bottom-0 rdt-right-0",
-        position === "bottom-left" && "rdt-bottom-0 rdt-left-0",
-        position === "top-right" && "rdt-right-0 rdt-top-0",
-        position === "top-left" && "rdt-left-0 rdt-top-0",
+        "fixed m-1.5 h-14 w-14 cursor-pointer rounded-full transition-all ",
+        hideUntilHover && "opacity-0",
+        position === "bottom-right" && "bottom-0 right-0",
+        position === "bottom-left" && "bottom-0 left-0",
+        position === "top-right" && "right-0 top-0",
+        position === "top-left" && "left-0 top-0",
         position === "middle-right" &&
-          "rdt-right-0 rdt-top-1/2 -rdt-translate-y-1/2",
+          "right-0 top-1/2 -translate-y-1/2",
         position === "middle-left" &&
-          "rdt-left-0 rdt-top-1/2 -rdt-translate-y-1/2",
-        isOpen && "rdt-hidden" // Hide the button when the dev tools is open
+          "left-0 top-1/2 -translate-y-1/2",
+        isOpen && "hidden" // Hide the button when the dev tools is open
       )}
     >
       <Logo
         className={clsx(
-          "rdt-h-14 rdt-w-14 rdt-rounded-full rdt-transition-all rdt-duration-200",
-          "hover:rdt-cursor-pointer hover:rdt-ring-2 hover:rdt-ring-offset-2 rdt-ring-[#212121]"
+          "h-14 w-14 rounded-full transition-all duration-200",
+          "hover:cursor-pointer hover:ring-2 hover:ring-offset-2 ring-[#212121]"
         )}
       />
     </div>

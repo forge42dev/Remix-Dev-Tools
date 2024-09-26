@@ -601,7 +601,10 @@
    --tw-backdrop-saturate: ;
    --tw-backdrop-sepia: ;
  }
- @tailwind components;
- @tailwind utilities;
+
  
+}
+.remix-dev-tools{
+  @tailwind components;
+  @tailwind utilities;
 }
