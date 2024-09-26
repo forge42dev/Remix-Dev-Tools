@@ -46,7 +46,7 @@ export const loader = async ({ request, response }: LoaderFunctionArgs) => {
       reject("test");
     }, 1000);
   });
-  return defer({ message: "Hello World!", test, test1 });
+  return defer({ message: "Hello World!", test, test1, });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -70,6 +70,7 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
+      <p><p></p></p>
       <Button
         onClick={(e) => {
           console.log(e);

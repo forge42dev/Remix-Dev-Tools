@@ -36,5 +36,6 @@
     "./docs",
     "tsup*.ts",
     "./src/external/react-use-websocket",
+    "test-apps",
   ],
 }
