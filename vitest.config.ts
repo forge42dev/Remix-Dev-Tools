@@ -6,9 +6,10 @@ export default defineConfig({
 		environment: "happy-dom",
 		exclude: ["**/node_modules/**", "**/dist/**", "**/docs/**", "**/public/**", "**/test-apps/**"],
 		coverage: {
-			include: ["app/**/*"],
-			reporter: ["text", "json-summary", "json"],
+			include: ["src/**/*"],
+			reporter: ["text", "json-summary", "json", "html"],
 			reportOnFailure: true,
+			all: false,
 		},
 	},
 })
