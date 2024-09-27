@@ -1,12 +1,12 @@
-  interface TerminalOutput {
-  type: "output" | "command" | "error";
-  value: string;
+interface TerminalOutput {
+	type: "output" | "command" | "error"
+	value: string
 }
 
 export interface Terminal {
-  id: number;
-  locked: boolean;
-  history: string[];
-  output: TerminalOutput[];
-  processId?: number;
+	id: number
+	locked: boolean
+	history: string[]
+	output: TerminalOutput[]
+	processId?: number
 }

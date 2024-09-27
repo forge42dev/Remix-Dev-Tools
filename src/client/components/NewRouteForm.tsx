@@ -1,166 +1,157 @@
-import clsx from "clsx";
-import { useState } from "react";
-import { Checkbox } from './Checkbox.js';
-import { Input } from './Input.js';
-import { useRemixForgeSocket } from '../hooks/useRemixForgeSocket.js';
+import clsx from "clsx"
+import { useState } from "react"
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
+import { Checkbox } from "./Checkbox.js"
+import { Input } from "./Input.js"
 
 interface NewRouteOptions {
-  path: string;
-  loader: boolean;
-  action: boolean;
-  headers: boolean;
-  errorBoundary: boolean;
-  revalidate: boolean;
-  handler: boolean;
-  meta: boolean;
-  links: boolean;
+	path: string
+	loader: boolean
+	action: boolean
+	headers: boolean
+	errorBoundary: boolean
+	revalidate: boolean
+	handler: boolean
+	meta: boolean
+	links: boolean
 }
 
 const DEFAULT_VALUES = {
-  path: "",
-  loader: false,
-  action: false,
-  headers: false,
-  errorBoundary: false,
-  revalidate: false,
-  handler: false,
-  meta: false,
-  links: false,
-};
+	path: "",
+	loader: false,
+	action: false,
+	headers: false,
+	errorBoundary: false,
+	revalidate: false,
+	handler: false,
+	meta: false,
+	links: false,
+}
 
 const NewRouteForm = () => {
-  const { sendJsonMessage } = useRemixForgeSocket({
-    onMessage: (e) => {
-      const messageData = e.data;
-      if (messageData.type === "route_added") {
-        setNewRouteInfo(DEFAULT_VALUES);
-      }
-    },
-  });
-  const [newRouteInfo, setNewRouteInfo] =
-    useState<NewRouteOptions>(DEFAULT_VALUES);
+	const { sendJsonMessage } = useRemixForgeSocket({
+		onMessage: (e) => {
+			const messageData = e.data
+			if (messageData.type === "route_added") {
+				setNewRouteInfo(DEFAULT_VALUES)
+			}
+		},
+	})
+	const [newRouteInfo, setNewRouteInfo] = useState<NewRouteOptions>(DEFAULT_VALUES)
 
-  const handleSubmit = () => {
-    const { path, ...options } = newRouteInfo;
-    sendJsonMessage({
-      type: "add_route",
-      path,
-      options,
-    });
-  };
+	const handleSubmit = () => {
+		const { path, ...options } = newRouteInfo
+		sendJsonMessage({
+			type: "add_route",
+			path,
+			options,
+		})
+	}
 
-  const setNewInfo = (info: Partial<NewRouteOptions>) => {
-    setNewRouteInfo({ ...newRouteInfo, ...info });
-  };
-  return (
-    <div className="mb-2 rounded-lg border border-gray-500/20 p-2">
-      <label className="mb-2 block ">Route path:</label>
-      <Input
-        onBlur={() =>
-          setNewInfo({
-            path: newRouteInfo.path.trim(),
-          })
-        }
-        onChange={(e) => setNewInfo({ path: e.target.value })}
-        className="mb-1"
-      />
-      <span className="mb-4 block text-gray-500">
-        This will be added to your routes folder under your entered name,
-        exclude the extension
-      </span>
-      <label className="mb-2 block">Additional options:</label>
-      <Checkbox
-        value={newRouteInfo.loader}
-        onChange={() =>
-          setNewInfo({
-            loader: !newRouteInfo.loader,
-          })
-        }
-        id="loader"
-      >
-        Add a loader
-      </Checkbox>
-      <Checkbox
-        value={newRouteInfo.action}
-        onChange={() =>
-          setNewInfo({
-            action: !newRouteInfo.action,
-          })
-        }
-        id="action"
-      >
-        Add an action
-      </Checkbox>
-      <Checkbox
-        value={newRouteInfo.errorBoundary}
-        onChange={() =>
-          setNewInfo({
-            errorBoundary: !newRouteInfo.errorBoundary,
-          })
-        }
-        id="error-boundary"
-      >
-        Add an error boundary
-      </Checkbox>
-      <Checkbox
-        value={newRouteInfo.handler}
-        onChange={() =>
-          setNewInfo({
-            handler: !newRouteInfo.handler,
-          })
-        }
-        id="handle"
-      >
-        Add a handle
-      </Checkbox>
-      <Checkbox
-        value={newRouteInfo.meta}
-        onChange={() => setNewInfo({ meta: !newRouteInfo.meta })}
-        id="meta"
-      >
-        Add a meta export
-      </Checkbox>
-      <Checkbox
-        value={newRouteInfo.links}
-        onChange={() => setNewInfo({ links: !newRouteInfo.links })}
-        id="links"
-      >
-        Add a links export
-      </Checkbox>
-      <Checkbox
-        value={newRouteInfo.headers}
-        onChange={() =>
-          setNewInfo({
-            headers: !newRouteInfo.headers,
-          })
-        }
-        id="headers"
-      >
-        Add a headers export
-      </Checkbox>
-      <Checkbox
-        value={newRouteInfo.revalidate}
-        onChange={() =>
-          setNewInfo({
-            revalidate: !newRouteInfo.revalidate,
-          })
-        }
-        id="shouldRevalidate"
-      >
-        Add a shouldRevalidate export
-      </Checkbox>
-      <button
-        onClick={handleSubmit}
-        disabled={!newRouteInfo.path}
-        className={clsx(
-          "mr-2 mt-2 self-end text-white rounded border border-gray-400 px-2 py-1 text-sm",
-          !newRouteInfo.path && "opacity-50"
-        )}
-      >
-        Add route
-      </button>
-    </div>
-  );
-};
+	const setNewInfo = (info: Partial<NewRouteOptions>) => {
+		setNewRouteInfo({ ...newRouteInfo, ...info })
+	}
+	return (
+		<div className="mb-2 rounded-lg border border-gray-500/20 p-2">
+			<div className="mb-2 block ">Route path:</div>
+			<Input
+				onBlur={() =>
+					setNewInfo({
+						path: newRouteInfo.path.trim(),
+					})
+				}
+				onChange={(e) => setNewInfo({ path: e.target.value })}
+				className="mb-1"
+			/>
+			<span className="mb-4 block text-gray-500">
+				This will be added to your routes folder under your entered name, exclude the extension
+			</span>
+			<div className="mb-2 block">Additional options:</div>
+			<Checkbox
+				value={newRouteInfo.loader}
+				onChange={() =>
+					setNewInfo({
+						loader: !newRouteInfo.loader,
+					})
+				}
+				id="loader"
+			>
+				Add a loader
+			</Checkbox>
+			<Checkbox
+				value={newRouteInfo.action}
+				onChange={() =>
+					setNewInfo({
+						action: !newRouteInfo.action,
+					})
+				}
+				id="action"
+			>
+				Add an action
+			</Checkbox>
+			<Checkbox
+				value={newRouteInfo.errorBoundary}
+				onChange={() =>
+					setNewInfo({
+						errorBoundary: !newRouteInfo.errorBoundary,
+					})
+				}
+				id="error-boundary"
+			>
+				Add an error boundary
+			</Checkbox>
+			<Checkbox
+				value={newRouteInfo.handler}
+				onChange={() =>
+					setNewInfo({
+						handler: !newRouteInfo.handler,
+					})
+				}
+				id="handle"
+			>
+				Add a handle
+			</Checkbox>
+			<Checkbox value={newRouteInfo.meta} onChange={() => setNewInfo({ meta: !newRouteInfo.meta })} id="meta">
+				Add a meta export
+			</Checkbox>
+			<Checkbox value={newRouteInfo.links} onChange={() => setNewInfo({ links: !newRouteInfo.links })} id="links">
+				Add a links export
+			</Checkbox>
+			<Checkbox
+				value={newRouteInfo.headers}
+				onChange={() =>
+					setNewInfo({
+						headers: !newRouteInfo.headers,
+					})
+				}
+				id="headers"
+			>
+				Add a headers export
+			</Checkbox>
+			<Checkbox
+				value={newRouteInfo.revalidate}
+				onChange={() =>
+					setNewInfo({
+						revalidate: !newRouteInfo.revalidate,
+					})
+				}
+				id="shouldRevalidate"
+			>
+				Add a shouldRevalidate export
+			</Checkbox>
+			<button
+				onClick={handleSubmit}
+				disabled={!newRouteInfo.path}
+				type="button"
+				className={clsx(
+					"mr-2 mt-2 self-end text-white rounded border border-gray-400 px-2 py-1 text-sm",
+					!newRouteInfo.path && "opacity-50"
+				)}
+			>
+				Add route
+			</button>
+		</div>
+	)
+}
 
-export { NewRouteForm };
+export { NewRouteForm }
