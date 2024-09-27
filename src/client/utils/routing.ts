@@ -2,7 +2,7 @@ import { EntryRoute } from "@remix-run/react/dist/routes.js";
 import { RouteWildcards } from "../context/rdtReducer.js";
 import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize.js";
 
-export type RouteType = "ROOT" | "LAYOUT" | "ROUTE";
+ 
 type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">;
 
 export function getRouteType(route: Route) {
@@ -30,12 +30,9 @@ export function isLayoutRoute(route: Route) {
 export function isLeafRoute(route: Route) {
   return getRouteType(route) === "ROUTE";
 }
+ 
 
-export function isRootRoute(route: Route) {
-  return getRouteType(route) === "ROOT";
-}
-
-export const ROUTE_FILLS = {
+  const ROUTE_FILLS = {
   GREEN: "fill-green-500 text-white",
   BLUE: "fill-blue-500 text-white",
   PURPLE: "fill-purple-500 text-white",

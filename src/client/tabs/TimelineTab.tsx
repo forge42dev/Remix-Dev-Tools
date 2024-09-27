@@ -60,7 +60,7 @@ const FormEventComponent = (event: FormEvent) => {
   );
 };
 
-export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
+  const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
   GET: "GREEN",
   POST: "BLUE",
   PUT: "TEAL",

@@ -11,6 +11,7 @@ import { useDevServerConnection } from "../hooks/useDevServerConnection.js";
 import { Icon } from "./icon/Icon.js";
 import clsx from "clsx";
 import { OpenSourceData } from "../../vite/editor.js";
+import { useSetRouteBoundaries } from "../hooks/useSetRouteBoundaries.js";
 
 const getLoaderData = (data: string | Record<string, any>) => {
   if (typeof data === "string") {
@@ -55,7 +56,7 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
   };
 };
 
-export const ROUTE_COLORS = {
+  const ROUTE_COLORS = {
   GREEN: "bg-green-500 ring-green-500 text-white",
   BLUE: "bg-blue-500 ring-blue-500 text-white",
   TEAL: "bg-teal-400 ring-teal-400 text-white",
@@ -66,6 +67,7 @@ export const ROUTE_COLORS = {
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
   const { server, setServerInfo } = useServerInfo();
   const { isConnected, sendJsonMessage } = useDevServerConnection();
+ const a =  useSetRouteBoundaries()
   const loaderData = getLoaderData(route.data as any);
   const serverInfo = server?.routes?.[route.id];
   const isRoot = route.id === "root";
@@ -75,6 +77,9 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
     ? parseCacheControlHeader(new Headers(serverInfo?.lastLoader.responseHeaders))
     : undefined;
   const onHover = (path: string, type: "enter" | "leave") => {
+    if(settings.showRouteBoundariesOn === "click"){
+      return;
+    }
     setSettings({
       hoveredRoute: path,
       isHoveringRoute: type === "enter",
@@ -93,7 +98,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
     <li
       onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
       onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
-      className="mb-8 ml-8"
+      className="mb-8 ml-6 lg:ml-8"
     >
       <div
         className={clsx(
@@ -114,6 +119,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
               cacheDate={new Date(serverInfo?.lastLoader.timestamp ?? "")}
             />
           )}
+          <div className="flex items-center gap-2">
           {isConnected && import.meta.env.DEV && (
             <EditorButton
               name={editorName}
@@ -125,6 +131,36 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
               }
             />
           )}
+          {settings.showRouteBoundariesOn === "click" && (
+            <button
+             className="rounded border border-green-600 rounded border border-[#1F9CF0] px-2.5 py-0.5 text-sm font-medium text-green-600"
+              onClick={() => {
+                const routeId = route.id === "root" ? "root" : i.toString();
+                if(routeId !== settings.hoveredRoute){
+                  // Remove the classes from the old hovered route
+                  setSettings({
+                    isHoveringRoute: false  ,
+                  })
+                  // Add the classes to the new hovered route
+                  setTimeout(() => {
+                    setSettings({
+                    hoveredRoute: routeId,
+                    isHoveringRoute: true
+                  })});
+
+                } else {
+                  // Just change the isHoveringRoute state
+                  setSettings({
+                    isHoveringRoute: !settings.isHoveringRoute
+                  })
+                }
+              }}
+
+            >
+              Show Route Boundary
+            </button>
+          )}
+          </div>
         </div>
       </h2>
       <div className="mb-4">

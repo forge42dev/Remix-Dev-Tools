@@ -47,12 +47,12 @@ const Tab = ({
       onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabType }))}
       className={clsx(
         "group relative flex shrink-0 cursor-pointer items-center justify-center border-0 border-b border-solid border-b-[#212121] border-r-[#212121] p-2 font-sans transition-all",
-        activeTab !== tab.id && "hover:opacity-50",
+        activeTab !== tab.id && "hover:bg-[#212121]",
         activeTab === tab.id && "bg-[#212121]",
         "hover:bg-[#212121]/50"
       )}
     >
-      <div className={className}>{tab.icon}</div>
+      <div className={clsx(className, "group-hover:opacity-80 transition-all")}>{tab.icon}</div>
       <div
         className={clsx(
           "duration-400 invisible text-white opacity-0 transition after:absolute after:-left-2 after:top-1/2 after:h-0 after:w-0 after:-translate-y-1/2 after:-rotate-90 after:border-x-4 after:border-b-[6px] after:border-x-transparent after:border-b-gray-700 group-hover:visible",
@@ -92,12 +92,12 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 
   const getErrorCount = () => {
     return htmlErrors.length + (window.HYDRATION_OVERLAY.ERROR ? 1 : 0);
-  } 
+  }
 
   const hasErrors = getErrorCount() > 0;
   return (
     <div className="relative flex h-full bg-gray-800">
-      <div ref={scrollRef} className="remix-dev-tools-tab flex h-full w-full flex-col">
+      <div ref={scrollRef} className="remix-dev-tools-tab  flex h-full w-full flex-col">
         {visibleTabs.map((tab) => (
           <Tab
             key={tab.id}

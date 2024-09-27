@@ -5,11 +5,11 @@ import { getStorageItem, setStorageItem } from "../../utils/storage.js";
 import { useDetachedWindowControls } from "../../context/useRDTContext.js";
 import { detachedModeSetup } from "../../context/RDTContext.js";
 
-export const LOCAL_STORAGE_ROUTE_KEY = "rdt_route";
+  const LOCAL_STORAGE_ROUTE_KEY = "rdt_route";
 
 export const setRouteInLocalStorage = (route: string) => setStorageItem(LOCAL_STORAGE_ROUTE_KEY, route);
 
-export const getRouteFromLocalStorage = () => getStorageItem(LOCAL_STORAGE_ROUTE_KEY);
+  const getRouteFromLocalStorage = () => getStorageItem(LOCAL_STORAGE_ROUTE_KEY);
 
 export const useListenToRouteChange = () => {
   const { detachedWindowOwner } = useDetachedWindowControls();

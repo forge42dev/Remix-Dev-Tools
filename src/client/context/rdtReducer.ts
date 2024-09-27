@@ -28,7 +28,7 @@ export const ROUTE_BOUNDARY_GRADIENTS = {
 
 export const RouteBoundaryOptions = Object.keys(ROUTE_BOUNDARY_GRADIENTS) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[];
 export type RouteWildcards = Record<string, Record<string, string> | undefined>;
-export type TriggerPosition =
+ export type TriggerPosition =
   | "top-left"
   | "top-right"
   | "bottom-left"
@@ -55,7 +55,7 @@ export type ServerInfo = {
   };
 };
 
-export type HTMLErrorPrimitive = {
+  type HTMLErrorPrimitive = {
   file: string;
   tag: string;
 };
@@ -119,13 +119,13 @@ export type RemixDevToolsState = {
      */
     hideUntilHover: boolean;
     /**
-     * The position of the trigger button 
+     * The position of the trigger button
      * @default "bottom-right"
      */
     position: TriggerPosition;
     /**
      * The initial expansion level of the JSON viewer objects
-     * @default 0
+     * @default 1
      */
     expansionLevel: number;
     hoveredRoute: string;
@@ -152,6 +152,10 @@ export type RemixDevToolsState = {
      * @default "rdt"
      */
     urlFlag: string;
+    /**
+     * Whether to show route boundaries on hover of the route segment or clicking a button
+     */
+    showRouteBoundariesOn: "hover" | "click";
   };
   htmlErrors: HTMLError[];
   server?: ServerInfo;
@@ -165,13 +169,14 @@ export const initialState: RemixDevToolsState = {
   terminals: [{ id: 0, locked: false, output: [], history: [] }],
   server: undefined,
   settings: {
+    showRouteBoundariesOn: "hover",
     breakpoints: [
-      { name: "", min: 0, max: 639 }, 
+      { name: "", min: 0, max: 639 },
       { name: "sm", min: 640, max: 767 },
       { name: "md", min: 768, max: 1023 },
       { name: "lg", min: 1024, max: 1279 },
       { name: "xl", min: 1280, max: 1535 },
-      { name: "2xl", min: 1536, max: 9999 }, 
+      { name: "2xl", min: 1536, max: 9999 },
     ],
     showBreakpointIndicator: true,
     liveUrls: [],
@@ -188,7 +193,7 @@ export const initialState: RemixDevToolsState = {
     defaultOpen: false,
     hideUntilHover: false,
     position: "bottom-right",
-    expansionLevel: 0,
+    expansionLevel: 1,
     hoveredRoute: "",
     isHoveringRoute: false,
     routeViewMode: "tree",
@@ -204,7 +209,6 @@ export const initialState: RemixDevToolsState = {
   detachedWindowOwner: false,
 };
 
-export type ReducerActions = Pick<RemixDevToolsActions, "type">["type"];
 
 /** Reducer action types */
 type SetTimelineEvent = {

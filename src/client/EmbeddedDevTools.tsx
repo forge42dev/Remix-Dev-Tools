@@ -27,7 +27,7 @@ const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: Embed
   const plugins = pluginArray?.map(plugin => typeof plugin === "function" ? plugin() : plugin)
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   return (
-    <div id={REMIX_DEV_TOOLS} className={clsx("remix-dev-tools", className)}>
+    <div id={REMIX_DEV_TOOLS} className={clsx("remix-dev-tools remix-dev-tools-reset", className)}>
       <MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
         <Tabs plugins={plugins} />
         <ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />

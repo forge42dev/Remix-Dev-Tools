@@ -6,18 +6,18 @@ import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
 import beautify from "beautify";
 // @ts-expect-error
 const DiffViewer: typeof ReactDiffViewer.default = ReactDiffViewer.default ? (ReactDiffViewer.default as any) : (ReactDiffViewer as any);
- 
+
 
 const ErrorsTab = () => {
   const { htmlErrors } = useHtmlErrors();
-  const { sendJsonMessage } = useDevServerConnection(); 
+  const { sendJsonMessage } = useDevServerConnection();
   const [SSRHtml, setSSRHtml] = useState("");
-  const [CSRHtml, setCSRHtml] = useState(""); 
+  const [CSRHtml, setCSRHtml] = useState("");
   const [hasHydrationMismatch, setHasHydrationMismatch] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!window.HYDRATION_OVERLAY) { 
+    if (!window.HYDRATION_OVERLAY) {
       return;
     }
     const ssrHtml = window.HYDRATION_OVERLAY?.SSR_HTML;
@@ -36,11 +36,14 @@ const ErrorsTab = () => {
     <div className="flex flex-col gap-1">
         {htmlErrors.length > 0 ? (
         <>
-          <h1 className="text-xl">HTML Nesting Errors</h1>
-          <hr className="mb-1 border-gray-600/30" />
+          <div className="mb-1" >
+          <span className="text-lg font-semibold">HTML Nesting Errors</span>
+          <hr className="mt-2 border-gray-400" />
+            </div>
+
         </>
       ) : (
-        <h1 className="text-xl">No errors detected!</h1>
+        <div className="text-2xl">No errors detected!</div>
       )}
       {htmlErrors.map((error) => {
         return (
@@ -49,12 +52,12 @@ const ErrorsTab = () => {
             className="flex justify-start gap-2 rounded-lg border border-solid border-red-600/20 p-2"
           >
             <Icon size="md" className="text-red-600" name="Shield" />
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-2 lg:gap-0">
               <div>
                 <span className="font-bold text-red-600">{error.child.tag}</span> element can't be nested inside
                 of <span className="font-bold text-red-600">{error.parent.tag}</span> element
               </div>
-              <div className="flex items-center gap-1 text-sm text-gray-500">
+              <div className="flex lg:flex-row flex-col items-start gap-1 text-sm text-gray-500">
                 The parent element is located inside of the
                 <div
                   onClick={() =>
@@ -69,7 +72,7 @@ const ErrorsTab = () => {
                 </div>
                 file
               </div>
-              <div className="flex items-center gap-1 text-sm text-gray-500">
+              <div className="flex lg:flex-row flex-col items-start gap-1 text-sm text-gray-500">
                 The child element is located inside of the
                 <div
                   onClick={() =>
@@ -88,7 +91,7 @@ const ErrorsTab = () => {
           </div>
         );
       })}
-      {hasHydrationMismatch && <div className="relative mt-4 w-full border-2 rounded border-gray-800">
+      {hasHydrationMismatch && <div className="relative mt-4 w-full border-2 overflow-y-auto rounded border-gray-800">
         <h1 className="text-xl p-2 text-center">Hydration mismatch comparison</h1>
         <hr className="mb-1 border-gray-600/30" />
         <DiffViewer
@@ -97,7 +100,7 @@ const ErrorsTab = () => {
           leftTitle={"Server-Side Render"}
           rightTitle={"Client-Side Render"}
           compareMethod={DiffMethod.WORDS}
-           styles={{ 
+           styles={{
             titleBlock: {
               textAlign: 'center',
             },
@@ -112,7 +115,7 @@ const ErrorsTab = () => {
                 wordRemovedBackground: '#7d383f',
                 addedGutterBackground: '#034148',
                 removedGutterBackground: '#632b30',
-                gutterBackground: '#1F2937', 
+                gutterBackground: '#1F2937',
                 highlightBackground: '#212121',
                 highlightGutterBackground: '#212121',
                 codeFoldGutterBackground: '#1F2937',
@@ -125,7 +128,7 @@ const ErrorsTab = () => {
                 diffViewerTitleBackground: '#212121',
                 diffViewerTitleColor: 'white',
                 diffViewerTitleBorderColor: '#353846',},
-              dark: { 
+              dark: {
                 diffViewerBackground: '#212121',
                 diffViewerColor: '#FFF',
                 addedBackground: '#044B53',
@@ -136,7 +139,7 @@ const ErrorsTab = () => {
                 wordRemovedBackground: '#7d383f',
                 addedGutterBackground: '#034148',
                 removedGutterBackground: '#632b30',
-                gutterBackground: '#1F2937', 
+                gutterBackground: '#1F2937',
                 highlightBackground: '#212121',
                 highlightGutterBackground: '#212121',
                 codeFoldGutterBackground: '#1F2937',
@@ -156,7 +159,7 @@ const ErrorsTab = () => {
           useDarkTheme={true}
         />
       </div>}
-    
+
     </div>
   );
 };

@@ -2,7 +2,7 @@ import type { SVGProps } from "react";
 import type { IconName } from "./icons/types.js";
 import { cn } from "../util.js";
 
-export enum IconSize {
+  enum IconSize {
   xs = "12",
   sm = "16",
   md = "20",
@@ -12,9 +12,9 @@ export enum IconSize {
   jumbo = "160",
 }
 
-export type IconSizes = keyof typeof IconSize;
+  type IconSizes = keyof typeof IconSize;
 
-export interface IconProps extends SVGProps<SVGSVGElement> {
+  interface IconProps extends SVGProps<SVGSVGElement> {
   name: IconName;
   testId?: string;
   className?: string;
@@ -23,7 +23,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
 
 /** Below array tells the Icon component which components should have fill set to none due do them not looking proper with fill */
 const emptyFill: Partial<IconName>[] = [];
-export const strokeIcon: Partial<IconName>[] = [];
+  const strokeIcon: Partial<IconName>[] = [];
 /**
  * Icon component wrapper for SVG icons.
  * @returns SVG icon as a react component
@@ -296,5 +296,4 @@ export const Icon = ({ name, testId, className, size = "sm", ...props }: IconPro
     </svg>
   );
 };
-
-export { IconName };
+ 

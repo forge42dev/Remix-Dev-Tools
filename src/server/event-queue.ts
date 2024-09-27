@@ -28,10 +28,7 @@ export type ActionEvent = RDTEvent<
     timestamp: number;
   }
 >;
-
-export type RDTEventArray = RDTEvent<"events", (LoaderEvent | ActionEvent)[]>;
-
-export type WsEventType = RDTEventArray;
+ 
  
 
    

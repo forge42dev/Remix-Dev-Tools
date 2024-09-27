@@ -13,11 +13,11 @@ export const SettingsTab = () => {
   const [maxHeight, setMaxHeight] = useState(settings.maxHeight.toString());
   const [expansionLevel, setExpansionLevel] = useState(settings.expansionLevel.toString());
   const [openHotkey, setOpenHotkey] = useState(settings.openHotkey.toString());
- 
+
   return (
     <Stack className="mb-4">
       <h1>
-        <span className="text-2xl font-semibold">Settings</span>
+        <span className="text-lg font-semibold">Settings</span>
         <hr className="mt-2 border-gray-400" />
       </h1>
       <Checkbox
@@ -52,7 +52,7 @@ export const SettingsTab = () => {
       >
         Show breakpoint indicator
       </Checkbox>
-      
+
       <hr className="mt-2 border-gray-700" />
       <Stack gap="lg">
         {settings.requireUrlFlag && (
@@ -68,7 +68,7 @@ export const SettingsTab = () => {
             }}
           />
         )}
-       
+
         <Input
           name="expansionLevel"
           id="expansionLevel"
@@ -97,7 +97,7 @@ export const SettingsTab = () => {
             }
           }}
         />
-        <div className="flex flex-col gap-2 lg:!flex-row">
+        <div className="flex flex-col gap-2 lg:flex-row">
           <Input
             name="minHeight"
             label="Min height of the dev tools (px)"
@@ -128,7 +128,7 @@ export const SettingsTab = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-2 lg:!flex-row">
+        <div className="flex flex-col gap-2 lg:flex-row">
           <SelectWithOptions
             label="Trigger position"
             onSelect={(value) => setSettings({ position: value })}
@@ -153,7 +153,7 @@ export const SettingsTab = () => {
               { label: "Bottom Right", value: "bottom-right" },
               { label: "Bottom Left", value: "bottom-left" },
               { label: "Top Right", value: "top-right" },
-              { label: "Top Left", value: "top-left" }, 
+              { label: "Top Left", value: "top-left" },
             ]}
             hint="This will determine where your environments position on the screen is."
           />
@@ -169,7 +169,30 @@ export const SettingsTab = () => {
             hint="This will determine where your panel shows up once opened"
           />
         </div>
-
+        <div className="flex flex-col gap-2 lg:flex-row">
+        <SelectWithOptions
+          label="Route boundary gradient"
+          onSelect={(value) => setSettings({ routeBoundaryGradient: value })}
+          value={settings.routeBoundaryGradient}
+          options={RouteBoundaryOptions.map((option) => ({
+            label: uppercaseFirstLetter(option),
+            value: option,
+          }))}
+          className="w-full"
+          hint="This will determine the look of the gradient shown for route boundaries."
+        />
+         <SelectWithOptions
+          label="Show route boundaries on"
+          onSelect={(value) => setSettings({ showRouteBoundariesOn: value })}
+          value={settings.showRouteBoundariesOn}
+          options={[
+            { value: "hover", label: "Hover" },
+            { value: "click", label: "Click" },
+          ]}
+          className="w-full"
+          hint="This will determine if the route boundaries show on hover of a route segment or clicking a button."
+        />
+        </div>
         <Input
           name="port"
           id="port"
@@ -183,16 +206,7 @@ export const SettingsTab = () => {
             }
           }}
         />
-        <SelectWithOptions
-          label="Route boundary gradient"
-          onSelect={(value) => setSettings({ routeBoundaryGradient: value })}
-          value={settings.routeBoundaryGradient}
-          options={RouteBoundaryOptions.map((option) => ({
-            label: uppercaseFirstLetter(option),
-            value: option,
-          }))}
-          hint="This will determine the look of the gradient shown for route boundaries."
-        />
+
       </Stack>
     </Stack>
   );

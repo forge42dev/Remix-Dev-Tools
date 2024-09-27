@@ -77,21 +77,27 @@ const RoutesTab = () => {
               </AccordionContent>
             </AccordionItem>
           )}
+          <div className="py-2">
 
+            <span className="text-lg font-semibold">Project routes</span>
+            <hr className="mt-2 border-gray-400" />
+          </div>
           {routes?.map((route) => {
             const { path, pathToOpen } = constructRoutePath(route, routeWildcards);
             return (
               <AccordionItem key={route.id} value={route.id}>
                 <AccordionTrigger>
-                  <div className="justify-center text-white flex w-full items-center gap-2">
-                    <span className="text-gray-500">Route:</span> {route.url}{" "}
-                    <span className="ml-auto text-xs text-gray-500">Url: "{pathToOpen}"</span>
+                  <div className="justify-center flex-wrap text-white flex px-3 lg:px-0 flex-col lg:flex-row w-full items-start lg:items-center gap-1 ">
+                    <span className="text-gray-500"></span> {route.url}{" "}
+                    <div className="lg:ml-auto flex-wrap flex items-center gap-2">
+                    <span className=" text-left text-xs text-gray-500">Url: "{pathToOpen}"</span>
                     <div
                       title={pathToOpen}
-                      className="mr-2 whitespace-nowrap rounded border border-gray-400 px-2 py-1 text-sm"
+                      className="mr-2  whitespace-nowrap rounded border border-gray-400 px-2 py-1 text-sm"
                       onClick={openNewRoute(path)}
                     >
                       Open in browser
+                    </div>
                     </div>
                   </div>
                 </AccordionTrigger>

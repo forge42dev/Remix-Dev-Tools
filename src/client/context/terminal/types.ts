@@ -1,4 +1,4 @@
-export interface TerminalOutput {
+  interface TerminalOutput {
   type: "output" | "command" | "error";
   value: string;
 }

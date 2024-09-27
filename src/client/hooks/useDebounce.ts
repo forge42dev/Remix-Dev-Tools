@@ -1,6 +1,6 @@
 import React from "react";
 
-export function debounce(func: (...args: any[]) => any, timeout = 300) {
+  function debounce(func: (...args: any[]) => any, timeout = 300) {
   let timer: NodeJS.Timeout;
   return (...args: any[]) => {
     clearTimeout(timer);

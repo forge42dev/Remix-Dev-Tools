@@ -29,7 +29,7 @@ const Input = ({ className, name, label, hint, ...props }: InputProps) => {
         name={name}
         id={name}
         className={clsx(
-          "w-full rounded text-white border border-gray-400 bg-[#121212] px-2 py-1 text-sm",
+          "w-full rounded transition-all text-white border border-gray-400 hover:border-gray-400/50 bg-[#121212] px-2 py-1 text-sm",
           className
         )}
         {...props}

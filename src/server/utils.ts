@@ -70,7 +70,7 @@ const analyzeClearSite = (route: Omit<ServerRoute, "children">, config: DevTools
   }
 };
 
-export const analyzeHeaders = (route: Omit<ServerRoute, "children">, response: unknown) => {
+  const analyzeHeaders = (route: Omit<ServerRoute, "children">, response: unknown) => {
   if (!(response instanceof Response)) {
     return;
   }
@@ -81,7 +81,7 @@ export const analyzeHeaders = (route: Omit<ServerRoute, "children">, response: u
   analyzeClearSite(route, config, headers);
 };
 
-export const analyzeDeferred = (id: string, start: number, response: any) => {
+  const analyzeDeferred = (id: string, start: number, response: any) => {
   const config = getConfig();
   if (config.logs?.defer === false) {
     return;
@@ -105,7 +105,7 @@ export const isAsyncFunction = (fn: (...args: any[]) => any) => {
   return fn.constructor.name === "AsyncFunction";
 };
 
-export const unAwaited = async (promise: () => any) => {
+  const unAwaited = async (promise: () => any) => {
   promise();
 };
 
@@ -252,6 +252,4 @@ export const asyncAnalysis =
       .catch((err) => errorHandler(route.id, err));
     return response;
   };
-
-export const hasExtension = (path: string) =>
-  path.endsWith(".tsx") || path.endsWith(".jsx") || path.endsWith(".js") || path.endsWith(".ts");
+ 

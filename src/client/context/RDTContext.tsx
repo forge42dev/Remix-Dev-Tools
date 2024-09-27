@@ -70,27 +70,27 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
   const settings = getSettings();
   const { detachedWindow, detachedWindowOwner } = detachedModeSetup();
   const state: RemixDevToolsState = {
-    ...initialState, 
+    ...initialState,
     ...(existingState ? JSON.parse(existingState) : {}),
     settings: {
       ...initialState.settings,
       ...config,
       ...settings,
       editorName: config?.editorName ?? initialState.settings.editorName,
-      liveUrls: config?.liveUrls ?? initialState.settings.liveUrls, 
+      liveUrls: config?.liveUrls ?? initialState.settings.liveUrls,
       breakpoints: config?.breakpoints ?? initialState.settings.breakpoints,
-       
+
     },
     detachedWindow,
     detachedWindowOwner,
   };
- 
+
   return state;
 };
 
-export type RdtClientConfig = Pick<RemixDevToolsState["settings"], "defaultOpen" | "breakpoints" | "showBreakpointIndicator" | "expansionLevel" | "liveUrls" | "position" | "height" | "minHeight" | "maxHeight" | "hideUntilHover" | "panelLocation" | "requireUrlFlag" | "urlFlag" | "routeBoundaryGradient">  
+export type RdtClientConfig = Pick<RemixDevToolsState["settings"], "defaultOpen" | "breakpoints" | "showBreakpointIndicator" | "showRouteBoundariesOn" | "expansionLevel" | "liveUrls" | "position" | "height" | "minHeight" | "maxHeight" | "hideUntilHover" | "panelLocation" | "requireUrlFlag" | "urlFlag" | "routeBoundaryGradient">
 
-export const RDTContextProvider = ({ children, config }: ContextProps) => { 
+export const RDTContextProvider = ({ children, config }: ContextProps) => {
   const [state, dispatch] = useReducer<typeof rdtReducer>(rdtReducer, getExistingStateFromStorage(config));
   const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 

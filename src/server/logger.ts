@@ -40,14 +40,14 @@ export const actionLog = (message: string) => {
   log(`${chalk.yellowBright.bold("ACTION")} ${message}`);
 };
 
-export const successLog = (message: string) => {
-  log(`${chalk.greenBright.bold("SUCCESS")} ${message}`);
-};
+ // const successLog = (message: string) => {
+ // log(`${chalk.greenBright.bold("SUCCESS")} ${message}`);
+//};
 
-export const warningLog = (message: string) => {
-  log(`${chalk.bgYellow(logPrefix("WARNING"))} ${message}`);
-};
+  //const warningLog = (message: string) => {
+  //log(`${chalk.bgYellow(logPrefix("WARNING"))} ${message}`);
+//};
 
-export const debugLog = (message: string) => {
-  log(`${chalk.bgMagenta(logPrefix("DEBUG"))} ${message}`);
-};
+ // const debugLog = (message: string) => {
+ // log(`${chalk.bgMagenta(logPrefix("DEBUG"))} ${message}`);
+//};

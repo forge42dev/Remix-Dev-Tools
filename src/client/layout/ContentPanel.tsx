@@ -18,10 +18,10 @@ const ContentPanel = ({ plugins }: ContentPanelProps) => {
     <div className="flex h-full w-full overflow-y-hidden">
       <div
         className={clsx(
-          "z-20 h-full w-full overflow-y-auto bg-main p-2",
-          "pl-2",
+          "z-20 h-full w-full overflow-y-auto overflow-x-hidden bg-main px-1 lg:px-4 pt-3 pb-4 ",
+
           isPluginTab && "unset",
-          activeTab === "page" && "pt-0"
+          activeTab === "page" && "!pt-0"
         )}
       >
         {Component}
@@ -30,7 +30,7 @@ const ContentPanel = ({ plugins }: ContentPanelProps) => {
       {!hideTimeline && (
         <Fragment>
           <div className="w-1 bg-gray-500/20"></div>
-          <div className={clsx("z-10 h-full w-1/3 p-2")}>
+          <div className={clsx("z-10 hidden lg:block h-full w-1/3 p-2")}>
             <TimelineTab />
           </div>
         </Fragment>

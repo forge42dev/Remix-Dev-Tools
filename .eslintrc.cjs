@@ -3,10 +3,9 @@ module.exports = {
   ignorePatterns: [
     "node_modules",
     "dist", 
-    ".eslintrc.cjs",
-    "tailwind.config.js",
+    ".eslintrc.cjs", 
     "src/external",
-    "src/test-apps",
+    "test-apps",
   ],
   extends: [
     "eslint:recommended",

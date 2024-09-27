@@ -15,7 +15,7 @@ export const useSetRouteBoundaries = () => {
       const hovering = isHovering ?? settings.isHoveringRoute;
       // Classes to apply/remove
       const classes = [
-        "transition-all duration-400 rounded apply-tw",
+        "transition-all duration-200 rounded-lg apply-tw",
         ROUTE_BOUNDARY_GRADIENTS[settings.routeBoundaryGradient],
       ].join(" ");
 
@@ -34,11 +34,17 @@ export const useSetRouteBoundaries = () => {
           outlet.classList[hovering ? "add" : "remove"](c);
         }
       }
+      if(element?.parentElement){
+        element.parentElement.classList[hovering ? "add" : "remove"]("remix-dev-tools");
+      }
     },
     [settings.hoveredRoute, settings.isHoveringRoute, settings.routeBoundaryGradient, matches.length]
   );
   // Mouse left the document => remove classes => set isHovering to false so that detached mode removes as well
   useAttachListener("mouseleave", "document", () => {
+    if(settings.showRouteBoundariesOn=== "click"){
+      return
+    }
     applyOrRemoveClasses();
     if (!detachedWindow) {
       return;
@@ -49,6 +55,9 @@ export const useSetRouteBoundaries = () => {
   });
   // Mouse is scrolling => remove classes => set isHovering to false so that detached mode removes as well
   useAttachListener("wheel", "window", () => {
+    if(settings.showRouteBoundariesOn=== "click"){
+      return
+    }
     applyOrRemoveClasses(false);
     if (!detachedWindow) {
       return;
@@ -75,4 +84,5 @@ export const useSetRouteBoundaries = () => {
     detachedWindow,
     setSettings,
   ]);
+
 };

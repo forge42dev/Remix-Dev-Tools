@@ -21,22 +21,22 @@ import {
 import { useSyncStateWhenDetached } from "./hooks/detached/useSyncStateWhenDetached.js";
 import "../input.css";
 import { useDevServerConnection } from "./hooks/useDevServerConnection.js";
-import { useOpenElementSource } from "./hooks/useOpenElementSource.js"; 
+import { useOpenElementSource } from "./hooks/useOpenElementSource.js";
 import { useDebounce } from "./hooks/useDebounce.js";
 import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.js";
-import { RdtPlugin } from "../index.js"; 
+import { RdtPlugin } from "../index.js";
 import { useHotkeys } from "react-hotkeys-hook";
 import clsx from "clsx";
 
 const recursivelyChangeTabIndex = (node: Element | HTMLElement, remove = true) => {
   if(remove){
     node.setAttribute("tabIndex","-1");
-  } else { 
+  } else {
     node.removeAttribute("tabIndex");
   }
-  for(const child of node.children) { 
+  for(const child of node.children) {
     recursivelyChangeTabIndex(child, remove);
-  } 
+  }
 };
 
 const LiveUrls = () =>{
@@ -51,13 +51,13 @@ const LiveUrls = () =>{
   }
   if(settings.liveUrls.length === 0) return null;
   return <div className={clsx("flex fixed items-center gap-2 px-2", envsClassName)}>
-    {settings.liveUrls.map((env) => { 
+    {settings.liveUrls.map((env) => {
       return <Link key={env.name} referrerPolicy="no-referrer" target="_blank" to={env.url+location.pathname} className="flex transition-all hover:text-gray-500 items-center gap-2 text-sm font-semibold text-gray-400">
         {env.name}
       </Link>
     })}
   </div>
- 
+
 }
 type WindowSize = {
   width: number;
@@ -109,7 +109,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useDevServerConnection();
   useOpenElementSource();
   useListenToRouteChange();
-  
+
   const { setPersistOpen } = usePersistOpen();
   const url = useLocation().search;
   const { detachedWindowOwner, isDetached, setDetachedWindowOwner } = useDetachedWindowControls();
@@ -126,14 +126,14 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
   useEffect(() => {
     const el = document.getElementById(REMIX_DEV_TOOLS);
     if(!el) return;
-    recursivelyChangeTabIndex(el , !isOpen); 
-  },[isOpen])  
+    recursivelyChangeTabIndex(el , !isOpen);
+  },[isOpen])
 
   if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null;
   // If the dev tools are detached, we don't want to render the main panel
   if (detachedWindowOwner) {
     return (
-      <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
+      <div id={REMIX_DEV_TOOLS} className="remix-dev-tools remix-dev-tools-reset">
         <Trigger
           isOpen={false}
           setIsOpen={() => {
@@ -146,8 +146,8 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
     );
   }
 
-  return ( 
-      <div id={REMIX_DEV_TOOLS} className="remix-dev-tools">
+  return (
+      <div id={REMIX_DEV_TOOLS} className="remix-dev-tools remix-dev-tools-reset">
         <Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
         <LiveUrls />
         <Breakpoints />
@@ -158,7 +158,7 @@ const DevTools = ({ plugins: pluginArray }: RemixDevToolsProps) => {
           </div>
         </MainPanel>
       </div>
-    
+
   );
 };
 

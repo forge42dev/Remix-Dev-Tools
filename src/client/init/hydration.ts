@@ -1,4 +1,4 @@
-export function removeStyleAndDataAttributes(inputString: string) {
+  function removeStyleAndDataAttributes(inputString: string) {
   // Define the regular expressions to match <style>...</style> tags  
   const styleTagRegex = /<style\b[^>]*>[\s\S]*?<\/style>/gi;
   const scriptTagRegex = /<script\b[^>]*>[\s\S]*?<\/script>/gi;

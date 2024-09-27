@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 
-export type ListenerAttachmentTarget = "window" | "document" | "body";
+  type ListenerAttachmentTarget = "window" | "document" | "body";
 
 const getAttachment = (target: ListenerAttachmentTarget) => {
   switch (target) {
@@ -28,7 +28,7 @@ export const useAttachListener = (
  * Helper hook that listens to the provided event on the provided node and triggers a callback function
  * @param fn Function to be called when the event happens
  */
-export const useAttachListenerToNode = (
+  const useAttachListenerToNode = (
   listener: keyof HTMLElementEventMap | keyof WindowEventMap | keyof DocumentEventMap,
   node: HTMLElement | Window | Document | null,
   fn: EventListener,
@@ -75,10 +75,10 @@ export const useAttachDocumentListener = (
  * Helper hook that listens to the document scroll event and triggers a callback function
  * @param fn Function to be called when the user scrolls
  */
-export const useAttachBodyListener = (
-  listener: keyof WindowEventMap,
-  fn: (...args: unknown[]) => unknown,
-  shouldAttach = true
-) => {
-  return useAttachListener(listener, "body", fn, shouldAttach);
-};
+ // const useAttachBodyListener = (
+ // listener: keyof WindowEventMap,
+ // fn: (...args: unknown[]) => unknown,
+ // shouldAttach = true
+//) => {
+ // return useAttachListener(listener, "body", fn, shouldAttach);
+//};

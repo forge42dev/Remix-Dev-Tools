@@ -4,12 +4,6 @@ import { useMemo } from "react";
 
 import { RouteSegmentInfo } from "../components/RouteSegmentInfo.js";
 
-export const ROUTE_COLORS: Record<string, string> = {
-  ROUTE: "bg-green-500 text-white",
-  LAYOUT: "bg-blue-500 text-white",
-  ROOT: "bg-purple-500 text-white",
-};
-
 const PageTab = () => {
   const routes = useMatches();
   const reversed = useMemo(() => routes.reverse(), [routes]);
@@ -17,13 +11,13 @@ const PageTab = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-30 mb-2 bg-[#212121] pt-2">
+      <div className="sticky w-full top-0 z-30 mb-2 bg-[#212121] pt-2">
         <div className="mb-1 flex justify-between ">
-          <h1 className="text-lg">Active Route Segments</h1>
+          <div className="text-lg font-semibold">Active Route Segments</div>
           <button
             onClick={() => revalidate()}
             className={clsx(
-              "  z-20 cursor-pointer rounded-lg border border-green-500 px-3 py-1 text-sm font-semibold text-white",
+              "z-20 cursor-pointer rounded-lg border border-green-500 px-3 py-1 text-sm font-semibold text-white",
               state !== "idle" && "pointer-events-none opacity-50"
             )}
           >
@@ -32,7 +26,7 @@ const PageTab = () => {
         </div>
         <hr className="border-gray-700" />
       </div>
-      <div className="relative flex h-full flex-col p-6 px-6">
+      <div className="relative flex h-full flex-col p-6 px-2 pl-4 lg:px-6">
         <ol
           className={clsx(
             "relative border-l border-gray-700",
