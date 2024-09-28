@@ -9,6 +9,7 @@ export default defineConfig({
 		exclude: ["**/node_modules/**", "**/dist/**", "**/docs/**", "**/public/**", "**/test-apps/**"],
 
 		coverage: {
+			provider: "v8",
 			include: ["src/**/*"],
 			reporter: ["text", "json-summary", "json", "html"],
 			reportOnFailure: true,

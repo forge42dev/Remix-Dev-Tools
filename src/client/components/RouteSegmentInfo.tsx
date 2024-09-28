@@ -30,9 +30,10 @@ const cleanupLoaderOrAction = (routeInfo: ServerRouteInfo["lastLoader"]) => {
 	if (!Object.keys(routeInfo).length) return {}
 	return {
 		executionTime: `${routeInfo.executionTime}ms`,
-		requestData: routeInfo.requestData,
-		requestHeaders: routeInfo.requestHeaders,
-		responseHeaders: routeInfo.responseHeaders,
+		...(routeInfo.responseData ? { responseData: routeInfo.responseData } : {}),
+		...(routeInfo.requestData ? { requestData: routeInfo.requestData } : {}),
+		...(routeInfo.responseHeaders ? { responseHeaders: routeInfo.responseHeaders } : {}),
+		...(routeInfo.requestHeaders ? { requestHeaders: routeInfo.requestHeaders } : {}),
 		...(routeInfo.responseHeaders?.["cache-control"] && {
 			cacheInfo: { ...parseCacheControlHeader(new Headers(routeInfo.responseHeaders)) },
 		}),
@@ -41,18 +42,22 @@ const cleanupLoaderOrAction = (routeInfo: ServerRouteInfo["lastLoader"]) => {
 
 const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
 	return {
-		loaderTriggerCount: routeInfo.loaderTriggerCount,
-		actionTriggerCount: routeInfo.actionTriggerCount,
-		lowestExecutionTime: `${routeInfo.lowestExecutionTime}ms`,
-		highestExecutionTime: `${routeInfo.highestExecutionTime}ms`,
-		averageExecutionTime: `${routeInfo.averageExecutionTime}ms`,
-		lastLoaderInfo: cleanupLoaderOrAction(routeInfo.lastLoader),
-		...(routeInfo.lastAction && {
-			lastActionInfo: cleanupLoaderOrAction(routeInfo.lastAction),
-		}),
-
-		loaderCalls: routeInfo.loaders?.map((loader) => cleanupLoaderOrAction(loader)).reverse(),
-		actionCalls: routeInfo.actions?.map((action) => cleanupLoaderOrAction(action)).reverse(),
+		loaderInfo: {
+			loaderTriggerCount: routeInfo.loaderTriggerCount,
+			lowestExecutionTime: `${routeInfo.lowestExecutionTime}ms`,
+			highestExecutionTime: `${routeInfo.highestExecutionTime}ms`,
+			averageExecutionTime: `${routeInfo.averageExecutionTime}ms`,
+			lastLoaderInfo: cleanupLoaderOrAction(routeInfo.lastLoader),
+			lastNLoaderCalls: routeInfo.loaders?.map((loader) => cleanupLoaderOrAction(loader)).reverse(),
+		},
+		actionInfo: {
+			actionTriggerCount: routeInfo.actionTriggerCount,
+			...(routeInfo.lastAction && {
+				lastActionInfo: cleanupLoaderOrAction(routeInfo.lastAction),
+			}),
+			lastNActionCalls: routeInfo.actions?.map((action) => cleanupLoaderOrAction(action)).reverse(),
+		},
+		...cleanupLoaderOrAction(routeInfo.lastLoader),
 	}
 }
 
@@ -67,7 +72,6 @@ const ROUTE_COLORS = {
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
 	const { server, setServerInfo } = useServerInfo()
 	const { isConnected, sendJsonMessage } = useDevServerConnection()
-	const a = useSetRouteBoundaries()
 	const loaderData = getLoaderData(route.data as any)
 	const serverInfo = server?.routes?.[route.id]
 	const isRoot = route.id === "root"
@@ -167,9 +171,9 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 				<p className="mb-2 block text-sm font-normal leading-none text-gray-500  ">Route segment file: {route.id}</p>
 
 				<div className="flex flex-wrap gap-6">
-					{loaderData && <InfoCard title="Loader data">{<JsonRenderer data={loaderData} />}</InfoCard>}
+					{loaderData && <InfoCard title="Returned loader data">{<JsonRenderer data={loaderData} />}</InfoCard>}
 					{serverInfo && import.meta.env.DEV && (
-						<InfoCard onClear={clearServerInfoForRoute} title="Server Info">
+						<InfoCard onClear={clearServerInfoForRoute} title="Server information">
 							<JsonRenderer data={cleanServerInfo(serverInfo)} />
 						</InfoCard>
 					)}

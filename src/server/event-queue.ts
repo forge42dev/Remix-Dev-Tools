@@ -9,6 +9,7 @@ export type LoaderEvent = RDTEvent<
 		id: string
 		executionTime: number
 		requestData: any
+		responseData: any
 		requestHeaders: Record<string, string>
 		responseHeaders: Record<string, string>
 		timestamp: number
@@ -20,6 +21,7 @@ export type ActionEvent = RDTEvent<
 		id: string
 		executionTime: number
 		requestData: any
+		responseData: any
 		requestHeaders: Record<string, string>
 		responseHeaders: Record<string, string>
 		timestamp: number

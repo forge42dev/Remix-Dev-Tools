@@ -6,14 +6,14 @@ export const secondsToHuman = (s: number) => {
 		const minutes = Math.floor((s % 3600) / 60)
 		const seconds = Math.floor((s % 3600) % 60)
 		if (minutes === 0 && seconds === 0) return `${hours}h`
-		if (seconds === 0) return `${hours}:${minutes}m`
-		return `${hours}:${minutes}:${seconds}s`
+		if (seconds === 0) return `${hours}:${minutes}h`
+		return `${hours}:${minutes}:${seconds}h`
 	}
 	if (s > 60) {
 		const minutes = Math.floor(s / 60)
 		const seconds = Math.floor(s % 60)
 		if (seconds === 0) return `${minutes}m`
-		return `${minutes}:${seconds}s`
+		return `${minutes}:${seconds}m`
 	}
 	return `${s}s`
 }

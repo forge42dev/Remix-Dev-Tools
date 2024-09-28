@@ -8,9 +8,16 @@ import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
 import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
 import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
 
+// this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
 		RDT_MOUNTED: boolean
+	}
+	namespace NodeJS {
+		interface Process {
+			rdt_config: DevToolsServerConfig
+			rdt_port: number
+		}
 	}
 }
 
@@ -41,10 +48,10 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 	const remixDir = args?.remixDir || "./app"
 
 	const shouldInject = (mode: string | undefined) => mode === "development" || include
-	let port = 5173
+
 	// Set the server config on the process object so that it can be accessed by the plugin
 	if (typeof process !== "undefined") {
-		;(process as any).rdt_config = serverConfig
+		process.rdt_config = serverConfig
 	}
 	return [
 		{
@@ -53,16 +60,9 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 			apply(config) {
 				return config.mode === "development"
 			},
-			transform(code) {
-				const RDT_PORT = "__REMIX_DEVELOPMENT_TOOL_SERVER_PORT__"
-				if (code.includes(RDT_PORT)) {
-					const modified = code.replaceAll(RDT_PORT, port.toString())
-					return modified
-				}
-			},
 			async configureServer(server) {
 				server.httpServer?.on("listening", () => {
-					port = server.config.server.port ?? 5173
+					process.rdt_port = server.config.server.port ?? 5173
 				})
 				server.middlewares.use((req, res, next) =>
 					handleDevToolsViteRequest(req, res, next, (parsedData) => {

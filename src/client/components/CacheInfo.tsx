@@ -1,5 +1,5 @@
-import add from "date-fns/add/index.js"
-import formatDistance from "date-fns/formatDistance/index.js"
+import { add } from "date-fns/add"
+import { formatDistance } from "date-fns/formatDistance"
 import type { CacheControl } from "../../server/parser.js"
 import { useCountdown } from "../hooks/useCountdown.js"
 import { Tag } from "./Tag.js"

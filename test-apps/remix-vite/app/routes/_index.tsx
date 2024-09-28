@@ -4,18 +4,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Link, useFetcher, useSubmit } from "@remix-run/react";
 import { Button } from "../components/Button";
 
-class Redis {
-  constructor(url: string, options: any) {
-    console.log("Redis constructor", url, options);
-    console.error("Redis constructor", url, options);
-  }
-  on(event: string, cb: any) {
-    console.log("Redis on", event, cb);
-  }
-  removeAllListeners(event: string) {
-    console.log("Redis removeAllListeners", event);
-  }
-}
+
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
@@ -23,17 +12,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const redis = new Redis("url", {
-  commandTimeout: 5000,
-  enableAutoPipelining: true,
-  maxRetriesPerRequest: 3,
-});
-
-redis.on("connect", () => console.debug("Redis connected"));
-redis.on("close", () => console.debug("Redis connection closed"));
-redis.on("reconnecting", () => console.log("Redis reconnecting"));
-redis.removeAllListeners("error");
-redis.on("error", console.error);
 
 export const loader = async ({ request, response }: LoaderFunctionArgs) => {
   const test = new Promise((resolve, reject) => {
@@ -43,8 +21,8 @@ export const loader = async ({ request, response }: LoaderFunctionArgs) => {
   });
   const test1 = new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject("test");
-    }, 1000);
+      resolve("test");
+    }, 1500);
   });
   return defer({ message: "Hello World!", test, test1, });
 };
@@ -83,7 +61,7 @@ export default function Index() {
         onClick={() => pFetcher.submit(data, { method: "POST", action: "/" })}
       >
         FETCHER Action
-      </button>  
+      </button>
       <button onClick={() => submit(null, { method: "POST", action: "/" })}>
         SUBMIT Action
       </button>
@@ -95,7 +73,7 @@ export default function Index() {
       </button>
       <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
         SUBMIT Action PUT
-      </button> 
+      </button>
 
       <h2>Test Links</h2>
 

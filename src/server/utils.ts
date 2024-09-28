@@ -69,6 +69,42 @@ const analyzeClearSite = (route: Omit<ServerRoute, "children">, config: DevTools
 		infoLog(`🧹 Site data cleared by ${chalk.blueBright(route.id)} ${chalk.green(`[${data}]`)}`)
 	}
 }
+const analyzeServerTimings = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
+	if (config.logs?.serverTimings === false) {
+		return
+	}
+	const data = headers.get("Server-Timing")
+
+	if (data) {
+		const splitEntries = data.split(",")
+		for (const entry of splitEntries) {
+			const segments = entry.split(";")
+			let name: string | null = null
+			let desc: string | null = null
+			let dur: number | null = null
+
+			for (const segment of segments) {
+				const [key, value] = segment.split("=")
+				if (key === "desc") {
+					desc = value
+				} else if (key === "dur") {
+					dur = Number(value)
+				} else {
+					name = segment
+				}
+			}
+			if (!name || dur === null) {
+				return
+			}
+			const threshold = config.serverTimingThreshold ?? Number.POSITIVE_INFINITY
+			const overThreshold = dur > threshold
+			const durationColor = overThreshold ? chalk.redBright : chalk.green
+			infoLog(
+				`⏰  Server timing for route ${chalk.blueBright(route.id)} - ${chalk.cyanBright(name)} ${durationColor(`[${dur}ms]`)} ${desc ? chalk.yellow(`[${desc}]`) : ""}`
+			)
+		}
+	}
+}
 
 const analyzeHeaders = (route: Omit<ServerRoute, "children">, response: unknown) => {
 	if (!(response instanceof Response)) {
@@ -79,6 +115,7 @@ const analyzeHeaders = (route: Omit<ServerRoute, "children">, response: unknown)
 	analyzeCookies(route, config, headers)
 	analyzeCache(route, config, headers)
 	analyzeClearSite(route, config, headers)
+	analyzeServerTimings(route, config, headers)
 }
 
 const analyzeDeferred = (id: string, start: number, response: any) => {
@@ -180,6 +217,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 	args: DataFunctionArgs
 ) => {
 	const isResponse = response instanceof Response
+	const isObject = typeof response === "object" && response !== null && !("deferredKeys" in response)
 	const responseHeaders = isResponse ? extractHeadersFromResponseOrRequest(response) : null
 	const requestHeaders = extractHeadersFromResponseOrRequest(args.request)
 	// create the event
@@ -189,14 +227,14 @@ const storeAndEmitActionOrLoaderInfo = async (
 			id: route.id,
 			executionTime: end,
 			timestamp: new Date().getTime(),
+			...(isObject ? { responseData: response } : {}),
 			//requestData: await extractDataFromResponseOrRequest(args.request),
 			requestHeaders,
 			responseHeaders,
 		},
 	}
-	const port =
-		// @ts-expect-error
-		typeof __REMIX_DEVELOPMENT_TOOL_SERVER_PORT__ === "number" ? __REMIX_DEVELOPMENT_TOOL_SERVER_PORT__ : undefined
+	const port = process.rdt_port
+
 	if (port) {
 		fetch(`http://localhost:${port}/remix-development-tools-request`, {
 			method: "POST",

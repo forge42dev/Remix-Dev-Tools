@@ -18,7 +18,7 @@ export function links()  {
 export const loader = () => {
   console.log("loader?")
   userSomething();
-  return json({ message: "Hello World" });
+  return  ({ message: "Hello World" });
 }
 
 export const action = () => {
@@ -26,7 +26,7 @@ export const action = () => {
 }
 
 export default function App() {
-  console.log("App?") 
+  console.log("App?")
   return (
     <html lang="en">
       <head>
@@ -38,14 +38,14 @@ export default function App() {
       <body>
        <Form method="post">
         <input readOnly type="text" name="name" value={"name"} />
-       <button type="submit">  
+       <button type="submit">
           Submit
         </button>
        </Form>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-     
+
       </body>
     </html>
   );
