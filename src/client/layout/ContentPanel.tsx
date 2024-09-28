@@ -1,6 +1,5 @@
 import clsx from "clsx"
 import { Fragment } from "react"
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
 import { useTabs } from "../hooks/useTabs.js"
 import { TimelineTab } from "../tabs/TimelineTab.js"
 import type { Tab } from "../tabs/index.js"
@@ -11,8 +10,8 @@ interface ContentPanelProps {
 }
 
 const ContentPanel = ({ plugins }: ContentPanelProps) => {
-	const { isConnected, isConnecting } = useRemixForgeSocket()
-	const { Component, hideTimeline, isPluginTab, activeTab } = useTabs(isConnected, isConnecting, plugins)
+	//const { isConnected, isConnecting } = useRemixForgeSocket()
+	const { Component, hideTimeline, isPluginTab, activeTab } = useTabs(false, false, plugins)
 
 	return (
 		<div className="flex h-full w-full overflow-y-hidden">

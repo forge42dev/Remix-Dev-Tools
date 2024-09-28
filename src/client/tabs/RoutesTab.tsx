@@ -4,7 +4,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "..
 import { NewRouteForm } from "../components/NewRouteForm.js"
 import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext.js"
 import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange.js"
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
 import { type ExtendedRoute, constructRoutePath, createExtendedRoutes } from "../utils/routing.js"
 import { createRouteTree } from "../utils/sanitize.js"
 
@@ -20,7 +19,7 @@ const RoutesTab = () => {
 	const activeRoutes = matches.map((match) => match.id)
 	const { settings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
-	const { isConnected } = useRemixForgeSocket()
+	//const { isConnected } = useRemixForgeSocket()
 	const { detachedWindow } = useDetachedWindowControls()
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
 	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes())
@@ -67,7 +66,8 @@ const RoutesTab = () => {
 				</div>
 			) : (
 				<Accordion className="h-full w-full overflow-y-auto pr-4" type="single" collapsible>
-					{isConnected && (
+					{/* TODO bring back */}
+					{false && (
 						<AccordionItem value="add-new">
 							<AccordionTrigger className="text-white">Add a new route to the project</AccordionTrigger>
 							<AccordionContent>
