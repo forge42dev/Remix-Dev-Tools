@@ -2,8 +2,8 @@
 title: "Plugins"
 description: "Remix Development Tools plugins"
 ---
-
-## Plugins in Vite
+ 
+## Plugins in Vite  
 Plugins work in a different way in Vite. You create a directory for plugins and just provide the path to the directory to the plugin. The plugin will automatically import all the plugins from the directory and add them to the dev tools. You only need to make sure your exports are named exports and not default exports and that they are uniquely named.
 
 You can create a directory called plugins in your project and add your plugins there. Then you can add the following to your vite.config.js file:
@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [
     remixDevTools({
       pluginsDir: "./plugins"
-  })],
+  })], 
 });
 ```
 
@@ -39,6 +39,8 @@ Export a function with the following contract:
       icon: <MyIcon size={16} />,
       // The component to be rendered when the tab is active
       component: <MyComponent />,
+      // Whether the tab requires the Remix Forge VS Code extension to be connected to be shown
+      requiresForge: false,
       // Whether the timeline should be shown on the tab
       hideTimeline: false,
     }
@@ -54,5 +56,44 @@ import { remixDevToolsPlugin } from "./remix-dev-tools-plugin";
 -  withDevTools(App);
 +  withDevTools(App, { plugins: [remixDevToolsPlugin()] })
 ```
-
+ 
 You should now see your plugin in the Remix Development Tools as a new tab.
+
+## Using Remix Forge with your plugin
+If you want to use Remix Forge with your plugin you can do so by setting the requiresForge property to true in your plugin. This will make sure that the plugin is only shown when the Remix Forge VS Code extension is connected.
+
+Follow the above guide to create a plugin.
+Import the following hook from remix-development-tools:
+```tsx
+import { useRemixForgeSocket } from "remix-development-tools"; 
+ 
+  const MyComponent = () => {
+    const socket = useRemixForgeSocket();
+    // Implement your logic here
+    return <div>My Component</div>
+  }
+```
+
+You can now use the socket to send messages to the Remix Forge VS Code extension. For now it accepts reading/deleting/opening files in VS Code
+```tsx
+  const MyComponent = () => {
+    const socket = useRemixForgeSocket();
+    const runCommand = () => {
+      socket.sendJsonMessage({ subtype: "read_file", path: "package.json" })
+    }
+    // Implement your logic here
+    return <div onClick={runCommand}>My Component</div>
+  }
+  ```
+The following contract is returned from the extension:
+ ```tsx
+  interface RemixForgeResponse {
+    type: "plugin";
+    subtype: "read_file" | "open_file" | "delete_file" | "write_file";
+    error: boolean;
+    data: string | null;
+  }
+  ```
+Make sure you check if the type and subtype match your needs before using the data.
+Refer to react-use-websocket for more information on how to use the socket and what options it accepts because that is what is used under the hood.
+After you're done share your plugin with the community by opening a discussion!

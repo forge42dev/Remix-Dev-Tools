@@ -4,6 +4,7 @@ import clsx from "clsx"
 import { Icon } from "../components/icon/Icon.js"
 import type { Terminal as TerminalType } from "../context/terminal/types.js"
 import { useTerminalContext } from "../context/useRDTContext.js"
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
 import { useTerminalShortcuts } from "../hooks/useTerminalShortcuts.js"
 
 interface TerminalProps {
@@ -36,8 +37,39 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
 	useEffect(() => {
 		ref.current?.scrollTo({ top: ref.current.scrollHeight })
 	}, [terminal.output])
-	// TODO bring back
-	const sendJsonMessage = (params: any) => {}
+
+	const { sendJsonMessage } = useRemixForgeSocket({
+		onMessage: (message) => {
+			try {
+				const data = JSON.parse(message.data)
+				// Check if command was sent from this terminal
+				const isThisTerminalCommand = data.type === "terminal_command" && data.terminalId === terminal.id
+
+				if (isThisTerminalCommand) {
+					const processDone = data.subtype === "ERROR" || data.subtype === "EXIT" || data.subtype === "CLOSE"
+					const hasOutputData = data.subtype === "DATA" || data.subtype === "ERROR"
+					// set the process ID if it exists so we can terminate it if we want
+					if (data.processId) {
+						setProcessId(terminal.id, data.processId)
+					}
+					// Process done => unlock terminal
+					if (processDone) {
+						setProcessId(terminal.id, undefined)
+						toggleTerminalLock(terminal.id, false)
+					}
+					// Add output to terminal
+					if (hasOutputData) {
+						addTerminalOutput(data.terminalId, {
+							type: data.subtype === "ERROR" ? "error" : "output",
+							value: data.data,
+						})
+					}
+				}
+			} catch (e) {
+				// console.log(e);
+			}
+		},
+	})
 	const { onKeyDown } = useTerminalShortcuts({
 		onSubmit,
 		setCommand,
@@ -114,34 +146,44 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
 }
 
 const TerminalTab = () => {
-	return <div />
-	//	const { terminals, addOrRemoveTerminal } = useTerminalContext()
-	//	const [projectCommands, setProjectCommands] = useState<Record<string, string>>()
-	//	//const sendJsonMessage = (params: any) =>{}
-	//	// TODO bring back
-	//	//	useEffect(() => {
-	//	//		sendJsonMessage({ type: "commands" })
-	//	//	}, [sendJsonMessage])
-	//	return (
-	//		<div className="relative mr-8 flex h-full justify-between gap-4 rounded-lg">
-	//			{terminals.length < 3 && (
-	//				<button type="button" className="absolute -right-8" onClick={() => addOrRemoveTerminal()}>
-	//					<Icon name="Columns" />
-	//				</button>
-	//			)}
-	//			{/*  <button className="absolute -right-8 top-8">
-	//        <MonitorPlay />
-	//      </button> */}
-	//			{terminals.map((terminal) => (
-	//				<Terminal
-	//					terminal={terminal}
-	//					projectCommands={projectCommands}
-	//					onClose={() => addOrRemoveTerminal(terminal.id)}
-	//					key={terminal.id}
-	//				/>
-	//			))}
-	//		</div>
-	//	)
+	const { terminals, addOrRemoveTerminal } = useTerminalContext()
+	const [projectCommands, setProjectCommands] = useState<Record<string, string>>()
+	const { sendJsonMessage } = useRemixForgeSocket({
+		onMessage: (message) => {
+			try {
+				const data = JSON.parse(message.data)
+				if (data.type === "commands") {
+					setProjectCommands(data.data)
+				}
+			} catch (e) {
+				// console.log(e);
+			}
+		},
+	})
+
+	useEffect(() => {
+		sendJsonMessage({ type: "commands" })
+	}, [sendJsonMessage])
+	return (
+		<div className="relative mr-8 flex h-full justify-between gap-4 rounded-lg">
+			{terminals.length < 3 && (
+				<button type="button" className="absolute -right-8" onClick={() => addOrRemoveTerminal()}>
+					<Icon name="Columns" />
+				</button>
+			)}
+			{/*  <button className="absolute -right-8 top-8">
+        <MonitorPlay />
+      </button> */}
+			{terminals.map((terminal) => (
+				<Terminal
+					terminal={terminal}
+					projectCommands={projectCommands}
+					onClose={() => addOrRemoveTerminal(terminal.id)}
+					key={terminal.id}
+				/>
+			))}
+		</div>
+	)
 }
 
 export { TerminalTab }

@@ -9,6 +9,7 @@ import {
 	useSettingsContext,
 } from "../context/useRDTContext.js"
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll.js"
+import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
 import { useTabs } from "../hooks/useTabs.js"
 import type { Tab as TabType, Tabs as TabsType } from "../tabs/index.js"
 import {
@@ -70,10 +71,9 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 	const { htmlErrors } = useHtmlErrors()
 	const { setPersistOpen } = usePersistOpen()
 	const { activeTab } = settings
-	//const { isConnected, isConnecting } = useRemixForgeSocket()
-	const isConnecting = false
-	const { visibleTabs } = useTabs(false, false, plugins)
-	const shouldShowConnectToForge = false
+	const { isConnected, isConnecting } = useRemixForgeSocket()
+	const { visibleTabs } = useTabs(isConnected, isConnecting, plugins)
+	const shouldShowConnectToForge = !isConnected || isConnecting
 	const scrollRef = useHorizontalScroll()
 	const { setDetachedWindowOwner, detachedWindowOwner, detachedWindow } = useDetachedWindowControls()
 	const handleDetachment = () => {
