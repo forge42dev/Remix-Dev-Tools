@@ -17,12 +17,12 @@ export const loader = async ({ request, response }: LoaderFunctionArgs) => {
   const test = new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
-    }, 1000);
+    }, 2000);
   });
   const test1 = new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve("test");
-    }, 1500);
+      resolve("test1");
+    }, 3500);
   });
   return defer({ message: "Hello World!", test, test1, });
 };
@@ -48,7 +48,6 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
-      <p><p></p></p>
       <Button
         onClick={(e) => {
           console.log(e);

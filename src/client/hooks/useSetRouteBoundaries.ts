@@ -14,10 +14,7 @@ export const useSetRouteBoundaries = () => {
 			// Overrides the hovering so the classes are force removed if needed
 			const hovering = isHovering ?? settings.isHoveringRoute
 			// Classes to apply/remove
-			const classes = [
-				"transition-all duration-200 rounded-lg apply-tw",
-				ROUTE_BOUNDARY_GRADIENTS[settings.routeBoundaryGradient],
-			].join(" ")
+			const classes = ROUTE_BOUNDARY_GRADIENTS[settings.routeBoundaryGradient]
 
 			const isRoot = settings.hoveredRoute === "root"
 			// We get all the elements with this class name, the last one is the one we want because strict mode applies 2x divs
@@ -30,12 +27,9 @@ export const useSetRouteBoundaries = () => {
 			if (element) {
 				// Root has no outlet so we need to use the body, otherwise we get the outlet that is the next sibling of the element
 				const outlet = element
-				for (const c of classes.split(" ")) {
-					outlet.classList[hovering ? "add" : "remove"](c)
+				for (const classItem of classes.split(" ")) {
+					outlet.classList[hovering ? "add" : "remove"](classItem)
 				}
-			}
-			if (element?.parentElement) {
-				element.parentElement.classList[hovering ? "add" : "remove"]("remix-dev-tools")
 			}
 		},
 		[settings.hoveredRoute, settings.isHoveringRoute, settings.routeBoundaryGradient, matches.length]

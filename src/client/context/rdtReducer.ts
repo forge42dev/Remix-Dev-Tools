@@ -15,15 +15,15 @@ export const defaultServerRouteState: ServerRouteInfo = {
 	loaders: [],
 	actions: [],
 }
-
+// classes created in input.css
 export const ROUTE_BOUNDARY_GRADIENTS = {
-	sea: "bg-green-100 bg-gradient-to-r from-cyan-500/50 to-blue-500/50",
-	hyper: "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500",
-	gotham: "bg-gradient-to-r from-gray-700 via-gray-900 to-black",
-	gray: "bg-gradient-to-r from-gray-700/50 via-gray-900/50 to-black/50",
-	watermelon: "bg-gradient-to-r from-red-500 to-green-500",
-	ice: "bg-gradient-to-r from-rose-100 to-teal-100",
-	silver: "bg-gradient-to-r from-gray-100 to-gray-300",
+	sea: "sea-gradient",
+	hyper: "hyper-gradient",
+	gotham: "gotham-gradient",
+	gray: "gray-gradient",
+	watermelon: "watermelon-gradient",
+	ice: "ice-gradient",
+	silver: "silver-gradient",
 } as const
 
 export const RouteBoundaryOptions = Object.keys(ROUTE_BOUNDARY_GRADIENTS) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[]

@@ -240,9 +240,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 			method: "POST",
 			body: JSON.stringify(event),
 		})
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			.then(() => {})
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			.catch(() => {})
 	}
 }

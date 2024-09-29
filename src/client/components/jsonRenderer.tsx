@@ -27,13 +27,16 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
 				: Object.entries(data)
 						.map(([key, value]) => {
 							if (isPromise(value)) {
-								value.then((res) => {
-									if (!ref.current) return
-									setJson((json: any) => ({
-										...json,
-										[key]: res,
-									}))
-								})
+								value
+									.then((res) => {
+										if (!ref.current) return
+										console.log(res)
+										setJson((json: any) => ({
+											...json,
+											[key]: res,
+										}))
+									})
+									.catch((e) => {})
 								return { [key]: "Loading deferred data..." }
 							}
 							return { [key]: value }
@@ -50,6 +53,7 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
 	useEffect(() => {
 		setJson(data)
 	}, [data])
+
 	if (typeof json === "string") {
 		return <div className="rdt-max-w-xs rdt-text-green-600">{json}</div>
 	}

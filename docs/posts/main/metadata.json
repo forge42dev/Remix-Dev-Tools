@@ -13,6 +13,7 @@
     "examples": "features/examples",
     "migration": "guides/migration",
     "plugins": "guides/plugins",
+    "hydrogen": "guides/hydrogen-oxygen",
     "contributing": "guides/contributing"
   },
   "sections": [
@@ -113,6 +114,12 @@
       "description": "Using plugins with remix-development-tools.",
       "section": "Guides",
       "slug": "plugins"
+    },
+    "hydrogen": {
+      "title": "Hydrogen + Oxygen integration",
+      "description": "Using remix-development-tools with Hydrogen and Oxygen from Shopify.",
+      "section": "Guides",
+      "slug": "hydrogen"
     },
     "contributing": {
       "title": "Contributing",

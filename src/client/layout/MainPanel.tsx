@@ -36,7 +36,7 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
 			}}
 			className={clsx(
 				"duration-600 box-border flex w-screen flex-col overflow-auto bg-main text-white opacity-0 transition-all",
-				isOpen ? "opacity-100 drop-shadow-2xl" : "h-0",
+				isOpen ? "opacity-100 drop-shadow-2xl" : "!h-0",
 				isResizing && "cursor-grabbing ",
 				!isEmbedded ? `fixed left-0 ${panelLocation === "bottom" ? "bottom-0" : "top-0 border-b-2 border-main"}` : "",
 				className
