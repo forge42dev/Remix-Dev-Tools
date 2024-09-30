@@ -14,7 +14,7 @@ export const useSetRouteBoundaries = () => {
 			// Overrides the hovering so the classes are force removed if needed
 			const hovering = isHovering ?? settings.isHoveringRoute
 			// Classes to apply/remove
-			const classes = ROUTE_BOUNDARY_GRADIENTS[settings.routeBoundaryGradient]
+			const classes = ["apply-tw", ROUTE_BOUNDARY_GRADIENTS[settings.routeBoundaryGradient]].join(" ")
 
 			const isRoot = settings.hoveredRoute === "root"
 			// We get all the elements with this class name, the last one is the one we want because strict mode applies 2x divs

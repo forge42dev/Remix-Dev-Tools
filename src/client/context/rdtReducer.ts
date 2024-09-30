@@ -86,6 +86,10 @@ export type RemixDevToolsState = {
 		 * @default "silver"
 		 */
 		editorName: string
+		/**
+		 * The route boundary gradient color to use
+		 * @default "watermelon"
+		 */
 		routeBoundaryGradient: keyof typeof ROUTE_BOUNDARY_GRADIENTS
 		routeWildcards: RouteWildcards
 		activeTab: Tabs
@@ -163,7 +167,7 @@ export const initialState: RemixDevToolsState = {
 	terminals: [{ id: 0, locked: false, output: [], history: [] }],
 	server: undefined,
 	settings: {
-		showRouteBoundariesOn: "hover",
+		showRouteBoundariesOn: "click",
 		breakpoints: [
 			{ name: "", min: 0, max: 639 },
 			{ name: "sm", min: 640, max: 767 },
@@ -176,7 +180,7 @@ export const initialState: RemixDevToolsState = {
 		liveUrls: [],
 		liveUrlsPosition: "bottom-left",
 		editorName: "VSCode",
-		routeBoundaryGradient: "silver",
+		routeBoundaryGradient: "watermelon",
 		routeWildcards: {},
 		activeTab: "page",
 		shouldConnectWithForge: false,
