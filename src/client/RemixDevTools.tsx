@@ -51,7 +51,7 @@ const LiveUrls = () => {
 	}
 	if (settings.liveUrls.length === 0) return null
 	return (
-		<div className={clsx("flex fixed items-center gap-2 px-2", envsClassName)}>
+		<div className={clsx("flex fixed items-center z-[9998] gap-2 px-2", envsClassName)}>
 			{settings.liveUrls.map((env) => {
 				return (
 					<Link
@@ -107,7 +107,7 @@ const Breakpoints = () => {
 	return (
 		<div
 			className={clsx(
-				"flex fixed bottom-0 left-0 mb-5 rounded-full bg-[#212121] size-10 text-white flex items-center justify-center items-center gap-2 mx-1"
+				"flex fixed bottom-0 left-0 mb-5 rounded-full bg-[#212121] z-[9998] size-10 text-white flex items-center justify-center items-center gap-2 mx-1"
 			)}
 		>
 			{breakpoint?.name}
