@@ -1,5 +1,5 @@
-import { Link, useLocation } from "@remix-run/react"
 import { useEffect, useState } from "react"
+import { Link, useLocation } from "react-router"
 import { Trigger } from "./components/Trigger.js"
 import { RDTContextProvider, type RdtClientConfig } from "./context/RDTContext.js"
 import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext.js"

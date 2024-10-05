@@ -1,7 +1,6 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
-import { Link, useFetcher, useSubmit } from "@remix-run/react";
+
+import type { MetaFunction , LoaderFunctionArgs} from "react-router";
+import { Link, useFetcher, useSubmit } from "react-router";
 import { Button } from "../components/Button";
 
 
@@ -13,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
 
 
-export const loader = async ({ request, response }: LoaderFunctionArgs) => {
+export const loader = async ({ request,   }: LoaderFunctionArgs) => {
   const test = new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
@@ -24,12 +23,9 @@ export const loader = async ({ request, response }: LoaderFunctionArgs) => {
       resolve("test1");
     }, 3500);
   });
-  return defer({ message: "Hello World!", test, test1, });
+  return  ({ message: "Hello World!", test, test1, });
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  return redirect("/login");
-};
 
 export default function Index() {
   const lFetcher = useFetcher({ key: "lfetcher"});

@@ -15,7 +15,7 @@ import {
 	//getExistingStateFromStorage,
 } from "./RDTContext.js"
 
-vi.mock("@remix-run/react", () => ({
+vi.mock("react-router", () => ({
 	useLocation: () => ({
 		pathname: "/",
 	}),

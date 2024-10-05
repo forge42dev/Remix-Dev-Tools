@@ -1,5 +1,5 @@
-import { useNavigation } from "@remix-run/react"
 import { useEffect } from "react"
+import { useNavigation } from "react-router"
 import type { ActionEvent, LoaderEvent } from "../../server/event-queue.js"
 import type { ServerInfo } from "../context/rdtReducer.js"
 import { useServerInfo } from "../context/useRDTContext.js"

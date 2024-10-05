@@ -1,6 +1,6 @@
-import { useLocation } from "@remix-run/react"
 import clsx from "clsx"
 import { useEffect, useState } from "react"
+import { useLocation } from "react-router"
 import type { RemixDevToolsProps } from "./RemixDevTools.js"
 import { RDTContextProvider } from "./context/RDTContext.js"
 import { useSettingsContext } from "./context/useRDTContext.js"

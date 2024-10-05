@@ -4,22 +4,21 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "remix vite:build",
-    "dev": "remix vite:dev",
-    "start": "remix-serve ./build/server/index.js",
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@remix-run/node": "^2.8.0",
-    "@remix-run/react": "^2.8.0",
-    "@remix-run/serve": "^2.8.0",
+    "react-router": "^7.0.0-pre.0",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@react-router/dev": "^7.0.0-pre.0",
+    "@react-router/node": "^7.0.0-pre.0",
+    "@react-router/serve": "^7.0.0-pre.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.8.0",
-    "@remix-run/eslint-config": "^2.8.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "eslint": "^8.38.0",

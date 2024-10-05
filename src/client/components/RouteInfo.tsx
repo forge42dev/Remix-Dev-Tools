@@ -1,6 +1,6 @@
-import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import type { MouseEvent } from "react"
+import { Link } from "react-router"
 import { useSettingsContext } from "../context/useRDTContext.js"
 import { type ExtendedRoute, constructRoutePath } from "../utils/routing.js"
 import { Input } from "./Input.js"

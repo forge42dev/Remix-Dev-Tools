@@ -1,5 +1,5 @@
 import { getRouteType, isLayoutRoute, isLeafRoute } from "./routing.js"
-// Mock the window.__remixManifest.routes object for testing purposes
+// Mock the window.__reactRouterManifest.routes object for testing purposes
 const mockRoutes = {
 	root: {
 		id: "root",
@@ -30,7 +30,7 @@ const mockRoutes = {
 	},
 }
 
-window.__remixManifest = {
+window.__reactRouterManifest = {
 	routes: mockRoutes,
 } as any
 

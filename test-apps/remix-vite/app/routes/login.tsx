@@ -1,15 +1,15 @@
-import { Form, Link } from "@remix-run/react"; 
+import { Form, Link } from "react-router";
 
-interface SocialButtonProps { 
+interface SocialButtonProps {
   label: string;
 }
- 
+
 
 export default function LoginRoute() {
   return (
     <>
       <Link to="/">Login</Link>
-      
+
     </>
   );
 }
