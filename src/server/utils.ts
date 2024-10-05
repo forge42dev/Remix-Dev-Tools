@@ -1,6 +1,5 @@
 import chalk from "chalk"
 import type { DataFunctionArgs } from "react-router"
-import type { DataFunctionArgs } from "react-router"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
