@@ -24,7 +24,7 @@ const RoutesTab = () => {
 	const { detachedWindow } = useDetachedWindowControls()
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
 	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes())
-	const [treeRoutes] = useState(createRouteTree(window.__reactRouterManifest.routes))
+	const [treeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
 	const isTreeView = routeViewMode === "tree"
 	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
 		e?.preventDefault()

@@ -1,5 +1,5 @@
-import type { UIMatch } from "@remix-run/router"
 import clsx from "clsx"
+import type { UIMatch } from "react-router"
 import { parseCacheControlHeader } from "../../server/parser.js"
 import type { OpenSourceData } from "../../vite/editor.js"
 import { type ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js"
@@ -89,7 +89,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 			isHoveringRoute: type === "enter",
 		})
 	}
-	const entryRoute = __reactRouterManifest.routes[route.id]
+	const entryRoute = window.__reactRouterManifest?.routes[route.id]
 	const isLayout = isLayoutRoute(entryRoute)
 
 	const clearServerInfoForRoute = () => {

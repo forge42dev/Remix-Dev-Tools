@@ -1,7 +1,7 @@
-import type { EntryRoute } from "react-router/dist/routes.js"
+import type { EntryContext } from "react-router"
 import type { RouteWildcards } from "../context/rdtReducer.js"
 import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize.js"
-
+type EntryRoute = EntryContext["manifest"]["routes"][0]
 type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">
 
 export function getRouteType(route: Route) {
@@ -16,6 +16,9 @@ export function getRouteType(route: Route) {
 		return "LAYOUT"
 	}
 
+	if (!window.__reactRouterManifest) {
+		return "ROUTE"
+	}
 	// Find an index route with parentId set to this route
 	const childIndexRoute = Object.values(window.__reactRouterManifest.routes).find(
 		(r) => r.parentId === route.id && r.index
@@ -24,7 +27,10 @@ export function getRouteType(route: Route) {
 	return childIndexRoute ? "LAYOUT" : "ROUTE"
 }
 
-export function isLayoutRoute(route: Route) {
+export function isLayoutRoute(route: Route | undefined) {
+	if (!route) {
+		return false
+	}
 	return getRouteType(route) === "LAYOUT"
 }
 
@@ -70,12 +76,17 @@ export const constructRoutePath = (route: ExtendedRoute, routeWildcards: RouteWi
 }
 
 export const createExtendedRoutes = () => {
+	if (!window.__reactRouterManifest) {
+		return []
+	}
 	return Object.values(window.__reactRouterManifest.routes)
 		.map((route) => {
 			return {
 				...route,
-				url: convertRemixPathToUrl(window.__reactRouterManifest.routes, route),
-				errorBoundary: findParentErrorBoundary(window.__reactRouterManifest.routes, route),
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
+				url: convertRemixPathToUrl(window.__reactRouterManifest!.routes, route),
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
+				errorBoundary: findParentErrorBoundary(window.__reactRouterManifest!.routes, route),
 			}
 		})
 		.filter((route) => isLeafRoute(route))
