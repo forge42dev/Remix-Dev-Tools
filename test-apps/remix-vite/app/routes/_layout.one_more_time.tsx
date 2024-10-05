@@ -1,7 +1,7 @@
-import type { V2_MetaFunction } from "@remix-run/react/dist/routeModules";
-import type { HeadersFunction, LinksFunction, LoaderArgs, ActionArgs } from "@remix-run/node";
-import { useLoaderData, isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import type { ShouldRevalidateFunction } from "@remix-run/react";
+import type { V2_MetaFunction } from "react-router/dist/routeModules";
+import type { HeadersFunction, LinksFunction, LoaderArgs, ActionArgs } from "@react-router/node";
+import { useLoaderData, isRouteErrorResponse, useRouteError } from "react-router";
+import type { ShouldRevalidateFunction } from "react-router";
 
 export const links: LinksFunction = () => (
   [

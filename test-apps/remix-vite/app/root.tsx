@@ -1,13 +1,11 @@
 import {
   Form,
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
-import { LinksFunction, json } from "@remix-run/server-runtime";
+} from "react-router";
 import { userSomething } from "./modules/user.server";
 
 
@@ -22,7 +20,7 @@ export const loader = () => {
 }
 
 export const action = () => {
-  return json({ message: "Hello World" });
+  return  ({ message: "Hello World" });
 }
 
 export default function App() {

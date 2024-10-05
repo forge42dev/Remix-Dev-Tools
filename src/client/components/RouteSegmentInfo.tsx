@@ -89,7 +89,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 			isHoveringRoute: type === "enter",
 		})
 	}
-	const entryRoute = __remixManifest.routes[route.id]
+	const entryRoute = __reactRouterManifest.routes[route.id]
 	const isLayout = isLayoutRoute(entryRoute)
 
 	const clearServerInfoForRoute = () => {

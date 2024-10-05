@@ -1,4 +1,4 @@
-import type { EntryRoute } from "@remix-run/react/dist/routes.js"
+import type { EntryRoute } from "react-router/dist/routes.js"
 import type { RouteWildcards } from "../context/rdtReducer.js"
 import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize.js"
 
@@ -17,7 +17,9 @@ export function getRouteType(route: Route) {
 	}
 
 	// Find an index route with parentId set to this route
-	const childIndexRoute = Object.values(window.__remixManifest.routes).find((r) => r.parentId === route.id && r.index)
+	const childIndexRoute = Object.values(window.__reactRouterManifest.routes).find(
+		(r) => r.parentId === route.id && r.index
+	)
 
 	return childIndexRoute ? "LAYOUT" : "ROUTE"
 }
@@ -68,12 +70,12 @@ export const constructRoutePath = (route: ExtendedRoute, routeWildcards: RouteWi
 }
 
 export const createExtendedRoutes = () => {
-	return Object.values(window.__remixManifest.routes)
+	return Object.values(window.__reactRouterManifest.routes)
 		.map((route) => {
 			return {
 				...route,
-				url: convertRemixPathToUrl(window.__remixManifest.routes, route),
-				errorBoundary: findParentErrorBoundary(window.__remixManifest.routes, route),
+				url: convertRemixPathToUrl(window.__reactRouterManifest.routes, route),
+				errorBoundary: findParentErrorBoundary(window.__reactRouterManifest.routes, route),
 			}
 		})
 		.filter((route) => isLeafRoute(route))

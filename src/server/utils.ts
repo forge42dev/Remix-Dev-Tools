@@ -1,11 +1,11 @@
-import type { DataFunctionArgs } from "@remix-run/server-runtime"
-import type { ResponseStubImpl } from "@remix-run/server-runtime/dist/routeModules.js"
-import type { ServerRoute } from "@remix-run/server-runtime/dist/routes.js"
 import chalk from "chalk"
+import type { DataFunctionArgs } from "react-router"
+import type { DataFunctionArgs } from "react-router"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
 
+type ServerRoute = any
 const analyzeCookies = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.cookies === false) {
 		return
@@ -147,12 +147,9 @@ const unAwaited = async (promise: () => any) => {
 	promise()
 }
 
-function isResponseStub(value: any): value is ResponseStubImpl {
-	return value && typeof value === "object" && "headers" in value
-}
 const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
 	unAwaited(() => {
-		if (e instanceof Response || isResponseStub(e)) {
+		if (e instanceof Response) {
 			const headers = new Headers(e.headers)
 			const location = headers.get("Location")
 			if (location) {
@@ -161,9 +158,7 @@ const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
 			} else {
 				errorLog(`${chalk.blueBright(routeId)} threw a response!`)
 				if (e.status) {
-					errorLog(
-						`${chalk.blueBright(routeId)} responded with ${chalk.white(e.status)} ${isResponseStub(e) ? "" : chalk.white(e.statusText)}`
-					)
+					errorLog(`${chalk.blueBright(routeId)} responded with ${chalk.white(e.status)}`)
 				}
 			}
 		} else {

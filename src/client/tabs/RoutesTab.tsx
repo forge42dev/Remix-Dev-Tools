@@ -1,5 +1,5 @@
-import { useMatches, useNavigate } from "@remix-run/react"
 import { type MouseEvent, useState } from "react"
+import { useMatches, useNavigate } from "react-router"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
 import { NewRouteForm } from "../components/NewRouteForm.js"
 import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext.js"
@@ -24,7 +24,7 @@ const RoutesTab = () => {
 	const { detachedWindow } = useDetachedWindowControls()
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
 	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes())
-	const [treeRoutes] = useState(createRouteTree(window.__remixManifest.routes))
+	const [treeRoutes] = useState(createRouteTree(window.__reactRouterManifest.routes))
 	const isTreeView = routeViewMode === "tree"
 	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
 		e?.preventDefault()

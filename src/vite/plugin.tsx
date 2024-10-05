@@ -180,7 +180,9 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 				const pluginNames = plugins.map((p) => p.name)
 				// Wraps loaders/actions
 				if (
-					(id.includes("virtual:server-entry") || id.includes("virtual:remix/server-build")) &&
+					(id.includes("virtual:server-entry") ||
+						id.includes("virtual:remix/server-build") ||
+						id.includes("virtual:react-router/server-build")) &&
 					process.env.NODE_ENV === "development"
 				) {
 					const updatedCode = [

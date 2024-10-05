@@ -1,4 +1,4 @@
-import { vitePlugin as remix } from "@remix-run/dev";
+import { reactRouter as remix } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { remixDevTools, defineRdtConfig } from "remix-development-tools"
@@ -27,9 +27,7 @@ export default defineConfig({
   plugins: [
     remixDevTools( config),
     remix({
-      future: {
-        unstable_singleFetch: true
-      }
+
     }),
     tsconfigPaths()
   ],

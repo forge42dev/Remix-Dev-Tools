@@ -1,7 +1,9 @@
-import type { LoaderFunctionArgs } from "@remix-run/server-runtime"
-import type { ServerRoute, ServerRouteManifest } from "@remix-run/server-runtime/dist/routes.js"
+//import type { ServerRoute, ServerRouteManifest } from "react-router"
+import type { LoaderFunctionArgs } from "react-router"
 import { augmentAction } from "./action.js"
 import { asyncAnalysis, isAsyncFunction, syncAnalysis } from "./utils.js"
+type ServerRoute = any
+type ServerRouteManifest = Record<string, ServerRoute>
 
 const asyncLoader = (
 	route: Omit<ServerRoute, "children">,
