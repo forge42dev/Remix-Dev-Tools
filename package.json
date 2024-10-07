@@ -2,7 +2,7 @@
 	"name": "remix-development-tools",
 	"description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
 	"author": "Alem Tuzlak",
-	"version": "4.7.1",
+	"version": "4.7.2",
 	"license": "MIT",
 	"keywords": [
 		"remix",
@@ -54,7 +54,9 @@
 			"default": "./dist/client.css"
 		}
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Code-Forge-Net/Remix-Dev-Tools.git"
@@ -91,7 +93,11 @@
 		"icons": "npm run run:scripts scripts/icons.ts",
 		"check:unused": "knip "
 	},
-	"workspaces": [".", "test-apps/*", "docs"],
+	"workspaces": [
+		".",
+		"test-apps/*",
+		"docs"
+	],
 	"peerDependencies": {
 		"@remix-run/react": ">=1.15",
 		"react": ">=17",
