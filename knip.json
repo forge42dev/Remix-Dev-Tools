@@ -3,5 +3,6 @@
 	"entry": ["src/*.{ts,js}", "scripts/*.{ts,js}"],
 	"project": ["**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}"],
 	"ignore": ["test-apps/**", "src/external/**", "docs/**", "plugins/**", "tsup*.ts", "**/rdtReducer.ts"],
-	"ignoreWorkspaces": ["test-apps/**", "docs/**"]
+	"ignoreWorkspaces": ["test-apps/**", "docs/**"],
+	"ignoreBinaries": ["pkg-pr-new"]
 }
