@@ -174,7 +174,7 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 			},
 			async configResolved(resolvedViteConfig) {
 				if (!args?.suppressDeprecationWarning && resolvedViteConfig.appType === "custom") {
-					// Log the deprecation warning message once
+					// Log a warning message
 					console.log(
 						chalk.yellowBright.bold(
 							"⚠️  This package is deprecated and will be renamed to react-router-devtools when React Router v7 is released"

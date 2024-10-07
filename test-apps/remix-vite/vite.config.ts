@@ -18,7 +18,7 @@ const config = defineRdtConfig({
   },
   pluginDir: "./plugins",
   includeInProd: true,
-    // Set this property to true to suppress deprecation warnings
+    // Set this option to true to suppress deprecation warnings
     // suppressDeprecationWarning: true,
   server:  {
     serverTimingThreshold: 250,
