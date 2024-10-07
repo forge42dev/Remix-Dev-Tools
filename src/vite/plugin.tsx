@@ -32,6 +32,12 @@ type RemixViteConfig = {
 	/** The directory where the remix app is located. Defaults to the "./app" relative to where vite.config is being defined. */
 	remixDir?: string
 	editor?: EditorConfig
+	/**
+	 * If the package is marked as deprecated, a warning will be logged in the console
+	 * To disable this warning, set the option to true
+	 * @default false
+	 */
+	suppressDeprecationWarning?: boolean
 }
 
 export const defineRdtConfig = (config: RemixViteConfig) => config
@@ -167,6 +173,15 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 				return shouldInject(config.mode)
 			},
 			async configResolved(resolvedViteConfig) {
+				if (!args?.suppressDeprecationWarning && resolvedViteConfig.appType === "custom") {
+					// Log the deprecation warning message once
+					console.log(
+						chalk.yellowBright.bold(
+							"⚠️  This package is deprecated and will be renamed to react-router-devtools when React Router v7 is released"
+						)
+					)
+				}
+
 				const remixIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "remix")
 				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "remix-development-tools")
 

@@ -136,3 +136,6 @@ dist
 # IDE
 .idea
 .tsup
+
+# Github
+.github/workflows/publish-commit.yaml
