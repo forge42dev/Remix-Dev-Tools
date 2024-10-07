@@ -26,7 +26,7 @@ export type EditorConfig = {
 export const DEFAULT_EDITOR_CONFIG: EditorConfig = {
 	name: "VSCode",
 	open: (path, lineNumber) => {
-		exec(`code -g "${normalizePath(path)}${lineNumber ? `:${lineNumber}` : ""}"`)
+		exec(`code -g "${normalizePath(path).replaceAll("$", "\\$")}${lineNumber ? `:${lineNumber}` : ""}"`)
 	},
 }
 
