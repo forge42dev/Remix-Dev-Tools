@@ -10,7 +10,7 @@ export const CountInfoExtra = <K extends TagType>(props: SectionElement<K>) => {
 
 CountInfoExtra.displayName = 'JVR.CountInfoExtra';
 
-export interface CountInfoExtraCompsProps<T extends object> {
+interface CountInfoExtraCompsProps<T extends object> {
   value?: T;
   keyName: string | number;
 }

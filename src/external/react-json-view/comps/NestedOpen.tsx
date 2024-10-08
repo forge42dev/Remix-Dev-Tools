@@ -8,7 +8,7 @@ import { Arrow, BracketsOpen, BracketsClose } from "../symbol/index.js";
 import { EllipsisComp } from "../section/Ellipsis.js";
 import { SetComp, MapComp } from "../types/index.js";
 
-export interface NestedOpenProps<T extends object> {
+interface NestedOpenProps<T extends object> {
   keyName?: string | number;
   value?: T;
   initialValue?: T;

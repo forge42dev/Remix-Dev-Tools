@@ -4,13 +4,13 @@ import { useShowToolsStore } from "../store/ShowTools.js";
 import { useSectionStore } from "../store/Section.js";
 import { type TagType } from "../store/Types.js";
 
-export type CopiedOption<T extends object> = {
+type CopiedOption<T extends object> = {
   value?: T;
   copied: boolean;
   setCopied: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export interface CopiedProps<T extends object> extends React.SVGProps<SVGSVGElement> {
+interface CopiedProps<T extends object> extends React.SVGProps<SVGSVGElement> {
   value?: T;
   keyName: string | number;
   expandKey: string;

@@ -4,7 +4,7 @@ import { NestedOpen } from './comps/NestedOpen.js';
 import { KeyValues } from './comps/KeyValues.js';
 import { useShowToolsDispatch } from './store/ShowTools.js';
 
-export interface ContainerProps<T extends object> extends React.HTMLAttributes<HTMLDivElement> {
+interface ContainerProps<T extends object> extends React.HTMLAttributes<HTMLDivElement> {
   keyName?: string | number;
   keyid?: string;
   parentValue?: T;

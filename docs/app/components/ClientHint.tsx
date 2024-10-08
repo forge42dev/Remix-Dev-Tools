@@ -1,7 +1,7 @@
 import { useRevalidator } from '@remix-run/react'
 import { useEffect } from 'react'
 
-export const clientHints = {
+  const clientHints = {
   theme: {
     cookieName: 'CH-prefers-color-scheme',
     getValueCode:
@@ -127,7 +127,7 @@ document.cookie = encodeURIComponent(hint.name) + '=' + encodeURIComponent(hint.
 }
 }
 
-// On Cookie change, reload the page, unless the browser doesn't support Cookies. 
+// On Cookie change, reload the page, unless the browser doesn't support Cookies.
 if (hasCookieChanged && navigator.cookieEnabled) {
   window.location.reload();
 }
