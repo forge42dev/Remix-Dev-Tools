@@ -79,7 +79,7 @@ export const KayName = <T extends object>(props: KayNameProps<T>) => {
 
 KayName.displayName = "JVR.KayName";
 
-export const KeyValuesItem = <T extends object>(props: KeyValuesProps<T>) => {
+const KeyValuesItem = <T extends object>(props: KeyValuesProps<T>) => {
   const { keyName, value, parentValue, level = 0 } = props;
   const dispatch = useShowToolsDispatch();
   const subkeyid = useId();

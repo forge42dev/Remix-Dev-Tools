@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type TriangleArrowProps = React.SVGProps<SVGSVGElement>
+type TriangleArrowProps = React.SVGProps<SVGSVGElement>
 export function TriangleArrow(props: TriangleArrowProps) {
   const { style, ...reset } = props;
   const defaultStyle: React.CSSProperties = {

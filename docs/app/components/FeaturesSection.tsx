@@ -11,7 +11,7 @@ const content = [
         </span>
         in real time. See your deferred data load in and see your cached loader
         information . No more
-        <span className="mx-1 font-bold text-red-500">console.log().</span>Get
+        <span className="mx-1 font-bold text-red-500">console.log</span>Get
         the information you need when you need it.
       </div>
     ),
