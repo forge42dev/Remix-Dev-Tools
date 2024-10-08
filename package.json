@@ -54,9 +54,7 @@
 			"default": "./dist/client.css"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Code-Forge-Net/Remix-Dev-Tools.git"
@@ -93,11 +91,7 @@
 		"icons": "npm run run:scripts scripts/icons.ts",
 		"check:unused": "knip "
 	},
-	"workspaces": [
-		".",
-		"test-apps/*",
-		"docs"
-	],
+	"workspaces": [".", "test-apps/*", "docs"],
 	"peerDependencies": {
 		"@remix-run/react": ">=1.15",
 		"react": ">=17",

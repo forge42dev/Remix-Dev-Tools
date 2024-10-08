@@ -10,7 +10,7 @@ export const Ellipsis = <K extends TagType>(props: SectionElement<K>) => {
 
 Ellipsis.displayName = 'JVR.Ellipsis';
 
-export interface EllipsisCompProps<T extends object> {
+interface EllipsisCompProps<T extends object> {
   value?: T;
   keyName: string | number;
   isExpanded: boolean;

@@ -95,7 +95,7 @@ export const TypewriterEffect = ({
   )
 }
 
-export const TypewriterEffectSmooth = ({
+const TypewriterEffectSmooth = ({
   words,
   className,
   cursorClassName,

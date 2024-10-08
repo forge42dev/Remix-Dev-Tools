@@ -12,7 +12,7 @@ import {
   TypeUrl,
 } from '../types/index.js';
 
-export const isFloat = (n: number) => (Number(n) === n && n % 1 !== 0) || isNaN(n);
+const isFloat = (n: number) => (Number(n) === n && n % 1 !== 0) || isNaN(n);
 
 interface ValueProps {
   value?: unknown;

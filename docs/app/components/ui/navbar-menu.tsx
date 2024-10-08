@@ -12,7 +12,7 @@ const transition = {
   restSpeed: 0.001,
 }
 
-export const MenuItem = ({
+  const MenuItem = ({
   setActive,
   active,
   item,
@@ -59,7 +59,7 @@ export const MenuItem = ({
   )
 }
 
-export const Menu = ({
+  const Menu = ({
   setActive,
   children,
 }: {
@@ -76,7 +76,7 @@ export const Menu = ({
   )
 }
 
-export const HoveredLink = ({ children, ...rest }: any) => {
+const HoveredLink = ({ children, ...rest }: any) => {
   return (
     <Link
       {...rest}
