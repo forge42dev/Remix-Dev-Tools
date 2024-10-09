@@ -40,7 +40,7 @@ export const withViteDevTools = (Component: any, config?: RemixDevToolsProps) =>
 	hydrationDetector()
 	function AppWithDevTools(props: any) {
 		const hydrated = useHydrated()
-		if (!hydrated) return <Component />
+		if (!hydrated) return <Component {...props} />
 		return (
 			<>
 				<Component {...props} />
