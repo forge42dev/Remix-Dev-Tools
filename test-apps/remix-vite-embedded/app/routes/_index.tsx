@@ -1,8 +1,9 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import {   redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
+import { json, redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
-import { Link, useFetcher,   useSubmit } from "@remix-run/react";
-import { EmbeddedDevTools } from "remix-development-tools/client";
+import { Link, useFetcher, useSubmit } from "@remix-run/react";
+import { Button } from "../components/Button";
+
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,33 +12,50 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const test = new Promise((resolve) => {
+
+export const loader = async ({ request, response }: LoaderFunctionArgs) => {
+  const test = new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
-    }, 1000);
-  })
-  return defer({ message: "Hello World!", test });
+    }, 2000);
+  });
+  const test1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("test1");
+    }, 3500);
+  });
+  return defer({ message: "Hello World!", test, test1, });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   return redirect("/login");
 };
 
-export default function Index() {  
-  const lFetcher = useFetcher();
-  const pFetcher = useFetcher();
+export default function Index() {
+  const lFetcher = useFetcher({ key: "lfetcher"});
+  const pFetcher = useFetcher({ key: "test"});
   const submit = useSubmit();
   const data = new FormData();
   data.append("test", "test");
+  data.append("array", "test");
+  data.append("array", "test1");
+  data.append("person.name", "test1");
+  data.append("person.surname", "test1");
+  data.append("array2.0", "test1");
+  data.append("array2.1", "test1");
+  data.append("array2.2", "test1");
+  data.append("obj", JSON.stringify({ test: "test" }));
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
-      <button
-        onClick={() => lFetcher.submit(null, { method: "get", action: "/" })}
+      <Button
+        onClick={(e) => {
+          console.log(e);
+          lFetcher.submit(null, { method: "get", action: "/" })
+        }}
       >
         FETCHER Loader
-      </button>
+      </Button>
       <button
         onClick={() => pFetcher.submit(data, { method: "POST", action: "/" })}
       >
@@ -55,10 +73,23 @@ export default function Index() {
       <button onClick={() => submit(null, { method: "PUT", action: "/" })}>
         SUBMIT Action PUT
       </button>
-      <div style={{ height: 400, overflowY: "auto",  width: 1700 }}>
-        <EmbeddedDevTools className="!h-[400px] !overflow-y-auto" mainPanelClassName="w-40" />
-      </div>
-      <Link to="/login">Login</Link>
+
+      <h2>Test Links</h2>
+
+      <ul>
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
+        <li>
+          <Link to="/file">File Route (file.tsx)</Link>
+        </li>
+        <li>
+          <Link to="/folder">Folder Route (folder/route.tsx)</Link>
+        </li>
+      </ul>
+
+      <h2>Resources</h2>
+
       <ul>
         <li>
           <a

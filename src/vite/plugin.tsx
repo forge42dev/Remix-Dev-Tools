@@ -29,6 +29,7 @@ type RemixViteConfig = {
 	pluginDir?: string
 	includeInProd?: boolean
 	improvedConsole?: boolean
+	panelMode?: "auto" | "embedded"
 	/** The directory where the remix app is located. Defaults to the "./app" relative to where vite.config is being defined. */
 	remixDir?: string
 	editor?: EditorConfig
@@ -54,6 +55,8 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 	const remixDir = args?.remixDir || "./app"
 
 	const shouldInject = (mode: string | undefined) => mode === "development" || include
+
+	const panelMode = args?.panelMode ?? "auto"
 
 	// Set the server config on the process object so that it can be accessed by the plugin
 	if (typeof process !== "undefined") {
@@ -223,7 +226,7 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 
 					const augmentedDefaultExport = `export default withViteDevTools(AppExport, { config: ${JSON.stringify(clientConfig)}, plugins: [${pluginNames.join(
 						","
-					)}] })();`
+					)}], panelMode: "${panelMode}" })();`
 
 					const updatedCode = lines.map((line) => {
 						// Handles default export augmentation
