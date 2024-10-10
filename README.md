@@ -67,6 +67,6 @@ Thanks to all the contributors on this project and the support to the community.
 
 ---
 
-Devoted to my loving wife.
+Devoted to my loving wife and my little late bird Kiira who helped me initially build out these tools by keeping me company and being my rubber duck, she will forever be my best friend.
 
-In loving memory of my late Grandfather, who taught me to always be curious, never stop learning, and to always be kind to others. I miss you, Grandpa.
+In loving memory of my late Grandfather, who taught me to always be curious, never stop learning, and to always be kind to others, and my late Grandmother who always encouraged me to learn new things, and stand up for the things I believe in.
