@@ -30,19 +30,28 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
 
 	return (
 		<div
-			style={{
-				zIndex: 9998,
-				...(!isEmbedded && { height: detachedWindow ? window.innerHeight : height }),
-			}}
+			style={
+				!isEmbedded
+					? {
+							zIndex: 9998,
+							height: detachedWindow ? window.innerHeight : height,
+						}
+					: undefined
+			}
 			className={clsx(
-				"duration-600 box-border flex w-screen flex-col overflow-auto bg-main text-white opacity-0 transition-all",
+				"duration-600 box-border flex overflow-auto bg-main text-white opacity-0 transition-all",
 				isOpen ? "opacity-100 drop-shadow-2xl" : "!h-0",
 				isResizing && "cursor-grabbing ",
-				!isEmbedded ? `fixed left-0 ${panelLocation === "bottom" ? "bottom-0" : "top-0 border-b-2 border-main"}` : "",
+				!isEmbedded
+					? clsx(
+							"flex-col fixed left-0 w-screen",
+							panelLocation === "bottom" ? "bottom-0" : "top-0 border-b-2 border-main"
+						)
+					: "flex-row",
 				className
 			)}
 		>
-			{panelLocation === "bottom" && (
+			{!isEmbedded && panelLocation === "bottom" && (
 				<div
 					onMouseDown={enableResize}
 					onMouseUp={disableResize}
@@ -50,7 +59,7 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
 				/>
 			)}
 			{children}
-			{panelLocation === "top" && (
+			{!isEmbedded && panelLocation === "top" && (
 				<div
 					onMouseDown={enableResize}
 					onMouseUp={disableResize}

@@ -1,6 +1,6 @@
 import type { Dispatch } from "react"
 import type React from "react"
-import { createContext, useEffect, useMemo, useReducer } from "react"
+import { createContext, useContext, useEffect, useMemo, useReducer } from "react"
 import { useRemoveBody } from "../hooks/detached/useRemoveBody.js"
 import { checkIsDetached, checkIsDetachedOwner, checkIsDetachedWindow } from "../utils/detached.js"
 import { tryParseJson } from "../utils/sanitize.js"
@@ -19,6 +19,16 @@ export const RDTContext = createContext<{
 	state: RemixDevToolsState
 	dispatch: Dispatch<RemixDevToolsActions>
 }>({ state: initialState, dispatch: () => null })
+
+const RDTEmbeddedContext = createContext<boolean>(false)
+
+export function RDTEmbeddedContextProvider({ children }: React.PropsWithChildren) {
+	return <RDTEmbeddedContext.Provider value={true}>{children}</RDTEmbeddedContext.Provider>
+}
+
+export function useIsEmbeddedRDT() {
+	return useContext(RDTEmbeddedContext)
+}
 
 RDTContext.displayName = "RDTContext"
 
