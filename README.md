@@ -21,6 +21,12 @@ Detailed documentation can be found here:
 https://remix-development-tools.fly.dev/
 
 
+# Deprecation warning!
+
+Huge news! The remix-development-tools will be turning into react-router-devtools once the stable release of react-router 7 is out! As you already might've heard remix is being merged into react-router, so naturally these devtools are going to be supporting react-router users rather than remix users!
+
+We are looking forward to expanding the scope of our users to a much broader audience and helping even more projects. When it comes to remix-development-tools all the updates will be coming out regularly until the official release of react-router v7 where this package will be rebranded with the same feature set.
+
 ## Getting Started
 
 1. Install the package via npm:
@@ -61,6 +67,6 @@ Thanks to all the contributors on this project and the support to the community.
 
 ---
 
-Devoted to my loving wife.
+Devoted to my loving wife and my little late bird Kiira who helped me initially build out these tools by keeping me company and being my rubber duck, she will forever be my best friend.
 
-In loving memory of my late Grandfather, who taught me to always be curious, never stop learning, and to always be kind to others. I miss you, Grandpa.
+In loving memory of my late Grandfather, who taught me to always be curious, never stop learning, and to always be kind to others, and my late Grandmother who always encouraged me to learn new things, and stand up for the things I believe in.

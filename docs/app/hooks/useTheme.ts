@@ -4,8 +4,8 @@ import { z } from 'zod'
 import { useHints } from './useHints'
 import { useRequestInfo } from './useRequestInfo'
 
-export const THEME_COOKIE_KEY = 'theme'
-export type Theme = 'light' | 'dark' | undefined
+const THEME_COOKIE_KEY = 'theme'
+type Theme = 'light' | 'dark' | undefined
 
 export const ThemeFormSchema = z.object({
   theme: z.enum(['system', 'light', 'dark']),
@@ -32,7 +32,7 @@ export function useTheme() {
  * If the user's changing their theme mode preference,
  * this will return the value it's being changed to.
  */
-export function useOptimisticThemeMode() {
+function useOptimisticThemeMode() {
   const fetchers = useFetchers()
   const themeFetcher = fetchers.find(
     f => f.formAction?.startsWith('/updateTheme')

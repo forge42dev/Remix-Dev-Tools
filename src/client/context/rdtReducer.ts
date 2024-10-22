@@ -28,7 +28,7 @@ export const ROUTE_BOUNDARY_GRADIENTS = {
 
 export const RouteBoundaryOptions = Object.keys(ROUTE_BOUNDARY_GRADIENTS) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[]
 export type RouteWildcards = Record<string, Record<string, string> | undefined>
-export type TriggerPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right" | "middle-left" | "middle-right"
+type TriggerPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right" | "middle-left" | "middle-right"
 
 export type ServerRouteInfo = {
 	actions?: Omit<ActionEvent["data"], "id">[]

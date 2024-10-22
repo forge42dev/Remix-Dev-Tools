@@ -18,8 +18,10 @@ const config = defineRdtConfig({
   },
   pluginDir: "./plugins",
   includeInProd: true,
+    // Set this option to true to suppress deprecation warnings
+    // suppressDeprecationWarning: true,
   server:  {
-    serverTimingThreshold: 250
+    serverTimingThreshold: 250,
   }
 });
 
@@ -31,6 +33,6 @@ export default defineConfig({
   ],
   server: {
     open: true,
-    port: 3005 ,
+    port: 3005,
   },
 });

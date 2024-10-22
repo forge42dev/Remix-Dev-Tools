@@ -54,7 +54,9 @@
 			"default": "./dist/client.css"
 		}
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/forge42dev/react-router-devtools.git"
@@ -91,7 +93,11 @@
 		"icons": "npm run run:scripts scripts/icons.ts",
 		"check:unused": "knip "
 	},
-	"workspaces": [".", "test-apps/*", "./docs"],
+	"workspaces": [
+		".",
+		"test-apps/*",
+		"./docs"
+	],
 	"peerDependencies": {
 		"react": ">=17",
 		"react-dom": ">=17",

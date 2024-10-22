@@ -33,6 +33,12 @@ type ReactRouterViteConfig = {
 	/** The directory where the react router app is located. Defaults to the "./app" relative to where vite.config is being defined. */
 	appDir?: string
 	editor?: EditorConfig
+	/**
+	 * If the package is marked as deprecated, a warning will be logged in the console
+	 * To disable this warning, set the option to true
+	 * @default false
+	 */
+	suppressDeprecationWarning?: boolean
 }
 
 export const defineRdtConfig = (config: ReactRouterViteConfig) => config

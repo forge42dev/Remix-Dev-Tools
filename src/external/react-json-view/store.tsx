@@ -6,9 +6,9 @@ import { useTypes, Types, type InitialTypesState, type TagType } from './store/T
 import { useSymbols, Symbols } from './store/Symbols.js';
 import { useSection, Section } from './store/Section.js';
 
-export type BlockTagType = keyof JSX.IntrinsicElements;
+type BlockTagType = keyof JSX.IntrinsicElements;
 
-export interface InitialState<T extends object> {
+interface InitialState<T extends object> {
   value?: object;
   onExpand?: JsonViewProps<object>['onExpand'];
   onCopied?: JsonViewProps<object>['onCopied'];
@@ -21,20 +21,20 @@ export interface InitialState<T extends object> {
   indentWidth?: number;
 }
 
-export const initialState: InitialState<object> = {
+const initialState: InitialState<object> = {
   objectSortKeys: false,
   indentWidth: 15,
 };
 
 type Dispatch = React.Dispatch<InitialState<object>>;
 
-export const Context = createContext<InitialState<object>>(initialState);
+const Context = createContext<InitialState<object>>(initialState);
 Context.displayName = 'JVR.Context';
 
 const DispatchContext = createContext<Dispatch>(() => {});
 DispatchContext.displayName = 'JVR.DispatchContext';
 
-export function reducer(state: InitialState<object>, action: InitialState<object>): InitialState<object> {
+function reducer(state: InitialState<object>, action: InitialState<object>): InitialState<object> {
   return {
     ...state,
     ...action,
@@ -45,11 +45,11 @@ export const useStore = () => {
   return useContext(Context);
 };
 
-export const useDispatchStore = () => {
+const useDispatchStore = () => {
   return useContext(DispatchContext);
 };
 
-export interface ProviderProps {
+interface ProviderProps {
   initialState?: InitialState<object>;
   initialTypes?: InitialTypesState;
 }
@@ -85,7 +85,7 @@ export const Provider: React.FC<PropsWithChildren<ProviderProps>> = ({
   );
 };
 
-export function useDispatch() {
+function useDispatch() {
   return useContext(DispatchContext);
 }
 
