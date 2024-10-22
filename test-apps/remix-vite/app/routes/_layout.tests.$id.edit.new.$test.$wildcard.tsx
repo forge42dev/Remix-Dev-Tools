@@ -1,7 +1,5 @@
-import type { ActionFunctionArgs } from "@react-router/node";
-import { json, type LoaderFunctionArgs } from "@react-router/node";
-import type { MetaFunction } from "@react-router/node";
-import { Link, useFetcher, useLoaderData, useSubmit } from "react-router";
+
+import { ActionFunctionArgs, data, Link, LoaderFunctionArgs, MetaFunction, useFetcher, useLoaderData, useSubmit } from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,7 +10,7 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
-  return json({
+  return data({
     should: "work",
     with: {
       nested: {

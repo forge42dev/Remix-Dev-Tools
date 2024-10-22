@@ -1,7 +1,6 @@
-import type { V2_MetaFunction } from "react-router/dist/routeModules";
-import type { HeadersFunction, LinksFunction, LoaderArgs, ActionArgs } from "@react-router/node";
+
 import { useLoaderData, isRouteErrorResponse, useRouteError } from "react-router";
-import type { ShouldRevalidateFunction } from "react-router";
+import type { ActionFunctionArgs, HeadersFunction, LinksFunction, LoaderFunctionArgs, MetaFunction, ShouldRevalidateFunction } from "react-router";
 
 export const links: LinksFunction = () => (
   [
@@ -9,7 +8,7 @@ export const links: LinksFunction = () => (
   ]
 );
 
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   // your meta here
 ];
 
@@ -23,11 +22,11 @@ export const headers: HeadersFunction = () => (
   }
 );
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   return null;
 };
 

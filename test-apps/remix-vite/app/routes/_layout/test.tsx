@@ -1,7 +1,7 @@
-import type { LoaderArgs } from "@react-router/node";
-import { useLoaderData } from "react-router";
 
-export const loader = async ({ request }: LoaderArgs) => {
+import { LoaderFunctionArgs, useLoaderData } from "react-router";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 

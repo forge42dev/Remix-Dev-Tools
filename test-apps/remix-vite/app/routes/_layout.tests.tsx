@@ -1,8 +1,9 @@
-import type { ActionFunctionArgs } from "@react-router/node";
-import { json, redirect, type LoaderFunctionArgs } from "@react-router/node";
-import type { MetaFunction } from "@react-router/node";
+
 import {
+  ActionFunctionArgs,
   Link,
+  LoaderFunctionArgs,
+  MetaFunction,
   Outlet,
   useFetcher,
   useLoaderData,
@@ -21,7 +22,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return json({
+  return  ({
     test: "died",
   });
 };

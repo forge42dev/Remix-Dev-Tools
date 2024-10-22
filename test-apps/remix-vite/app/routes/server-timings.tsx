@@ -1,7 +1,6 @@
-import type { ActionFunctionArgs } from "@react-router/node";
-import { json, redirect, type LoaderFunctionArgs,   } from "@react-router/node";
-import type { MetaFunction } from "@react-router/node";
 
+
+import { ActionFunctionArgs, json, LoaderFunctionArgs, MetaFunction, redirect } from "react-router";
 import { getServerTiming } from "~/timing.server";
 
 
@@ -13,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
 
 
-export const loader = async ({ request, response }: LoaderFunctionArgs) => {
+export const loader = async ({ request,   }: LoaderFunctionArgs) => {
   const { time, getServerTimingHeader } = getServerTiming();
 	await time("test", () => {
 		return new Promise((resolve, reject) => {

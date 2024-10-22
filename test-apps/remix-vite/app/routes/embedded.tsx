@@ -1,8 +1,6 @@
-import type { ActionFunctionArgs } from "@react-router/node";
-import {    } from "@react-router/node";
-import type { MetaFunction } from "@react-router/node";
-import { Link, useFetcher,   useSubmit } from "react-router";
-import { EmbeddedDevTools } from "remix-development-tools/client";
+
+import { Link, LoaderFunctionArgs, MetaFunction, useFetcher,   useSubmit } from "react-router";
+import { EmbeddedDevTools } from "react-router-devtools/client";
 
 export const meta: MetaFunction = () => {
   return [

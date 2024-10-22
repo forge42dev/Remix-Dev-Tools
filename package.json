@@ -49,9 +49,7 @@
 		},
 		"./client.css": {
 			"import": "./dist/client.css",
-			"require": "./dist/client.css",
-			"node": "./dist/client.css",
-			"default": "./dist/client.css"
+			"require": "./dist/client.css"
 		}
 	},
 	"files": ["dist"],
@@ -65,6 +63,7 @@
 	"homepage": "https://remix-development-tools.fly.dev/",
 	"readme": "https://github.com/forge42dev/react-router-devtools#readme",
 	"scripts": {
+		"clean": "git clean -fdX --exclude=\"!.env\"",
 		"docs": "npm run dev -w docs",
 		"prepublishOnly": "npm run build",
 		"remix-vite": "npm run dev -w test-apps/remix-vite",
@@ -99,9 +98,9 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.8.3",
-		"@react-router/dev": "^7.0.0-pre.0",
-		"@react-router/node": "^7.0.0-pre.0",
-		"@react-router/serve": "^7.0.0-pre.0",
+		"@react-router/dev": "^7.0.0-pre.1",
+		"@react-router/node": "^7.0.0-pre.1",
+		"@react-router/serve": "^7.0.0-pre.1",
 		"@testing-library/react": "^14.0.0",
 		"@types/beautify": "^0.0.3",
 		"@types/node": "^20.4.5",
@@ -136,7 +135,7 @@
 		"react-d3-tree": "^3.6.2",
 		"react-diff-viewer-continued": "^3.3.1",
 		"react-hotkeys-hook": "^4.5.0",
-		"react-router": "^7.0.0-pre.0",
+		"react-router": "^7.0.0-pre.1",
 		"tailwind-merge": "^1.14.0"
 	}
 }
