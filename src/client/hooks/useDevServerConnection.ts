@@ -14,7 +14,7 @@ const updateRouteInfo = (
 	const { data, type } = event
 	const { id, ...rest } = data
 	// Get existing route
-	const existingRouteInfo = !includeServerInfo ? routes?.[id] : routes?.[id] ?? server?.routes?.[id]
+	const existingRouteInfo = !includeServerInfo ? routes?.[id] : (routes?.[id] ?? server?.routes?.[id])
 	let newRouteData = [...(existingRouteInfo?.[type === "loader" ? "loaders" : "actions"] || []), rest]
 	// Makes sure there are no more than 20 entries per loader/action
 	newRouteData = cutArrayToLastN(newRouteData, 20)
@@ -40,10 +40,10 @@ const updateRouteInfo = (
 		highestExecutionTime: max,
 		averageExecutionTime: Number(Number(total / newRouteData.length).toFixed(2)),
 		loaderTriggerCount: type === "loader" ? loaderTriggerCount + 1 : loaderTriggerCount,
-		loaders: type === "loader" ? newRouteData : existingRouteInfo?.loaders ?? [],
-		actions: type === "action" ? newRouteData : existingRouteInfo?.actions ?? [],
-		lastLoader: type === "loader" ? rest : existingRouteInfo?.lastLoader ?? {},
-		lastAction: type === "action" ? rest : existingRouteInfo?.lastAction ?? {},
+		loaders: type === "loader" ? newRouteData : (existingRouteInfo?.loaders ?? []),
+		actions: type === "action" ? newRouteData : (existingRouteInfo?.actions ?? []),
+		lastLoader: type === "loader" ? rest : (existingRouteInfo?.lastLoader ?? {}),
+		lastAction: type === "action" ? rest : (existingRouteInfo?.lastAction ?? {}),
 		actionTriggerCount: type === "action" ? actionTriggerCount + 1 : actionTriggerCount,
 	}
 }

@@ -4,13 +4,9 @@
 		".": {
 			"entry": ["scripts/*.ts"],
 			"tsup": ["tsup*.config.ts"]
-		},
-		"docs": {
-			"entry": ["app/entry.worker.ts", "app/components/plugins/*.tsx"]
 		}
 	},
-	"ignore": ["plugins/**"],
+	"ignore": ["docs/**", "plugins/**"],
 	"ignoreBinaries": ["pkg-pr-new"],
-	"ignoreDependencies": ["lefthook"],
 	"ignoreWorkspaces": ["test-apps/**"]
 }
