@@ -3,11 +3,11 @@ type EntryRoute = EntryContext["manifest"]["routes"][0]
 type RouteManifest = EntryContext["manifest"]["routes"]
 type Route = Pick<EntryRoute, "path" | "parentId" | "id" | "hasErrorBoundary">
 /**
- * Helper method used to convert remix route conventions to url segments
+ * Helper method used to convert react router route conventions to url segments
  * @param chunk Chunk to convert
  * @returns Returns the converted chunk
  */
-export const convertRemixPathToUrl = (routes: any, route: Route) => {
+export const convertReactRouterPathToUrl = (routes: any, route: Route) => {
 	let currentRoute: Route | null = route
 	const path = []
 
@@ -57,7 +57,7 @@ const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 	for (const key of routeKeys) {
 		const route = routes[key]
 		if (route.parentId === parentId) {
-			const url = convertRemixPathToUrl(routes, route)
+			const url = convertReactRouterPathToUrl(routes, route)
 			const node: RawNodeDatum = {
 				name: url,
 				attributes: {

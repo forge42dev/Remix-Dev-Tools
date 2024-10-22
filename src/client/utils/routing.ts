@@ -1,6 +1,6 @@
 import type { EntryContext } from "react-router"
 import type { RouteWildcards } from "../context/rdtReducer.js"
-import { convertRemixPathToUrl, findParentErrorBoundary } from "./sanitize.js"
+import { convertReactRouterPathToUrl, findParentErrorBoundary } from "./sanitize.js"
 type EntryRoute = EntryContext["manifest"]["routes"][0]
 type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">
 
@@ -84,7 +84,7 @@ export const createExtendedRoutes = () => {
 			return {
 				...route,
 				// biome-ignore lint/style/noNonNullAssertion: <explanation>
-				url: convertRemixPathToUrl(window.__reactRouterManifest!.routes, route),
+				url: convertReactRouterPathToUrl(window.__reactRouterManifest!.routes, route),
 				// biome-ignore lint/style/noNonNullAssertion: <explanation>
 				errorBoundary: findParentErrorBoundary(window.__reactRouterManifest!.routes, route),
 			}

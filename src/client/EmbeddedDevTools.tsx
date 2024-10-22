@@ -1,7 +1,6 @@
 import clsx from "clsx"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router"
-import type { RemixDevToolsProps } from "./RemixDevTools.js"
 import { RDTContextProvider } from "./context/RDTContext.js"
 import { useSettingsContext } from "./context/useRDTContext.js"
 import { useBorderedRoutes } from "./hooks/useBorderedRoutes.js"
@@ -10,9 +9,10 @@ import { useTimelineHandler } from "./hooks/useTimelineHandler.js"
 import { ContentPanel } from "./layout/ContentPanel.js"
 import { MainPanel } from "./layout/MainPanel.js"
 import { Tabs } from "./layout/Tabs.js"
-import { REMIX_DEV_TOOLS } from "./utils/storage.js"
+import type { ReactRouterToolsProps } from "./react-router-dev-tools.js"
+import { REACT_ROUTER_DEV_TOOLS } from "./utils/storage.js"
 
-export interface EmbeddedDevToolsProps extends RemixDevToolsProps {
+export interface EmbeddedDevToolsProps extends ReactRouterToolsProps {
 	mainPanelClassName?: string
 	className?: string
 }
@@ -27,7 +27,7 @@ const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: Embed
 	const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin))
 	if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null
 	return (
-		<div id={REMIX_DEV_TOOLS} className={clsx("remix-dev-tools remix-dev-tools-reset", className)}>
+		<div id={REACT_ROUTER_DEV_TOOLS} className={clsx("react-router-dev-tools react-router-dev-tools-reset", className)}>
 			<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
 				<Tabs plugins={plugins} />
 				<ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />

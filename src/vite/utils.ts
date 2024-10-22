@@ -29,7 +29,7 @@ export const handleDevToolsViteRequest = (
 	next: Connect.NextFunction,
 	cb: (data: any) => void
 ) => {
-	if (!req.url?.includes("remix-development-tools-request")) {
+	if (!req.url?.includes("react-router-devtools-request")) {
 		return next()
 	}
 

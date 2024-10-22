@@ -61,7 +61,7 @@
 
 - title: "Remix Dev Tools"
   repoUrl: "https://github.com/Code-Forge-Net/Remix-Dev-Tools"
-  imgSrc: "https://github.com/Code-Forge-Net/Remix-Dev-Tools/raw/main/assets/remix-dev-tools.png"
+  imgSrc: "https://github.com/Code-Forge-Net/Remix-Dev-Tools/raw/main/assets/react-router-dev-tools.png"
   initCommand: "npm install remix-development-tools -D"
   category: "libraries"
 

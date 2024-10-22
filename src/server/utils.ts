@@ -230,7 +230,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 	const port = process.rdt_port
 
 	if (port) {
-		fetch(`http://localhost:${port}/remix-development-tools-request`, {
+		fetch(`http://localhost:${port}/react-router-devtools-request`, {
 			method: "POST",
 			body: JSON.stringify(event),
 		})

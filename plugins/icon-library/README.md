@@ -1,6 +1,6 @@
 # Icon library plugin
 
-This plugin allows you to see all your project icons in a new tab in remix development tools, copy the code and change their classes.
+This plugin allows you to see all your project icons in a new tab in react router devtools, copy the code and change their classes.
 
 <video controls="controls" src="./icon-library.mp4" ></video>
 
@@ -10,11 +10,11 @@ This plugin allows you to see all your project icons in a new tab in remix devel
 1. Create a plugin directory in your project. (eg on the root you can create a `your-path-here` folder)
 2. Copy the code from the plugin located in this folder. and paste it into there (eg `your-path-here/icon-library.tsx`)
 3. Specify the plugin directory in your vite config via the `pluginsDir` option:
-  
+
 ```js
   // vite.config.js
   export default {
-    plugins: [remixDevTools({ pluginsDir: './your-path-here' })]
+    plugins: [reactRouterDevTools({ pluginsDir: './your-path-here' })]
   }
 ```
 
@@ -38,7 +38,7 @@ This plugin allows you to see all your project icons in a new tab in remix devel
 
 ## How it works
 
-The plugin will use all the icons in your project that are provided to it and will display them in a grid with different sizes. 
+The plugin will use all the icons in your project that are provided to it and will display them in a grid with different sizes.
 
 You can click on the icon to copy the code of the icon to your clipboard.
 

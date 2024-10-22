@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import clsx from "clsx"; 
+import clsx from "clsx";
 // TODO Replace these with your own toast library
 //import { toast } from "react-toastify";
 // TODO Replace these with your own array of all icon names available through a project, either generate through a script or use epic-stack script
@@ -83,6 +83,5 @@ export const iconLibraryPlugin  = () => ({
   component: <IconLibrary />,
   name: "Icon Library",
   id: "icon-library",
-  requiresForge: false,
   hideTimeline: true,
 });

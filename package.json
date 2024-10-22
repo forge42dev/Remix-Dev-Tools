@@ -1,20 +1,20 @@
 {
-	"name": "remix-development-tools",
-	"description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
+	"name": "react-router-devtools",
+	"description": "Devtools for React Router - debug and 10x your DX with React Router",
 	"author": "Alem Tuzlak",
-	"version": "4.7.1",
+	"version": "1.0.0",
 	"license": "MIT",
 	"keywords": [
-		"remix",
-		"remix-dev-tools",
-		"remix-development-tools",
+		"react-router",
+		"react-router-dev-tools",
+		"react-router-development-tools",
 		"hydration-debugger",
-		"remix-debugger",
-		"remix-debugger-ui",
-		"remix-debugger-ui-react",
+		"react-router-debugger",
+		"react-router-debugger-ui",
+		"react-router-debugger-ui-react",
 		"view-source",
-		"remix-logger",
-		"remix-dev-server",
+		"react-router-logger",
+		"react-router-dev-server",
 		"hydration-mismatch"
 	],
 	"private": false,
@@ -57,13 +57,13 @@
 	"files": ["dist"],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Code-Forge-Net/Remix-Dev-Tools.git"
+		"url": "git+https://github.com/forge42dev/react-router-devtools.git"
 	},
 	"bugs": {
-		"url": "https://github.com/Code-Forge-Net/Remix-Dev-Tools/issues"
+		"url": "https://github.com/forge42dev/react-router-devtools/issues"
 	},
 	"homepage": "https://remix-development-tools.fly.dev/",
-	"readme": "https://github.com/Code-Forge-Net/Remix-Dev-Tools#readme",
+	"readme": "https://github.com/forge42dev/react-router-devtools#readme",
 	"scripts": {
 		"docs": "npm run dev -w docs",
 		"prepublishOnly": "npm run build",
@@ -91,7 +91,7 @@
 		"icons": "npm run run:scripts scripts/icons.ts",
 		"check:unused": "knip "
 	},
-	"workspaces": [".", "test-apps/*"],
+	"workspaces": [".", "test-apps/*", "./docs"],
 	"peerDependencies": {
 		"react": ">=17",
 		"react-dom": ">=17",
@@ -137,7 +137,6 @@
 		"react-diff-viewer-continued": "^3.3.1",
 		"react-hotkeys-hook": "^4.5.0",
 		"react-router": "^7.0.0-pre.0",
-		"react-use-websocket": "^4.8.1",
 		"tailwind-merge": "^1.14.0"
 	}
 }

@@ -1,6 +1,6 @@
 ---
-title: Remix Development Tools Client Configuration
-description: Configuration options for the Remix Development Tools client
+title: React Router Devtools Client Configuration
+description: Configuration options for the React Router Devtools client
 ---
 
 import Info from "./info.tsx";
@@ -51,7 +51,7 @@ This option is used to set the position of the live urls that will be displayed 
 
 ## Position
 
-This option is used to set the position of the Remix Development Tools trigger (the button that opens the panel). The possible values are:
+This option is used to set the position of the React Router Devtools trigger (the button that opens the panel). The possible values are:
 - `top-left` - the trigger will be positioned at the top left corner of the screen
 - `top-right` - the trigger will be positioned at the top right corner of the screen
 - `bottom-left` - the trigger will be positioned at the bottom left corner of the screen
@@ -67,7 +67,7 @@ the panel will be closed by default.
 ## Expansion Level
 
 This option is used to set the initial expansion level of the returned JSON data in the **Active Page** tab. By default it is set to
-0 and if you open up the **Active Page** and look at the returned loader data it will look like this:
+1 and if you open up the **Active Page** and look at the returned loader data it will look like this:
 
 ```ts
 "data": { ... } +
@@ -163,7 +163,7 @@ Default value is `click`;
 To create a custom configuration you can use the following code snippet:
 
   ```ts
-  import { defineRdtConfig } from "remix-development-tools";
+  import { defineRdtConfig } from "react-router-devtools";
 
   const customConfig = defineRdtConfig({
     client: {
@@ -190,10 +190,10 @@ Then you can use this configuration in your `vite.config.js` file like this:
 
 ```ts
 import customConfig from "./rdt.config";
-import { remixDevTools } from "remix-development-tools";
+import { reactRouterDevTools } from "react-router-devtools";
 
 export default defineConfig({
-  plugins: [remixDevTools(customConfig)],
+  plugins: [reactRouterDevTools(customConfig)],
 });
 ```
 

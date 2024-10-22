@@ -6,6 +6,7 @@ import { cutArrayToLastN } from "../client/utils/common.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
 import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
+import { type WriteFileData, handleWriteFile } from "./file.js"
 import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
 
 // this should mirror the types in server/config.ts as well as they are bundled separately.
@@ -23,20 +24,20 @@ declare global {
 
 const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>()
 
-type RemixViteConfig = {
+type ReactRouterViteConfig = {
 	client?: Partial<RdtClientConfig>
 	server?: DevToolsServerConfig
 	pluginDir?: string
 	includeInProd?: boolean
 	improvedConsole?: boolean
-	/** The directory where the remix app is located. Defaults to the "./app" relative to where vite.config is being defined. */
-	remixDir?: string
+	/** The directory where the react router app is located. Defaults to the "./app" relative to where vite.config is being defined. */
+	appDir?: string
 	editor?: EditorConfig
 }
 
-export const defineRdtConfig = (config: RemixViteConfig) => config
+export const defineRdtConfig = (config: ReactRouterViteConfig) => config
 
-export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
+export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (args) => {
 	const serverConfig = args?.server || {}
 	const clientConfig = {
 		...args?.client,
@@ -45,7 +46,7 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 
 	const include = args?.includeInProd ?? false
 	const improvedConsole = args?.improvedConsole ?? true
-	const remixDir = args?.remixDir || "./app"
+	const appDir = args?.appDir || "./app"
 
 	const shouldInject = (mode: string | undefined) => mode === "development" || include
 
@@ -56,7 +57,7 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 	return [
 		{
 			enforce: "pre",
-			name: "remix-development-tools-server",
+			name: "react-router-devtools-server",
 			apply(config) {
 				return config.mode === "development"
 			},
@@ -108,7 +109,8 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 						editor.open(path, lineNum)
 					}
 
-					server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({ data, openInEditor, remixDir }))
+					server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({ data, openInEditor, appDir }))
+					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor }))
 				}
 			},
 		},
@@ -162,16 +164,16 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 				]
 			: []),
 		{
-			name: "remix-development-tools",
+			name: "react-router-devtools",
 			apply(config) {
 				return shouldInject(config.mode)
 			},
 			async configResolved(resolvedViteConfig) {
-				const remixIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "remix")
-				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "remix-development-tools")
+				const reactRouterIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router")
+				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router-devtools")
 
-				if (remixIndex >= 0 && devToolsIndex > remixIndex) {
-					throw new Error("remixDevTools plugin has to be before the remix plugin!")
+				if (reactRouterIndex >= 0 && devToolsIndex > reactRouterIndex) {
+					throw new Error("react-router-devtools plugin has to be before the react-router plugin!")
 				}
 			},
 			async transform(code, id) {
@@ -179,14 +181,9 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 				const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : []
 				const pluginNames = plugins.map((p) => p.name)
 				// Wraps loaders/actions
-				if (
-					(id.includes("virtual:server-entry") ||
-						id.includes("virtual:remix/server-build") ||
-						id.includes("virtual:react-router/server-build")) &&
-					process.env.NODE_ENV === "development"
-				) {
+				if (id.includes("virtual:react-router/server-build") && process.env.NODE_ENV === "development") {
 					const updatedCode = [
-						`import { augmentLoadersAndActions } from "remix-development-tools/server";`,
+						`import { augmentLoadersAndActions } from "react-router-devtools/server";`,
 						code.replace("export const routes =", "const routeModules ="),
 						"export const routes = augmentLoadersAndActions(routeModules);",
 					].join("\n")
@@ -200,8 +197,8 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 					const lines = code.split("\n")
 
 					const imports = [
-						'import { withViteDevTools } from "remix-development-tools/client";',
-						'import rdtStylesheet from "remix-development-tools/client.css?url";',
+						'import { withViteDevTools } from "react-router-devtools/client";',
+						'import rdtStylesheet from "react-router-devtools/client.css?url";',
 						plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n"),
 					]
 

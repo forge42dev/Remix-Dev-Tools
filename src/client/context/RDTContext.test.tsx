@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react"
 import * as detachedMethods from "../utils/detached.js"
 import {
-	REMIX_DEV_TOOLS_CHECK_DETACHED,
-	REMIX_DEV_TOOLS_DETACHED,
-	REMIX_DEV_TOOLS_SETTINGS,
-	REMIX_DEV_TOOLS_STATE,
+	REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_SETTINGS,
+	REACT_ROUTER_DEV_TOOLS_STATE,
 } from "../utils/storage.js"
 import {
 	RDTContextProvider,
@@ -34,8 +34,8 @@ describe("RDTContextProvider", () => {
 		)
 		expect(container).toBeTruthy()
 
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_STATE)
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_SETTINGS)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_STATE)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_SETTINGS)
 	})
 
 	it("renders with existing values retrieved from local and session storage", () => {
@@ -55,8 +55,8 @@ describe("RDTContextProvider", () => {
 			</RDTContextProvider>
 		)
 		expect(container).toBeTruthy()
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_STATE)
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_SETTINGS)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_STATE)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_SETTINGS)
 	})
 })
 
@@ -94,7 +94,7 @@ describe("setIsDetachedIfRequired", () => {
 		;(global as any).window = window
 		setIsDetachedIfRequired()
 		expect(isDetachedWindowSpy).toHaveBeenCalled()
-		expect(setSessionSpy).toHaveBeenCalledWith(REMIX_DEV_TOOLS_DETACHED, "true")
+		expect(setSessionSpy).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_DETACHED, "true")
 	})
 
 	it("should not set REMIX_DEV_TOOLS_DETACHED if window is detached", () => {
@@ -125,6 +125,6 @@ describe("resetIsDetachedCheck", () => {
 		const setStorageSpy = vi.spyOn(localStorage, "setItem")
 
 		resetIsDetachedCheck()
-		expect(setStorageSpy).toHaveBeenCalledWith(REMIX_DEV_TOOLS_CHECK_DETACHED, "false")
+		expect(setStorageSpy).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED, "false")
 	})
 })

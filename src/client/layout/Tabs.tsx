@@ -9,12 +9,11 @@ import {
 	useSettingsContext,
 } from "../context/useRDTContext.js"
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll.js"
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
 import { useTabs } from "../hooks/useTabs.js"
 import type { Tab as TabType, Tabs as TabsType } from "../tabs/index.js"
 import {
-	REMIX_DEV_TOOLS_DETACHED_OWNER,
-	REMIX_DEV_TOOLS_IS_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_DETACHED_OWNER,
+	REACT_ROUTER_DEV_TOOLS_IS_DETACHED,
 	setSessionItem,
 	setStorageItem,
 } from "../utils/storage.js"
@@ -71,9 +70,7 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 	const { htmlErrors } = useHtmlErrors()
 	const { setPersistOpen } = usePersistOpen()
 	const { activeTab } = settings
-	const { isConnected, isConnecting } = useRemixForgeSocket()
-	const { visibleTabs } = useTabs(isConnected, isConnecting, plugins)
-	const shouldShowConnectToForge = !isConnected || isConnecting
+	const { visibleTabs } = useTabs(plugins)
 	const scrollRef = useHorizontalScroll()
 	const { setDetachedWindowOwner, detachedWindowOwner, detachedWindow } = useDetachedWindowControls()
 	const handleDetachment = () => {
@@ -85,8 +82,8 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 
 		if (rdtWindow) {
 			setDetachedWindowOwner(true)
-			setStorageItem(REMIX_DEV_TOOLS_IS_DETACHED, "true")
-			setSessionItem(REMIX_DEV_TOOLS_DETACHED_OWNER, "true")
+			setStorageItem(REACT_ROUTER_DEV_TOOLS_IS_DETACHED, "true")
+			setSessionItem(REACT_ROUTER_DEV_TOOLS_DETACHED_OWNER, "true")
 			rdtWindow.RDT_MOUNTED = true
 		}
 	}
@@ -98,7 +95,7 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 	const hasErrors = getErrorCount() > 0
 	return (
 		<div className="relative flex h-full bg-gray-800">
-			<div ref={scrollRef} className="remix-dev-tools-tab  flex h-full w-full flex-col">
+			<div ref={scrollRef} className="react-router-dev-tools-tab  flex h-full w-full flex-col">
 				{visibleTabs.map((tab) => (
 					<Tab
 						key={tab.id}
@@ -117,26 +114,6 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 					/>
 				))}
 				<div className={clsx("mt-auto flex w-full flex-col items-center")}>
-					{shouldShowConnectToForge && (
-						<Tab
-							tab={{
-								id: "connect",
-								name: isConnecting ? "Connecting to Forge..." : "Connect to Remix Forge",
-								requiresForge: false,
-								hideTimeline: false,
-								component: <></>,
-								icon: <Icon name="Radio" size="md" />,
-							}}
-							className={twMerge(
-								clsx(
-									isConnecting && "pointer-events-none animate-pulse cursor-default",
-									"mt-auto w-full ",
-									detachedWindow ? "mr-0" : ""
-								)
-							)}
-							onClick={() => setSettings({ shouldConnectWithForge: true })}
-						/>
-					)}
 					{!detachedWindow && setIsOpen && (
 						<>
 							{!detachedWindowOwner && (
@@ -146,7 +123,6 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 										icon: <Icon name="CopySlash" size="md" onClick={handleDetachment} />,
 										id: "detach",
 										name: "Detach",
-										requiresForge: false,
 										hideTimeline: false,
 										component: <></>,
 									}}
@@ -158,7 +134,6 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 									icon: <Icon name="X" size="md" />,
 									id: "close",
 									name: "Close",
-									requiresForge: false,
 									hideTimeline: false,
 									component: <></>,
 								}}

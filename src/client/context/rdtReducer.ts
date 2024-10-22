@@ -93,8 +93,6 @@ export type RemixDevToolsState = {
 		routeBoundaryGradient: keyof typeof ROUTE_BOUNDARY_GRADIENTS
 		routeWildcards: RouteWildcards
 		activeTab: Tabs
-		shouldConnectWithForge: boolean
-		port: number
 		height: number
 		/**
 		 * The maximum height of the panel
@@ -183,8 +181,6 @@ export const initialState: RemixDevToolsState = {
 		routeBoundaryGradient: "watermelon",
 		routeWildcards: {},
 		activeTab: "page",
-		shouldConnectWithForge: false,
-		port: 3003,
 		height: 400,
 		maxHeight: 600,
 		minHeight: 200,

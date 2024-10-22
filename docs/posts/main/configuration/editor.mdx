@@ -1,9 +1,9 @@
 ---
-title: Remix Development Tools Editor Configuration
-description: Configuration options for the Remix Development Tools to interface with your editor
+title: React Router Devtools Editor Configuration
+description: Configuration options for the React Router Devtools to interface with your editor
 ---
 
-Everyone uses their own editors, so it's important to be able to configure the editor that Remix Development Tools will open your files in.
+Everyone uses their own editors, so it's important to be able to configure the editor that React Router Devtools will open your files in.
 
 ```ts
 type EditorConfig = {
@@ -26,7 +26,7 @@ so be sure to cover both of them.
 import { exec } from "node:child_process";
 import { normalizePath } from "vite";
 
-function open(path: string, lineNumber: string | undefined) { 
+function open(path: string, lineNumber: string | undefined) {
   exec(`code -g "${normalizePath(path)}${lineNumber ? `:${lineNumber}` : ""}"`);
 }
 ```
@@ -49,7 +49,7 @@ import { cwd } from "node:process";
 
 const editor = {
   name: "WebStorm",
-  open(path, lineNumber) { 
+  open(path, lineNumber) {
     exec(
       `webstorm "${process.cwd()}/${path}" --line ${lineNumber ? `--line ${lineNumber}` : ""}`.replace(
         /\$/g,
@@ -73,7 +73,7 @@ const editor = {
   open(path, lineNumber) {
     if (!path) return;
     exec(
-      `goland "${process.cwd()}/${path}" ${lineNumber ? `--line ${lineNumber}` : ""}` 
+      `goland "${process.cwd()}/${path}" ${lineNumber ? `--line ${lineNumber}` : ""}`
     );
   },
 };
