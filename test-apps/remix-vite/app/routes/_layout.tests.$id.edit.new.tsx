@@ -1,7 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
-import { Link, Outlet, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
+
+import { ActionFunctionArgs, data, Link, LoaderFunctionArgs, MetaFunction, Outlet, useFetcher, useLoaderData, useSubmit } from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,7 +9,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({
+  return data({
     should: "work",
     with: {
       nested: {
@@ -79,7 +77,7 @@ export default function IndexRoute() {
         </a>
         <form />
         <li>
-         
+
           <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
             Remix Docs
           </a>

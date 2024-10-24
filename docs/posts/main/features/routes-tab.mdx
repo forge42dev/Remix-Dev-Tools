@@ -1,11 +1,11 @@
 ---
-title: "Routes Tab" 
+title: "Routes Tab"
 description: "Detailed overview of all features on the Routes Tab."
 ---
 
 import Info from "./info.tsx";
 
-The Routes tab shows you all the routes in your Remix.run application either in the tree view or a list view.
+The Routes tab shows you all the routes in your React Router application either in the tree view or a list view.
 The default is the tree view which shows the routes in a nested tree structure. You can switch to the list view by
  clicking the list icon in the top left corner of the tab.
 
@@ -17,15 +17,15 @@ The only difference is the fact that the **tree view** shows you which routes ar
 
 ## Route types
 
-There are three types of routes in remix-development-tools:
-- *root* - The root route is the first route that is loaded when you open the application. 
+There are three types of routes in react-router-devtools:
+- *root* - The root route is the first route that is loaded when you open the application.
 It is the first route in the tree. (purple)
 - *route* - A route is a route that is not a root route. It is a route that is nested under another route and has
 a url segment. (green)
 - *layout* - A layout is a route that is not a root route and is a special kind of route that does not have a url
 segment but provides only an outlet with some layout for the child routes (blue)
 
-## Route info 
+## Route info
 
 Clicking on any route name will show you detailed information about that route. This includes the route's name, the
 route's path, the route's url, the route's file and does it contain the following things:

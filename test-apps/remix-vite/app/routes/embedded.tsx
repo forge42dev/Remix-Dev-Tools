@@ -1,8 +1,6 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import {   redirect, type LoaderFunctionArgs, defer } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
-import { Link, useFetcher,   useSubmit } from "@remix-run/react";
-import { EmbeddedDevTools } from "remix-development-tools/client";
+
+import { Link, LoaderFunctionArgs, MetaFunction, useFetcher,   useSubmit } from "react-router";
+import { EmbeddedDevTools } from "react-router-devtools/client";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,14 +15,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       resolve("test");
     }, 1000);
   })
-  return defer({ message: "Hello World!", test });
+  return  ({ message: "Hello World!", test });
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  return redirect("/login");
-};
 
-export default function Index() {  
+
+export default function Index() {
   const lFetcher = useFetcher();
   const pFetcher = useFetcher();
   const submit = useSubmit();

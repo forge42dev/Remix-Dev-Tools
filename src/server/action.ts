@@ -1,7 +1,7 @@
-import type { ActionFunctionArgs } from "@remix-run/server-runtime"
-import type { ServerRoute } from "@remix-run/server-runtime/dist/routes.js"
+import type { ActionFunctionArgs } from "react-router"
+//import type { ServerRoute } from "react-router/dom"
 import { asyncAnalysis, isAsyncFunction, syncAnalysis } from "./utils.js"
-
+type ServerRoute = any
 const asyncAction = (
 	route: Omit<ServerRoute, "children">,
 	action: (args: ActionFunctionArgs) => Promise<Response | unknown>

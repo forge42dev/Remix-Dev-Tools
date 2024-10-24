@@ -1,13 +1,14 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
+
 import {
+  ActionFunctionArgs,
   Link,
+  LoaderFunctionArgs,
+  MetaFunction,
   Outlet,
   useFetcher,
   useLoaderData,
   useSubmit,
-} from "@remix-run/react";
+} from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,11 +18,11 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader =   ({ request }: LoaderFunctionArgs) => {
-  return json({ test: "died" },  )
+  return  { test: "died" }
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return json({
+  return  ({
     test: "died",
   });
 };
@@ -33,7 +34,7 @@ export default function Index() {
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <p>
         <p>
-          
+
         </p>
       </p>
       <Outlet />

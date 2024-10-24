@@ -193,19 +193,6 @@ export const SettingsTab = () => {
 						hint="This will determine if the route boundaries show on hover of a route segment or clicking a button."
 					/>
 				</div>
-				<Input
-					name="port"
-					id="port"
-					label="Remix Forge port (default: 3003)"
-					hint="The port on which Remix Forge is running. If you change this field make sure you change the port in the Remix Forge config as well."
-					value={settings.port}
-					onChange={(e) => {
-						const value = e.target.value
-						if (value && !Number.isNaN(Number.parseInt(value))) {
-							setSettings({ port: Number.parseInt(value) })
-						}
-					}}
-				/>
 			</Stack>
 		</Stack>
 	)

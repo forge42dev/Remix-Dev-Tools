@@ -1,8 +1,8 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData, Form } from '@remix-run/react'; 
+
+import { useLoaderData, Form, LoaderFunctionArgs } from 'react-router';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
- 
+
   return { message: 'You are logged in!' };
 };
 

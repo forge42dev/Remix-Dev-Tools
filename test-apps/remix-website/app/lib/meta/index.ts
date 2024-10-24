@@ -1,1 +1,0 @@
-export { getMeta } from "./meta";

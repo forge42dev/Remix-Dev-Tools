@@ -1,7 +1,7 @@
-import type { LoaderArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 
-export const loader = async ({ request }: LoaderArgs) => {
+import { LoaderFunctionArgs, useLoaderData } from "react-router";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 

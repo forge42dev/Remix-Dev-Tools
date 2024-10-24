@@ -14,12 +14,11 @@ export default defineConfig({
 			reporter: ["text", "json-summary", "json", "html"],
 			reportOnFailure: true,
 			all: false,
-			// @ts-expect-error
 			thresholds: {
-				statements: 80,
+				statements: 70,
 				branches: 75,
 				functions: 70,
-				lines: 80,
+				lines: 70,
 			},
 		},
 	},

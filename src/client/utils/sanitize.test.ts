@@ -1,4 +1,4 @@
-import { convertRemixPathToUrl } from "./sanitize.js"
+import { convertReactRouterPathToUrl } from "./sanitize.js"
 
 describe("convertRemixPathToUrl", () => {
 	it('should return "/" when given a route with no parent', () => {
@@ -11,7 +11,7 @@ describe("convertRemixPathToUrl", () => {
 		}
 
 		const route = routes.root
-		const result = convertRemixPathToUrl(routes as any, route)
+		const result = convertReactRouterPathToUrl(routes as any, route)
 		expect(result).toBe("/")
 	})
 
@@ -37,7 +37,7 @@ describe("convertRemixPathToUrl", () => {
 		}
 
 		const route = routes.childRoute
-		const result = convertRemixPathToUrl(routes, route)
+		const result = convertReactRouterPathToUrl(routes, route)
 		expect(result).toBe("parent/child")
 	})
 
@@ -57,7 +57,7 @@ describe("convertRemixPathToUrl", () => {
 		}
 
 		const route = routes.childRoute
-		const result = convertRemixPathToUrl(routes, route)
+		const result = convertReactRouterPathToUrl(routes, route)
 		expect(result).toBe("child")
 	})
 
@@ -83,7 +83,7 @@ describe("convertRemixPathToUrl", () => {
 		}
 
 		const route = routes.childRoute
-		const result = convertRemixPathToUrl(routes, route)
+		const result = convertReactRouterPathToUrl(routes, route)
 		expect(result).toBe("child")
 	})
 })

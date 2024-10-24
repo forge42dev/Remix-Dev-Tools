@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react"
 import { RDTContext, getExistingStateFromStorage } from "../../context/RDTContext.js"
 import {
-	REMIX_DEV_TOOLS_CHECK_DETACHED,
-	REMIX_DEV_TOOLS_DETACHED,
-	REMIX_DEV_TOOLS_DETACHED_OWNER,
-	REMIX_DEV_TOOLS_IS_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_DETACHED_OWNER,
+	REACT_ROUTER_DEV_TOOLS_IS_DETACHED,
 	getBooleanFromStorage,
 	setStorageItem,
 } from "../../utils/storage.js"
@@ -12,7 +12,7 @@ import {
 export const useCheckIfStillDetached = () => {
 	const { dispatch } = useContext(RDTContext)
 	const [checking, setChecking] = useState(false)
-	const isDetached = getBooleanFromStorage(REMIX_DEV_TOOLS_IS_DETACHED)
+	const isDetached = getBooleanFromStorage(REACT_ROUTER_DEV_TOOLS_IS_DETACHED)
 
 	useEffect(() => {
 		if (!checking || !isDetached) {
@@ -20,13 +20,13 @@ export const useCheckIfStillDetached = () => {
 		}
 
 		// On reload the detached window will set the flag back to false so we can check if it is still detached
-		const isNotDetachedAnymore = getBooleanFromStorage(REMIX_DEV_TOOLS_CHECK_DETACHED)
+		const isNotDetachedAnymore = getBooleanFromStorage(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED)
 		// The window hasn't set it back to true so it is not detached anymore and we clean all the detached state
 		if (isNotDetachedAnymore) {
-			setStorageItem(REMIX_DEV_TOOLS_IS_DETACHED, "false")
-			setStorageItem(REMIX_DEV_TOOLS_CHECK_DETACHED, "false")
-			sessionStorage.removeItem(REMIX_DEV_TOOLS_DETACHED_OWNER)
-			sessionStorage.removeItem(REMIX_DEV_TOOLS_DETACHED)
+			setStorageItem(REACT_ROUTER_DEV_TOOLS_IS_DETACHED, "false")
+			setStorageItem(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED, "false")
+			sessionStorage.removeItem(REACT_ROUTER_DEV_TOOLS_DETACHED_OWNER)
+			sessionStorage.removeItem(REACT_ROUTER_DEV_TOOLS_DETACHED)
 			const state = getExistingStateFromStorage()
 			dispatch({ type: "SET_WHOLE_STATE", payload: state })
 			setChecking(false)
@@ -36,11 +36,11 @@ export const useCheckIfStillDetached = () => {
 	const checkDetachment = useCallback(
 		(e: any) => {
 			// We only care about the should_check key
-			if (e.key !== REMIX_DEV_TOOLS_CHECK_DETACHED) {
+			if (e.key !== REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED) {
 				return
 			}
 
-			const shouldCheckDetached = getBooleanFromStorage(REMIX_DEV_TOOLS_CHECK_DETACHED)
+			const shouldCheckDetached = getBooleanFromStorage(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED)
 
 			// If the detached window is unloaded we want to check if it is still there
 			if (shouldCheckDetached && !checking) {

@@ -260,7 +260,6 @@ export const tailwindPalettePlugin = () => ({
   name: "Color Palette",
   // id of the tab, must be unique
   id: "palette",
-  requiresForge: false,
   hideTimeline: false,
   component: <TailwindColorPalette />,
 });

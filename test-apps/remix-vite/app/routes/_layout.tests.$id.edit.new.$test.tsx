@@ -1,7 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
-import { Link, Outlet, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
+
+import { ActionFunctionArgs, data, Link, LoaderFunctionArgs, MetaFunction, Outlet, useFetcher, useLoaderData, useSubmit } from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,14 +9,14 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({
+  return  data({
     should: "work",
     with: {
       nested: {
         objects: {
-            
+
         },
-      }, 
+      },
     },
   }, { headers: { "Cache-Control": "max-age=3600, private" } });
 };
@@ -34,7 +32,7 @@ export default function IndexRoute() {
   const pFetcher = useFetcher();
   const submit = useSubmit();
   const data = new FormData();
-  data.append("test", "test"); 
+  data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix 4</h1>

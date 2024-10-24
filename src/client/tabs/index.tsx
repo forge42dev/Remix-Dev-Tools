@@ -3,7 +3,6 @@ import { ErrorsTab } from "./ErrorsTab.js"
 import { PageTab } from "./PageTab.js"
 import { RoutesTab } from "./RoutesTab.js"
 import { SettingsTab } from "./SettingsTab.js"
-import { TerminalTab } from "./TerminalTab.js"
 
 export type Tabs = (typeof tabs)[number]["id"]
 
@@ -12,7 +11,6 @@ export interface Tab {
 	icon: JSX.Element
 	id: string
 	component: JSX.Element
-	requiresForge: boolean
 	hideTimeline: boolean
 }
 
@@ -22,7 +20,6 @@ export const tabs = [
 		icon: <Icon size="md" name="Layers" />,
 		id: "page",
 		component: <PageTab />,
-		requiresForge: false,
 		hideTimeline: false,
 	},
 	{
@@ -30,24 +27,15 @@ export const tabs = [
 		icon: <Icon size="md" name="GitMerge" />,
 		id: "routes",
 		component: <RoutesTab />,
-		requiresForge: false,
 		hideTimeline: false,
 	},
-	{
-		name: "Terminal",
-		icon: <Icon size="md" name="Terminal" />,
-		id: "terminal",
-		component: <TerminalTab />,
-		requiresForge: true,
-		hideTimeline: false,
-	},
+
 	{
 		name: "Errors",
 		icon: <Icon size="md" name="Shield" />,
 		id: "errors",
 		component: <ErrorsTab />,
 
-		requiresForge: false,
 		hideTimeline: false,
 	},
 	{
@@ -55,7 +43,6 @@ export const tabs = [
 		icon: <Icon size="md" name="Settings" />,
 		id: "settings",
 		component: <SettingsTab />,
-		requiresForge: false,
 		hideTimeline: false,
 	},
 ] as const

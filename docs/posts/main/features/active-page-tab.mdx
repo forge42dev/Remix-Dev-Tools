@@ -1,5 +1,5 @@
 ---
-title: "Active Page Tab" 
+title: "Active Page Tab"
 description: "Detailed overview of all features on the active page tab."
 ---
 
@@ -10,8 +10,8 @@ on the current page and detailed information about each loader.
 
 ## Route boundaries
 
-The first feature we will go over is the route boundaries. This feature shows you the current route boundaries on the actual page. 
-This is useful for debugging and testing purposes. It finds the `<Outlet />` component in the route and highlights it with a 
+The first feature we will go over is the route boundaries. This feature shows you the current route boundaries on the actual page.
+This is useful for debugging and testing purposes. It finds the `<Outlet />` component in the route and highlights it with a
 gradient background that can be set in the settings.
 
 <Info>
@@ -21,8 +21,8 @@ gradient background that can be set in the settings.
 
   You can also change the gradient background color in the settings.
 </Info>
- 
-## Loader list 
+
+## Loader list
 
 The loader list is a list of all active loaders on the current page. It shows the url segment of the loader,
 the loader type and the loader file.
@@ -36,7 +36,7 @@ the loader type and the loader file.
 
 ### Open in VS code
 
-Each segment has an **open in VS code** button that opens the loader file in VS code. 
+Each segment has an **open in VS code** button that opens the loader file in VS code.
 This is useful for quick navigation to the loader file.
 
 <Info title="Caveat!">
@@ -60,11 +60,11 @@ This part will contain everything returned from the server and it will be **hot 
 
 ### Route params
 
-The route params section contains all the route params for the current segment. 
+The route params section contains all the route params for the current segment.
 
 This will contain all the **wildcard** params currently available on this route.
 
-If you open up the dev tools, you will be able to see that `tag` and `slug` are both in 
+If you open up the dev tools, you will be able to see that `tag` and `slug` are both in
 the route params.
 
 ### Server info
@@ -86,14 +86,14 @@ The handles section contains all the handles for the current segment.
 
 This will contain all the **handles** currently available on this route.
 
-Remix allows you to export a custom **handle** export which can be anything, it will be shown here if it is exported.
+React Router allows you to export a custom **handle** export which can be anything, it will be shown here if it is exported.
 
 ## Revalidation
 
 There is a **Revalidate** button that allows you to revalidate all the loaders on the page.
 
 
-## Timeline 
+## Timeline
 
 The timeline section on the right contains useful information on navigation and submission events in your application.
 
@@ -109,7 +109,7 @@ The timeline will contain the following information for each event:
 - `response` - the response of the event
 
 <Info>
-This only happens for events that change the state of the app, if there is a client-side navigation to a 
+This only happens for events that change the state of the app, if there is a client-side navigation to a
 new location that has no loaders nothing will happen because the state has remained idle.
 </Info>
 

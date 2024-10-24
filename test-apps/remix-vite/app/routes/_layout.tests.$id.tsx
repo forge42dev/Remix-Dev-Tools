@@ -1,13 +1,15 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
-import type { MetaFunction } from "@remix-run/node";
+
 import {
+  ActionFunctionArgs,
+  json,
   Link,
+  LoaderFunctionArgs,
+  MetaFunction,
   Outlet,
   useFetcher,
   useLoaderData,
   useSubmit,
-} from "@remix-run/react";
+} from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,7 +27,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return json({
+  return  ({
     test: "died",
   });
 };
