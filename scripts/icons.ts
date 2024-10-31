@@ -12,10 +12,12 @@ const files = glob.sync("**/*.svg", {
 	cwd: inputDir,
 })
 if (files.length === 0) {
+	// biome-ignore lint/suspicious/noConsole: disable noConsole rule for this line
 	console.log(`No SVG files found in ${inputDirRelative}`)
 	process.exit(0)
 }
 // The relative paths are just for cleaner logs
+// biome-ignore lint/suspicious/noConsole: disable noConsole rule for this line
 console.log(`Generating sprite for ${inputDirRelative}`)
 
 generateSvgSprite({

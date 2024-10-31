@@ -175,6 +175,7 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 			async configResolved(resolvedViteConfig) {
 				if (!args?.suppressDeprecationWarning && resolvedViteConfig.appType === "custom") {
 					// Log a warning message
+					// biome-ignore lint/suspicious/noConsole: disable noConsole rule for this line
 					console.log(
 						`\n\n⚠️  ${chalk.yellowBright("remix-development-tools")} are going to be deprecated and will be renamed to ${chalk.greenBright("react-router-devtools ")} when React Router v7 is released ⚠️`,
 						`\n⚠️  Set suppressDeprecationWarning to true in your ${chalk.greenBright("vite.config.ts")} file to silence this warning ⚠️`

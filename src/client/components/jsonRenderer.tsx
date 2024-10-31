@@ -30,7 +30,6 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
 								value
 									.then((res) => {
 										if (!ref.current) return
-										console.log(res)
 										setJson((json: any) => ({
 											...json,
 											[key]: res,
