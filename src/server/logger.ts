@@ -6,7 +6,8 @@ const log = (message: string) => {
 	if (config.silent) {
 		return
 	}
-	// eslint-disable-next-line no-console
+
+	// biome-ignore lint/suspicious/noConsole: disable noConsole rule for this line
 	console.log(message)
 }
 

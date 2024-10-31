@@ -99,7 +99,7 @@
 		"vite": ">=5.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.8.3",
+		"@biomejs/biome": "^1.9.4",
 		"@remix-run/dev": "^2.9.1",
 		"@remix-run/node": "^2.9.1",
 		"@remix-run/react": "^2.9.1",

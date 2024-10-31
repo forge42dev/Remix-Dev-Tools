@@ -3,6 +3,7 @@ import chalk from "chalk"
 import prompt from "prompt"
 // Helper method used to verify the run
 const verifyRun = async () => {
+	// biome-ignore lint/suspicious/noConsole: disable noConsole rule for this line
 	console.log("About to execute the command")
 
 	const { sure } = await prompt.get([
@@ -10,6 +11,7 @@ const verifyRun = async () => {
 	])
 
 	if (sure !== "y") {
+		// biome-ignore lint/suspicious/noConsole: disable noConsole rule for this line
 		console.log(chalk.bold.red("Command aborted!\n"))
 		process.exit(1)
 	}
