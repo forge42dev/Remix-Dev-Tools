@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs, ClientLoaderFunctionArgs, ClientActionFunctionArgs, ActionFunctionArgs } from "react-router";
+import   { LoaderFunctionArgs, ClientLoaderFunctionArgs, ClientActionFunctionArgs, ActionFunctionArgs } from "react-router";
 import { useLoaderData, isRouteErrorResponse, useRouteError } from "react-router";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

@@ -1,5 +1,6 @@
 import { Icon } from "../components/icon/Icon.js"
 import { ErrorsTab } from "./ErrorsTab.js"
+import { NetworkTab } from "./NetworkTab.js"
 import { PageTab } from "./PageTab.js"
 import { RoutesTab } from "./RoutesTab.js"
 import { SettingsTab } from "./SettingsTab.js"
@@ -37,6 +38,14 @@ export const tabs = [
 		component: <ErrorsTab />,
 
 		hideTimeline: false,
+	},
+	{
+		name: "Network",
+		icon: <Icon size="md" name="Network" />,
+		id: "network",
+		component: <NetworkTab />,
+
+		hideTimeline: true,
 	},
 	{
 		name: "Settings",

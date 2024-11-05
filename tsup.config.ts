@@ -7,4 +7,5 @@ export default defineConfig({
 	clean: false,
 	dts: true,
 	format: ["esm"],
+	external: ["@babel/generator", "@jridgewell/*"],
 })

@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react"
+import type { NetworkRequest } from "../components/network-tracer/types.js"
 import { RDTContext } from "./RDTContext.js"
 import type { RemixDevToolsState } from "./rdtReducer.js"
-import type { Terminal } from "./terminal/types.js"
 import type { TimelineEvent } from "./timeline/types.js"
 
 /**
@@ -60,6 +60,22 @@ export const useServerInfo = () => {
 		[dispatch, server]
 	)
 	return { server, setServerInfo }
+}
+
+export const useNetworkRequests = () => {
+	const { state, dispatch } = useRDTContext()
+	const { requests } = state
+
+	const setNetworkRequests = useCallback(
+		(requests: NetworkRequest[]) => {
+			dispatch({
+				type: "SET_NETWORK_REQUESTS",
+				payload: requests,
+			})
+		},
+		[dispatch]
+	)
+	return { requests, setNetworkRequests }
 }
 
 export const useDetachedWindowControls = () => {

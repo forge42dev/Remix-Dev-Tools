@@ -2,11 +2,11 @@ import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { reactRouterDevTools, defineRdtConfig } from "react-router-devtools"
-
+import inspect from "vite-plugin-inspect"
 const config = defineRdtConfig({
   client: {
     defaultOpen: false,
-    panelLocation: "top",
+
     position: "top-right",
     requireUrlFlag: false,
     liveUrls: [
@@ -27,10 +27,14 @@ const config = defineRdtConfig({
 
 export default defineConfig({
   plugins: [
+    inspect(),
     reactRouterDevTools( config),
     reactRouter(),
     tsconfigPaths()
   ],
+  optimizeDeps: {
+    exclude: ["react-router-devtools"]
+  },
   server: {
     open: true,
     port: 3005,

@@ -5,8 +5,11 @@ import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import { cutArrayToLastN } from "../client/utils/common.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
+
+import type { RequestEvent } from "../server/utils.js"
 import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
 import { type WriteFileData, handleWriteFile } from "./file.js"
+import { transformCode } from "./network-tracer.js"
 import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
 
 // this should mirror the types in server/config.ts as well as they are bundled separately.
@@ -23,6 +26,7 @@ declare global {
 }
 
 const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>()
+const unusedEvents = new Map<string, RequestEvent>()
 
 type ReactRouterViteConfig = {
 	client?: Partial<RdtClientConfig>
@@ -63,17 +67,82 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	return [
 		{
 			enforce: "pre",
+			name: "react-router-devtools-client-data-augment",
+			apply(config) {
+				return config.mode === "development"
+			},
+			transform(code, id) {
+				if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
+					return
+				}
+
+				const routeId = id.replace(normalizePath(process.cwd()), "").replace("/app/", "").replace(".tsx", "")
+
+				const finalCode = transformCode(code, routeId)
+				return finalCode
+				/* let modified = code
+				if (code.includes("export const clientLoader")) {
+					modified = `${modified.replace("export const clientLoader", "const __clientLoader")}\n\n
+					export const clientLoader = async (args) => {
+						const startTime = Date.now();
+						const headers = Object.fromEntries(args.request.headers.entries());
+						import.meta.hot.send('request-event',{ type: 'client-loader', url: args.request.url, headers, startTime, id: "${routeId}",  method: args.request.method  });
+						const data = await __clientLoader(args);
+						import.meta.hot.send('request-event',{ type: 'client-loader', url: args.request.url, headers, startTime, endTime: Date.now(),  id: "${routeId}",  data,  method: args.request.method });
+						return data;
+					};\n`
+					if (modified.includes("clientLoader.hydrate = true")) {
+						modified = modified.replace("clientLoader.hydrate = true", "").concat("clientLoader.hydrate = true;\n")
+					}
+					if (modified.includes("clientLoader.hydrate = false")) {
+						modified = modified.replace("clientLoader.hydrate = false", "").concat("clientLoader.hydrate = false;\n")
+					}
+				}
+
+				if (code.includes("export const clientAction")) {
+					modified = `${modified.replace("export const clientAction", "const __clientAction")}\n\n
+					export const clientAction = async (args) => {
+						const startTime = Date.now();
+						const headers = Object.fromEntries(args.request.headers.entries());
+						import.meta.hot.send('request-event',{ type: 'client-action', url: args.request.url, headers, startTime, id: "${routeId}",  method: args.request.method  });
+						const data = await __clientAction(args);
+						import.meta.hot.send('request-event',{ type: 'client-action', url: args.request.url, headers, startTime, endTime: Date.now(),  id: "${routeId}",  data, method: args.request.method
+						 });
+						return data;
+					};\n`
+				}
+				return modified */
+			},
+		},
+		{
+			enforce: "pre",
 			name: "react-router-devtools-server",
 			apply(config) {
 				return config.mode === "development"
 			},
 			async configureServer(server) {
+				if (server.config.appType !== "custom") {
+					return
+				}
 				server.httpServer?.on("listening", () => {
 					process.rdt_port = server.config.server.port ?? 5173
 				})
+				const channel = server.hot.channels.find((channel) => channel.name === "ws")
 				server.middlewares.use((req, res, next) =>
 					handleDevToolsViteRequest(req, res, next, (parsedData) => {
-						const { type, data } = parsedData
+						const { type, data, routine } = parsedData
+						if (routine === "request-event") {
+							//	console.log("route id", parsedData.id)
+							unusedEvents.set(parsedData.id + parsedData.startTime, parsedData)
+							//	console.log(unusedEvents.keys())
+							for (const client of server.hot.channels) {
+								if (client.name === "ws") {
+									client.send("request-event", JSON.stringify(parsedData))
+								}
+							}
+
+							return
+						}
 						const id = data.id
 						const existingData = routeInfo.get(id)
 						if (existingData) {
@@ -92,10 +161,13 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 							}
 						}
 						for (const client of server.hot.channels) {
-							client.send("route-info", JSON.stringify({ type, data }))
+							if (client.name === "ws") {
+								client.send("route-info", JSON.stringify({ type, data }))
+							}
 						}
 					})
 				)
+
 				server.hot.on("all-route-info", (data, client) => {
 					client.send(
 						"all-route-info",
@@ -107,6 +179,34 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				})
 
 				if (!server.config.isProduction) {
+					channel?.on("remove-event", (data, client) => {
+						const parsedData = data
+						const { id, startTime, fromClient } = parsedData
+						//	console.log("remove event", id, fromClient)
+						unusedEvents.delete(id + startTime)
+					})
+					channel?.on("get-events", (_, client) => {
+						const events = Array.from(unusedEvents.values())
+						/* 	console.log(
+							"get events",
+							events.map((e) => e.id)
+						) */
+						if (events) {
+							client.send("get-events", JSON.stringify(events))
+						}
+					})
+					channel?.on("request-event", (data, client) => {
+						//	console.log("request event", data.id)
+						unusedEvents.set(data.id + data.startTime, data)
+						client.send(
+							"request-event",
+							JSON.stringify({
+								type: "request-event",
+								data: data,
+								...data,
+							})
+						)
+					})
 					const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
 					const openInEditor = (path: string | undefined, lineNum: string | undefined) => {
 						if (!path) {
@@ -188,13 +288,14 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				const pluginNames = plugins.map((p) => p.name)
 				// Wraps loaders/actions
 				if (id.includes("virtual:react-router/server-build") && process.env.NODE_ENV === "development") {
-					const updatedCode = [
+					return code
+					/* 	const updatedCode = [
 						`import { augmentLoadersAndActions } from "react-router-devtools/server";`,
 						code.replace("export const routes =", "const routeModules ="),
 						"export const routes = augmentLoadersAndActions(routeModules);",
 					].join("\n")
 
-					return updatedCode
+					return updatedCode */
 				}
 				if (id.endsWith("/root.tsx") || id.endsWith("/root.jsx")) {
 					const [, exports] = parse(code)

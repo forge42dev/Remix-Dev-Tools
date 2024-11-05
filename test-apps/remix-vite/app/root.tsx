@@ -14,12 +14,16 @@ export function links()  {
 }
 
 export const loader = () => {
-  console.log("loader?")
   userSomething();
   return  ({ message: "Hello World" });
 }
 
-export const action = () => {
+export const action =async  () => {
+  await new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("test");
+    }, 2000);
+  });
   return  ({ message: "Hello World" });
 }
 

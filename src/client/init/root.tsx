@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import type { RdtClientConfig } from "../context/RDTContext.js"
+import { RequestContext, RequestProvider } from "../context/requests/request-context.js"
 import { ReactRouterDevTools, type ReactRouterToolsProps } from "../react-router-dev-tools.js"
 import { hydrationDetector } from "./hydration.js"
 
@@ -27,12 +28,17 @@ export const withViteDevTools = (Component: any, config?: ReactRouterToolsProps)
 	hydrationDetector()
 	function AppWithDevTools(props: any) {
 		const hydrated = useHydrated()
-		if (!hydrated) return <Component {...props} />
+		if (!hydrated)
+			return (
+				<RequestProvider>
+					<Component {...props} />
+				</RequestProvider>
+			)
 		return (
-			<>
+			<RequestProvider>
 				<Component {...props} />
 				{createPortal(<ReactRouterDevTools {...config} />, document.body)}
-			</>
+			</RequestProvider>
 		)
 	}
 	return AppWithDevTools

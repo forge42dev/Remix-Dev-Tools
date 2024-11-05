@@ -5,13 +5,14 @@ import { useSettingsContext } from "../context/useRDTContext.js"
 
 interface JsonRendererProps {
 	data: string | Record<string, unknown>
+	expansionLevel?: number
 }
 
 const isPromise = (value: any): value is Promise<any> => {
 	return value && typeof value.then === "function"
 }
 
-const JsonRenderer = ({ data }: JsonRendererProps) => {
+const JsonRenderer = ({ data, expansionLevel }: JsonRendererProps) => {
 	const { settings } = useSettingsContext()
 	const ref = useRef(true)
 	useEffect(() => {
@@ -57,7 +58,9 @@ const JsonRenderer = ({ data }: JsonRendererProps) => {
 		return <div className="rdt-max-w-xs rdt-text-green-600">{json}</div>
 	}
 
-	return <JsonView highlightUpdates style={customTheme} collapsed={settings.expansionLevel} value={json} />
+	return (
+		<JsonView highlightUpdates style={customTheme} collapsed={expansionLevel ?? settings.expansionLevel} value={json} />
+	)
 }
 
 export { JsonRenderer }

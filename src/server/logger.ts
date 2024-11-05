@@ -32,12 +32,28 @@ export const loaderLog = (message: string) => {
 	log(`${chalk.green.bold("LOADER")} ${message}`)
 }
 
+export const clientLoaderLog = (message: string) => {
+	const config = getConfig()
+	if (config.logs?.loaders === false) {
+		return
+	}
+	log(`${chalk.green.bold("CLIENT LOADER")} ${message}`)
+}
+
 export const actionLog = (message: string) => {
 	const config = getConfig()
 	if (config.logs?.actions === false) {
 		return
 	}
 	log(`${chalk.yellowBright.bold("ACTION")} ${message}`)
+}
+
+export const clientActionLog = (message: string) => {
+	const config = getConfig()
+	if (config.logs?.actions === false) {
+		return
+	}
+	log(`${chalk.yellowBright.bold("CLIENT ACTION")} ${message}`)
 }
 
 // const successLog = (message: string) => {

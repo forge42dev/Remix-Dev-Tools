@@ -8,9 +8,9 @@ type ServerRouteManifest = Record<string, ServerRoute>
 const asyncLoader = (
 	route: Omit<ServerRoute, "children">,
 	loader: (args: LoaderFunctionArgs) => Promise<Response | unknown>
-) => asyncAnalysis(route, "loader", loader)
+) => asyncAnalysis(route.id, "loader", loader)
 const syncLoader = (route: Omit<ServerRoute, "children">, loader: (args: LoaderFunctionArgs) => Response | unknown) =>
-	syncAnalysis(route, "loader", loader)
+	syncAnalysis(route.id, "loader", loader)
 
 const augmentLoader = (
 	route: Omit<ServerRoute, "children">,
