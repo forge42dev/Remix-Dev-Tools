@@ -247,19 +247,13 @@ export type RequestEvent = {
 	startTime: number
 	endTime?: number | undefined
 	data?: any | undefined
-}
-
-const sendEvent = (event: {
-	type: "action" | "loader"
-	headers: Record<string, string>
-	id: string
-	startTime: number
-	endTime?: number | undefined
-	data?: any | undefined
 	method: string
 	status?: string
 	url: string
-}) => {
+	aborted?: boolean
+}
+
+const sendEvent = (event: RequestEvent) => {
 	const port = process.rdt_port
 
 	if (port) {
@@ -328,6 +322,20 @@ export const asyncAnalysis =
 			url: args.request.url,
 			id: routeId,
 		})
+		let aborted = false
+		args.request.signal.addEventListener("abort", () => {
+			aborted = true
+			sendEvent({
+				type,
+				url: args.request.url,
+				headers,
+				startTime,
+				endTime: Date.now(),
+				id: routeId,
+				method: args.request.method,
+				aborted: true,
+			})
+		})
 		const res = await response
 		unAwaited(() => {
 			const end = diffInMs(start)
@@ -336,17 +344,19 @@ export const asyncAnalysis =
 			logTrigger(routeId, type, end)
 			analyzeDeferred(routeId, start, response)
 			analyzeHeaders(routeId, response)
-			sendEvent({
-				type,
-				headers,
-				startTime,
-				endTime,
-				data: res,
-				id: routeId,
-				url: args.request.url,
-				method: args.request.method,
-				status: typeof response === "object" ? (response as any).status : undefined,
-			})
+			if (!aborted) {
+				sendEvent({
+					type,
+					headers,
+					startTime,
+					endTime,
+					data: res,
+					id: routeId,
+					url: args.request.url,
+					method: args.request.method,
+					status: typeof response === "object" ? (response as any).status : undefined,
+				})
+			}
 		})
 		return res
 	}

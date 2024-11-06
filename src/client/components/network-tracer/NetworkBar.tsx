@@ -41,7 +41,8 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 	const y = index * (barHeight + barPadding) + 24
 	const state = request.endTime ? "finished" : "pending"
 
-	const color = state === "pending" ? COLORS.pending : COLORS[request.type as keyof typeof COLORS]
+	const color =
+		state === "pending" ? COLORS.pending : COLORS[request.aborted ? "error" : (request.type as keyof typeof COLORS)]
 
 	const barWidth = useMotionValue(2)
 

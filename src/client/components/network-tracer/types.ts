@@ -10,6 +10,7 @@ export interface NetworkRequest {
 	data?: Record<string, unknown>
 	headers?: Record<string, string>
 	state: "pending" | "complete" | "error"
+	aborted?: boolean
 }
 export interface Position {
 	x: number

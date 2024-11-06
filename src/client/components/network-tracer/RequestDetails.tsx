@@ -19,9 +19,9 @@ const REQUEST_COLORS = {
 	"client-loader": "border-blue-500",
 	action: "border-yellow-500",
 	"client-action": "border-purple-500",
+	error: "border-red-500",
 }
 export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose, total, order, onChangeRequest }) => {
-	console.log(request)
 	return (
 		<div className=" w-full mt-4 bg-main rounded-lg shadow-xl p-4 z-50">
 			<div className="text-sm">
@@ -38,6 +38,13 @@ export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose
 									className={`w-max flex items-center rounded px-2.5 py-0.5 text-sm font-medium border ${REQUEST_COLORS[request.type]}`}
 								>
 									{request.type}
+								</div>
+							)}
+							{request?.aborted && (
+								<div
+									className={`w-max flex items-center rounded px-2.5 py-0.5 text-sm font-medium border ${REQUEST_COLORS.error}`}
+								>
+									Request aborted
 								</div>
 							)}
 						</div>
