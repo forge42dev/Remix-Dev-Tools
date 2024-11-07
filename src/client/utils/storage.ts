@@ -20,7 +20,6 @@ export const getBooleanFromSession = (key: string) => getSessionItem(key) === "t
 
 export const REACT_ROUTER_DEV_TOOLS = "react_router_devtools"
 export const REACT_ROUTER_DEV_TOOLS_STATE = "react_router_devtools_state"
-export const REACT_ROUTER_DEV_TOOLS_REQUEST = "react_router_devtools_request"
 export const REACT_ROUTER_DEV_TOOLS_SETTINGS = "react_router_devtools_settings"
 export const REACT_ROUTER_DEV_TOOLS_DETACHED = "react_router_devtools_detached"
 export const REACT_ROUTER_DEV_TOOLS_DETACHED_OWNER = "react_router_devtools_detached_owner"
