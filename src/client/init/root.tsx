@@ -24,7 +24,7 @@ export const defineClientConfig = (config: RdtClientConfig) => config
  *
  * @description Injects the dev tools into the Vite App, ONLY meant to be used by the package plugin, do not use this yourself!
  */
-export const withViteDevTools = (Component: any, config?: ReactRouterToolsProps) => () => {
+export const withViteDevTools = (Component: any, config?: ReactRouterToolsProps) => (props: any) => {
 	hydrationDetector()
 	function AppWithDevTools(props: any) {
 		const hydrated = useHydrated()
@@ -41,5 +41,5 @@ export const withViteDevTools = (Component: any, config?: ReactRouterToolsProps)
 			</RequestProvider>
 		)
 	}
-	return AppWithDevTools
+	return AppWithDevTools(props)
 }

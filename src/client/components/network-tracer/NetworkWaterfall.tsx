@@ -6,7 +6,7 @@ import { Tooltip } from "react-tooltip"
 import { METHOD_COLORS } from "../../tabs/TimelineTab"
 import { Tag } from "../Tag"
 import { NetworkBar } from "./NetworkBar"
-import { RequestDetails } from "./RequestDetails"
+import { REQUEST_BORDER_COLORS, RequestDetails } from "./RequestDetails"
 import type { NetworkRequest, Position } from "./types"
 
 interface Props {
@@ -19,7 +19,7 @@ const BAR_PADDING = 8
 const TIME_COLUMN_INTERVAL = 1000 // 1 second
 const MIN_SCALE = 0.1
 const MAX_SCALE = 10
-const FUTURE_BUFFER = 5000 // 2 seconds ahead
+const FUTURE_BUFFER = 1000 // 2 seconds ahead
 const INACTIVE_THRESHOLD = 100 // 1 seconds
 
 export const TYPE_COLORS = {
@@ -28,7 +28,7 @@ export const TYPE_COLORS = {
 	action: "bg-yellow-500",
 	"client-action": "bg-purple-500",
 }
-export const TYPE_TEXT_COLORS = {
+const TYPE_TEXT_COLORS = {
 	loader: "text-green-500",
 	"client-loader": "text-blue-500",
 	action: "text-yellow-500",
@@ -40,14 +40,13 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	const [scale, setScale] = useState(0.1)
 	const [isDragging, setIsDragging] = useState(false)
 	const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 })
-	const [selectedRequest, setSelectedRequest] = useState<{ request: NetworkRequest; order: number } | null>(null)
+	const [selectedRequestIndex, setSelectedRequest] = useState<number | null>(null)
 	const [now, setNow] = useState(Date.now())
-
+	const selectedRequest = selectedRequestIndex !== null ? requests[selectedRequestIndex] : null
 	// Check if there are any active requests
 	const hasActiveRequests = requests.some(
 		(req) => !req.endTime || (req.endTime && now - req.endTime < INACTIVE_THRESHOLD)
 	)
-
 	useEffect(() => {
 		if (!hasActiveRequests) {
 			return
@@ -105,11 +104,8 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	//		setScale((s) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, s + delta)))
 	//	}
 
-	const handleBarClick = (e: React.MouseEvent, request: NetworkRequest, order: number) => {
-		setSelectedRequest({
-			request,
-			order,
-		})
+	const handleBarClick = (e: React.MouseEvent, request: NetworkRequest, index: number) => {
+		setSelectedRequest(index)
 	}
 
 	/* 	const handleReset = () => {
@@ -118,21 +114,20 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 			containerRef.current.scrollLeft = 0
 		}
 	} */
-	const onChangeRequest = (order: number) => {
-		const newRequest = requests[order]
-		setSelectedRequest({
-			request: newRequest,
-			order,
-		})
+	const onChangeRequest = (index: number) => {
+		setSelectedRequest(index)
 	}
 	const onClose = () => {
 		setSelectedRequest(null)
 	}
 	useHotkeys("arrowleft,arrowright", (e) => {
+		const order = selectedRequestIndex
+		if (order === null) {
+			return onChangeRequest(0)
+		}
 		if (!selectedRequest) {
 			return
 		}
-		const order = selectedRequest.order
 
 		if (e.key === "ArrowLeft" && order > 0) {
 			onChangeRequest(order - 1)
@@ -148,24 +143,28 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 					<div className="h-5 flex items-center border-b border-gray-700 mb-1   pb-2">Requests</div>
 					<div style={{ gap: BAR_PADDING }} className=" pr-4 flex flex-col z-50 ">
 						{requests.map((request, index) => (
-							<button
-								type="button"
+							<div
 								style={{ height: BAR_HEIGHT }}
-								className="flex items-center gap-2 text-md text-white"
 								key={request.id + request.startTime}
-								onClick={(e) => handleBarClick(e, request, index)}
+								className="flex gap-2 items-center"
 							>
-								<div
-									data-tooltip-id={`${request.id}${request.startTime}`}
-									data-tooltip-html={`<div>This was triggered by ${request.type.startsWith("a") ? "an" : "a"} <span class="font-bold ${TYPE_TEXT_COLORS[request.type]}">${request.type}</span> request</div>`}
-									data-tooltip-place="top"
-									className={`size-2 p-1 ${TYPE_COLORS[request.type]}`}
-								/>
+								<button
+									type="button"
+									className={`flex w-full items-center focus-visible:outline-none gap-2 px-2 py-0.5 text-md text-white border rounded ${index === selectedRequestIndex ? `${REQUEST_BORDER_COLORS[request.type]}` : "border-transparent"}`}
+									onClick={(e) => handleBarClick(e, request, index)}
+								>
+									<div
+										data-tooltip-id={`${request.id}${request.startTime}`}
+										data-tooltip-html={`<div>This was triggered by ${request.type.startsWith("a") ? "an" : "a"} <span class="font-bold ${TYPE_TEXT_COLORS[request.type]}">${request.type}</span> request</div>`}
+										data-tooltip-place="top"
+										className={`size-2 p-1 ${TYPE_COLORS[request.type]}`}
+									/>
 
-								<Tooltip place="top" id={`${request.id}${request.startTime}`} />
-								<div className="pr-4">
-									<div>{request.id}</div>
-								</div>
+									<Tooltip place="top" id={`${request.id}${request.startTime}`} />
+									<div className="pr-4">
+										<div>{request.id}</div>
+									</div>
+								</button>
 								<div className="flex items-center ml-auto">
 									{request?.method && (
 										<Tag className="!px-1 !py-0 text-[0.7rem]" color={METHOD_COLORS[request.method]}>
@@ -173,7 +172,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 										</Tag>
 									)}
 								</div>
-							</button>
+							</div>
 						))}
 					</div>
 				</div>
@@ -230,13 +229,15 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 			</div>
 			<div className="w-full">
 				{selectedRequest && (
-					<RequestDetails
-						total={requests.length}
-						order={selectedRequest.order}
-						request={selectedRequest.request}
-						onChangeRequest={onChangeRequest}
-						onClose={onClose}
-					/>
+					<AnimatePresence>
+						<RequestDetails
+							total={requests.length}
+							index={selectedRequestIndex}
+							request={selectedRequest}
+							onChangeRequest={onChangeRequest}
+							onClose={onClose}
+						/>
+					</AnimatePresence>
 				)}
 			</div>
 			{/* 		<div className="sticky top-0 z-10 bg-gray-900 p-2 border-b border-gray-700 flex items-center gap-2">

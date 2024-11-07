@@ -1,45 +1,41 @@
 import type { types as Babel } from "@babel/core"
 import type { ParseResult } from "@babel/parser"
 import type { NodePath } from "@babel/traverse"
+import { gen, parse, t, trav } from "./babel"
 
-import generate from "@babel/generator"
-import { parse } from "@babel/parser"
-import traverse from "@babel/traverse"
-const trav =
-	typeof (traverse as any).default !== "undefined"
-		? ((traverse as any).default as typeof import("@babel/traverse").default)
-		: traverse
-
-const gen =
-	typeof (generate as any).default !== "undefined"
-		? ((generate as any).default as typeof import("@babel/generator").default)
-		: generate
-import * as t from "@babel/types"
 const SERVER_COMPONENT_EXPORTS = ["loader", "action"]
 const CLIENT_COMPONENT_EXPORTS = ["clientLoader", "clientAction"]
 const ALL_EXPORTS = [...SERVER_COMPONENT_EXPORTS, ...CLIENT_COMPONENT_EXPORTS]
 
-export const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
+const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 	const serverHocs: Array<[string, Babel.Identifier]> = []
 	const clientHocs: Array<[string, Babel.Identifier]> = []
 	function getServerHocId(path: NodePath, hocName: string) {
 		const uid = path.scope.generateUidIdentifier(hocName)
+		const hasHoc = serverHocs.find(([name]) => name === hocName)
+		if (hasHoc) {
+			return uid
+		}
 		serverHocs.push([hocName, uid])
 		return uid
 	}
 	function getClientHocId(path: NodePath, hocName: string) {
 		const uid = path.scope.generateUidIdentifier(hocName)
+		const hasHoc = clientHocs.find(([name]) => name === hocName)
+		if (hasHoc) {
+			return uid
+		}
 		clientHocs.push([hocName, uid])
 		return uid
 	}
 	function uppercaseFirstLetter(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1)
 	}
+	const transformations: Array<() => void> = []
 	trav(ast, {
 		ExportDeclaration(path) {
 			if (path.isExportNamedDeclaration()) {
 				const decl = path.get("declaration")
-
 				if (decl.isVariableDeclaration()) {
 					for (const varDeclarator of decl.get("declarations")) {
 						const id = varDeclarator.get("id")
@@ -80,8 +76,48 @@ export const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 				}
 			}
 		},
-	})
+		ExportNamedDeclaration(path) {
+			const specifiers = path.node.specifiers
+			for (const specifier of specifiers) {
+				if (!(t.isExportSpecifier(specifier) && t.isIdentifier(specifier.exported))) {
+					return
+				}
+				const name = specifier.exported.name
+				if (!ALL_EXPORTS.includes(name)) {
+					return
+				}
+				const uid = CLIENT_COMPONENT_EXPORTS.includes(name)
+					? getClientHocId(path, `with${uppercaseFirstLetter(name)}Wrapper`)
+					: getServerHocId(path, `with${uppercaseFirstLetter(name)}Wrapper`)
+				transformations.push(() => {
+					const uniqueName = path.scope.generateUidIdentifier(name).name
+					path.replaceWith(
+						t.exportNamedDeclaration(
+							null,
+							[t.exportSpecifier(t.identifier(name), t.identifier(uniqueName))],
+							path.node.source
+						)
+					)
 
+					// Insert the wrapped export after the modified export statement
+					path.insertAfter(
+						t.exportNamedDeclaration(
+							t.variableDeclaration("const", [
+								t.variableDeclarator(
+									t.identifier(name),
+									t.callExpression(uid, [t.identifier(uniqueName), t.stringLiteral(routeId)])
+								),
+							]),
+							[]
+						)
+					)
+				})
+			}
+		},
+	})
+	for (const transformation of transformations) {
+		transformation()
+	}
 	if (serverHocs.length > 0) {
 		ast.program.body.unshift(
 			t.importDeclaration(
@@ -103,11 +139,10 @@ export const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 }
 
 function toFunctionExpression(decl: Babel.FunctionDeclaration) {
-	console.log(decl.params)
 	return t.functionExpression(decl.id, decl.params, decl.body, decl.generator, decl.async)
 }
 
-export function transformCode(code: string, routeId: string) {
+export function augmentDataFetchingFunctions(code: string, routeId: string) {
 	const ast = parse(code, { sourceType: "module", plugins: ["jsx", "typescript"] })
 	const didTransform = transform(ast, routeId)
 	if (!didTransform) {

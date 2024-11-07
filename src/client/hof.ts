@@ -1,4 +1,4 @@
-import type { ClientActionFunctionArgs, ClientLoaderFunctionArgs } from "react-router"
+import type { ClientActionFunctionArgs, ClientLoaderFunctionArgs, LinksFunction } from "react-router"
 
 export const withClientLoaderWrapper = (loader: (args: ClientLoaderFunctionArgs) => any, routeId: string) => {
 	return async (args: ClientLoaderFunctionArgs) => {
@@ -42,6 +42,10 @@ export const withClientLoaderWrapper = (loader: (args: ClientLoaderFunctionArgs)
 
 		return data
 	}
+}
+
+export const withLinksWrapper = (links: LinksFunction, rdtStylesheet: string): LinksFunction => {
+	return () => [...links(), { rel: "stylesheet", href: rdtStylesheet }]
 }
 
 export const withClientActionWrapper = (action: (args: ClientActionFunctionArgs) => any, routeId: string) => {

@@ -3,7 +3,8 @@ import type { NetworkRequest } from "../../components/network-tracer/types"
 
 export const RequestContext = createContext<{
 	requests: NetworkRequest[]
-}>({ requests: [] })
+	removeAllRequests: () => void
+}>({ requests: [], removeAllRequests: () => {} })
 
 const requestMap = new Map<string, NetworkRequest>()
 
@@ -28,7 +29,11 @@ export const RequestProvider = ({ children }: any) => {
 		}
 	}, [setNewRequests])
 
-	return <RequestContext.Provider value={{ requests }}>{children}</RequestContext.Provider>
+	const removeAllRequests = useCallback(() => {
+		setRequests([])
+		requestMap.clear()
+	}, [])
+	return <RequestContext.Provider value={{ requests, removeAllRequests }}>{children}</RequestContext.Provider>
 }
 
 export const useRequestContext = () => {

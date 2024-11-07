@@ -47,9 +47,6 @@ export default function Index() {
   data.append("array", "test1");
   data.append("person.name", "test1");
   data.append("person.surname", "test1");
-  data.append("array2.0", "test1");
-  data.append("array2.1", "test1");
-  data.append("array2.2", "test1");
   data.append("obj", JSON.stringify({ test: "test" }));
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>

@@ -62,22 +62,6 @@ export const useServerInfo = () => {
 	return { server, setServerInfo }
 }
 
-export const useNetworkRequests = () => {
-	const { state, dispatch } = useRDTContext()
-	const { requests } = state
-
-	const setNetworkRequests = useCallback(
-		(requests: NetworkRequest[]) => {
-			dispatch({
-				type: "SET_NETWORK_REQUESTS",
-				payload: requests,
-			})
-		},
-		[dispatch]
-	)
-	return { requests, setNetworkRequests }
-}
-
 export const useDetachedWindowControls = () => {
 	const { state, dispatch } = useRDTContext()
 	const { detachedWindow, detachedWindowOwner } = state

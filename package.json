@@ -52,9 +52,7 @@
 			"require": "./dist/client.css"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/forge42dev/react-router-devtools.git"
@@ -92,10 +90,7 @@
 		"icons": "npm run run:scripts scripts/icons.ts",
 		"check:unused": "knip "
 	},
-	"workspaces": [
-		".",
-		"test-apps/*"
-	],
+	"workspaces": [".", "test-apps/*"],
 	"peerDependencies": {
 		"react": ">=17",
 		"react-dom": ">=17",
@@ -133,6 +128,7 @@
 	},
 	"dependencies": {
 		"@babel/core": "^7.26.0",
+		"@babel/generator": "^7.26.2",
 		"@babel/parser": "^7.26.2",
 		"@babel/traverse": "^7.25.9",
 		"@babel/types": "^7.26.0",

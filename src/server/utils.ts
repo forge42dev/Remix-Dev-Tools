@@ -4,7 +4,6 @@ import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
 
-type ServerRoute = any
 const analyzeCookies = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.cookies === false) {
 		return
@@ -138,10 +137,6 @@ const analyzeDeferred = (id: string, start: number, response: any) => {
 	}
 }
 
-export const isAsyncFunction = (fn: (...args: any[]) => any) => {
-	return fn.constructor.name === "AsyncFunction"
-}
-
 const unAwaited = async (promise: () => any) => {
 	promise()
 }
@@ -180,27 +175,6 @@ const logTrigger = (id: string, type: "action" | "loader", end: number) => {
 const extractHeadersFromResponseOrRequest = (response: Response | Request) => {
 	const headers = new Headers(response.headers)
 	return Object.fromEntries(headers.entries())
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const extractDataFromResponseOrRequest = async (response: Response | Request): Promise<null | unknown> => {
-	try {
-		const extractable = new Response(response.body, response)
-		const headers = new Headers(extractable.headers)
-		const contentType = headers.get("Content-Type")
-		if (contentType?.includes("application/json")) {
-			return extractable.json()
-		}
-		if (contentType?.includes("text/html")) {
-			return extractable.text()
-		}
-		if (contentType?.includes("x-www-form-urlencoded")) {
-			const formData = await extractable.formData()
-			return Object.fromEntries(formData.entries())
-		}
-	} catch (e) {
-		return null
-	}
-	return null
 }
 
 const storeAndEmitActionOrLoaderInfo = async (
@@ -266,47 +240,6 @@ const sendEvent = (event: RequestEvent) => {
 	}
 }
 
-export const syncAnalysis =
-	(routeId: string, type: "action" | "loader", loaderOrAction: (args: any) => any) =>
-	(args: LoaderFunctionArgs | ActionFunctionArgs) => {
-		const start = performance.now()
-		const startTime = Date.now()
-		const headers = Object.fromEntries(args.request.headers.entries())
-		sendEvent({
-			type,
-			headers,
-			startTime,
-			method: args.request.method,
-			id: routeId,
-			url: args.request.url,
-		})
-
-		try {
-			const response = loaderOrAction(args)
-			unAwaited(() => {
-				const end = diffInMs(start)
-				logTrigger(routeId, type, end)
-				storeAndEmitActionOrLoaderInfo(type, routeId, response, end, args)
-				analyzeHeaders(routeId, response)
-			})
-			const endTime = Date.now()
-			sendEvent({
-				type,
-				headers,
-				startTime,
-				endTime,
-				data: response,
-				id: routeId,
-				url: args.request.url,
-				method: args.request.method,
-				status: typeof response === "object" ? (response as any).status : undefined,
-			})
-			return response
-		} catch (err: any) {
-			errorHandler(routeId, err, true)
-		}
-	}
-
 export const asyncAnalysis =
 	(routeId: string, type: "action" | "loader", loaderOrAction: (args: any) => Promise<any>) =>
 	async (args: LoaderFunctionArgs | ActionFunctionArgs) => {
@@ -336,27 +269,31 @@ export const asyncAnalysis =
 				aborted: true,
 			})
 		})
-		const res = await response
-		unAwaited(() => {
-			const end = diffInMs(start)
-			const endTime = Date.now()
-			storeAndEmitActionOrLoaderInfo(type, routeId, response, end, args)
-			logTrigger(routeId, type, end)
-			analyzeDeferred(routeId, start, response)
-			analyzeHeaders(routeId, response)
-			if (!aborted) {
-				sendEvent({
-					type,
-					headers,
-					startTime,
-					endTime,
-					data: res,
-					id: routeId,
-					url: args.request.url,
-					method: args.request.method,
-					status: typeof response === "object" ? (response as any).status : undefined,
-				})
-			}
-		})
-		return res
+		try {
+			const res = await response
+			unAwaited(() => {
+				const end = diffInMs(start)
+				const endTime = Date.now()
+				storeAndEmitActionOrLoaderInfo(type, routeId, response, end, args)
+				logTrigger(routeId, type, end)
+				analyzeDeferred(routeId, start, response)
+				analyzeHeaders(routeId, response)
+				if (!aborted) {
+					sendEvent({
+						type,
+						headers,
+						startTime,
+						endTime,
+						data: res,
+						id: routeId,
+						url: args.request.url,
+						method: args.request.method,
+						status: typeof response === "object" ? (response as any).status : undefined,
+					})
+				}
+			})
+			return res
+		} catch (err) {
+			errorHandler(routeId, err, true)
+		}
 	}

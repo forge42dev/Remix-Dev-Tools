@@ -10,18 +10,21 @@ import type { NetworkRequest } from "./types"
 interface RequestDetailsProps {
 	request: NetworkRequest
 	onClose: () => void
-	onChangeRequest: (order: number) => void
+	onChangeRequest: (index: number) => void
 	total: number
-	order: number
+	index: null | number
 }
-const REQUEST_COLORS = {
+export const REQUEST_BORDER_COLORS = {
 	loader: "border-green-500",
 	"client-loader": "border-blue-500",
 	action: "border-yellow-500",
 	"client-action": "border-purple-500",
 	error: "border-red-500",
 }
-export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose, total, order, onChangeRequest }) => {
+export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose, total, index, onChangeRequest }) => {
+	if (index === null) {
+		return
+	}
 	return (
 		<div className=" w-full mt-4 bg-main rounded-lg shadow-xl p-4 z-50">
 			<div className="text-sm">
@@ -35,14 +38,14 @@ export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose
 							)}
 							{request?.type && (
 								<div
-									className={`w-max flex items-center rounded px-2.5 py-0.5 text-sm font-medium border ${REQUEST_COLORS[request.type]}`}
+									className={`w-max flex items-center rounded px-2.5 py-0.5 text-sm font-medium border ${REQUEST_BORDER_COLORS[request.type]}`}
 								>
 									{request.type}
 								</div>
 							)}
 							{request?.aborted && (
 								<div
-									className={`w-max flex items-center rounded px-2.5 py-0.5 text-sm font-medium border ${REQUEST_COLORS.error}`}
+									className={`w-max flex items-center rounded px-2.5 py-0.5 text-sm font-medium border ${REQUEST_BORDER_COLORS.error}`}
 								>
 									Request aborted
 								</div>
@@ -50,19 +53,19 @@ export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose
 						</div>
 						<div className="flex ml-auto items-center gap-4">
 							<div className="flex items-center gap-2">
-								{order > 0 ? (
+								{index > 0 ? (
 									<button
 										type="button"
-										onClick={() => onChangeRequest(order - 1)}
+										onClick={() => onChangeRequest(index - 1)}
 										className="text-gray-400 hover:text-white flex items-center justify-center size-8 rounded-md border border-gray-500 text-gray-500"
 									>
 										<Icon name="ChevronDown" className="rotate-90" />
 									</button>
 								) : null}
-								{order < total - 1 ? (
+								{index < total - 1 ? (
 									<button
 										type="button"
-										onClick={() => onChangeRequest(order + 1)}
+										onClick={() => onChangeRequest(index + 1)}
 										className="text-gray-400 hover:text-white flex items-center justify-center size-8 rounded-md border border-gray-500 text-gray-500"
 									>
 										<Icon name="ChevronDown" className="-rotate-90" />

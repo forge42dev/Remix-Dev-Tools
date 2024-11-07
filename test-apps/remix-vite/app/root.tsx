@@ -9,9 +9,7 @@ import {
 import { userSomething } from "./modules/user.server";
 
 
-export function links()  {
-  return  []
-}
+export const links = () => [];
 
 export const loader = () => {
   userSomething();
@@ -28,7 +26,6 @@ export const action =async  () => {
 }
 
 export default function App() {
-  console.log("App?")
   return (
     <html lang="en">
       <head>
