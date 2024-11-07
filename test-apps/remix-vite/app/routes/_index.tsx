@@ -1,5 +1,5 @@
 
-import type { MetaFunction , LoaderFunctionArgs} from "react-router";
+import type { MetaFunction , LoaderFunctionArgs, ClientLoaderFunctionArgs} from "react-router";
 import { Link, useFetcher, useSubmit } from "react-router";
 import { Button } from "../components/Button";
 
@@ -13,7 +13,7 @@ export const meta: MetaFunction = () => {
 
 
 export const loader = async ({ request,   }: LoaderFunctionArgs) => {
-  const test = new Promise((resolve, reject) => {
+  const test = await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
     }, 2000);
@@ -26,6 +26,16 @@ export const loader = async ({ request,   }: LoaderFunctionArgs) => {
   return  ({ message: "Hello World!", test, test1, });
 };
 
+export const clientLoader =  async ({ request, serverLoader }: ClientLoaderFunctionArgs) => {
+  const headers = Object.fromEntries(request.headers.entries());
+  const promise =await  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("test");
+    }, 2000);
+  });
+  return  serverLoader();
+};
+clientLoader.hydrate = true;
 
 export default function Index() {
   const lFetcher = useFetcher({ key: "lfetcher"});
@@ -37,9 +47,6 @@ export default function Index() {
   data.append("array", "test1");
   data.append("person.name", "test1");
   data.append("person.surname", "test1");
-  data.append("array2.0", "test1");
-  data.append("array2.1", "test1");
-  data.append("array2.2", "test1");
   data.append("obj", JSON.stringify({ test: "test" }));
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>

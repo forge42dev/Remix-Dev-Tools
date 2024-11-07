@@ -1,6 +1,7 @@
 import type { Dispatch } from "react"
 import type React from "react"
-import { createContext, useEffect, useMemo, useReducer } from "react"
+import { createContext, useEffect, useMemo, useReducer, useState } from "react"
+import type { NetworkRequest } from "../components/network-tracer/types.js"
 import { useRemoveBody } from "../hooks/detached/useRemoveBody.js"
 import { checkIsDetached, checkIsDetachedOwner, checkIsDetachedWindow } from "../utils/detached.js"
 import { tryParseJson } from "../utils/sanitize.js"
@@ -66,9 +67,12 @@ export const getSettings = () => {
 	}
 }
 
-export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorName?: string }) => {
+export const getExistingStateFromStorage = (
+	config?: RdtClientConfig & { editorName?: string; requests?: NetworkRequest[] }
+) => {
 	const existingState = getStorageItem(REACT_ROUTER_DEV_TOOLS_STATE)
 	const settings = getSettings()
+
 	const { detachedWindow, detachedWindowOwner } = detachedModeSetup()
 	const state: RemixDevToolsState = {
 		...initialState,
@@ -83,8 +87,8 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 		},
 		detachedWindow,
 		detachedWindowOwner,
+		requests: [],
 	}
-
 	return state
 }
 
@@ -115,8 +119,7 @@ export const RDTContextProvider = ({ children, config }: ContextProps) => {
 	useRemoveBody(state)
 
 	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { settings, detachedWindow, detachedWindowOwner, ...rest } = state
+		const { settings, detachedWindow, detachedWindowOwner, requests, ...rest } = state
 		// Store user settings for dev tools into local storage
 		setStorageItem(REACT_ROUTER_DEV_TOOLS_SETTINGS, JSON.stringify(settings))
 		// Store general state into local storage

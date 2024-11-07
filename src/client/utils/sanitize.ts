@@ -1,7 +1,7 @@
 import type { EntryContext } from "react-router"
 type EntryRoute = EntryContext["manifest"]["routes"][0]
 type RouteManifest = EntryContext["manifest"]["routes"]
-type Route = Pick<EntryRoute, "path" | "parentId" | "id" | "hasErrorBoundary">
+type Route = any
 /**
  * Helper method used to convert react router route conventions to url segments
  * @param chunk Chunk to convert

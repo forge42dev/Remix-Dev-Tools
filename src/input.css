@@ -1,3 +1,4 @@
+@import url("./gradients.css");
 .react-router-dev-tools-reset {
 	::before,
 	::after {
@@ -559,27 +560,7 @@
 	@tailwind variants;
 }
 
-.sea-gradient {
-	@apply bg-green-100 bg-gradient-to-r from-cyan-500/50 to-blue-500/50
-}
-.hyper-gradient {
-	@apply bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500
-}
-.gotham-gradient {
-	@apply bg-gradient-to-r from-gray-700 via-gray-900 to-black
-}
-.gray-gradient {
-	@apply bg-gradient-to-r from-gray-700/50 via-gray-900/50 to-black/50
-}
-.watermelon-gradient {
-	@apply bg-gradient-to-r from-red-500 to-green-500
-}
-.ice-gradient {
-	@apply bg-gradient-to-r from-rose-100 to-teal-100
-}
-.silver-gradient {
-	@apply bg-gradient-to-r from-gray-100 to-gray-300
-}
+
 .apply-tw {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;

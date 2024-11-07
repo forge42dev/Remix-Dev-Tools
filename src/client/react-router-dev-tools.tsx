@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router"
 import { Trigger } from "./components/Trigger.js"
@@ -20,7 +21,6 @@ import {
 	setStorageItem,
 } from "./utils/storage.js"
 import "../input.css"
-import clsx from "clsx"
 import { useHotkeys } from "react-hotkeys-hook"
 import type { RdtPlugin } from "../index.js"
 import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.js"

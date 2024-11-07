@@ -2,7 +2,7 @@ import type { EntryContext } from "react-router"
 import type { RouteWildcards } from "../context/rdtReducer.js"
 import { convertReactRouterPathToUrl, findParentErrorBoundary } from "./sanitize.js"
 type EntryRoute = EntryContext["manifest"]["routes"][0]
-type Route = Pick<EntryRoute, "id" | "index" | "path" | "parentId">
+type Route = Pick<NonNullable<EntryRoute>, "id" | "index" | "path" | "parentId">
 
 export function getRouteType(route: Route) {
 	if (route.id === "root") {
@@ -21,7 +21,7 @@ export function getRouteType(route: Route) {
 	}
 	// Find an index route with parentId set to this route
 	const childIndexRoute = Object.values(window.__reactRouterManifest.routes).find(
-		(r) => r.parentId === route.id && r.index
+		(r) => r?.parentId === route.id && r.index
 	)
 
 	return childIndexRoute ? "LAYOUT" : "ROUTE"
@@ -89,5 +89,5 @@ export const createExtendedRoutes = () => {
 				errorBoundary: findParentErrorBoundary(window.__reactRouterManifest!.routes, route),
 			}
 		})
-		.filter((route) => isLeafRoute(route))
+		.filter((route) => isLeafRoute(route as any))
 }

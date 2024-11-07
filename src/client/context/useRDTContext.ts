@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react"
+import type { NetworkRequest } from "../components/network-tracer/types.js"
 import { RDTContext } from "./RDTContext.js"
 import type { RemixDevToolsState } from "./rdtReducer.js"
-import type { Terminal } from "./terminal/types.js"
 import type { TimelineEvent } from "./timeline/types.js"
 
 /**

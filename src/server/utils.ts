@@ -1,20 +1,19 @@
 import chalk from "chalk"
-import type { DataFunctionArgs } from "react-router"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
 
-type ServerRoute = any
-const analyzeCookies = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
+const analyzeCookies = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.cookies === false) {
 		return
 	}
 	if (headers.get("Set-Cookie")) {
-		infoLog(`🍪 Cookie set by ${chalk.blueBright(route.id)}`)
+		infoLog(`🍪 Cookie set by ${chalk.blueBright(routeId)}`)
 	}
 }
 
-const analyzeCache = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
+const analyzeCache = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.cache === false) {
 		return
 	}
@@ -31,7 +30,7 @@ const analyzeCache = (route: Omit<ServerRoute, "children">, config: DevToolsServ
 			const duration = serverAge.split("=")[1]
 			const durationNumber = Number.isNaN(Number.parseInt(duration)) ? 0 : Number.parseInt(duration)
 			return infoLog(
-				`📦 Route ${chalk.blueBright(route.id)} cached for ${chalk.green(secondsToHuman(durationNumber))} ${chalk.green(
+				`📦 Route ${chalk.blueBright(routeId)} cached for ${chalk.green(secondsToHuman(durationNumber))} ${chalk.green(
 					"[Shared Cache]"
 				)}`
 			)
@@ -41,7 +40,7 @@ const analyzeCache = (route: Omit<ServerRoute, "children">, config: DevToolsServ
 			const durationNumber = Number.isNaN(Number.parseInt(duration)) ? 0 : Number.parseInt(duration)
 
 			infoLog(
-				`📦 Route ${chalk.blueBright(route.id)} cached for ${chalk.green(secondsToHuman(durationNumber))} ${chalk.green(
+				`📦 Route ${chalk.blueBright(routeId)} cached for ${chalk.green(secondsToHuman(durationNumber))} ${chalk.green(
 					`[${isPrivate ? "Private Cache" : "Shared Cache"}]`
 				)}`
 			)
@@ -50,7 +49,7 @@ const analyzeCache = (route: Omit<ServerRoute, "children">, config: DevToolsServ
 			const duration = serverAge.split("=")[1]
 			const durationNumber = Number.isNaN(Number.parseInt(duration)) ? 0 : Number.parseInt(duration)
 			infoLog(
-				`📦 Route ${chalk.blueBright(route.id)} cached for ${chalk.green(secondsToHuman(durationNumber))} ${chalk.green(
+				`📦 Route ${chalk.blueBright(routeId)} cached for ${chalk.green(secondsToHuman(durationNumber))} ${chalk.green(
 					"[Shared Cache]"
 				)}`
 			)
@@ -58,17 +57,17 @@ const analyzeCache = (route: Omit<ServerRoute, "children">, config: DevToolsServ
 	}
 }
 
-const analyzeClearSite = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
+const analyzeClearSite = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.siteClear === false) {
 		return
 	}
 
 	if (headers.get("Clear-Site-Data")) {
 		const data = headers.get("Clear-Site-Data")
-		infoLog(`🧹 Site data cleared by ${chalk.blueBright(route.id)} ${chalk.green(`[${data}]`)}`)
+		infoLog(`🧹 Site data cleared by ${chalk.blueBright(routeId)} ${chalk.green(`[${data}]`)}`)
 	}
 }
-const analyzeServerTimings = (route: Omit<ServerRoute, "children">, config: DevToolsServerConfig, headers: Headers) => {
+const analyzeServerTimings = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.serverTimings === false) {
 		return
 	}
@@ -99,22 +98,22 @@ const analyzeServerTimings = (route: Omit<ServerRoute, "children">, config: DevT
 			const overThreshold = dur > threshold
 			const durationColor = overThreshold ? chalk.redBright : chalk.green
 			infoLog(
-				`⏰  Server timing for route ${chalk.blueBright(route.id)} - ${chalk.cyanBright(name)} ${durationColor(`[${dur}ms]`)} ${desc ? chalk.yellow(`[${desc}]`) : ""}`
+				`⏰  Server timing for route ${chalk.blueBright(routeId)} - ${chalk.cyanBright(name)} ${durationColor(`[${dur}ms]`)} ${desc ? chalk.yellow(`[${desc}]`) : ""}`
 			)
 		}
 	}
 }
 
-const analyzeHeaders = (route: Omit<ServerRoute, "children">, response: unknown) => {
+const analyzeHeaders = (routeId: string, response: unknown) => {
 	if (!(response instanceof Response)) {
 		return
 	}
 	const headers = new Headers(response.headers)
 	const config = getConfig()
-	analyzeCookies(route, config, headers)
-	analyzeCache(route, config, headers)
-	analyzeClearSite(route, config, headers)
-	analyzeServerTimings(route, config, headers)
+	analyzeCookies(routeId, config, headers)
+	analyzeCache(routeId, config, headers)
+	analyzeClearSite(routeId, config, headers)
+	analyzeServerTimings(routeId, config, headers)
 }
 
 const analyzeDeferred = (id: string, start: number, response: any) => {
@@ -136,10 +135,6 @@ const analyzeDeferred = (id: string, start: number, response: any) => {
 				})
 		})
 	}
-}
-
-export const isAsyncFunction = (fn: (...args: any[]) => any) => {
-	return fn.constructor.name === "AsyncFunction"
 }
 
 const unAwaited = async (promise: () => any) => {
@@ -181,34 +176,13 @@ const extractHeadersFromResponseOrRequest = (response: Response | Request) => {
 	const headers = new Headers(response.headers)
 	return Object.fromEntries(headers.entries())
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const extractDataFromResponseOrRequest = async (response: Response | Request): Promise<null | unknown> => {
-	try {
-		const extractable = new Response(response.body, response)
-		const headers = new Headers(extractable.headers)
-		const contentType = headers.get("Content-Type")
-		if (contentType?.includes("application/json")) {
-			return extractable.json()
-		}
-		if (contentType?.includes("text/html")) {
-			return extractable.text()
-		}
-		if (contentType?.includes("x-www-form-urlencoded")) {
-			const formData = await extractable.formData()
-			return Object.fromEntries(formData.entries())
-		}
-	} catch (e) {
-		return null
-	}
-	return null
-}
 
 const storeAndEmitActionOrLoaderInfo = async (
 	type: "action" | "loader",
-	route: Omit<ServerRoute, "children">,
+	routeId: string,
 	response: unknown,
 	end: number,
-	args: DataFunctionArgs
+	args: LoaderFunctionArgs | ActionFunctionArgs
 ) => {
 	const isResponse = response instanceof Response
 	const isObject = typeof response === "object" && response !== null && !("deferredKeys" in response)
@@ -218,7 +192,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 	const event = {
 		type,
 		data: {
-			id: route.id,
+			id: routeId,
 			executionTime: end,
 			timestamp: new Date().getTime(),
 			...(isObject ? { responseData: response } : {}),
@@ -239,44 +213,87 @@ const storeAndEmitActionOrLoaderInfo = async (
 	}
 }
 
-export const syncAnalysis =
-	(route: Omit<ServerRoute, "children">, type: "action" | "loader", loaderOrAction: (args: any) => any) =>
-	(args: DataFunctionArgs) => {
-		const start = performance.now()
-		try {
-			const response = loaderOrAction(args)
-			unAwaited(() => {
-				const end = diffInMs(start)
-				logTrigger(route.id, type, end)
-				storeAndEmitActionOrLoaderInfo(type, route, response, end, args)
-				analyzeHeaders(route, response)
-			})
-			return response
-		} catch (err: any) {
-			errorHandler(route.id, err, true)
-		}
+export type RequestEvent = {
+	routine?: "request-event"
+	type: "action" | "loader"
+	headers: Record<string, string>
+	id: string
+	startTime: number
+	endTime?: number | undefined
+	data?: any | undefined
+	method: string
+	status?: string
+	url: string
+	aborted?: boolean
+}
+
+const sendEvent = (event: RequestEvent) => {
+	const port = process.rdt_port
+
+	if (port) {
+		fetch(`http://localhost:${port}/react-router-devtools-request`, {
+			method: "POST",
+			body: JSON.stringify({ routine: "request-event", ...event }),
+		})
+			.then(() => {})
+			.catch(() => {})
 	}
+}
 
 export const asyncAnalysis =
-	(route: Omit<ServerRoute, "children">, type: "action" | "loader", loaderOrAction: (args: any) => Promise<any>) =>
-	async (args: DataFunctionArgs) => {
+	(routeId: string, type: "action" | "loader", loaderOrAction: (args: any) => Promise<any>) =>
+	async (args: LoaderFunctionArgs | ActionFunctionArgs) => {
 		const start = performance.now()
 		const response = loaderOrAction(args)
-		response
-			.then((response: unknown) => {
-				unAwaited(() => {
-					const end = diffInMs(start)
-					storeAndEmitActionOrLoaderInfo(type, route, response, end, args)
-					if (type === "action") {
-						actionLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`)
-					} else {
-						loaderLog(`${chalk.blueBright(route.id)} triggered - ${chalk.white(`${end} ms`)}`)
-					}
-					analyzeDeferred(route.id, start, response)
-					analyzeHeaders(route, response)
-				})
-				return response
+		const headers = Object.fromEntries(args.request.headers.entries())
+		const startTime = Date.now()
+		sendEvent({
+			type,
+			headers,
+			startTime,
+			method: args.request.method,
+			url: args.request.url,
+			id: routeId,
+		})
+		let aborted = false
+		args.request.signal.addEventListener("abort", () => {
+			aborted = true
+			sendEvent({
+				type,
+				url: args.request.url,
+				headers,
+				startTime,
+				endTime: Date.now(),
+				id: routeId,
+				method: args.request.method,
+				aborted: true,
 			})
-			.catch((err) => errorHandler(route.id, err))
-		return response
+		})
+		try {
+			const res = await response
+			unAwaited(() => {
+				const end = diffInMs(start)
+				const endTime = Date.now()
+				storeAndEmitActionOrLoaderInfo(type, routeId, response, end, args)
+				logTrigger(routeId, type, end)
+				analyzeDeferred(routeId, start, response)
+				analyzeHeaders(routeId, response)
+				if (!aborted) {
+					sendEvent({
+						type,
+						headers,
+						startTime,
+						endTime,
+						data: res,
+						id: routeId,
+						url: args.request.url,
+						method: args.request.method,
+						status: typeof response === "object" ? (response as any).status : undefined,
+					})
+				}
+			})
+			return res
+		} catch (err) {
+			errorHandler(routeId, err, true)
+		}
 	}

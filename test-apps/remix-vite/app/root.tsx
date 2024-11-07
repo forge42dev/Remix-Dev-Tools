@@ -9,22 +9,23 @@ import {
 import { userSomething } from "./modules/user.server";
 
 
-export function links()  {
-  return  []
-}
+export const links = () => [];
 
 export const loader = () => {
-  console.log("loader?")
   userSomething();
   return  ({ message: "Hello World" });
 }
 
-export const action = () => {
+export const action =async  () => {
+  await new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("test");
+    }, 2000);
+  });
   return  ({ message: "Hello World" });
 }
 
 export default function App() {
-  console.log("App?")
   return (
     <html lang="en">
       <head>

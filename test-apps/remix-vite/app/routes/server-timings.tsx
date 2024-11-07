@@ -1,6 +1,6 @@
 
 
-import { ActionFunctionArgs, json, LoaderFunctionArgs, MetaFunction, redirect } from "react-router";
+import { ActionFunctionArgs, data, json, LoaderFunctionArgs, MetaFunction, redirect } from "react-router";
 import { getServerTiming } from "~/timing.server";
 
 
@@ -26,7 +26,7 @@ export const loader = async ({ request,   }: LoaderFunctionArgs) => {
 			resolve("test");
 		}, 200);
 	}))
-  return json({ message: "Hello World!",   }, {
+  return  data({ message: "Hello World!",   }, {
 		headers: getServerTimingHeader(),
 	});
 };
