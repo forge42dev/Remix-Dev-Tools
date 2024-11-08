@@ -25,7 +25,11 @@
 			"recommended": true,
 			"suspicious": {
 				"recommended": true,
-				"noExplicitAny": "off"
+				"noExplicitAny": "off",
+				"noConsole": {
+					"level": "error",
+					"options": { "allow": ["assert", "error", "info", "warn"] }
+				}
 			},
 			"style": {
 				"recommended": true

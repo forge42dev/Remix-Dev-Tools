@@ -65,7 +65,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	}
 	return [
 		{
-			name: "react-router-devtools-client-inject",
+			name: "react-router-devtools-client",
 			apply(config) {
 				return shouldInject(config.mode)
 			},
