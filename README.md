@@ -25,6 +25,8 @@ This repository used to be called Remix Development Tools, but we decided to ren
 
 If you're looking for the old version of this package, you can find it [here](https://github.com/forge42dev/Remix-Dev-Tools/tree/remix-development-tools).
 
+And the detailed documentation can be found [here](https://remix-development-tools.fly.dev/).
+
 # Documentation
 
 Detailed documentation can be found here:
