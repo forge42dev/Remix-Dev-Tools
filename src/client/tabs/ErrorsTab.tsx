@@ -65,7 +65,7 @@ const ErrorsTab = () => {
 									onClick={() =>
 										sendJsonMessage({
 											type: "open-source",
-											data: { source: error.parent.file.replace(".tsx", "") },
+											data: { source: error.parent.file },
 										})
 									}
 									className="cursor-pointer text-white"
@@ -81,7 +81,7 @@ const ErrorsTab = () => {
 									onClick={() =>
 										sendJsonMessage({
 											type: "open-source",
-											data: { source: error.child.file.replace(".tsx", "") },
+											data: { source: error.child.file },
 										})
 									}
 									className="cursor-pointer text-white"
