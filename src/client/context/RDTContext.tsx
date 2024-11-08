@@ -1,6 +1,6 @@
 import type { Dispatch } from "react"
 import type React from "react"
-import { createContext, useEffect, useMemo, useReducer, useState } from "react"
+import { createContext, useEffect, useMemo, useReducer } from "react"
 import type { NetworkRequest } from "../components/network-tracer/types.js"
 import { useRemoveBody } from "../hooks/detached/useRemoveBody.js"
 import { checkIsDetached, checkIsDetachedOwner, checkIsDetachedWindow } from "../utils/detached.js"
@@ -67,9 +67,7 @@ export const getSettings = () => {
 	}
 }
 
-export const getExistingStateFromStorage = (
-	config?: RdtClientConfig & { editorName?: string; requests?: NetworkRequest[] }
-) => {
+export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorName?: string }) => {
 	const existingState = getStorageItem(REACT_ROUTER_DEV_TOOLS_STATE)
 	const settings = getSettings()
 
@@ -87,7 +85,6 @@ export const getExistingStateFromStorage = (
 		},
 		detachedWindow,
 		detachedWindowOwner,
-		requests: [],
 	}
 	return state
 }
@@ -119,7 +116,7 @@ export const RDTContextProvider = ({ children, config }: ContextProps) => {
 	useRemoveBody(state)
 
 	useEffect(() => {
-		const { settings, detachedWindow, detachedWindowOwner, requests, ...rest } = state
+		const { settings, detachedWindow, detachedWindowOwner, ...rest } = state
 		// Store user settings for dev tools into local storage
 		setStorageItem(REACT_ROUTER_DEV_TOOLS_SETTINGS, JSON.stringify(settings))
 		// Store general state into local storage

@@ -1,5 +1,4 @@
 import type { ActionEvent, LoaderEvent } from "../../server/event-queue.js"
-import type { NetworkRequest } from "../components/network-tracer/types.js"
 import type { Tabs } from "../tabs/index.js"
 import { cutArrayToFirstN } from "../utils/common.js"
 import type { Terminal } from "./terminal/types.js"
@@ -159,10 +158,7 @@ export type RemixDevToolsState = {
 	persistOpen: boolean
 	detachedWindow: boolean
 	detachedWindowOwner: boolean
-	requests: NetworkRequest[]
 }
-
-const requestMap = new Map<string, NetworkRequest>()
 
 export const initialState: RemixDevToolsState = {
 	timeline: [],
@@ -205,18 +201,12 @@ export const initialState: RemixDevToolsState = {
 	persistOpen: false,
 	detachedWindow: false,
 	detachedWindowOwner: false,
-	requests: [],
 }
 
 /** Reducer action types */
 type SetTimelineEvent = {
 	type: "SET_TIMELINE_EVENT"
 	payload: TimelineEvent
-}
-
-type SetNetworkRequests = {
-	type: "SET_NETWORK_REQUESTS"
-	payload: NetworkRequest[]
 }
 
 type ToggleTerminalLock = {
@@ -317,7 +307,6 @@ export type RemixDevToolsActions =
 	| SetIsSubmittedAction
 	| SetServerInfo
 	| SetHtmlErrors
-	| SetNetworkRequests
 	| SetPersistOpenAction
 
 export const rdtReducer = (state: RemixDevToolsState, { type, payload }: RemixDevToolsActions): RemixDevToolsState => {
@@ -345,20 +334,7 @@ export const rdtReducer = (state: RemixDevToolsState, { type, payload }: RemixDe
 					...payload,
 				},
 			}
-		case "SET_NETWORK_REQUESTS": {
-			const newRequests = payload.filter((req) => !requestMap.has(req.id + req.startTime))
-			console.log("existingRequests", state.requests)
-			console.log("newRequests", newRequests)
-			for (const req of newRequests) {
-				requestMap.set(req.id + req.startTime, req)
-			}
-			const finalRequests = state.requests.concat(newRequests)
-			console.log("finalRequests", finalRequests)
-			return {
-				...state,
-				requests: finalRequests,
-			}
-		}
+
 		case "SET_TIMELINE_EVENT":
 			return {
 				...state,
