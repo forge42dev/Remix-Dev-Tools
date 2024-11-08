@@ -1,4 +1,5 @@
 import {
+  data,
   Form,
   Links,
   Meta,
@@ -13,7 +14,17 @@ export const links = () => [];
 
 export const loader = () => {
   userSomething();
-  return  ({ message: "Hello World" });
+  const mainPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const subPromise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("test");
+        }, 2000);
+      });
+      resolve({ test: "test", subPromise});
+    }, 2000);
+  });
+  return  data({ message: "Hello World", mainPromise }, { headers: { "Cache-Control": "max-age=3600, private" } });
 }
 
 export const action =async  () => {

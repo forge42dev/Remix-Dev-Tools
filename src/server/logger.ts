@@ -10,8 +10,6 @@ const log = (message: string) => {
 	console.log(message)
 }
 
-const logPrefix = (prefix: string) => ` ${chalk.white(prefix.toLowerCase())} `
-
 export const errorLog = (message: string) => {
 	log(`${chalk.redBright.bold("ERROR")} ${message}`)
 }
@@ -29,7 +27,9 @@ export const loaderLog = (message: string) => {
 	if (config.logs?.loaders === false) {
 		return
 	}
-	log(`${chalk.green.bold("LOADER")} ${message}`)
+	const messageToLog = `${chalk.green.bold("LOADER")} ${message}`
+	log(messageToLog)
+	return messageToLog
 }
 
 export const actionLog = (message: string) => {
@@ -37,7 +37,9 @@ export const actionLog = (message: string) => {
 	if (config.logs?.actions === false) {
 		return
 	}
-	log(`${chalk.yellowBright.bold("ACTION")} ${message}`)
+	const messageToLog = `${chalk.yellowBright.bold("ACTION")} ${message}`
+	log(messageToLog)
+	return messageToLog
 }
 
 // const successLog = (message: string) => {

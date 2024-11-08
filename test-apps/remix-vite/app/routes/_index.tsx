@@ -23,17 +23,18 @@ export const loader = async ({ request,   }: LoaderFunctionArgs) => {
       resolve("test1");
     }, 3500);
   });
-  return  ({ message: "Hello World!", test, test1, });
+  return  { message: "Hello World!", test, test1, };
 };
 
 export const clientLoader =  async ({ request, serverLoader }: ClientLoaderFunctionArgs) => {
   const headers = Object.fromEntries(request.headers.entries());
+  const serverLoaderResults = await serverLoader();
   const promise =await  new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
     }, 2000);
   });
-  return  serverLoader();
+  return serverLoaderResults
 };
 clientLoader.hydrate = true;
 

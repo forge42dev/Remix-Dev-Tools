@@ -1,5 +1,4 @@
 import chalk from "chalk"
-import { parse } from "es-module-lexer"
 import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import { cutArrayToLastN } from "../client/utils/common.js"
@@ -7,12 +6,11 @@ import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
 
 import type { RequestEvent } from "../server/utils.js"
-import { augmentDataFetchingFunctions } from "./data-functions-augment.js"
 import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
 import { type WriteFileData, handleWriteFile } from "./file.js"
-import { injectRdtClient } from "./inject-client.js"
 import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
-
+import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
+import { injectRdtClient } from "./utils/inject-client.js"
 // this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
@@ -71,7 +69,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			apply(config) {
 				return shouldInject(config.mode)
 			},
-			enforce: "pre",
+
 			async configResolved(resolvedViteConfig) {
 				const reactRouterIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router")
 				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router-devtools")
@@ -92,7 +90,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			},
 		},
 		{
-			enforce: "pre",
 			name: "react-router-devtools-data-function-augment",
 			apply(config) {
 				return config.mode === "development"
@@ -101,7 +98,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
 					return
 				}
-
 				const routeId = id.replace(normalizePath(process.cwd()), "").replace("/app/", "").replace(".tsx", "")
 
 				const finalCode = augmentDataFetchingFunctions(code, routeId)
@@ -126,9 +122,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					handleDevToolsViteRequest(req, res, next, (parsedData) => {
 						const { type, data, routine } = parsedData
 						if (routine === "request-event") {
-							//	console.log("route id", parsedData.id)
 							unusedEvents.set(parsedData.id + parsedData.startTime, parsedData)
-							//	console.log(unusedEvents.keys())
 							for (const client of server.hot.channels) {
 								if (client.name === "ws") {
 									client.send("request-event", JSON.stringify(parsedData))
@@ -175,22 +169,18 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				if (!server.config.isProduction) {
 					channel?.on("remove-event", (data, client) => {
 						const parsedData = data
-						const { id, startTime, fromClient } = parsedData
-						//	console.log("remove event", id, fromClient)
+						const { id, startTime } = parsedData
+
 						unusedEvents.delete(id + startTime)
 					})
 					channel?.on("get-events", (_, client) => {
 						const events = Array.from(unusedEvents.values())
-						/* 	console.log(
-							"get events",
-							events.map((e) => e.id)
-						) */
+
 						if (events) {
 							client.send("get-events", JSON.stringify(events))
 						}
 					})
 					channel?.on("request-event", (data, client) => {
-						//	console.log("request event", data.id)
 						unusedEvents.set(data.id + data.startTime, data)
 						client.send(
 							"request-event",

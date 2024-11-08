@@ -1,10 +1,10 @@
 import chalk from "chalk"
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router"
+import type { ActionFunctionArgs, LoaderFunctionArgs, UNSAFE_DataWithResponseInit } from "react-router"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
 
-const analyzeCookies = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
+export const analyzeCookies = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.cookies === false) {
 		return
 	}
@@ -13,7 +13,7 @@ const analyzeCookies = (routeId: string, config: DevToolsServerConfig, headers: 
 	}
 }
 
-const analyzeCache = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
+export const analyzeCache = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.cache === false) {
 		return
 	}
@@ -57,7 +57,7 @@ const analyzeCache = (routeId: string, config: DevToolsServerConfig, headers: He
 	}
 }
 
-const analyzeClearSite = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
+export const analyzeClearSite = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.siteClear === false) {
 		return
 	}
@@ -67,7 +67,7 @@ const analyzeClearSite = (routeId: string, config: DevToolsServerConfig, headers
 		infoLog(`🧹 Site data cleared by ${chalk.blueBright(routeId)} ${chalk.green(`[${data}]`)}`)
 	}
 }
-const analyzeServerTimings = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
+export const analyzeServerTimings = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
 	if (config.logs?.serverTimings === false) {
 		return
 	}
@@ -88,27 +88,30 @@ const analyzeServerTimings = (routeId: string, config: DevToolsServerConfig, hea
 				} else if (key === "dur") {
 					dur = Number(value)
 				} else {
-					name = segment
+					name = segment.trim()
 				}
 			}
 			if (!name || dur === null) {
 				return
 			}
 			const threshold = config.serverTimingThreshold ?? Number.POSITIVE_INFINITY
-			const overThreshold = dur > threshold
+			const overThreshold = dur >= threshold
 			const durationColor = overThreshold ? chalk.redBright : chalk.green
 			infoLog(
-				`⏰  Server timing for route ${chalk.blueBright(routeId)} - ${chalk.cyanBright(name)} ${durationColor(`[${dur}ms]`)} ${desc ? chalk.yellow(`[${desc}]`) : ""}`
+				`⏰  Server timing for route ${chalk.blueBright(routeId)} - ${chalk.cyanBright(name)} ${durationColor(`[${dur}ms]`)} ${desc ? chalk.yellow(`[${desc}]`) : ""}`.trim()
 			)
 		}
 	}
 }
 
 const analyzeHeaders = (routeId: string, response: unknown) => {
-	if (!(response instanceof Response)) {
-		return
-	}
-	const headers = new Headers(response.headers)
+	const headers = new Headers(
+		isDataFunctionResponse(response) && response.init
+			? response.init.headers
+			: response instanceof Response
+				? response.headers
+				: {}
+	)
 	const config = getConfig()
 	analyzeCookies(routeId, config, headers)
 	analyzeCache(routeId, config, headers)
@@ -116,33 +119,63 @@ const analyzeHeaders = (routeId: string, response: unknown) => {
 	analyzeServerTimings(routeId, config, headers)
 }
 
-const analyzeDeferred = (id: string, start: number, response: any) => {
-	const config = getConfig()
-	if (config.logs?.defer === false) {
-		return
-	}
-	if (response?.deferredKeys) {
-		infoLog(`Deferred values detected in ${chalk.blueBright(id)} - ${chalk.white(response.deferredKeys.join(", "))}`)
-		response.deferredKeys.map((key: string) => {
-			response.data[key]
-				.then(() => {
+const logDeferredObject = (response: Record<any, any>, id: string, start: number, preKey = "") => {
+	let hasPromises = false
+	const deferredKeys = []
+	for (const [key, value] of Object.entries(isDataFunctionResponse(response) ? response.data : response)) {
+		if (value instanceof Promise) {
+			deferredKeys.push(preKey ? `${preKey}.${key}` : key)
+			hasPromises = true
+			value
+				.then((val) => {
 					const end = diffInMs(start)
-					infoLog(`Deferred value ${chalk.white(key)} resolved in ${chalk.blueBright(id)} - ${chalk.white(`${end}ms`)}`)
+					infoLog(
+						`Promise ${chalk.white(preKey ? `${preKey}.${key}` : key)} resolved in ${chalk.blueBright(id)} - ${chalk.white(`${end}ms`)}`
+					)
+					logDeferredObject(val, id, start, preKey ? `${preKey}.${key}` : key)
 				})
 				.catch((e: any) => {
-					errorLog(`Deferred value ${chalk.white(key)} rejected in ${chalk.blueBright(id)}`)
+					errorLog(`Promise ${chalk.white(preKey ? `${preKey}.${key}` : key)} rejected in ${chalk.blueBright(id)}`)
 					errorLog(e?.message ? e.message : e)
 				})
-		})
+		}
 	}
+	if (hasPromises) {
+		infoLog(`Promises detected in ${chalk.blueBright(id)} - ${chalk.white(deferredKeys.join(", "))}`)
+	}
+}
+
+export const analyzeDeferred = (id: string, start: number, response: any) => {
+	const config = getConfig()
+	if (config.logs?.defer === false || config.silent) {
+		return
+	}
+	if (response instanceof Response || typeof response !== "object") {
+		return
+	}
+	logDeferredObject(response, id, start)
 }
 
 const unAwaited = async (promise: () => any) => {
 	promise()
 }
 
-const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
+export const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
 	unAwaited(() => {
+		if (isDataFunctionResponse(e)) {
+			const headers = new Headers(e.init?.headers)
+			const location = headers.get("Location")
+			if (location) {
+				redirectLog(`${chalk.blueBright(routeId)} threw a response!`)
+				redirectLog(`${chalk.blueBright(routeId)} redirected to ${chalk.green(location)}`)
+			} else {
+				errorLog(`${chalk.blueBright(routeId)} threw a response!`)
+				if (e.init?.status) {
+					errorLog(`${chalk.blueBright(routeId)} responded with ${chalk.white(e.init.status)}`)
+				}
+			}
+			return
+		}
 		if (e instanceof Response) {
 			const headers = new Headers(e.headers)
 			const location = headers.get("Location")
@@ -157,23 +190,28 @@ const errorHandler = (routeId: string, e: any, shouldThrow = false) => {
 			}
 		} else {
 			errorLog(`${chalk.blueBright(routeId)} threw an error!`)
-			errorLog(`${e?.message}`)
+			errorLog(`${e?.message ?? e}`)
 		}
 	})
 	if (shouldThrow) {
 		throw e
 	}
 }
-const logTrigger = (id: string, type: "action" | "loader", end: number) => {
+export const logTrigger = (id: string, type: "action" | "loader", end: number) => {
 	if (type === "action") {
-		actionLog(`${chalk.blueBright(id)} triggered - ${chalk.white(`${end} ms`)}`)
+		actionLog(`${chalk.blueBright(id)} triggered - ${chalk.white(`${end}ms`)}`)
 	} else {
-		loaderLog(`${chalk.blueBright(id)} triggered - ${chalk.white(`${end} ms`)}`)
+		loaderLog(`${chalk.blueBright(id)} triggered - ${chalk.white(`${end}ms`)}`)
 	}
 }
 
-const extractHeadersFromResponseOrRequest = (response: Response | Request) => {
-	const headers = new Headers(response.headers)
+export const extractHeadersFromResponseOrRequest = (
+	response: Response | Request | UNSAFE_DataWithResponseInit<any> | any
+) => {
+	if (!isDataFunctionResponse(response) && !(response instanceof Response) && !(response instanceof Request)) {
+		return null
+	}
+	const headers = new Headers(!isDataFunctionResponse(response) ? response.headers : response.init?.headers)
 	return Object.fromEntries(headers.entries())
 }
 
@@ -184,9 +222,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 	end: number,
 	args: LoaderFunctionArgs | ActionFunctionArgs
 ) => {
-	const isResponse = response instanceof Response
-	const isObject = typeof response === "object" && response !== null && !("deferredKeys" in response)
-	const responseHeaders = isResponse ? extractHeadersFromResponseOrRequest(response) : null
+	const responseHeaders = extractHeadersFromResponseOrRequest(response)
 	const requestHeaders = extractHeadersFromResponseOrRequest(args.request)
 	// create the event
 	const event = {
@@ -195,8 +231,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 			id: routeId,
 			executionTime: end,
 			timestamp: new Date().getTime(),
-			...(isObject ? { responseData: response } : {}),
-			//requestData: await extractDataFromResponseOrRequest(args.request),
+			responseData: isDataFunctionResponse(response) ? response.data : response,
 			requestHeaders,
 			responseHeaders,
 		},
@@ -215,7 +250,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 
 export type RequestEvent = {
 	routine?: "request-event"
-	type: "action" | "loader"
+	type: "action" | "loader" | "client-loader" | "client-action"
 	headers: Record<string, string>
 	id: string
 	startTime: number
@@ -240,7 +275,11 @@ const sendEvent = (event: RequestEvent) => {
 	}
 }
 
-export const asyncAnalysis =
+export const isDataFunctionResponse = (res: any): res is UNSAFE_DataWithResponseInit<any> => {
+	return res?.type && res.type === "DataWithResponseInit" && res.data && res.init
+}
+
+export const analyzeLoaderOrAction =
 	(routeId: string, type: "action" | "loader", loaderOrAction: (args: any) => Promise<any>) =>
 	async (args: LoaderFunctionArgs | ActionFunctionArgs) => {
 		const start = performance.now()
@@ -271,6 +310,8 @@ export const asyncAnalysis =
 		})
 		try {
 			const res = await response
+			if (isDataFunctionResponse(res)) {
+			}
 			unAwaited(() => {
 				const end = diffInMs(start)
 				const endTime = Date.now()

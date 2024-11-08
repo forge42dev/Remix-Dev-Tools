@@ -108,7 +108,7 @@ function toFunctionExpression(decl: Babel.FunctionDeclaration) {
 }
 
 export function injectRdtClient(code: string, clientConfig: string, pluginImports: string) {
-	const ast = parse(code, { sourceType: "module", plugins: ["jsx", "typescript"] })
+	const ast = parse(code, { sourceType: "module" })
 	const didTransform = transform(ast, clientConfig)
 	if (!didTransform) {
 		return code

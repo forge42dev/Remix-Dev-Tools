@@ -115,7 +115,7 @@ const Breakpoints = () => {
 	)
 }
 
-const DevTools = ({ plugins: pluginArray }: ReactRouterToolsProps) => {
+const DevTools = ({ plugins: pluginArray }: ReactRouterDevtoolsProps) => {
 	useTimelineHandler()
 	useResetDetachmentCheck()
 	useBorderedRoutes()
@@ -179,13 +179,13 @@ const DevTools = ({ plugins: pluginArray }: ReactRouterToolsProps) => {
 	)
 }
 
-export interface ReactRouterToolsProps {
+export interface ReactRouterDevtoolsProps {
 	// Additional tabs to add to the dev tools
 	plugins?: (Tab | RdtPlugin)[]
 	config?: RdtClientConfig
 }
 
-const ReactRouterDevTools = ({ plugins, config }: ReactRouterToolsProps) => {
+const ReactRouterDevTools = ({ plugins, config }: ReactRouterDevtoolsProps) => {
 	return (
 		<RDTContextProvider config={config}>
 			<DevTools plugins={plugins} />

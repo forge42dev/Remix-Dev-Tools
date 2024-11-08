@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react"
 import type { RemixDevToolsState } from "../context/rdtReducer.js"
 import { useSettingsContext } from "../context/useRDTContext.js"
-import type { ReactRouterToolsProps } from "../react-router-dev-tools.js"
+import type { ReactRouterDevtoolsProps } from "../react-router-dev-tools.js"
 import { type Tab, tabs } from "../tabs/index.js"
 import type { Tabs } from "../tabs/index.js"
 
@@ -10,7 +10,7 @@ const shouldHideTimeline = (activeTab: Tabs, tab: Tab | undefined, settings: Rem
 	return tab?.hideTimeline
 }
 
-export const useTabs = (pluginsArray?: ReactRouterToolsProps["plugins"]) => {
+export const useTabs = (pluginsArray?: ReactRouterDevtoolsProps["plugins"]) => {
 	const { settings } = useSettingsContext()
 	const { activeTab } = settings
 	const plugins = pluginsArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin))

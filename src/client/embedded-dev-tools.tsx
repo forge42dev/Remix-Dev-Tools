@@ -9,10 +9,10 @@ import { useTimelineHandler } from "./hooks/useTimelineHandler.js"
 import { ContentPanel } from "./layout/ContentPanel.js"
 import { MainPanel } from "./layout/MainPanel.js"
 import { Tabs } from "./layout/Tabs.js"
-import type { ReactRouterToolsProps } from "./react-router-dev-tools.js"
+import type { ReactRouterDevtoolsProps } from "./react-router-dev-tools.js"
 import { REACT_ROUTER_DEV_TOOLS } from "./utils/storage.js"
 
-export interface EmbeddedDevToolsProps extends ReactRouterToolsProps {
+export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
 	mainPanelClassName?: string
 	className?: string
 }

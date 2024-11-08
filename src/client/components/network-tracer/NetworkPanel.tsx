@@ -8,7 +8,6 @@ function NetworkPanel() {
 
 	const [containerWidth, setContainerWidth] = useState(800)
 
-	//console.log(req)
 	// Simulate network requests for demo
 
 	// Update container width on resize
