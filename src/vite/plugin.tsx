@@ -91,6 +91,10 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				return shouldInject(config.mode, includeServer)
 			},
 			transform(code, id) {
+				const extensions = [".tsx", ".jsx", ".ts", ".js"]
+				if (!extensions.some((ext) => id.endsWith(ext))) {
+					return
+				}
 				if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
 					return
 				}
