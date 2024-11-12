@@ -6,7 +6,7 @@ import {
   useLocation,
   useNavigate,
   useRouteLoaderData,
-} from '@remix-run/react'
+} from 'react-router'
 import { ChevronDownIcon, RatioIcon, SearchIcon, XIcon } from 'lucide-react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { useTransition, animated } from 'react-spring'
@@ -308,7 +308,7 @@ export default function Header({
                   aria-label="Home page"
                   to="/"
                   reloadDocument
-                  unstable_viewTransition
+                  viewTransition
                   className="md:flex"
                 >
                   <RatioIcon className="mr-2 h-7 w-7 self-center text-center md:hidden" />

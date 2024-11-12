@@ -1,4 +1,4 @@
-import { Link, useRouteLoaderData } from '@remix-run/react'
+
 import { Fragment, useMemo, useRef } from 'react'
 import { getMDXComponent, getMDXExport } from 'mdx-bundler/client'
 import clsx from 'clsx'
@@ -12,6 +12,7 @@ import Editor from '~/components/plugins/Editor'
 import Heading from '~/components/plugins/Heading'
 import { useTableOfContents } from '~/hooks/useTableOfContents'
 import { BackgroundGradient } from '../ui/background-gradient'
+import { Link, useRouteLoaderData } from 'react-router'
 
 export function Documentation({
   route = 'routes/docs.$tag.$slug',
@@ -117,7 +118,7 @@ export function Documentation({
               </dt>
               <dd className="mt-1">
                 <Link
-                  unstable_viewTransition
+                  viewTransition
                   className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
                   to={`/docs/${tag}/${prev.slug}`}
                   prefetch="intent"
@@ -138,7 +139,7 @@ export function Documentation({
                   className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
                   to={`/docs/${tag}/${next.slug}`}
                   prefetch="intent"
-                  unstable_viewTransition
+                  viewTransition
                 >
                   {next.alternateTitle ?? next.title}
                   {/* */}&nbsp;<span aria-hidden="true">→</span>

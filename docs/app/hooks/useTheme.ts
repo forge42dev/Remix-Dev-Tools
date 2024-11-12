@@ -1,4 +1,4 @@
-import { useFetchers } from '@remix-run/react'
+import { useFetchers } from 'react-router'
 import { z } from 'zod'
 
 import { useHints } from './useHints'

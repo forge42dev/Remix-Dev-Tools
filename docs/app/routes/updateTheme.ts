@@ -1,5 +1,6 @@
-import { json, type ActionFunctionArgs, redirect } from '@remix-run/node'
 
+
+import { ActionFunctionArgs, data, redirect } from 'react-router'
 import { ThemeFormSchema } from '~/hooks/useTheme'
 import { setTheme } from '~/utils/server/theme.server'
 
@@ -15,5 +16,5 @@ export async function action({ request }: ActionFunctionArgs) {
     return redirect(redirectTo, responseInit)
   }
 
-  return json({ success: true }, responseInit)
+  return  data({ success: true }, responseInit)
 }

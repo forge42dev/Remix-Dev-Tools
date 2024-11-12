@@ -31,17 +31,13 @@ type ReactRouterViteConfig = {
 	client?: Partial<RdtClientConfig>
 	server?: DevToolsServerConfig
 	pluginDir?: string
-	includeInProd?: boolean
-	improvedConsole?: boolean
+	includeInProd?: {
+		client?: boolean
+		server?: boolean
+	}
 	/** The directory where the react router app is located. Defaults to the "./app" relative to where vite.config is being defined. */
 	appDir?: string
 	editor?: EditorConfig
-	/**
-	 * If the package is marked as deprecated, a warning will be logged in the console
-	 * To disable this warning, set the option to true
-	 * @default false
-	 */
-	suppressDeprecationWarning?: boolean
 }
 
 export const defineRdtConfig = (config: ReactRouterViteConfig) => config
@@ -52,12 +48,12 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		...args?.client,
 		editorName: args?.editor?.name,
 	}
+	const includeClient = args?.includeInProd?.client ?? false
+	const includeServer = args?.includeInProd?.server ?? false
 
-	const include = args?.includeInProd ?? false
-	const improvedConsole = args?.improvedConsole ?? true
 	const appDir = args?.appDir || "./app"
 
-	const shouldInject = (mode: string | undefined) => mode === "development" || include
+	const shouldInject = (mode: string | undefined, include: boolean) => mode === "development" || include
 
 	// Set the server config on the process object so that it can be accessed by the plugin
 	if (typeof process !== "undefined") {
@@ -65,49 +61,49 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	}
 	return [
 		{
-			name: "react-router-devtools-client",
+			name: "react-router-devtools",
 			apply(config) {
-				return shouldInject(config.mode)
+				return shouldInject(config.mode, includeClient)
 			},
-
 			async configResolved(resolvedViteConfig) {
 				const reactRouterIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router")
 				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router-devtools")
-
 				if (reactRouterIndex >= 0 && devToolsIndex > reactRouterIndex) {
 					throw new Error("react-router-devtools plugin has to be before the react-router plugin!")
 				}
 			},
 			async transform(code, id) {
+				const isRoot = id.endsWith("/root.tsx") || id.endsWith("/root.jsx")
+				if (!isRoot) {
+					return
+				}
 				const pluginDir = args?.pluginDir || undefined
 				const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : []
 				const pluginNames = plugins.map((p) => p.name)
 				const pluginImports = plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n")
-				if (id.endsWith("/root.tsx") || id.endsWith("/root.jsx")) {
-					const config = `{ "config": ${JSON.stringify(clientConfig)}, "plugins": "[${pluginNames.join(",")}]" }`
-					return injectRdtClient(code, config, pluginImports)
-				}
+				const config = `{ "config": ${JSON.stringify(clientConfig)}, "plugins": "[${pluginNames.join(",")}]" }`
+				return injectRdtClient(code, config, pluginImports)
 			},
 		},
 		{
 			name: "react-router-devtools-data-function-augment",
 			apply(config) {
-				return config.mode === "development"
+				return shouldInject(config.mode, includeServer)
 			},
 			transform(code, id) {
 				if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
 					return
 				}
 				const routeId = id.replace(normalizePath(process.cwd()), "").replace("/app/", "").replace(".tsx", "")
-
 				const finalCode = augmentDataFetchingFunctions(code, routeId)
 				return finalCode
 			},
 		},
 		{
 			enforce: "pre",
-			name: "react-router-devtools-server",
+			name: "react-router-devtools-custom-server",
 			apply(config) {
+				// Custom server is only needed in development for piping events to the client
 				return config.mode === "development"
 			},
 			async configureServer(server) {
@@ -204,54 +200,50 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				}
 			},
 		},
-		...(improvedConsole
-			? [
-					{
-						name: "better-console-logs",
-						enforce: "pre",
-						apply(config) {
-							return config.mode === "development"
-						},
-						async transform(code, id) {
-							// Ignore anything external
-							if (
-								id.includes("node_modules") ||
-								id.includes("?raw") ||
-								id.includes("dist") ||
-								id.includes("build") ||
-								!id.includes("app")
-							)
-								return
+		{
+			name: "better-console-logs",
+			enforce: "pre",
+			apply(config) {
+				return config.mode === "development"
+			},
+			async transform(code, id) {
+				// Ignore anything external
+				if (
+					id.includes("node_modules") ||
+					id.includes("?raw") ||
+					id.includes("dist") ||
+					id.includes("build") ||
+					!id.includes("app")
+				)
+					return
 
-							if (code.includes("console.")) {
-								const lines = code.split("\n")
-								return lines
-									.map((line, lineNumber) => {
-										if (line.trim().startsWith("//") || line.trim().startsWith("/**") || line.trim().startsWith("*")) {
-											return line
-										}
-										// Do not add for arrow functions or return statements
-										if (line.replaceAll(" ", "").includes("=>console.") || line.includes("return console.")) {
-											return line
-										}
-
-										const column = line.indexOf("console.")
-										const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()), "")}:${lineNumber + 1}:${column + 1}`)}\\n → "`
-										if (line.includes("console.log(")) {
-											const newLine = `console.log(${logMessage},`
-											return line.replace("console.log(", newLine)
-										}
-										if (line.includes("console.error(")) {
-											const newLine = `console.error(${logMessage},`
-											return line.replace("console.error(", newLine)
-										}
-										return line
-									})
-									.join("\n")
+				if (code.includes("console.")) {
+					const lines = code.split("\n")
+					return lines
+						.map((line, lineNumber) => {
+							if (line.trim().startsWith("//") || line.trim().startsWith("/**") || line.trim().startsWith("*")) {
+								return line
 							}
-						},
-					} satisfies Plugin,
-				]
-			: []),
+							// Do not add for arrow functions or return statements
+							if (line.replaceAll(" ", "").includes("=>console.") || line.includes("return console.")) {
+								return line
+							}
+
+							const column = line.indexOf("console.")
+							const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()), "")}:${lineNumber + 1}:${column + 1}`)}\\n → "`
+							if (line.includes("console.log(")) {
+								const newLine = `console.log(${logMessage},`
+								return line.replace("console.log(", newLine)
+							}
+							if (line.includes("console.error(")) {
+								const newLine = `console.error(${logMessage},`
+								return line.replace("console.error(", newLine)
+							}
+							return line
+						})
+						.join("\n")
+				}
+			},
+		},
 	]
 }

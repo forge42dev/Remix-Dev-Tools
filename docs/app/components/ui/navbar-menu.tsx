@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from '@remix-run/react'
+import { Link } from 'react-router'
 import { cn } from '~/utils/cn'
 
 const transition = {

@@ -1,5 +1,5 @@
 
-import { installGlobals } from '@remix-run/node'
+import { installGlobals } from '@react-router/node'
 import { afterAll, afterEach } from 'vitest'
 
 installGlobals()

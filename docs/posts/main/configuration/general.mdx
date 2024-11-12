@@ -1,0 +1,55 @@
+---
+title: React Router Devtools General Configuration
+description: General Configuration options for the React Router Devtools to interface with your editor
+---
+
+import Warn from "./warn.tsx";
+
+This covers the general configuration options for the React Router Devtools.
+
+## General Config
+
+```ts
+type GeneralConfig = {
+ 	pluginDir?: string
+	includeInProd?: {
+		client?: boolean
+		server?: boolean
+	}
+
+}
+```
+
+## `pluginDir`
+
+The relative path to your plugin directory. If you have a directory for react-router-devtools plugins you can point to it and they
+will be automatically imported and added to the dev tools.
+
+## `includeInProd`
+
+  This option is used to set whether the plugin should be included in production builds or not.
+
+  By default it is set to `undefined` and if you set this option to an object with the `client` and `server` properties set to `true` the plugin will be included in production builds.
+
+The client part includes the dev tools with the plugin and the server part includes the info logs. You can granularly configure the
+exact behavior of both sides with client and server configs respectively.
+
+<Warn title="Be careful!">
+ If you decide to deploy parts to production you should be very careful that you don't expose the dev tools to your clients or anybody
+ who is not supposed to see them. Also the server part uses chalk which might not work in non-node environments!
+</Warn>
+
+  ```ts
+  import { reactRouterDevTools } from "react-router-devtools";
+
+  export default defineConfig({
+    plugins: [
+      reactRouterDevTools({
+        includeInProd: {
+          client: true,
+          server: true,
+        },
+      }),
+    ],
+  });
+  ```

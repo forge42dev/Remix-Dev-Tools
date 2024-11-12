@@ -21,7 +21,7 @@ This will install it as a dev dependency in your project.
 After you have installed the tools, you need to go to your `vite.config.ts` file which will probably look something like this:
 
 ```ts
-import { reactRouter } from '@react-router/dev'
+import { reactRouter } from '@react-router/dev/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
@@ -34,7 +34,7 @@ export default defineConfig({
 All you have to do is add the plugin into the `plugins` array in your `vite.config.ts` file.
 
 ```diff
-import { reactRouter } from '@react-router/dev'
+import { reactRouter } from '@react-router/dev/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 +import { reactRouterDevTools } from "react-router-devtools";

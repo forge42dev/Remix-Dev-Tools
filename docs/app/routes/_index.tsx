@@ -1,5 +1,5 @@
-import type { MetaFunction } from '@remix-run/node'
-import { Link } from '@remix-run/react' 
+
+import { Link } from 'react-router'
 import { FeaturesSection } from '~/components/FeaturesSection'
 import { Button } from '~/components/ui/Button'
 import { LampContainer } from '~/components/ui/Lamp'
@@ -68,7 +68,7 @@ export default function Index() {
           as={Link}
           to="/docs/main"
           className="text-white"
-          unstable_viewTransition
+          viewTransition
         >
           Get Started
         </Button>

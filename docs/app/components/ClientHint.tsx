@@ -1,5 +1,6 @@
-import { useRevalidator } from '@remix-run/react'
+
 import { useEffect } from 'react'
+import { useRevalidator } from 'react-router'
 
   const clientHints = {
   theme: {

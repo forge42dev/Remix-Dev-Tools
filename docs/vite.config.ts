@@ -1,17 +1,17 @@
-import { unstable_RemixPWA } from '@remix-pwa/dev'
-import { vitePlugin as remix } from '@remix-run/dev'
+
+import { reactRouter } from '@react-router/dev/vite'
 import { defineConfig } from 'vite'
-import { remixDevTools } from 'remix-development-tools'
+import { reactRouterDevTools } from 'react-router-devtools'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   plugins: [
-    remixDevTools({
+    reactRouterDevTools({
       includeInProd: true,
       client: { position: 'middle-right' },
       server: { silent: true },
     }),
-    remix(),
+    reactRouter(),
     tsconfigPaths(),
   ],
   server: {

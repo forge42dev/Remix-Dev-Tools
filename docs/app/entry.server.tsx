@@ -1,8 +1,7 @@
 /* eslint-disable indent */
 import { PassThrough } from 'node:stream'
-import type { AppLoadContext, EntryContext } from '@remix-run/node'
-import { createReadableStreamFromReadable } from '@remix-run/node'
-import { RemixServer } from '@remix-run/react'
+import { type AppLoadContext, type EntryContext, ServerRouter } from "react-router"
+import { createReadableStreamFromReadable } from '@react-router/node'
 import * as isbotModule from 'isbot'
 import { renderToPipeableStream } from 'react-dom/server'
 import 'dotenv/config'
@@ -61,7 +60,7 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const { abort, pipe } = renderToPipeableStream(
-      <RemixServer
+      <ServerRouter
         context={remixContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
@@ -111,7 +110,7 @@ function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const { abort, pipe } = renderToPipeableStream(
-      <RemixServer
+      <ServerRouter
         context={remixContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
