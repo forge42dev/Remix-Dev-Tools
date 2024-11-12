@@ -63,8 +63,8 @@ export const handleOpenSource = ({
 
 		if (isRoot) {
 			if (!fs.existsSync(appDir)) return
-			const filesInRemixPath = fs.readdirSync(appDir)
-			const rootFile = findFileByExtension("root", filesInRemixPath)
+			const filesInReactRouterPath = fs.readdirSync(appDir)
+			const rootFile = findFileByExtension("root", filesInReactRouterPath)
 			rootFile && openInEditor(path.join(appDir, rootFile), lineNum)
 			return
 		}

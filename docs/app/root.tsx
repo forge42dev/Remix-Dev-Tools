@@ -25,11 +25,11 @@ export const meta: MetaFunction<typeof loader> = () => {
   return [
     {
       property: 'og:site_name',
-      content: 'Remix Development Tools',
+      content: 'React Router Devtools',
     },
     {
       property: 'og:title',
-      content: 'Remix Development Tools Documentation',
+      content: 'React Router Devtools Documentation',
     },
     {
       property: 'og:image',

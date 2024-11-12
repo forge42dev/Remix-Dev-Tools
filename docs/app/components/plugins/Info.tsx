@@ -1,4 +1,4 @@
-export const RemixPWAInfo = ({ children, title = 'You should know!' }: any) => {
+export const PWAInfo = ({ children, title = 'You should know!' }: any) => {
   return (
     <div className="my-8 flex rounded-3xl bg-sky-50 p-6 dark:bg-slate-950/60 dark:ring-1 dark:ring-slate-300/10">
       <svg
@@ -72,5 +72,5 @@ export const RemixPWAInfo = ({ children, title = 'You should know!' }: any) => {
   )
 }
 
-const Info = RemixPWAInfo
+const Info = PWAInfo
 export default Info

@@ -26,7 +26,7 @@ export default function Index() {
 
       <LampContainer>
         <h1 className="bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold !leading-normal text-transparent md:text-7xl">
-          Own <br /> your <span className="mr-4 text-green-500"> Remix</span>
+          Own <br /> your <span className="mr-4 text-green-500"> React Router</span>
           application
         </h1>
       </LampContainer>
@@ -41,19 +41,19 @@ export default function Index() {
               title: 'Raphaël Moreau',
               name: 'Software Engineer',
               quote:
-                'Remix dev tools are really helpful when I struggle with something that doesn’t work as I expect. You have everything you need to debug right in your browser (really helpful when I can’t use a second monitor). The features I can’t work without are the active page data with the loader/action data and the server responses (no need to search for a console.log in the terminal or the browser console) and the error tab with the hydration mismatch view 🔥. (I love everything but it would be suspicious if I listed it all)',
+                'React Router Devtools are really helpful when I struggle with something that doesn’t work as I expect. You have everything you need to debug right in your browser (really helpful when I can’t use a second monitor). The features I can’t work without are the active page data with the loader/action data and the server responses (no need to search for a console.log in the terminal or the browser console) and the error tab with the hydration mismatch view 🔥. (I love everything but it would be suspicious if I listed it all)',
             },
             {
               title: 'Alem Tuzlak',
               name: 'The guy who created this',
               quote:
-                'Remix development tools is the best tool I have created so far. You should definitely try it out in your Remix project and this is not a paid testimonial 😂',
+                'React Router Devtools is the best tool I have created so far. You should definitely try it out in your React Router project and this is not a paid testimonial 😂',
             },
             {
               title: 'xHomu',
               name: 'Software Engineer',
               quote:
-                "From hydration error to hunting down nested routes, with RDT, the solution to the worst Remix pain points is always just a click away. Don't build a Remix app without it! ",
+                "From hydration error to hunting down nested routes, with RDT, the solution to the worst React Router pain points is always just a click away. Don't build a React Router app without it! ",
             },
           ]}
         />

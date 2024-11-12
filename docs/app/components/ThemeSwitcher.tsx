@@ -5,7 +5,7 @@ import { useFetcher } from 'react-router'
 
 import { useTheme } from '~/hooks/useTheme'
 
-export const RemixPWAThemeSwitcher = () => {
+export const PWAThemeSwitcher = () => {
   const fetcher = useFetcher()
   const theme = useTheme()
   const ref = useRef<HTMLButtonElement>(null)

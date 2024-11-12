@@ -37,6 +37,9 @@ exact behavior of both sides with client and server configs respectively.
 <Warn title="Be careful!">
  If you decide to deploy parts to production you should be very careful that you don't expose the dev tools to your clients or anybody
  who is not supposed to see them. Also the server part uses chalk which might not work in non-node environments!
+
+ Also, if you wish to edit the plugin server config in production you can set `process.rdt_config` to an object with the same shape as the
+ config object and it will be used instead of the default production config (`{ silent: true }`).
 </Warn>
 
   ```ts

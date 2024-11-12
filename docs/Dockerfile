@@ -4,9 +4,9 @@
 ARG NODE_VERSION=20.10.0
 FROM node:${NODE_VERSION}-slim as base
 
-LABEL fly_launch_runtime="Remix"
+LABEL fly_launch_runtime="React Router"
 
-# Remix app lives here
+# React router app lives here
 WORKDIR /app
 
 # Set production environment
@@ -42,4 +42,4 @@ COPY --from=build / /
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "node_modules/.bin/remix-serve", "./build/server/index.js" ]
+CMD [ "node_modules/.bin/react-router-serve", "./build/server/index.js" ]

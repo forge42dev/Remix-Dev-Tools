@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for remix-development-tools on 2024-03-09T20:07:33+01:00
+# fly.toml app configuration file generated for react-router-devtools on 2024-03-09T20:07:33+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'remix-development-tools'
+app = 'react-router-devtools'
 primary_region = 'lhr'
 
 [build]

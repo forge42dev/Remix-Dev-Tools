@@ -21,7 +21,7 @@ You can also track down hydration issues with the **Errors** tab and view your r
 
 ### Remix Development Tools
 
-This repository used to be called Remix Development Tools, but we decided to rename it to react-router-devtools to better reflect the fact that it's a package for React Router v7+ and not just for Remix.
+This repository used to be called remix-development-tools, but we decided to rename it to react-router-devtools to better reflect the fact that it's a package for React Router v7+ and not just for Remix.
 
 If you're looking for the old version of this package, you can find it [here](https://github.com/forge42dev/Remix-Dev-Tools/tree/remix-development-tools).
 
@@ -66,7 +66,7 @@ react-router-devtools is open-source software released under the [MIT License](h
 
 React Router Devtools was inspired by the React Router v7 and aims to enhance the development experience for React Router v7+ users.
 
-Feel free to explore React Router Devtools, and we hope it significantly improves your Remix development process. If you encounter any issues or have suggestions for enhancements, please don't hesitate to open an issue on our GitHub repository. Happy Remixing!
+Feel free to explore React Router Devtools, and we hope it significantly improves your React Router development process. If you encounter any issues or have suggestions for enhancements, please don't hesitate to open an issue on our GitHub repository. Happy Remixing!
 
 ## Thanks
 

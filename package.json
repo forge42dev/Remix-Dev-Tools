@@ -60,17 +60,15 @@
 	"bugs": {
 		"url": "https://github.com/forge42dev/react-router-devtools/issues"
 	},
-	"homepage": "https://remix-development-tools.fly.dev/",
+	"homepage": "https://forge42.dev/react-router-devtools",
 	"readme": "https://github.com/forge42dev/react-router-devtools#readme",
 	"scripts": {
 		"clean": "git clean -fdX --exclude=\"!.env\"",
 		"docs": "npm run dev -w docs",
 		"prepublishOnly": "npm run build",
-		"remix-vite": "npm run dev -w test-apps/remix-vite",
-		"remix-website": "npm run dev -w test-apps/remix-website",
+		"react-router-vite": "npm run dev -w test-apps/react-router-vite",
 		"runner": "npm-run-all -s build -p watch-all",
-		"dev": "npm run runner remix-vite",
-		"dev:website": "npm run runner remix-website ",
+		"dev": "npm run runner react-router-vite",
 		"build": "run-s  tsup:* -- --clean",
 		"watch-all": "npm-run-all -p tsup:index:watch tsup:client:watch tsup:server:watch -- --watch",
 		"tsup:index": "tsup",

@@ -1,4 +1,4 @@
-export const RemixPWAWarn = ({
+export const PWAWarn = ({
   children,
   title = 'Oh no! Something bad happened!',
 }: any) => {
@@ -82,5 +82,5 @@ export const RemixPWAWarn = ({
   )
 }
 
-const Warn = RemixPWAWarn
+const Warn = PWAWarn
 export default Warn

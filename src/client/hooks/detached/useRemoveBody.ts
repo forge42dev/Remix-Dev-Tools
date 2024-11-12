@@ -1,8 +1,8 @@
 import { useEffect } from "react"
-import type { RemixDevToolsState } from "../../context/rdtReducer.js"
+import type { ReactRouterDevtoolsState } from "../../context/rdtReducer.js"
 import { REACT_ROUTER_DEV_TOOLS } from "../../utils/storage.js"
 
-export const useRemoveBody = (state: RemixDevToolsState) => {
+export const useRemoveBody = (state: ReactRouterDevtoolsState) => {
 	useEffect(() => {
 		if (!state.detachedWindow) {
 			return

@@ -18,24 +18,6 @@ This plugin allows you to see all your project icons in a new tab in react route
   }
 ```
 
-
-### Remix bundler
-
-1. Copy the code from the plugin located in this folder.
-2. Go over the TODO's in the code and modify the code to your project specifications.
-3. Import the plugin exported from the `icon-library.tsx` into your `root.tsx` file.
-4. Add the plugin to the `plugins` array in the `withDevTools` wrapper.
-
-```tsx
-  import { iconLibraryPlugin } from "~/icon-library.tsx";
-
-  AppExport = withDevTools(App, {
-    plugins: [iconLibraryPlugin()]
-  });
-```
-
-5. Run your project and open the new tab in the development tools.
-
 ## How it works
 
 The plugin will use all the icons in your project that are provided to it and will display them in a grid with different sizes.

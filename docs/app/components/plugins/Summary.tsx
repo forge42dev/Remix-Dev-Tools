@@ -1,6 +1,6 @@
 import type { ReactNode, JSX } from 'react'
 
-export const RemixPWASummary = ({
+export const PWASummary = ({
   children,
   title,
 }: {
@@ -17,5 +17,5 @@ export const RemixPWASummary = ({
   )
 }
 
-const Summary = RemixPWASummary
+const Summary = PWASummary
 export default Summary

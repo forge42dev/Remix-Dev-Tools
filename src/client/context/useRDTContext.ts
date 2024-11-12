@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react"
 import type { NetworkRequest } from "../components/network-tracer/types.js"
 import { RDTContext } from "./RDTContext.js"
-import type { RemixDevToolsState } from "./rdtReducer.js"
+import type { ReactRouterDevtoolsState } from "./rdtReducer.js"
 import type { TimelineEvent } from "./timeline/types.js"
 
 /**
@@ -29,7 +29,7 @@ export const useHtmlErrors = () => {
 	const { state, dispatch } = useRDTContext()
 	const { htmlErrors } = state
 	const setHtmlErrors = useCallback(
-		(htmlErrors: RemixDevToolsState["htmlErrors"]) => {
+		(htmlErrors: ReactRouterDevtoolsState["htmlErrors"]) => {
 			dispatch({
 				type: "SET_HTML_ERRORS",
 				payload: htmlErrors,
@@ -44,7 +44,7 @@ export const useServerInfo = () => {
 	const { state, dispatch } = useRDTContext()
 	const { server } = state
 	const setServerInfo = useCallback(
-		(serverInfo: Partial<RemixDevToolsState["server"]>) => {
+		(serverInfo: Partial<ReactRouterDevtoolsState["server"]>) => {
 			dispatch({
 				type: "SET_SERVER_INFO",
 				payload: {
@@ -88,7 +88,7 @@ export const useSettingsContext = () => {
 	const { dispatch, state } = useRDTContext()
 	const { settings } = state
 	const setSettings = useCallback(
-		(settings: Partial<RemixDevToolsState["settings"]>) => {
+		(settings: Partial<ReactRouterDevtoolsState["settings"]>) => {
 			dispatch({
 				type: "SET_SETTINGS",
 				payload: settings,

@@ -12,7 +12,7 @@ export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
+  reactRouterContext: EntryContext,
   loadContext: AppLoadContext
 ) {
   return isBotRequest(request.headers.get('user-agent'))
@@ -20,19 +20,16 @@ export default function handleRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext
+        reactRouterContext
       )
     : handleBrowserRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext
+        reactRouterContext
       )
 }
 
-// We have some Remix apps in the wild already running with isbot@3 so we need
-// to maintain backwards compatibility even though we want new apps to use
-// isbot@4.  That way, we can ship this as a minor Semver update to @remix-run/dev.
 function isBotRequest(userAgent: string | null) {
   if (!userAgent) {
     return false
@@ -55,13 +52,13 @@ function handleBotRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  reactRouterContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const { abort, pipe } = renderToPipeableStream(
       <ServerRouter
-        context={remixContext}
+        context={reactRouterContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
       />,
@@ -105,13 +102,13 @@ function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  reactRouterContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const { abort, pipe } = renderToPipeableStream(
       <ServerRouter
-        context={remixContext}
+        context={reactRouterContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
       />,

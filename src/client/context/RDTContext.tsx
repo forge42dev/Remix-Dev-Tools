@@ -14,11 +14,16 @@ import {
 	setSessionItem,
 	setStorageItem,
 } from "../utils/storage.js"
-import { type RemixDevToolsActions, type RemixDevToolsState, initialState, rdtReducer } from "./rdtReducer.js"
+import {
+	type ReactRouterDevtoolsActions,
+	type ReactRouterDevtoolsState,
+	initialState,
+	rdtReducer,
+} from "./rdtReducer.js"
 
 export const RDTContext = createContext<{
-	state: RemixDevToolsState
-	dispatch: Dispatch<RemixDevToolsActions>
+	state: ReactRouterDevtoolsState
+	dispatch: Dispatch<ReactRouterDevtoolsActions>
 }>({ state: initialState, dispatch: () => null })
 
 RDTContext.displayName = "RDTContext"
@@ -61,7 +66,7 @@ export const detachedModeSetup = () => {
 
 export const getSettings = () => {
 	const settingsString = getStorageItem(REACT_ROUTER_DEV_TOOLS_SETTINGS)
-	const settings = tryParseJson<RemixDevToolsState["settings"]>(settingsString)
+	const settings = tryParseJson<ReactRouterDevtoolsState["settings"]>(settingsString)
 	return {
 		...settings,
 	}
@@ -72,7 +77,7 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 	const settings = getSettings()
 
 	const { detachedWindow, detachedWindowOwner } = detachedModeSetup()
-	const state: RemixDevToolsState = {
+	const state: ReactRouterDevtoolsState = {
 		...initialState,
 		...(existingState ? JSON.parse(existingState) : {}),
 		settings: {
@@ -90,7 +95,7 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 }
 
 export type RdtClientConfig = Pick<
-	RemixDevToolsState["settings"],
+	ReactRouterDevtoolsState["settings"],
 	| "defaultOpen"
 	| "breakpoints"
 	| "showBreakpointIndicator"

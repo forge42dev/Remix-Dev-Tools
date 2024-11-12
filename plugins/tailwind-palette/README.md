@@ -27,23 +27,6 @@ This plugin allows you to see all tailwind colors in a new tab in react router d
 ```
 
 
-### Remix bundler
-
-1. Copy the code from the plugin located in this folder.
-2. Go over the TODO's in the code and modify the code to your project specifications.
-3. Import the plugin exported from the `tailwind-palette.tsx` into your `root.tsx` file.
-4. Add the plugin to the `plugins` array in the `withDevTools` wrapper.
-
-```tsx
-  import { tailwindPalettePlugin } from "~/tailwind-palette.tsx";
-
-  AppExport = withDevTools(App, {
-    plugins: [tailwindPalettePlugin()]
-  });
-```
-
-5. Run your project and open the new tab in the development tools.
-
 ## How it works
 
 The plugin will use all the tailwind colors and list them for you so you can easily copy paste them and apply them to your elements

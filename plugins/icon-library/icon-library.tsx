@@ -76,7 +76,7 @@ const IconLibrary = () => {
   );
 };
 
-// TODO Import this into your root.tsx and call it inside of the plugins array for RemixDevTools
+// TODO Import this into your root.tsx and call it inside of the plugins array for react-router-devtools
 export const iconLibraryPlugin  = () => ({
   // TODO Replace with your own icon
   icon: <Icon name="camera" size="sm" />,

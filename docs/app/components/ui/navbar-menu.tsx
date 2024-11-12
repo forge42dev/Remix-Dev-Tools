@@ -117,9 +117,9 @@ export function Navbar({ className }: { className?: string }) {
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Links">
           <div className="flex flex-col space-y-4 text-sm">
-            <ExternalLink url="https://remix.run" text="Remix.run" />
+            <ExternalLink url="https://reactrouter.com/en/main" text="React Router" />
             <ExternalLink
-              url="https://github.com/Code-Forge-Net/Remix-Dev-Tools"
+              url="https://github.com/forge42dev/react-router-devtools"
               text="Github"
             />
             <ExternalLink

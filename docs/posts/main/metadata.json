@@ -26,7 +26,7 @@
   ],
   "meta": {
     "installation": {
-      "title": "Setting up Remix Development Tools",
+      "title": "Setting up React Router Devtools",
       "alternateTitle": "Installation",
       "description": "Learn how to setup react-router-devtools in your project.",
       "section": "Getting Started",

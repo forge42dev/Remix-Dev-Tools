@@ -1,6 +1,6 @@
 import { convertReactRouterPathToUrl } from "./sanitize.js"
 
-describe("convertRemixPathToUrl", () => {
+describe("convertReactRouterPathToUrl", () => {
 	it('should return "/" when given a route with no parent', () => {
 		const routes = {
 			root: {
