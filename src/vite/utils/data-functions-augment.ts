@@ -143,10 +143,14 @@ function toFunctionExpression(decl: Babel.FunctionDeclaration) {
 }
 
 export function augmentDataFetchingFunctions(code: string, routeId: string) {
-	const ast = parse(code, { sourceType: "module" })
-	const didTransform = transform(ast, routeId)
-	if (!didTransform) {
+	try {
+		const ast = parse(code, { sourceType: "module" })
+		const didTransform = transform(ast, routeId)
+		if (!didTransform) {
+			return code
+		}
+		return gen(ast).code
+	} catch (e) {
 		return code
 	}
-	return gen(ast).code
 }

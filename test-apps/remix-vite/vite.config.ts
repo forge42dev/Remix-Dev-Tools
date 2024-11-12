@@ -17,7 +17,10 @@ const config = defineRdtConfig({
     }],
   },
   pluginDir: "./plugins",
-  includeInProd: true,
+  includeInProd: {
+    client: true,
+    server: true
+  },
     // Set this option to true to suppress deprecation warnings
     // suppressDeprecationWarning: true,
   server:  {

@@ -7,7 +7,10 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
   plugins: [
     reactRouterDevTools({
-      includeInProd: true,
+      includeInProd: {
+        client: true,
+        server: true
+      },
       client: { position: 'middle-right' },
       server: { silent: true },
     }),

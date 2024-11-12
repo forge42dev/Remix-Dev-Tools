@@ -87,7 +87,7 @@
     "jsdom": "^24.0.0",
     "prettier": "^3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.10",
-    "react-router-devtools": "https://pkg.pr.new/forge42dev/Remix-Dev-Tools/react-router-devtools@151.tgz",
+    "react-router-devtools": "https://pkg.pr.new/forge42dev/Remix-Dev-Tools/react-router-devtools@5ebde1a",
     "rimraf": "^5.0.5",
     "tailwindcss": "^3.4.0",
     "tsx": "^4.7.0",
