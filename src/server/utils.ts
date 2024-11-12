@@ -150,7 +150,7 @@ export const analyzeDeferred = (id: string, start: number, response: any) => {
 	if (config.logs?.defer === false || config.silent) {
 		return
 	}
-	if (response instanceof Response || typeof response !== "object") {
+	if (!response || response instanceof Response || typeof response !== "object") {
 		return
 	}
 	logDeferredObject(response, id, start)
@@ -329,7 +329,7 @@ export const analyzeLoaderOrAction =
 						id: routeId,
 						url: args.request.url,
 						method: args.request.method,
-						status: typeof response === "object" ? (response as any).status : undefined,
+						status: response && typeof response === "object" ? (response as any).status : undefined,
 					})
 				}
 			})
