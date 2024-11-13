@@ -1,10 +1,8 @@
-# syntax = docker/dockerfile:1
+# syntax = docker/dockerfile:1.4
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.10.0
-FROM node:${NODE_VERSION}-slim as base
-
-LABEL fly_launch_runtime="React Router"
+ARG NODE_VERSION=22
+FROM node:${NODE_VERSION}-slim AS base
 
 # React router app lives here
 WORKDIR /app
