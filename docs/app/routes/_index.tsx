@@ -24,7 +24,7 @@ export default function Index() {
       </div>
 
       <LampContainer>
-        <h1 className="bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold !leading-normal text-transparent md:text-7xl">
+        <h1 className="bg-opacity-50 bg-gradient-to-b from-gray-50 to-gray-300 bg-clip-text text-center text-4xl font-bold !leading-normal text-transparent md:text-7xl">
           Own <br /> your <span className="mr-4 text-green-500"> React Router</span>
           application
         </h1>
