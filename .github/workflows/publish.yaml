@@ -24,6 +24,7 @@ jobs:
     uses: forge42dev/workflows/.github/workflows/deploy-to-fly.yaml@monorepo-matrix
     with:
       workspace_name: docs
+      set_cwd_to_workspace: true
       github_environment: "docs-release"
     secrets:
       fly_api_token: ${{ secrets.FLY_API_TOKEN }}
