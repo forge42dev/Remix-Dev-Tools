@@ -3,20 +3,21 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'react-router-devtools'
+app            = 'react-router-devtools'
 primary_region = 'lhr'
 
 [build]
+  dockerfile = "./Dockerfile"
 
 [http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = "suspend"
-  auto_start_machines = true
+  internal_port        = 3000
+  force_https          = true
+  auto_stop_machines   = "suspend"
+  auto_start_machines  = true
   min_machines_running = 0
-  processes = ['app']
+  processes            = ['app']
 
 [[vm]]
-  memory = '512mb'
+  memory   = '512mb'
   cpu_kind = 'shared'
-  cpus = 1
+  cpus     = 1
