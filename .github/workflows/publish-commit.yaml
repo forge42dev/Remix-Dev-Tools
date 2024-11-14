@@ -22,3 +22,14 @@ jobs:
         run: npm run build
 
       - run: npx pkg-pr-new publish
+
+
+
+  deploy-preview:
+    name: "🚀 Deploy Docs"
+    uses: forge42dev/workflows/.github/workflows/deploy-to-fly.yaml@monorepo-matrix
+    with:
+      workspace_name: docs
+      github_environment: "docs-previev"
+    secrets:
+      fly_api_token: ${{ secrets.FLY_API_TOKEN }}
