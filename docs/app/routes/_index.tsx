@@ -23,8 +23,8 @@ export default function Index() {
         <Meteors />
       </div>
 
-      <LampContainer>
-        <h1 className="text-center text-4xl font-bold !leading-normal text-white md:text-7xl">
+      <LampContainer className='h-[100vh]'>
+        <h1 className="text-center text-4xl font-bold !leading-normal text-white md:text-5xl xl:text-7xl">
           Own <br /> your <span className="mr-4 text-green-500"> React Router</span>
           application
         </h1>
