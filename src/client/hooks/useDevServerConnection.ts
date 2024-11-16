@@ -67,8 +67,8 @@ const useDevServerConnection = () => {
 			for (const routeInfo of Object.values(events)) {
 				const { loader, action } = routeInfo as any
 				const events = [
-					loader.map((e: any) => ({ type: "loader", data: e })),
-					action.map((e: any) => ({ type: "action", data: e })),
+					loader.slice(-3).map((e: any) => ({ type: "loader", data: e })),
+					action.slice(-3).map((e: any) => ({ type: "action", data: e })),
 				].flat()
 				for (const event of events) {
 					updateRouteInfo(server, routes, event, false)
