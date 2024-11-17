@@ -27,12 +27,17 @@ will be automatically imported and added to the dev tools.
 
 ## `includeInProd`
 
-  This option is used to set whether the plugin should be included in production builds or not.
+This option is used to set whether the plugin should be included in production builds or not.
 
-  By default it is set to `undefined` and if you set this option to an object with the `client` and `server` properties set to `true` the plugin will be included in production builds.
+By default it is set to `undefined` and if you set this option to an object with the `client`, `context` and `server` properties set to `true` the plugin will be included in production builds.
 
 The client part includes the dev tools with the plugin and the server part includes the info logs. You can granularly configure the
 exact behavior of both sides with client and server configs respectively.
+
+
+Each of these flags will include a part of the plugin in production, in order for any of these to work `react-router-devtools` need to be switched over to
+a regular dependency and included in your project. If you only want to include the `devTools` helper in production, for example, you can
+set `includeInProd` to `{ devTools: true }` and the `devTools` part will be included in production and available always.
 
 <Warn title="Be careful!">
  If you decide to deploy parts to production you should be very careful that you don't expose the dev tools to your clients or anybody
@@ -51,6 +56,7 @@ exact behavior of both sides with client and server configs respectively.
         includeInProd: {
           client: true,
           server: true,
+          devTools: true
         },
       }),
     ],

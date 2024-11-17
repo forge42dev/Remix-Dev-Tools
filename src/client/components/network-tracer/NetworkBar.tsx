@@ -1,17 +1,17 @@
 import { animate, motion, useMotionValue } from "framer-motion"
 import type React from "react"
 import { useEffect } from "react"
-import type { NetworkRequest } from "./types"
+import type { RequestEvent } from "../../../shared/request-event"
 
 interface NetworkBarProps {
-	request: NetworkRequest
+	request: RequestEvent
 	index: number
 	minTime: number
 	pixelsPerMs: number
 	barHeight: number
 	barPadding: number
 	now: number
-	onClick: (e: React.MouseEvent, request: NetworkRequest, order: number) => void
+	onClick: (e: React.MouseEvent, request: RequestEvent, order: number) => void
 	isActive: boolean
 }
 
@@ -20,6 +20,7 @@ const COLORS = {
 	"client-loader": "#60a5fa",
 	action: "#f59e0b",
 	"client-action": "#ef4444",
+	"custom-event": "#ffffff",
 	pending: "#94a3b8",
 	error: "#dc2626",
 }
@@ -90,7 +91,7 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 			className="relative overflow-hidden group cursor-pointer hover:brightness-110"
 			onClick={(e) => onClick(e, request, index)}
 		>
-			{request.state === "pending" && isActive && (
+			{isActive && (
 				<motion.div
 					className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
 					animate={{ x: ["-100%", "100%"] }}

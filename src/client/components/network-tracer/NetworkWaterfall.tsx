@@ -3,14 +3,14 @@ import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { Tooltip } from "react-tooltip"
+import type { RequestEvent } from "../../../shared/request-event"
 import { METHOD_COLORS } from "../../tabs/TimelineTab"
 import { Tag } from "../Tag"
 import { NetworkBar } from "./NetworkBar"
 import { REQUEST_BORDER_COLORS, RequestDetails } from "./RequestDetails"
-import type { NetworkRequest, Position } from "./types"
 
 interface Props {
-	requests: NetworkRequest[]
+	requests: RequestEvent[]
 	width: number
 }
 
@@ -22,17 +22,19 @@ const MAX_SCALE = 10
 const FUTURE_BUFFER = 1000 // 2 seconds ahead
 const INACTIVE_THRESHOLD = 100 // 1 seconds
 
-export const TYPE_COLORS = {
+const TYPE_COLORS = {
 	loader: "bg-green-500",
 	"client-loader": "bg-blue-500",
 	action: "bg-yellow-500",
 	"client-action": "bg-purple-500",
+	"custom-event": "bg-white",
 }
 const TYPE_TEXT_COLORS = {
 	loader: "text-green-500",
 	"client-loader": "text-blue-500",
 	action: "text-yellow-500",
 	"client-action": "text-purple-500",
+	"custom-event": "text-white",
 }
 
 const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
@@ -104,7 +106,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	//		setScale((s) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, s + delta)))
 	//	}
 
-	const handleBarClick = (e: React.MouseEvent, request: NetworkRequest, index: number) => {
+	const handleBarClick = (e: React.MouseEvent, request: RequestEvent, index: number) => {
 		setSelectedRequest(index)
 	}
 
@@ -162,7 +164,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 
 									<Tooltip place="top" id={`${request.id}${request.startTime}`} />
 									<div className="pr-4">
-										<div>{request.id}</div>
+										<div className="whitespace-nowrap">{request.id}</div>
 									</div>
 								</button>
 								<div className="flex items-center ml-auto">

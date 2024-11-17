@@ -1,14 +1,12 @@
-import { motion } from "framer-motion"
 import type React from "react"
+import type { RequestEvent } from "../../../shared/request-event"
 import { METHOD_COLORS } from "../../tabs/TimelineTab"
 import { Tag } from "../Tag"
 import { Icon } from "../icon/Icon"
 import { JsonRenderer } from "../jsonRenderer"
-import { TYPE_COLORS } from "./NetworkWaterfall"
-import type { NetworkRequest } from "./types"
 
 interface RequestDetailsProps {
-	request: NetworkRequest
+	request: RequestEvent
 	onClose: () => void
 	onChangeRequest: (index: number) => void
 	total: number
@@ -19,6 +17,7 @@ export const REQUEST_BORDER_COLORS = {
 	"client-loader": "border-blue-500",
 	action: "border-yellow-500",
 	"client-action": "border-purple-500",
+	"custom-event": "border-white",
 	error: "border-red-500",
 }
 export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose, total, index, onChangeRequest }) => {

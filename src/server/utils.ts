@@ -1,5 +1,6 @@
 import chalk from "chalk"
 import type { ActionFunctionArgs, LoaderFunctionArgs, UNSAFE_DataWithResponseInit } from "react-router"
+import { sendEvent } from "../shared/send-event.js"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
@@ -236,6 +237,9 @@ const storeAndEmitActionOrLoaderInfo = async (
 			responseHeaders,
 		},
 	}
+	if (typeof process === "undefined") {
+		return
+	}
 	const port = process.rdt_port
 
 	if (port) {
@@ -243,34 +247,11 @@ const storeAndEmitActionOrLoaderInfo = async (
 			method: "POST",
 			body: JSON.stringify(event),
 		})
-			.then(() => {})
-			.catch(() => {})
-	}
-}
-
-export type RequestEvent = {
-	routine?: "request-event"
-	type: "action" | "loader" | "client-loader" | "client-action"
-	headers: Record<string, string>
-	id: string
-	startTime: number
-	endTime?: number | undefined
-	data?: any | undefined
-	method: string
-	status?: string
-	url: string
-	aborted?: boolean
-}
-
-const sendEvent = (event: RequestEvent) => {
-	const port = process.rdt_port
-
-	if (port) {
-		fetch(`http://localhost:${port}/react-router-devtools-request`, {
-			method: "POST",
-			body: JSON.stringify({ routine: "request-event", ...event }),
-		})
-			.then(() => {})
+			.then(async (res) => {
+				if (res.ok) {
+					await res.text()
+				}
+			})
 			.catch(() => {})
 	}
 }
@@ -310,8 +291,7 @@ export const analyzeLoaderOrAction =
 		})
 		try {
 			const res = await response
-			if (isDataFunctionResponse(res)) {
-			}
+
 			unAwaited(() => {
 				const end = diffInMs(start)
 				const endTime = Date.now()

@@ -1,8 +1,8 @@
 {
 	"name": "react-router-devtools",
-	"description": "Devtools for React Router - debug and 10x your DX with React Router",
+	"description": "Devtools for React Router - debug, trace, find hydration errors, catch bugs and inspect server/client data with react-router-devtools",
 	"author": "Alem Tuzlak",
-	"version": "2.0.0",
+	"version": "1.0.1",
 	"license": "MIT",
 	"keywords": [
 		"react-router",
@@ -39,6 +39,14 @@
 			"types": "./dist/client.d.ts",
 			"default": "./dist/client.js"
 		},
+		"./context": {
+			"import": {
+				"types": "./dist/context.d.ts",
+				"default": "./dist/context.js"
+			},
+			"types": "./dist/context.d.ts",
+			"default": "./dist/context.js"
+		},
 		"./server": {
 			"import": {
 				"types": "./dist/server.d.ts",
@@ -70,11 +78,13 @@
 		"runner": "npm-run-all -s build -p watch-all",
 		"dev": "npm run runner react-router-vite",
 		"build": "run-s  tsup:* -- --clean",
-		"watch-all": "npm-run-all -p tsup:index:watch tsup:client:watch tsup:server:watch -- --watch",
+		"watch-all": "npm-run-all -p tsup:index:watch tsup:client:watch tsup:server:watch tsup:context:watch -- --watch",
 		"tsup:index": "tsup",
 		"tsup:index:watch": "tsup --watch",
 		"tsup:client": "tsup --config tsup-client.config.ts",
+		"tsup:context": "tsup --config tsup-context.config.ts",
 		"tsup:server": "tsup --config tsup-server.config.ts",
+		"tsup:context:watch": "npm run tsup:context -- --watch",
 		"tsup:client:watch": "npm run tsup:client -- --watch",
 		"tsup:server:watch": "npm run tsup:server -- --watch",
 		"check": "biome check .",

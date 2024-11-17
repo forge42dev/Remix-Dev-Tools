@@ -1,5 +1,4 @@
 import { useCallback, useContext } from "react"
-import type { NetworkRequest } from "../components/network-tracer/types.js"
 import { RDTContext } from "./RDTContext.js"
 import type { ReactRouterDevtoolsState } from "./rdtReducer.js"
 import type { TimelineEvent } from "./timeline/types.js"

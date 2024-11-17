@@ -1,7 +1,6 @@
 import type { Dispatch } from "react"
 import type React from "react"
 import { createContext, useEffect, useMemo, useReducer } from "react"
-import type { NetworkRequest } from "../components/network-tracer/types.js"
 import { useRemoveBody } from "../hooks/detached/useRemoveBody.js"
 import { checkIsDetached, checkIsDetachedOwner, checkIsDetachedWindow } from "../utils/detached.js"
 import { tryParseJson } from "../utils/sanitize.js"

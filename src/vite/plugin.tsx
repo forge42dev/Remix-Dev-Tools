@@ -5,12 +5,13 @@ import { cutArrayToLastN } from "../client/utils/common.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
 
-import type { RequestEvent } from "../server/utils.js"
+import type { RequestEvent } from "../shared/request-event.js"
 import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
 import { type WriteFileData, handleWriteFile } from "./file.js"
 import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
 import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
 import { injectRdtClient } from "./utils/inject-client.js"
+import { injectContext } from "./utils/inject-context.js"
 // this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
@@ -34,6 +35,7 @@ type ReactRouterViteConfig = {
 	includeInProd?: {
 		client?: boolean
 		server?: boolean
+		devTools?: boolean
 	}
 	/** The directory where the react router app is located. Defaults to the "./app" relative to where vite.config is being defined. */
 	appDir?: string
@@ -50,11 +52,22 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	}
 	const includeClient = args?.includeInProd?.client ?? false
 	const includeServer = args?.includeInProd?.server ?? false
+	const includeDevtools = args?.includeInProd?.devTools ?? false
 
 	const appDir = args?.appDir || "./app"
 
 	const shouldInject = (mode: string | undefined, include: boolean) => mode === "development" || include
-
+	const isTransformable = (id: string) => {
+		const extensions = [".tsx", ".jsx", ".ts", ".js"]
+		if (!extensions.some((ext) => id.endsWith(ext))) {
+			return
+		}
+		if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
+			return
+		}
+		const routeId = id.replace(normalizePath(process.cwd()), "").replace("/app/", "").replace(".tsx", "")
+		return routeId
+	}
 	// Set the server config on the process object so that it can be accessed by the plugin
 	if (typeof process !== "undefined") {
 		process.rdt_config = serverConfig
@@ -86,19 +99,29 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			},
 		},
 		{
+			name: "react-router-devtools-inject-context",
+			apply(config) {
+				return shouldInject(config.mode, includeDevtools)
+			},
+			transform(code, id) {
+				const routeId = isTransformable(id)
+				if (!routeId) {
+					return
+				}
+				const finalCode = injectContext(code, routeId)
+				return finalCode
+			},
+		},
+		{
 			name: "react-router-devtools-data-function-augment",
 			apply(config) {
 				return shouldInject(config.mode, includeServer)
 			},
 			transform(code, id) {
-				const extensions = [".tsx", ".jsx", ".ts", ".js"]
-				if (!extensions.some((ext) => id.endsWith(ext))) {
+				const routeId = isTransformable(id)
+				if (!routeId) {
 					return
 				}
-				if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
-					return
-				}
-				const routeId = id.replace(normalizePath(process.cwd()), "").replace("/app/", "").replace(".tsx", "")
 				const finalCode = augmentDataFetchingFunctions(code, routeId)
 				return finalCode
 			},

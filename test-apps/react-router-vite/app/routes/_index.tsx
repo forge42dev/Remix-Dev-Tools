@@ -12,7 +12,21 @@ export const meta: MetaFunction = () => {
 };
 
 
-export const loader = async ({ request,   }: LoaderFunctionArgs) => {
+export const loader = async ({ request, context,devTools  }: LoaderFunctionArgs) => {
+
+  const trace =  devTools?.tracing.trace
+  const data = await  trace?.("Loader call - GET users", async () => {
+
+     const also = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve("test");
+      }, 2000);
+    });
+     return {
+      custom: "data",
+      also
+     }
+   })
   const test = await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
@@ -23,12 +37,25 @@ export const loader = async ({ request,   }: LoaderFunctionArgs) => {
       resolve("test1");
     }, 3500);
   });
-  return  { message: "Hello World!", test, test1, };
+  return  { message: "Hello World!", test, test1, data };
 };
 
-export const clientLoader =  async ({ request, serverLoader }: ClientLoaderFunctionArgs) => {
+export const clientLoader =  async ({ request, serverLoader,  devTools }: ClientLoaderFunctionArgs) => {
   const headers = Object.fromEntries(request.headers.entries());
   const serverLoaderResults = await serverLoader();
+
+  const trace = devTools?.tracing.trace
+  const data = await trace?.("CLIENT LOADER API call",async () => {
+    const also = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve("test");
+      }, 1000);
+    });
+    return {
+      custom: "data",
+      also
+    }
+  })
   const promise =await  new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");

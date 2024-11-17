@@ -1,5 +1,5 @@
 import type { ClientActionFunctionArgs, ClientLoaderFunctionArgs, LinksFunction } from "react-router"
-import type { RequestEvent } from "../server/utils"
+import type { RequestEvent } from "../shared/request-event"
 
 const sendEventToDevServer = (req: RequestEvent) => {
 	import.meta.hot?.send("request-event", req)

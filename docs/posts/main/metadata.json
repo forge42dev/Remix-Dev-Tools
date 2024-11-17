@@ -7,6 +7,7 @@
     "server": "configuration/server",
     "shortcuts": "features/shortcuts",
     "active-page-tab": "features/active-page-tab",
+    "devtools": "features/devtools",
     "routes-tab": "features/routes-tab",
     "network-tab": "features/network-tab",
     "errors-tab": "features/errors-tab",
@@ -70,6 +71,14 @@
       "description": "Learn about all keyboard shortcuts",
       "section": "Features",
       "slug": "shortcuts",
+      "spacer": true
+    },
+    "devtools": {
+      "title": "Development Tools context",
+      "alternateTitle": "Development Tools context",
+      "description": "Detailed overview of all the features offered on the Dev Tools context.",
+      "section": "Features",
+      "slug": "devtools",
       "spacer": true
     },
     "active-page-tab": {

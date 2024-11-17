@@ -1,15 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
-import type { NetworkRequest } from "../../components/network-tracer/types"
+import type { RequestEvent } from "../../../shared/request-event"
 
 export const RequestContext = createContext<{
-	requests: NetworkRequest[]
+	requests: RequestEvent[]
 	removeAllRequests: () => void
 }>({ requests: [], removeAllRequests: () => {} })
 
-const requestMap = new Map<string, NetworkRequest>()
+const requestMap = new Map<string, RequestEvent>()
 
 export const RequestProvider = ({ children }: any) => {
-	const [requests, setRequests] = useState<NetworkRequest[]>([])
+	const [requests, setRequests] = useState<RequestEvent[]>([])
 	const setNewRequests = useCallback((payload: string) => {
 		const requests = JSON.parse(payload)
 		const newRequests = Array.isArray(requests) ? requests : [requests]

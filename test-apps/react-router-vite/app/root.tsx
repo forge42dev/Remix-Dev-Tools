@@ -1,7 +1,9 @@
 import {
+  ActionFunctionArgs,
   data,
   Form,
   Links,
+  LoaderFunctionArgs,
   Meta,
   Outlet,
   Scripts,
@@ -12,7 +14,7 @@ import { userSomething } from "./modules/user.server";
 
 export const links = () => [];
 
-export const loader = () => {
+export const loader = ({context, devTools }: LoaderFunctionArgs) => {
   userSomething();
   const mainPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -24,15 +26,19 @@ export const loader = () => {
       resolve({ test: "test", subPromise});
     }, 2000);
   });
+  const start =devTools?.tracing.start("test")!;
+  devTools?.tracing.end("test", start);
   return  data({ message: "Hello World", mainPromise }, { headers: { "Cache-Control": "max-age=3600, private" } });
 }
 
-export const action =async  () => {
+export const action =async  ({devTools}: ActionFunctionArgs) => {
+  const start = devTools?.tracing.start("action submission")
   await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
     }, 2000);
   });
+  devTools?.tracing.end("action submission", start!)
   return  ({ message: "Hello World" });
 }
 
