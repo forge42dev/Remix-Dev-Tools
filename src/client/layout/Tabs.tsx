@@ -44,6 +44,7 @@ const Tab = ({
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: ignored
 		<div
+			data-testid={tab.id}
 			onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabsType }))}
 			className={clsx(
 				"group relative flex shrink-0 cursor-pointer items-center justify-center border-0 border-b border-solid border-b-[#212121] border-r-[#212121] p-2 font-sans transition-all",

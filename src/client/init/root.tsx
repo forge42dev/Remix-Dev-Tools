@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import type { RdtClientConfig } from "../context/RDTContext.js"
-import { RequestContext, RequestProvider } from "../context/requests/request-context.js"
+import { RequestProvider } from "../context/requests/request-context.js"
 import { ReactRouterDevTools, type ReactRouterDevtoolsProps } from "../react-router-dev-tools.js"
 import { hydrationDetector } from "./hydration.js"
 

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import type { RequestEvent } from "../../../shared/request-event"
 
-export const RequestContext = createContext<{
+const RequestContext = createContext<{
 	requests: RequestEvent[]
 	removeAllRequests: () => void
 }>({ requests: [], removeAllRequests: () => {} })
@@ -24,8 +24,8 @@ export const RequestProvider = ({ children }: any) => {
 		import.meta.hot?.on("get-events", setNewRequests)
 		import.meta.hot?.on("request-event", setNewRequests)
 		return () => {
-			import.meta.hot?.off("get-events", setNewRequests)
-			import.meta.hot?.off("request-event", setNewRequests)
+			import.meta.hot?.off?.("get-events", setNewRequests)
+			import.meta.hot?.off?.("request-event", setNewRequests)
 		}
 	}, [setNewRequests])
 

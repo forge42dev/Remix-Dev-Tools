@@ -108,6 +108,7 @@ export type RdtClientConfig = Pick<
 	| "hideUntilHover"
 	| "panelLocation"
 	| "requireUrlFlag"
+	| "openHotkey"
 	| "urlFlag"
 	| "routeBoundaryGradient"
 >

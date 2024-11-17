@@ -12,7 +12,7 @@ export const Trigger = ({
 	const { settings } = useSettingsContext()
 	const { setPersistOpen } = usePersistOpen()
 	const { hideUntilHover, position } = settings
-	const handleHover = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, event: "enter" | "leave") => {
+	const handleHover = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, event: "enter" | "leave") => {
 		if (!hideUntilHover) return
 		const classesToRemove = "opacity-0"
 		const classesToAdd = "opacity-100"
@@ -27,8 +27,9 @@ export const Trigger = ({
 	}
 
 	return (
-		// biome-ignore lint/a11y/useKeyWithClickEvents: must be like this
-		<div
+		<button
+			type="button"
+			data-testid="react-router-devtools-trigger"
 			style={{ zIndex: 9999 }}
 			onClick={() => {
 				setIsOpen(!isOpen)
@@ -49,7 +50,11 @@ export const Trigger = ({
 				isOpen && "hidden" // Hide the button when the dev tools is open
 			)}
 		>
-			<Logo className={clsx(" w-full h-full -mt-1 rounded-full transition-all duration-200 overflow-visible")} />
-		</div>
+			<Logo
+				className={clsx(
+					"focus:outline-none w-full h-full -mt-1 rounded-full transition-all duration-200 overflow-visible"
+				)}
+			/>
+		</button>
 	)
 }

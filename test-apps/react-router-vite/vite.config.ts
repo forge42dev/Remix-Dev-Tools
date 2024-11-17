@@ -6,7 +6,6 @@ import inspect from "vite-plugin-inspect"
 const config = defineRdtConfig({
   client: {
     defaultOpen: false,
-
     position: "top-right",
     requireUrlFlag: false,
     liveUrls: [

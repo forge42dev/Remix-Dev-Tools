@@ -90,6 +90,9 @@
 		"check": "biome check .",
 		"check:fix": "biome check --fix .",
 		"test": "vitest run",
+		"test:ui": "vitest --ui --api 6532",
+		"test:debug": "jest-preview",
+		"test:live": "npm-run-all -p test:ui test:debug",
 		"test:cov": "vitest run --coverage",
 		"typecheck": "tsc --noEmit",
 		"validate": "npm run check && npm run typecheck && npm run test",
@@ -102,24 +105,27 @@
 	"peerDependencies": {
 		"react": ">=17",
 		"react-dom": ">=17",
-		"vite": ">=5.0.0",
-		"react-router": ">=7.0.0-pre.0"
+		"react-router": ">=7.0.0-pre.0",
+		"vite": ">=5.0.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
 		"@react-router/dev": "7.0.0-pre.2",
 		"@react-router/node": "7.0.0-pre.2",
 		"@react-router/serve": "7.0.0-pre.2",
+		"@testing-library/dom": "^10.4.0",
 		"@testing-library/react": "^16.0.1",
 		"@types/babel__core": "^7.20.5",
 		"@types/beautify": "^0.0.3",
 		"@types/node": "^20.16.14",
-		"@types/react": "^18.3.11",
+		"@types/react": "^18.3.12",
 		"@types/react-dom": "^18.3.1",
-		"@vitest/coverage-v8": "^2.1.3",
+		"@vitest/coverage-v8": "^2.1.5",
+		"@vitest/ui": "^2.1.5",
 		"autoprefixer": "^10.4.20",
 		"glob": "^11.0.0",
 		"happy-dom": "^15.7.4",
+		"jest-preview": "^0.3.1",
 		"knip": "^5.34.0",
 		"lefthook": "^1.8.0",
 		"node-html-parser": "^6.1.13",
@@ -133,7 +139,7 @@
 		"tsx": "^4.19.2",
 		"typescript": "^5.6.3",
 		"vite": "^5.4.10",
-		"vitest": "^2.1.3"
+		"vitest": "^2.1.5"
 	},
 	"dependencies": {
 		"@babel/core": "^7.26.0",

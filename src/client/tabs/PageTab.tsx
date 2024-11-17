@@ -17,6 +17,7 @@ const PageTab = () => {
 					<button
 						type="button"
 						onClick={() => revalidate()}
+						data-testid="revalidate-button"
 						className={clsx(
 							"z-20 cursor-pointer rounded-lg border border-green-500 px-3 py-1 text-sm font-semibold text-white",
 							state !== "idle" && "pointer-events-none opacity-50"

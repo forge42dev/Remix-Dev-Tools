@@ -100,6 +100,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 
 	return (
 		<li
+			data-testid={route.id}
 			onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
 			onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
 			className="mb-8 ml-6 lg:ml-8"
@@ -116,10 +117,11 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 				{route.pathname}
 
 				<div className="flex gap-2">
-					{cacheControl && serverInfo?.lastLoader.timestamp && (
+					{Boolean(cacheControl && serverInfo?.lastLoader.timestamp) && (
 						<CacheInfo
 							key={JSON.stringify(serverInfo?.lastLoader ?? "")}
-							cacheControl={cacheControl}
+							// biome-ignore lint/style/noNonNullAssertion: <explanation>
+							cacheControl={cacheControl!}
 							cacheDate={new Date(serverInfo?.lastLoader.timestamp ?? "")}
 						/>
 					)}
@@ -127,17 +129,19 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 						{isConnected && import.meta.env.DEV && (
 							<EditorButton
 								name={editorName}
-								onClick={() =>
+								data-testid={`${route.id}-open-source`}
+								onClick={() => {
 									sendJsonMessage({
 										type: "open-source",
 										data: { routeID: route.id },
 									} satisfies OpenSourceData)
-								}
+								}}
 							/>
 						)}
 						{settings.showRouteBoundariesOn === "click" && (
 							<button
 								type="button"
+								data-testid={`${route.id}-show-route-boundaries`}
 								className="rounded border border-green-600 rounded border border-[#1F9CF0] px-2.5 py-0.5 text-sm font-medium text-green-600"
 								onClick={() => {
 									const routeId = route.id === "root" ? "root" : i.toString()

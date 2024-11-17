@@ -1,6 +1,5 @@
-import clsx from "clsx"
 import { useEffect, useState } from "react"
-import { Link, useLocation } from "react-router"
+import { useLocation } from "react-router"
 import { Trigger } from "./components/Trigger.js"
 import { RDTContextProvider, type RdtClientConfig } from "./context/RDTContext.js"
 import { useDetachedWindowControls, usePersistOpen, useSettingsContext } from "./context/useRDTContext.js"
@@ -23,6 +22,8 @@ import {
 import "../input.css"
 import { useHotkeys } from "react-hotkeys-hook"
 import type { RdtPlugin } from "../index.js"
+import { Breakpoints } from "./components/Breakpoints.js"
+import { LiveUrls } from "./components/LiveUrls.js"
 import { useListenToRouteChange } from "./hooks/detached/useListenToRouteChange.js"
 import { useDebounce } from "./hooks/useDebounce.js"
 import { useDevServerConnection } from "./hooks/useDevServerConnection.js"
@@ -37,82 +38,6 @@ const recursivelyChangeTabIndex = (node: Element | HTMLElement, remove = true) =
 	for (const child of node.children) {
 		recursivelyChangeTabIndex(child, remove)
 	}
-}
-
-const LiveUrls = () => {
-	const { settings } = useSettingsContext()
-	const location = useLocation()
-	const envsPosition = settings.liveUrlsPosition
-	const envsClassName = {
-		"bottom-0": envsPosition === "bottom-left" || envsPosition === "bottom-right",
-		"top-0": envsPosition === "top-left" || envsPosition === "top-right",
-		"right-0": envsPosition === "bottom-right" || envsPosition === "top-right",
-		"left-0": envsPosition === "bottom-left" || envsPosition === "top-left",
-	}
-	if (settings.liveUrls.length === 0) return null
-	return (
-		<div className={clsx("flex fixed items-center z-[9998] gap-2 px-2", envsClassName)}>
-			{settings.liveUrls.map((env) => {
-				return (
-					<Link
-						key={env.name}
-						referrerPolicy="no-referrer"
-						target="_blank"
-						to={env.url + location.pathname}
-						className="flex transition-all hover:text-gray-500 items-center gap-2 text-sm font-semibold text-gray-400"
-					>
-						{env.name}
-					</Link>
-				)
-			})}
-		</div>
-	)
-}
-type WindowSize = {
-	width: number
-	height: number
-}
-const useOnWindowResize = () => {
-	const [windowSize, setWindowSize] = useState<WindowSize>({
-		width: window.innerWidth,
-		height: window.innerHeight,
-	})
-
-	useEffect(() => {
-		const handleResize = () => {
-			setWindowSize({
-				width: window.innerWidth,
-				height: window.innerHeight,
-			})
-		}
-
-		window.addEventListener("resize", handleResize)
-
-		return () => {
-			window.removeEventListener("resize", handleResize)
-		}
-	}, [])
-	return windowSize
-}
-
-const Breakpoints = () => {
-	const { width } = useOnWindowResize()
-	const { settings } = useSettingsContext()
-	const breakpoints = settings.breakpoints
-	const show = settings.showBreakpointIndicator
-	const breakpoint = breakpoints.find((bp) => bp.min <= width && bp.max >= width)
-	if (!breakpoint || !breakpoint.name || !show) {
-		return null
-	}
-	return (
-		<div
-			className={clsx(
-				"flex fixed bottom-0 left-0 mb-5 rounded-full bg-[#212121] z-[9998] size-10 text-white flex items-center justify-center items-center gap-2 mx-1"
-			)}
-		>
-			{breakpoint?.name}
-		</div>
-	)
 }
 
 const DevTools = ({ plugins: pluginArray }: ReactRouterDevtoolsProps) => {
@@ -151,7 +76,11 @@ const DevTools = ({ plugins: pluginArray }: ReactRouterDevtoolsProps) => {
 	// If the dev tools are detached, we don't want to render the main panel
 	if (detachedWindowOwner) {
 		return (
-			<div id={REACT_ROUTER_DEV_TOOLS} className="react-router-dev-tools react-router-dev-tools-reset">
+			<div
+				data-testid="react-router-devtools"
+				id={REACT_ROUTER_DEV_TOOLS}
+				className="react-router-dev-tools react-router-dev-tools-reset"
+			>
 				<Trigger
 					isOpen={false}
 					setIsOpen={() => {
@@ -165,7 +94,11 @@ const DevTools = ({ plugins: pluginArray }: ReactRouterDevtoolsProps) => {
 	}
 
 	return (
-		<div id={REACT_ROUTER_DEV_TOOLS} className="react-router-dev-tools react-router-dev-tools-reset">
+		<div
+			data-testid="react-router-devtools"
+			id={REACT_ROUTER_DEV_TOOLS}
+			className="react-router-dev-tools react-router-dev-tools-reset"
+		>
 			<Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
 			<LiveUrls />
 			<Breakpoints />
