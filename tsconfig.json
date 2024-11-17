@@ -31,8 +31,6 @@
 		"./plugins/**/*",
 		"./src/external/**/*",
 		"./scripts",
-		"./docs",
-
-		"test-apps"
+		"./docs"
 	]
 }
