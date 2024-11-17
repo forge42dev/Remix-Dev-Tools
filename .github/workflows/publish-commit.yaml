@@ -1,5 +1,12 @@
 name: 🚀 pkg-pr-new
-on: [push, pull_request]
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
