@@ -1,22 +1,29 @@
 import { useState } from "react"
-import { type Options, ReadyState } from "react-use-websocket"
 import useWebSocket from "react-use-websocket"
+
+enum ReadyState {
+	UNINSTANTIATED = -1,
+	CONNECTING = 0,
+	OPEN = 1,
+	CLOSING = 2,
+	CLOSED = 3,
+}
 import { useSettingsContext, useTerminalContext } from "../context/useRDTContext.js"
 
 const RETRY_COUNT = 2
 
-export const useRemixForgeSocket = (options?: Options) => {
+export const useRemixForgeSocket = (options?: any) => {
 	const { settings, setSettings } = useSettingsContext()
 	const { terminals, toggleTerminalLock, setProcessId } = useTerminalContext()
 	const { shouldConnectWithForge, port } = settings
 	const [retryCount, setRetryCount] = useState(0)
-	const opts: Options = {
+	const opts: any = {
 		...options,
 		share: true,
 		shouldReconnect: () => true,
 		reconnectAttempts: RETRY_COUNT,
 		reconnectInterval: 0,
-		onClose: (e) => {
+		onClose: (e: any) => {
 			// connection closed by remix forge
 			if (e.code === 1005) {
 				setSettings({ shouldConnectWithForge: false })
@@ -56,7 +63,7 @@ interface RemixForgeMessage extends Record<string, unknown> {
 	data?: string
 }
 
-export const useRemixForgeSocketExternal = (options?: Options) => {
+export const useRemixForgeSocketExternal = (options?: any) => {
 	const { sendJsonMessage, ...rest } = useRemixForgeSocket(options)
 	const sendJsonMessageExternal = (message: RemixForgeMessage) => {
 		sendJsonMessage({ ...message, type: "plugin" })
