@@ -39,7 +39,7 @@ const Terminal = ({ onClose, terminal, projectCommands }: TerminalProps) => {
 	}, [terminal.output])
 
 	const { sendJsonMessage } = useRemixForgeSocket({
-		onMessage: (message) => {
+		onMessage: (message: any) => {
 			try {
 				const data = JSON.parse(message.data)
 				// Check if command was sent from this terminal
@@ -149,7 +149,7 @@ const TerminalTab = () => {
 	const { terminals, addOrRemoveTerminal } = useTerminalContext()
 	const [projectCommands, setProjectCommands] = useState<Record<string, string>>()
 	const { sendJsonMessage } = useRemixForgeSocket({
-		onMessage: (message) => {
+		onMessage: (message: any) => {
 			try {
 				const data = JSON.parse(message.data)
 				if (data.type === "commands") {
