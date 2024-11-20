@@ -64,6 +64,11 @@ export type RemixDevToolsState = {
 	terminals: Terminal[]
 	settings: {
 		/**
+		 * The number of events to keep in history per route
+		 * @default 30
+		 */
+		eventsToKeep: number
+		/**
 		 * The breakpoints to show in the corner so you can see the current breakpoint that you defined
 		 */
 		breakpoints: { name: string; min: number; max: number }[]
@@ -167,6 +172,7 @@ export const initialState: RemixDevToolsState = {
 	terminals: [{ id: 0, locked: false, output: [], history: [] }],
 	server: undefined,
 	settings: {
+		eventsToKeep: 30,
 		showRouteBoundariesOn: "click",
 		breakpoints: [
 			{ name: "", min: 0, max: 639 },

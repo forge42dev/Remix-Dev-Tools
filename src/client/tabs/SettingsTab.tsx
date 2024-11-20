@@ -13,6 +13,7 @@ export const SettingsTab = () => {
 	const [maxHeight, setMaxHeight] = useState(settings.maxHeight.toString())
 	const [expansionLevel, setExpansionLevel] = useState(settings.expansionLevel.toString())
 	const [openHotkey, setOpenHotkey] = useState(settings.openHotkey.toString())
+	const [eventsToKeep, setEventsToKeep] = useState(settings.eventsToKeep.toString())
 
 	return (
 		<Stack className="mb-4">
@@ -203,6 +204,20 @@ export const SettingsTab = () => {
 						const value = e.target.value
 						if (value && !Number.isNaN(Number.parseInt(value))) {
 							setSettings({ port: Number.parseInt(value) })
+						}
+					}}
+				/>
+				<Input
+					name="eventsToKeep"
+					id="eventsToKeep"
+					label="Number of events to keep in history"
+					hint="The number of loader/action events to keep in history per route. Minimum: 1, Maximum: 100"
+					value={eventsToKeep}
+					onChange={(e) => setEventsToKeep(e.target.value ?? "")}
+					onBlur={(e) => {
+						const value = Number.parseInt(e.target.value)
+						if (value && !Number.isNaN(value) && value >= 1 && value <= 100) {
+							setSettings({ eventsToKeep: value })
 						}
 					}}
 				/>
