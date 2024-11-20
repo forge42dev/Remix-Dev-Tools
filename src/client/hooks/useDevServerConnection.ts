@@ -2,7 +2,7 @@ import { useNavigation } from "@remix-run/react"
 import { useEffect } from "react"
 import type { ActionEvent, LoaderEvent } from "../../server/event-queue.js"
 import type { ServerInfo } from "../context/rdtReducer.js"
-import { useServerInfo } from "../context/useRDTContext.js"
+import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js"
 import { cutArrayToLastN } from "../utils/common.js"
 
 const updateRouteInfo = (
@@ -51,6 +51,7 @@ const updateRouteInfo = (
 const useDevServerConnection = () => {
 	const navigation = useNavigation()
 	const { server, setServerInfo } = useServerInfo()
+	const { settings } = useSettingsContext()
 
 	// Pull the event queue from the server when the page is idle
 	useEffect(() => {
@@ -67,8 +68,8 @@ const useDevServerConnection = () => {
 			for (const routeInfo of Object.values(events)) {
 				const { loader, action } = routeInfo as any
 				const events = [
-					loader.slice(-3).map((e: any) => ({ type: "loader", data: e })),
-					action.slice(-3).map((e: any) => ({ type: "action", data: e })),
+					loader.slice(-settings.eventsToKeep).map((e: any) => ({ type: "loader", data: e })),
+					action.slice(-settings.eventsToKeep).map((e: any) => ({ type: "action", data: e })),
 				].flat()
 				for (const event of events) {
 					updateRouteInfo(server, routes, event, false)
@@ -86,7 +87,7 @@ const useDevServerConnection = () => {
 				import.meta.hot.dispose(cb2)
 			}
 		}
-	}, [server, setServerInfo])
+	}, [server, setServerInfo, settings.eventsToKeep])
 
 	const isConnected = typeof import.meta.hot !== "undefined"
 
