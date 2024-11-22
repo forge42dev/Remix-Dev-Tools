@@ -56,7 +56,7 @@
     "tailwind-merge": "^2.2.1",
     "unist-util-filter": "^5.0.1",
     "unist-util-visit": "^5.0.0",
-    "react-router-devtools": "https://pkg.pr.new/forge42dev/Remix-Dev-Tools/react-router-devtools@151.tgz",
+    "react-router-devtools": "1.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
