@@ -1,10 +1,9 @@
-import { useMatches, useNavigate } from "@remix-run/react"
 import { type MouseEvent, useState } from "react"
+import { useMatches, useNavigate } from "react-router"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
 import { NewRouteForm } from "../components/NewRouteForm.js"
 import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext.js"
 import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange.js"
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
 import { type ExtendedRoute, constructRoutePath, createExtendedRoutes } from "../utils/routing.js"
 import { createRouteTree } from "../utils/sanitize.js"
 
@@ -20,11 +19,10 @@ const RoutesTab = () => {
 	const activeRoutes = matches.map((match) => match.id)
 	const { settings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
-	const { isConnected } = useRemixForgeSocket()
 	const { detachedWindow } = useDetachedWindowControls()
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
-	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes())
-	const [treeRoutes] = useState(createRouteTree(window.__remixManifest.routes))
+	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
+	const [treeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
 	const isTreeView = routeViewMode === "tree"
 	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
 		e?.preventDefault()
@@ -67,14 +65,16 @@ const RoutesTab = () => {
 				</div>
 			) : (
 				<Accordion className="h-full w-full overflow-y-auto pr-4" type="single" collapsible>
-					{isConnected && (
+					{
 						<AccordionItem value="add-new">
-							<AccordionTrigger className="text-white">Add a new route to the project</AccordionTrigger>
+							<AccordionTrigger className="text-white">
+								<span className="text-lg font-semibold">Add a new route to the project</span>
+							</AccordionTrigger>
 							<AccordionContent>
 								<NewRouteForm />
 							</AccordionContent>
 						</AccordionItem>
-					)}
+					}
 					<div className="py-2">
 						<span className="text-lg font-semibold">Project routes</span>
 						<hr className="mt-2 border-gray-400" />

@@ -1,13 +1,14 @@
 import clsx from "clsx"
 import { useState } from "react"
-import { useRemixForgeSocket } from "../hooks/useRemixForgeSocket.js"
 import { Checkbox } from "./Checkbox.js"
 import { Input } from "./Input.js"
 
 interface NewRouteOptions {
 	path: string
 	loader: boolean
+	clientLoader: boolean
 	action: boolean
+	clientAction: boolean
 	headers: boolean
 	errorBoundary: boolean
 	revalidate: boolean
@@ -19,7 +20,9 @@ interface NewRouteOptions {
 const DEFAULT_VALUES = {
 	path: "",
 	loader: false,
+	clientLoader: false,
 	action: false,
+	clientAction: false,
 	headers: false,
 	errorBoundary: false,
 	revalidate: false,
@@ -29,23 +32,11 @@ const DEFAULT_VALUES = {
 }
 
 const NewRouteForm = () => {
-	const { sendJsonMessage } = useRemixForgeSocket({
-		onMessage: (e: { data: any }) => {
-			const messageData = e.data
-			if (messageData.type === "route_added") {
-				setNewRouteInfo(DEFAULT_VALUES)
-			}
-		},
-	})
 	const [newRouteInfo, setNewRouteInfo] = useState<NewRouteOptions>(DEFAULT_VALUES)
 
 	const handleSubmit = () => {
 		const { path, ...options } = newRouteInfo
-		sendJsonMessage({
-			type: "add_route",
-			path,
-			options,
-		})
+		import.meta.hot?.send("add-route", { type: "add-route", path, options })
 	}
 
 	const setNewInfo = (info: Partial<NewRouteOptions>) => {
@@ -64,7 +55,8 @@ const NewRouteForm = () => {
 				className="mb-1"
 			/>
 			<span className="mb-4 block text-gray-500">
-				This will be added to your routes folder under your entered name, exclude the extension
+				This will be added to your routes folder under your entered name, only supports .tsx and .ts extensions, you can
+				also emit the extension
 			</span>
 			<div className="mb-2 block">Additional options:</div>
 			<Checkbox
@@ -77,6 +69,17 @@ const NewRouteForm = () => {
 				id="loader"
 			>
 				Add a loader
+			</Checkbox>{" "}
+			<Checkbox
+				value={newRouteInfo.clientLoader}
+				onChange={() =>
+					setNewInfo({
+						clientLoader: !newRouteInfo.clientLoader,
+					})
+				}
+				id="clientLoader"
+			>
+				Add a clientLoader
 			</Checkbox>
 			<Checkbox
 				value={newRouteInfo.action}
@@ -88,6 +91,17 @@ const NewRouteForm = () => {
 				id="action"
 			>
 				Add an action
+			</Checkbox>{" "}
+			<Checkbox
+				value={newRouteInfo.clientAction}
+				onChange={() =>
+					setNewInfo({
+						clientAction: !newRouteInfo.clientAction,
+					})
+				}
+				id="clientAction"
+			>
+				Add a clientAction
 			</Checkbox>
 			<Checkbox
 				value={newRouteInfo.errorBoundary}

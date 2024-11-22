@@ -2,15 +2,10 @@
 	"$schema": "https://unpkg.com/knip@5/schema.json",
 	"workspaces": {
 		".": {
-			"entry": ["scripts/*.ts"],
-			"tsup": ["tsup*.config.ts"]
-		},
-		"docs": {
-			"entry": ["app/entry.worker.ts", "app/components/plugins/*.tsx"]
+			"entry": ["scripts/*.ts"]
 		}
 	},
-	"ignore": ["plugins/**"],
+	"ignore": ["docs/**", "plugins/**"],
 	"ignoreBinaries": ["pkg-pr-new"],
-	"ignoreDependencies": ["lefthook"],
 	"ignoreWorkspaces": ["test-apps/**"]
 }

@@ -5,19 +5,24 @@ import { useRemoveBody } from "../hooks/detached/useRemoveBody.js"
 import { checkIsDetached, checkIsDetachedOwner, checkIsDetachedWindow } from "../utils/detached.js"
 import { tryParseJson } from "../utils/sanitize.js"
 import {
-	REMIX_DEV_TOOLS_CHECK_DETACHED,
-	REMIX_DEV_TOOLS_DETACHED,
-	REMIX_DEV_TOOLS_SETTINGS,
-	REMIX_DEV_TOOLS_STATE,
+	REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_SETTINGS,
+	REACT_ROUTER_DEV_TOOLS_STATE,
 	getStorageItem,
 	setSessionItem,
 	setStorageItem,
 } from "../utils/storage.js"
-import { type RemixDevToolsActions, type RemixDevToolsState, initialState, rdtReducer } from "./rdtReducer.js"
+import {
+	type ReactRouterDevtoolsActions,
+	type ReactRouterDevtoolsState,
+	initialState,
+	rdtReducer,
+} from "./rdtReducer.js"
 
 export const RDTContext = createContext<{
-	state: RemixDevToolsState
-	dispatch: Dispatch<RemixDevToolsActions>
+	state: ReactRouterDevtoolsState
+	dispatch: Dispatch<ReactRouterDevtoolsActions>
 }>({ state: initialState, dispatch: () => null })
 
 RDTContext.displayName = "RDTContext"
@@ -30,12 +35,12 @@ interface ContextProps {
 export const setIsDetachedIfRequired = () => {
 	const isDetachedWindow = checkIsDetachedWindow()
 	if (!isDetachedWindow && window.RDT_MOUNTED) {
-		setSessionItem(REMIX_DEV_TOOLS_DETACHED, "true")
+		setSessionItem(REACT_ROUTER_DEV_TOOLS_DETACHED, "true")
 	}
 }
 
 export const resetIsDetachedCheck = () => {
-	setStorageItem(REMIX_DEV_TOOLS_CHECK_DETACHED, "false")
+	setStorageItem(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED, "false")
 }
 
 export const detachedModeSetup = () => {
@@ -59,18 +64,19 @@ export const detachedModeSetup = () => {
 }
 
 export const getSettings = () => {
-	const settingsString = getStorageItem(REMIX_DEV_TOOLS_SETTINGS)
-	const settings = tryParseJson<RemixDevToolsState["settings"]>(settingsString)
+	const settingsString = getStorageItem(REACT_ROUTER_DEV_TOOLS_SETTINGS)
+	const settings = tryParseJson<ReactRouterDevtoolsState["settings"]>(settingsString)
 	return {
 		...settings,
 	}
 }
 
 export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorName?: string }) => {
-	const existingState = getStorageItem(REMIX_DEV_TOOLS_STATE)
+	const existingState = getStorageItem(REACT_ROUTER_DEV_TOOLS_STATE)
 	const settings = getSettings()
+
 	const { detachedWindow, detachedWindowOwner } = detachedModeSetup()
-	const state: RemixDevToolsState = {
+	const state: ReactRouterDevtoolsState = {
 		...initialState,
 		...(existingState ? JSON.parse(existingState) : {}),
 		settings: {
@@ -84,12 +90,11 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 		detachedWindow,
 		detachedWindowOwner,
 	}
-
 	return state
 }
 
 export type RdtClientConfig = Pick<
-	RemixDevToolsState["settings"],
+	ReactRouterDevtoolsState["settings"],
 	| "defaultOpen"
 	| "breakpoints"
 	| "showBreakpointIndicator"
@@ -103,6 +108,7 @@ export type RdtClientConfig = Pick<
 	| "hideUntilHover"
 	| "panelLocation"
 	| "requireUrlFlag"
+	| "openHotkey"
 	| "urlFlag"
 	| "routeBoundaryGradient"
 >
@@ -115,12 +121,11 @@ export const RDTContextProvider = ({ children, config }: ContextProps) => {
 	useRemoveBody(state)
 
 	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { settings, detachedWindow, detachedWindowOwner, ...rest } = state
 		// Store user settings for dev tools into local storage
-		setStorageItem(REMIX_DEV_TOOLS_SETTINGS, JSON.stringify(settings))
+		setStorageItem(REACT_ROUTER_DEV_TOOLS_SETTINGS, JSON.stringify(settings))
 		// Store general state into local storage
-		setStorageItem(REMIX_DEV_TOOLS_STATE, JSON.stringify(rest))
+		setStorageItem(REACT_ROUTER_DEV_TOOLS_STATE, JSON.stringify(rest))
 	}, [state])
 
 	return <RDTContext.Provider value={value}>{children}</RDTContext.Provider>

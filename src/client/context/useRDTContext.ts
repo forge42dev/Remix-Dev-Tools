@@ -1,7 +1,6 @@
 import { useCallback, useContext } from "react"
 import { RDTContext } from "./RDTContext.js"
-import type { RemixDevToolsState } from "./rdtReducer.js"
-import type { Terminal } from "./terminal/types.js"
+import type { ReactRouterDevtoolsState } from "./rdtReducer.js"
 import type { TimelineEvent } from "./timeline/types.js"
 
 /**
@@ -29,7 +28,7 @@ export const useHtmlErrors = () => {
 	const { state, dispatch } = useRDTContext()
 	const { htmlErrors } = state
 	const setHtmlErrors = useCallback(
-		(htmlErrors: RemixDevToolsState["htmlErrors"]) => {
+		(htmlErrors: ReactRouterDevtoolsState["htmlErrors"]) => {
 			dispatch({
 				type: "SET_HTML_ERRORS",
 				payload: htmlErrors,
@@ -44,7 +43,7 @@ export const useServerInfo = () => {
 	const { state, dispatch } = useRDTContext()
 	const { server } = state
 	const setServerInfo = useCallback(
-		(serverInfo: Partial<RemixDevToolsState["server"]>) => {
+		(serverInfo: Partial<ReactRouterDevtoolsState["server"]>) => {
 			dispatch({
 				type: "SET_SERVER_INFO",
 				payload: {
@@ -88,7 +87,7 @@ export const useSettingsContext = () => {
 	const { dispatch, state } = useRDTContext()
 	const { settings } = state
 	const setSettings = useCallback(
-		(settings: Partial<RemixDevToolsState["settings"]>) => {
+		(settings: Partial<ReactRouterDevtoolsState["settings"]>) => {
 			dispatch({
 				type: "SET_SETTINGS",
 				payload: settings,
@@ -134,84 +133,6 @@ export const useTimelineContext = () => {
 	}, [dispatch])
 
 	return { setTimelineEvent, timeline, clearTimeline }
-}
-
-/**
- * Returns an object containing functions and state related to the terminal context.
- * @returns {Object} An object containing the following properties:
- *  - terminals: An array of terminal objects.
- *  - addOrRemoveTerminal: A function that adds or removes a terminal object.
- *  - toggleTerminalLock: A function that toggles the lock state of a terminal object.
- *  - addTerminalOutput: A function that adds output to a terminal object.
- *  - clearTerminalOutput: A function that clears the output of a terminal object.
- *  - addTerminalHistory: A function that adds a command to the history of a terminal object.
- *  - setProcessId: A function that sets the process ID of a terminal object.
- */
-export const useTerminalContext = () => {
-	const { state, dispatch } = useRDTContext()
-	const { terminals } = state
-	const addOrRemoveTerminal = useCallback(
-		(terminalId?: Terminal["id"]) => {
-			dispatch({ type: "ADD_OR_REMOVE_TERMINAL", payload: terminalId })
-		},
-		[dispatch]
-	)
-
-	const toggleTerminalLock = useCallback(
-		(terminalId: Terminal["id"], locked?: boolean) => {
-			dispatch({
-				type: "TOGGLE_TERMINAL_LOCK",
-				payload: { terminalId, locked },
-			})
-		},
-		[dispatch]
-	)
-
-	const addTerminalOutput = useCallback(
-		(terminalId: Terminal["id"], output: Terminal["output"][number]) => {
-			dispatch({
-				type: "ADD_TERMINAL_OUTPUT",
-				payload: { terminalId, output },
-			})
-		},
-		[dispatch]
-	)
-
-	const clearTerminalOutput = useCallback(
-		(terminalId: Terminal["id"]) => {
-			dispatch({ type: "CLEAR_TERMINAL_OUTPUT", payload: terminalId })
-		},
-		[dispatch]
-	)
-
-	const addTerminalHistory = useCallback(
-		(terminalId: Terminal["id"], history: Terminal["history"][number]) => {
-			dispatch({
-				type: "ADD_TERMINAL_HISTORY",
-				payload: { terminalId, history },
-			})
-		},
-		[dispatch]
-	)
-
-	const setProcessId = useCallback(
-		(terminalId: Terminal["id"], processId?: number) => {
-			dispatch({
-				type: "SET_PROCESS_ID",
-				payload: { terminalId, processId },
-			})
-		},
-		[dispatch]
-	)
-	return {
-		terminals,
-		addOrRemoveTerminal,
-		toggleTerminalLock,
-		addTerminalOutput,
-		clearTerminalOutput,
-		addTerminalHistory,
-		setProcessId,
-	}
 }
 
 export { useRDTContext }

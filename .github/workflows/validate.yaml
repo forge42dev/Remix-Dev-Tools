@@ -63,7 +63,19 @@ jobs:
         run: npm install -g dotenv-cli
       - name: ⚡ Run vitest
         run: npm run test:cov
-      - name: "Report Coverage"
+#      - name: "Report Coverage"
         # Only works if you set `reportOnFailure: true` in your vite config as specified above
-        if: always()
-        uses: davelosert/vitest-coverage-report-action@v2
+#        if: always()
+#        uses: davelosert/vitest-coverage-report-action@v2
+
+
+  deploy-preview:
+    name: "🚀 Deploy Docs"
+    needs: [lint, typecheck, vitest]
+    uses: forge42dev/workflows/.github/workflows/deploy-to-fly.yaml@monorepo-matrix
+    with:
+      workspace_name: docs
+      set_cwd_to_workspace: true
+      github_environment: "docs-previev"
+    secrets:
+      fly_api_token: ${{ secrets.FLY_API_TOKEN }}

@@ -9,7 +9,7 @@ export type OpenSourceData = {
 	data: {
 		/** The source file to open */
 		source?: string
-		/** The remix route ID, usually discovered via the hook useMatches */
+		/** The react router route ID, usually discovered via the hook useMatches */
 		routeID?: string
 		/** The line number in the source file */
 		line?: number
@@ -33,10 +33,10 @@ export const DEFAULT_EDITOR_CONFIG: EditorConfig = {
 export const handleOpenSource = ({
 	data,
 	openInEditor,
-	remixDir,
+	appDir,
 }: {
 	data: OpenSourceData
-	remixDir: string
+	appDir: string
 	openInEditor: (path: string, lineNum: string | undefined) => void
 }) => {
 	const { source, line, routeID } = data.data
@@ -47,7 +47,7 @@ export const handleOpenSource = ({
 	}
 
 	if (routeID) {
-		const routePath = path.join(remixDir, routeID)
+		const routePath = path.join(appDir, routeID)
 		const checkedPath = checkPath(routePath)
 
 		if (!checkedPath) return
@@ -62,10 +62,10 @@ export const handleOpenSource = ({
 		}
 
 		if (isRoot) {
-			if (!fs.existsSync(remixDir)) return
-			const filesInRemixPath = fs.readdirSync(remixDir)
-			const rootFile = findFileByExtension("root", filesInRemixPath)
-			rootFile && openInEditor(path.join(remixDir, rootFile), lineNum)
+			if (!fs.existsSync(appDir)) return
+			const filesInReactRouterPath = fs.readdirSync(appDir)
+			const rootFile = findFileByExtension("root", filesInReactRouterPath)
+			rootFile && openInEditor(path.join(appDir, rootFile), lineNum)
 			return
 		}
 
@@ -75,7 +75,7 @@ export const handleOpenSource = ({
 		if (type === "directory") {
 			const filesInFolderRoute = fs.readdirSync(validPath)
 			const routeFile = findFileByExtension("route", filesInFolderRoute)
-			routeFile && openInEditor(path.join(remixDir, routeID, routeFile), lineNum)
+			routeFile && openInEditor(path.join(appDir, routeID, routeFile), lineNum)
 			return
 		}
 		return openInEditor(validPath, lineNum)

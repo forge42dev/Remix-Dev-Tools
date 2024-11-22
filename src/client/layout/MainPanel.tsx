@@ -30,6 +30,7 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
 
 	return (
 		<div
+			data-testid="react-router-devtools-main-panel"
 			style={{
 				zIndex: 9998,
 				...(!isEmbedded && { height: detachedWindow ? window.innerHeight : height }),

@@ -1,12 +1,10 @@
-# syntax = docker/dockerfile:1
+# syntax = docker/dockerfile:1.4
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.10.0
-FROM node:${NODE_VERSION}-slim as base
+ARG NODE_VERSION=22
+FROM node:${NODE_VERSION}-slim AS base
 
-LABEL fly_launch_runtime="Remix"
-
-# Remix app lives here
+# React router app lives here
 WORKDIR /app
 
 # Set production environment
@@ -42,4 +40,4 @@ COPY --from=build / /
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "node_modules/.bin/remix-serve", "./build/server/index.js" ]
+CMD [ "node_modules/.bin/react-router-serve", "./build/server/index.js" ]

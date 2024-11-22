@@ -9,7 +9,7 @@
 		] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
 		"jsx": "react-jsx",
 		"module": "ESNext" /* Specify what module code is generated. */,
-		"rootDir": "./src" /* Specify the root folder within your source files. */,
+		"rootDir": "." /* Specify the root folder within your source files. */,
 		"moduleResolution": "Bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
 		"types": ["vitest/globals", "vite/client"],
 		"declaration": true /* Generate .d.ts files from TypeScript and JavaScript files in your project. */,
@@ -22,17 +22,15 @@
 		"strict": true,
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
+
 	"exclude": [
 		"./bin/**/*.test.ts",
 		"./dist/**/*",
 		"./bin/mocks/**/*",
-		"./*.config.ts",
 		"./test-apps/**/*",
 		"./plugins/**/*",
 		"./src/external/**/*",
 		"./scripts",
-		"./docs",
-		"tsup*.ts",
-		"test-apps"
+		"./docs"
 	]
 }

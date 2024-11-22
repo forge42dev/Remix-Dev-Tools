@@ -1,18 +1,31 @@
 <p align="center">
-<img src="./assets/remix-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" height="240" alt="Remix Development Tools"  />
+<img src="./assets/react-router-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" height="240" alt="react-router-devtools"  />
 </p>
 
-# Remix Development Tools
+# react-router-devtools
 
-![GitHub Repo stars](https://img.shields.io/github/stars/Code-Forge-Net/Remix-Dev-Tools?style=social)
-![npm](https://img.shields.io/npm/v/remix-development-tools?style=plastic)
-![GitHub](https://img.shields.io/github/license/Code-Forge-Net/Remix-Dev-Tools?style=plastic)
-![npm](https://img.shields.io/npm/dy/remix-development-tools?style=plastic)
-![npm](https://img.shields.io/npm/dw/remix-development-tools?style=plastic)
-![GitHub top language](https://img.shields.io/github/languages/top/Code-Forge-Net/Remix-Dev-Tools?style=plastic)
+![GitHub Repo stars](https://img.shields.io/github/stars/forge42dev/react-router-devtools?style=social)
+![npm](https://img.shields.io/npm/v/react-router-devtools?style=plastic)
+![GitHub](https://img.shields.io/github/license/forge42dev/react-router-devtools?style=plastic)
+![npm](https://img.shields.io/npm/dy/react-router-devtools?style=plastic)
+![npm](https://img.shields.io/npm/dw/react-router-devtools?style=plastic)
+![GitHub top language](https://img.shields.io/github/languages/top/forge42dev/react-router-devtools?style=plastic)
 
-Remix Development Tools is an open-source package designed to enhance your development workflow when working with Remix, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings**, **Errors** and **Routes**, along with a side tab called **Timeline**. With Remix Development Tools, you can efficiently monitor and manage various aspects of your Remix projects, including page information, URL parameters, server responses, loader data, routes, and more. You can
-also track down hydration issues with the **Errors** tab and view your routes in a tree/list view with the **Routes** tab.
+react-router-devtools is an open-source package designed to enhance your development workflow when working with React Router v7+, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings**, **Errors**, **Network** and **Routes**, along with a side tab called **Timeline**. With react-router-devtools, you can efficiently monitor and manage various aspects of your React Router v7+ projects, including page information, URL parameters, server responses, loader data, routes, and more.
+
+
+You can also track down hydration issues with the **Errors** tab and view your routes in a tree/list view with the **Routes** tab.
+
+
+**Network** tab is a powerful tool for tracing all your network requests and see what's happening under the hood. You can see all the requests in real-time, with the ability to see if they are aborted, if they are cached, and if they are successful or not.
+
+### Remix Development Tools
+
+This repository used to be called remix-development-tools, but we decided to rename it to react-router-devtools to better reflect the fact that it's a package for React Router v7+ and not just for Remix.
+
+If you're looking for the old version of this package, you can find it [here](https://github.com/forge42dev/Remix-Dev-Tools/tree/remix-development-tools).
+
+And the detailed documentation can be found [here](https://remix-development-tools.fly.dev/).
 
 # Documentation
 
@@ -21,26 +34,20 @@ Detailed documentation can be found here:
 https://remix-development-tools.fly.dev/
 
 
-# Deprecation warning!
-
-Huge news! The remix-development-tools will be turning into react-router-devtools once the stable release of react-router 7 is out! As you already might've heard remix is being merged into react-router, so naturally these devtools are going to be supporting react-router users rather than remix users!
-
-We are looking forward to expanding the scope of our users to a much broader audience and helping even more projects. When it comes to remix-development-tools all the updates will be coming out regularly until the official release of react-router v7 where this package will be rebranded with the same feature set.
-
 ## Getting Started
 
 1. Install the package via npm:
 
 ```bash
-npm install remix-development-tools -D
+npm install react-router-devtools -D
 ```
 
 ```js
-import { remixDevTools } from "remix-development-tools";
+import { reactRouterDevTools } from "react-router-devtools";
 
 // Add it to your plugins array in vite.config.js
 export default defineConfig({
-  plugins: [remixDevTools(), remix(), tsconfigPaths()],
+  plugins: [reactRouterDevTools(), reactRouter(), tsconfigPaths()],
 });
 ```
 
@@ -49,17 +56,17 @@ That's it, you're done!
 
 ## Support
 
-If you like Remix Development Tools consider starring the repository. If you have any questions, comments, or suggestions, please feel free to reach out!
+If you like react-router-devtools consider starring the repository or donating via Github sponsors. If you have any questions, comments, or suggestions, please feel free to reach out!
 
 ## License
 
-Remix Development Tools is open-source software released under the [MIT License](https://opensource.org/licenses/MIT).
+react-router-devtools is open-source software released under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Acknowledgments
 
-Remix Development Tools was inspired by the Remix framework and aims to enhance the development experience for Remix users.
+React Router Devtools was inspired by the React Router v7 and aims to enhance the development experience for React Router v7+ users.
 
-Feel free to explore Remix Development Tools, and we hope it significantly improves your Remix development process. If you encounter any issues or have suggestions for enhancements, please don't hesitate to open an issue on our GitHub repository. Happy Remixing!
+Feel free to explore React Router Devtools, and we hope it significantly improves your React Router development process. If you encounter any issues or have suggestions for enhancements, please don't hesitate to open an issue on our GitHub repository. Happy Remixing!
 
 ## Thanks
 

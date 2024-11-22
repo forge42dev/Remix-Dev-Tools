@@ -1,17 +1,17 @@
 ---
-title: "Setting up Remix Development Tools"
+title: "Setting up React Router Devtools"
 alternateTitle: "Beginner's Guide"
-description: "Follow this page to learn how to set up Remix Development Tools in your Remix project."
+description: "Follow this page to learn how to set up React Router Devtools in your React Router project."
 ---
 
 import Warn from "./warn.tsx";
- 
- 
+
+
 ## Installation
-Adding Remix Development Tools to your project is easy. First install it into your project by running:
+Adding React Router Devtools to your project is easy. First install it into your project by running:
 
 ```bash
-npm install remix-development-tools -D
+npm install react-router-devtools -D
 ```
 
 This will install it as a dev dependency in your project.
@@ -20,37 +20,35 @@ This will install it as a dev dependency in your project.
 
 After you have installed the tools, you need to go to your `vite.config.ts` file which will probably look something like this:
 
-```ts 
-import { vitePlugin as remix } from '@remix-run/dev'
+```ts
+import { reactRouter } from '@react-router/dev/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
-  plugins: [remix(), tsconfigPaths()],
-}) 
+  plugins: [reactRouter(), tsconfigPaths()],
+})
 
 ```
 
-All you have to do is add the plugin into the `plugins` array in your `vite.config.ts` file. 
+All you have to do is add the plugin into the `plugins` array in your `vite.config.ts` file.
 
-```diff 
-import { vitePlugin as remix } from '@remix-run/dev'
+```diff
+import { reactRouter } from '@react-router/dev/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-+import { remixDevTools } from "remix-development-tools";
++import { reactRouterDevTools } from "react-router-devtools";
 
 export default defineConfig({
--  plugins: [remix(), tsconfigPaths()], 
-+  plugins: [remixDevTools(), remix(), tsconfigPaths()],
-}) 
+-  plugins: [reactRouter(), tsconfigPaths()],
++  plugins: [reactRouterDevTools(), reactRouter(), tsconfigPaths()],
+})
 
 ```
 <Warn title="Warning">
-Make sure your plugin is BEFORE the remix one!
+Make sure your plugin is BEFORE the react router one!
 </Warn>
 
-**That's it!** 
+**That's it!**
 
-You should now see the Remix Development Tools in your browser when you run your app.
- 
-
+You should now see the React Router Devtools in your browser when you run your app.

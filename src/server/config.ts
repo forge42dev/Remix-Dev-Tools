@@ -1,5 +1,3 @@
-import { singleton } from "./singleton.js"
-
 export interface DevToolsServerConfig {
 	/**
 	 * Whether to log in the console, this turns off ALL logging
@@ -62,4 +60,4 @@ declare global {
 }
 export const defineServerConfig = (config: DevToolsServerConfig) => config
 
-export const getConfig = () => process.rdt_config
+export const getConfig = () => process.rdt_config ?? { silent: true }

@@ -1,9 +1,9 @@
 import { getExistingStateFromStorage } from "../../context/RDTContext.js"
 import { useRDTContext } from "../../context/useRDTContext.js"
-import { REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE } from "../../utils/storage.js"
+import { REACT_ROUTER_DEV_TOOLS_SETTINGS, REACT_ROUTER_DEV_TOOLS_STATE } from "../../utils/storage.js"
 import { useAttachListener } from "../useAttachListener.js"
 
-const refreshRequiredKeys = [REMIX_DEV_TOOLS_SETTINGS, REMIX_DEV_TOOLS_STATE]
+const refreshRequiredKeys = [REACT_ROUTER_DEV_TOOLS_SETTINGS, REACT_ROUTER_DEV_TOOLS_STATE]
 
 export const useSyncStateWhenDetached = () => {
 	const { dispatch, state } = useRDTContext()
@@ -18,14 +18,14 @@ export const useSyncStateWhenDetached = () => {
 			return
 		}
 		// Check if the settings have not changed and early return
-		if (e.key === REMIX_DEV_TOOLS_SETTINGS) {
+		if (e.key === REACT_ROUTER_DEV_TOOLS_SETTINGS) {
 			const oldSettings = JSON.stringify(state.settings)
 			if (oldSettings === e.newValue) {
 				return
 			}
 		}
 		// Check if the state has not changed and early return
-		if (e.key === REMIX_DEV_TOOLS_STATE) {
+		if (e.key === REACT_ROUTER_DEV_TOOLS_STATE) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { settings, ...rest } = state
 			const oldState = JSON.stringify(rest)

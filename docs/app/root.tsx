@@ -1,13 +1,4 @@
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from '@remix-run/react'
-import { json } from '@remix-run/node'
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+
 import { ClientHints, getHints } from './components/ClientHint'
 import { useTheme } from './hooks/useTheme'
 import { getTheme } from './utils/server/theme.server'
@@ -17,11 +8,12 @@ import './styles/code.css'
 import './styles/documentation.css'
 import './styles/fonts.css'
 import './styles/tailwind.css'
+import { Links, LoaderFunctionArgs, Meta, MetaFunction, Outlet, Scripts, ScrollRestoration } from 'react-router'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const versions = (await getVersions()) ?? []
 
-  return json({
+  return  ({
     requestInfo: {
       hints: getHints(request),
       userPrefs: { theme: getTheme(request) },
@@ -33,11 +25,11 @@ export const meta: MetaFunction<typeof loader> = () => {
   return [
     {
       property: 'og:site_name',
-      content: 'Remix Development Tools',
+      content: 'React Router Devtools',
     },
     {
       property: 'og:title',
-      content: 'Remix Development Tools Documentation',
+      content: 'React Router Devtools Documentation',
     },
     {
       property: 'og:image',

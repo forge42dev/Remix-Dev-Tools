@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { NavLink, useLocation } from '@remix-run/react'
+import { NavLink, useLocation } from 'react-router'
 import clsx from 'clsx'
 
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicLayoutEffect'
@@ -125,7 +125,7 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
                 />
               </svg>
               Quick search...
-              
+
               {actionKey ? (
                 <span className="ml-auto flex-none pl-3 text-xs font-semibold">
                   {actionKey[0]}K

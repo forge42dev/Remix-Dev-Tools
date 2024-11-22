@@ -1,5 +1,5 @@
-import { json, redirect } from '@remix-run/node'
-import type { LoaderFunctionArgs } from '@remix-run/node'
+
+import { LoaderFunctionArgs, redirect } from 'react-router'
 
 import { Documentation } from '~/components/layout/Documentation'
 import {
@@ -23,7 +23,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { code, frontmatter } = await mdxToHtml(postContent)
   const next = await getFirstPost(tag)
 
-  return json({
+  return  ({
     frontmatter,
     code,
     next,

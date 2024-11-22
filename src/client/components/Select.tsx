@@ -37,7 +37,7 @@ const SelectContent = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
 >(({ className, children, position = "popper", ...props }, ref) => {
 	return (
-		<SelectPrimitive.Portal itemRef="ref" className="remix-dev-tools">
+		<SelectPrimitive.Portal itemRef="ref" className="react-router-dev-tools">
 			<SelectPrimitive.Content
 				ref={ref}
 				className={cn(
@@ -126,7 +126,7 @@ const SelectWithOptions = <T extends string>({
 			<Select
 				onOpenChange={() => {
 					const el = document.querySelector("div[data-radix-popper-content-wrapper]")
-					el?.setAttribute("class", "remix-dev-tools")
+					el?.setAttribute("class", "react-router-dev-tools")
 				}}
 				value={value}
 				onValueChange={onSelect}

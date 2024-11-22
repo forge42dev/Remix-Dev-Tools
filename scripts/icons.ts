@@ -6,7 +6,7 @@ import { parse } from "node-html-parser"
 const cwd = process.cwd()
 const inputDir = path.join(cwd, "resources", "icons")
 const inputDirRelative = path.relative(cwd, inputDir)
-const outputDir = path.join(cwd, "src", "RemixDevTools", "components", "icon", "icons")
+const outputDir = path.join(cwd, "src", "client", "components", "icon", "icons")
 
 const files = glob.sync("**/*.svg", {
 	cwd: inputDir,

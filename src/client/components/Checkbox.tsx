@@ -9,19 +9,20 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
 const Checkbox = ({ onChange, id, children, value, hint, ...props }: CheckboxProps) => {
 	return (
 		<div>
-			<div className="flex items-center gap-2 py-1">
-				<input
-					value={value ? "checked" : undefined}
-					checked={value}
-					onChange={onChange}
-					id={id}
-					type="checkbox"
-					{...props}
-				/>
-				<label className="text-md cursor-pointer" htmlFor={id}>
+			<label className="text-md cursor-pointer" htmlFor={id}>
+				<div className="flex items-center gap-2 py-1">
+					<input
+						value={value ? "checked" : undefined}
+						checked={value}
+						onChange={onChange}
+						id={id}
+						type="checkbox"
+						{...props}
+					/>
+
 					{children}
-				</label>
-			</div>
+				</div>
+			</label>
 			{hint && <p className="text-sm text-gray-500">{hint}</p>}
 		</div>
 	)

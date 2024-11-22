@@ -1,6 +1,6 @@
-import type { useNavigate } from "@remix-run/react"
 import clsx from "clsx"
 import type { CustomNodeElementProps } from "react-d3-tree"
+import type { useNavigate } from "react-router"
 import type { RouteWildcards } from "../context/rdtReducer.js"
 import { type ExtendedRoute, getRouteColor } from "../utils/routing.js"
 

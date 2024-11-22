@@ -14,7 +14,7 @@
 		"lineWidth": 120
 	},
 	"files": {
-		"ignore": ["test-apps/**", "docs/**", "./src/external/**", "./plugins/**", "./src/input.css"]
+		"ignore": ["test-apps/**", "docs/**", "./src/external/**", "./plugins/**", "./src/input.css", "./src/gradients.css"]
 	},
 	"organizeImports": {
 		"enabled": true
@@ -28,7 +28,9 @@
 				"noExplicitAny": "off",
 				"noConsole": {
 					"level": "error",
-					"options": { "allow": ["assert", "error", "info", "warn"] }
+					"options": {
+						"allow": ["assert", "error", "info", "warn"]
+					}
 				}
 			},
 			"style": {

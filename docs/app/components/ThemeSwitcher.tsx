@@ -1,10 +1,11 @@
-import { useFetcher } from '@remix-run/react'
+
 import { MoonIcon, SunIcon } from 'lucide-react'
 import { useRef } from 'react'
+import { useFetcher } from 'react-router'
 
 import { useTheme } from '~/hooks/useTheme'
 
-export const RemixPWAThemeSwitcher = () => {
+export const PWAThemeSwitcher = () => {
   const fetcher = useFetcher()
   const theme = useTheme()
   const ref = useRef<HTMLButtonElement>(null)

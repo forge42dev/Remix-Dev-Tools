@@ -59,7 +59,7 @@ export type HTMLError = {
 	parent: HTMLErrorPrimitive
 }
 
-export type RemixDevToolsState = {
+export type ReactRouterDevtoolsState = {
 	timeline: TimelineEvent[]
 	terminals: Terminal[]
 	settings: {
@@ -93,8 +93,6 @@ export type RemixDevToolsState = {
 		routeBoundaryGradient: keyof typeof ROUTE_BOUNDARY_GRADIENTS
 		routeWildcards: RouteWildcards
 		activeTab: Tabs
-		shouldConnectWithForge: boolean
-		port: number
 		height: number
 		/**
 		 * The maximum height of the panel
@@ -162,7 +160,7 @@ export type RemixDevToolsState = {
 	detachedWindowOwner: boolean
 }
 
-export const initialState: RemixDevToolsState = {
+export const initialState: ReactRouterDevtoolsState = {
 	timeline: [],
 	terminals: [{ id: 0, locked: false, output: [], history: [] }],
 	server: undefined,
@@ -183,8 +181,6 @@ export const initialState: RemixDevToolsState = {
 		routeBoundaryGradient: "watermelon",
 		routeWildcards: {},
 		activeTab: "page",
-		shouldConnectWithForge: false,
-		port: 3003,
 		height: 400,
 		maxHeight: 600,
 		minHeight: 200,
@@ -262,12 +258,12 @@ type SetDetachedWindowOwner = {
 
 type SetWholeState = {
 	type: "SET_WHOLE_STATE"
-	payload: RemixDevToolsState
+	payload: ReactRouterDevtoolsState
 }
 
 type SetSettings = {
 	type: "SET_SETTINGS"
-	payload: Partial<RemixDevToolsState["settings"]>
+	payload: Partial<ReactRouterDevtoolsState["settings"]>
 }
 
 type PurgeTimeline = {
@@ -296,7 +292,7 @@ type SetHtmlErrors = {
 }
 
 /** Aggregate of all action types */
-export type RemixDevToolsActions =
+export type ReactRouterDevtoolsActions =
 	| SetTimelineEvent
 	| ToggleTerminalLock
 	| AddOrRemoveTerminal
@@ -313,7 +309,10 @@ export type RemixDevToolsActions =
 	| SetHtmlErrors
 	| SetPersistOpenAction
 
-export const rdtReducer = (state: RemixDevToolsState, { type, payload }: RemixDevToolsActions): RemixDevToolsState => {
+export const rdtReducer = (
+	state: ReactRouterDevtoolsState,
+	{ type, payload }: ReactRouterDevtoolsActions
+): ReactRouterDevtoolsState => {
 	switch (type) {
 		case "SET_DETACHED_WINDOW_OWNER":
 			return {
@@ -338,6 +337,7 @@ export const rdtReducer = (state: RemixDevToolsState, { type, payload }: RemixDe
 					...payload,
 				},
 			}
+
 		case "SET_TIMELINE_EVENT":
 			return {
 				...state,

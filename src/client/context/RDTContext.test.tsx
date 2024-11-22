@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react"
 import * as detachedMethods from "../utils/detached.js"
 import {
-	REMIX_DEV_TOOLS_CHECK_DETACHED,
-	REMIX_DEV_TOOLS_DETACHED,
-	REMIX_DEV_TOOLS_SETTINGS,
-	REMIX_DEV_TOOLS_STATE,
+	REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_DETACHED,
+	REACT_ROUTER_DEV_TOOLS_SETTINGS,
+	REACT_ROUTER_DEV_TOOLS_STATE,
 } from "../utils/storage.js"
 import {
 	RDTContextProvider,
@@ -15,7 +15,7 @@ import {
 	//getExistingStateFromStorage,
 } from "./RDTContext.js"
 
-vi.mock("@remix-run/react", () => ({
+vi.mock("react-router", () => ({
 	useLocation: () => ({
 		pathname: "/",
 	}),
@@ -34,8 +34,8 @@ describe("RDTContextProvider", () => {
 		)
 		expect(container).toBeTruthy()
 
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_STATE)
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_SETTINGS)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_STATE)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_SETTINGS)
 	})
 
 	it("renders with existing values retrieved from local and session storage", () => {
@@ -55,8 +55,8 @@ describe("RDTContextProvider", () => {
 			</RDTContextProvider>
 		)
 		expect(container).toBeTruthy()
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_STATE)
-		expect(localStorage.getItem).toHaveBeenCalledWith(REMIX_DEV_TOOLS_SETTINGS)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_STATE)
+		expect(localStorage.getItem).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_SETTINGS)
 	})
 })
 
@@ -87,17 +87,17 @@ describe("getSettings", () => {
 })
 
 describe("setIsDetachedIfRequired", () => {
-	it('should set REMIX_DEV_TOOLS_DETACHED to "true" if window is not detached but RDT_MOUNTED is true', () => {
+	it('should set REACT_ROUTER_DEV_TOOLS_DETACHED to "true" if window is not detached but RDT_MOUNTED is true', () => {
 		const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(false)
 		const setSessionSpy = vi.spyOn(sessionStorage, "setItem")
 		const window = { RDT_MOUNTED: true }
 		;(global as any).window = window
 		setIsDetachedIfRequired()
 		expect(isDetachedWindowSpy).toHaveBeenCalled()
-		expect(setSessionSpy).toHaveBeenCalledWith(REMIX_DEV_TOOLS_DETACHED, "true")
+		expect(setSessionSpy).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_DETACHED, "true")
 	})
 
-	it("should not set REMIX_DEV_TOOLS_DETACHED if window is detached", () => {
+	it("should not set REACT_ROUTER_DEV_TOOLS_DETACHED if window is detached", () => {
 		const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(true)
 		const setSessionSpy = vi.spyOn(sessionStorage, "setItem")
 		const window = { RDT_MOUNTED: false }
@@ -108,7 +108,7 @@ describe("setIsDetachedIfRequired", () => {
 		expect(setSessionSpy).not.toHaveBeenCalled()
 	})
 
-	it("should not set REMIX_DEV_TOOLS_DETACHED if RDT_MOUNTED is false && isDetachedWindow is false", () => {
+	it("should not set REACT_ROUTER_DEV_TOOLS_DETACHED if RDT_MOUNTED is false && isDetachedWindow is false", () => {
 		const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(false)
 		const setSessionSpy = vi.spyOn(sessionStorage, "setItem")
 		const window = { RDT_MOUNTED: false }
@@ -121,10 +121,10 @@ describe("setIsDetachedIfRequired", () => {
 })
 
 describe("resetIsDetachedCheck", () => {
-	it('should set REMIX_DEV_TOOLS_CHECK_DETACHED to "false" whenever the window is mounted', () => {
+	it('should set REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED to "false" whenever the window is mounted', () => {
 		const setStorageSpy = vi.spyOn(localStorage, "setItem")
 
 		resetIsDetachedCheck()
-		expect(setStorageSpy).toHaveBeenCalledWith(REMIX_DEV_TOOLS_CHECK_DETACHED, "false")
+		expect(setStorageSpy).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED, "false")
 	})
 })

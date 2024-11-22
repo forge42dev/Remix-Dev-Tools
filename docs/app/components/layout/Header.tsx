@@ -6,12 +6,12 @@ import {
   useLocation,
   useNavigate,
   useRouteLoaderData,
-} from '@remix-run/react'
+} from 'react-router'
 import { ChevronDownIcon, RatioIcon, SearchIcon, XIcon } from 'lucide-react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { useTransition, animated } from 'react-spring'
 
-import { RemixPWAThemeSwitcher as ThemeSwitcher } from '~/components/ThemeSwitcher'
+import { PWAThemeSwitcher as ThemeSwitcher } from '~/components/ThemeSwitcher'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 import type { MetadataType } from '~/utils/server/doc.server'
 import { DEFAULT_TAG } from '~/utils/defatult'
@@ -45,8 +45,7 @@ function Breadcrumb({
             />
           </svg>
         </Disclosure.Button>
-        {/* eslint-disable-next-line multiline-ternary */}
-        {section.length > 0 ? (
+        {section.length > 0 && (
           <ol className="ml-4 flex min-w-0 whitespace-nowrap text-sm leading-6">
             {section && (
               <li className="flex items-center text-sm text-slate-500 dark:text-slate-400">
@@ -69,12 +68,6 @@ function Breadcrumb({
             )}
             <li className="truncate font-semibold text-slate-900 dark:text-slate-200">
               {title}
-            </li>
-          </ol>
-        ) : (
-          <ol className="ml-4 flex min-w-0 whitespace-nowrap text-sm leading-6">
-            <li className="flex items-center text-sm text-slate-500 dark:text-slate-400">
-              Journal Stack Home
             </li>
           </ol>
         )}
@@ -308,13 +301,13 @@ export default function Header({
                   aria-label="Home page"
                   to="/"
                   reloadDocument
-                  unstable_viewTransition
+                  viewTransition
                   className="md:flex"
                 >
                   <RatioIcon className="mr-2 h-7 w-7 self-center text-center md:hidden" />
-                  <span className="sr-only">Remix Dev Tools home page</span>
+                  <span className="sr-only">React Router Devtools home page</span>
                   <p className="relative hidden font-space text-4xl text-slate-700 dark:text-sky-100 md:flex">
-                    <span className="mr-2">Remix Dev Tools</span>
+                    <span className="mr-2">React Router Devtools</span>
                   </p>
                 </Link>
                 {/* eslint-disable-next-line multiline-ternary */}
@@ -401,7 +394,7 @@ export default function Header({
                     <a
                       className="group"
                       aria-label="GitHub"
-                      href="https://github.com/Code-Forge-Net/Remix-Dev-Tools"
+                      href="https://github.com/Code-Forge-Net/react-router-devtools"
                       target="_blank"
                       rel="noreferrer"
                     >

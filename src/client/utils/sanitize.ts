@@ -1,12 +1,13 @@
-import type { EntryRoute, RouteManifest } from "@remix-run/react/dist/routes.js"
-
-type Route = Pick<EntryRoute, "path" | "parentId" | "id" | "hasErrorBoundary">
+import type { EntryContext } from "react-router"
+type EntryRoute = EntryContext["manifest"]["routes"][0]
+type RouteManifest = EntryContext["manifest"]["routes"]
+type Route = any
 /**
- * Helper method used to convert remix route conventions to url segments
+ * Helper method used to convert react router route conventions to url segments
  * @param chunk Chunk to convert
  * @returns Returns the converted chunk
  */
-export const convertRemixPathToUrl = (routes: RouteManifest<Route>, route: Route) => {
+export const convertReactRouterPathToUrl = (routes: any, route: Route) => {
 	let currentRoute: Route | null = route
 	const path = []
 
@@ -20,7 +21,7 @@ export const convertRemixPathToUrl = (routes: RouteManifest<Route>, route: Route
 	return output === "" ? "/" : output
 }
 
-export const findParentErrorBoundary = (routes: RouteManifest<Route>, route: Route) => {
+export const findParentErrorBoundary = (routes: RouteManifest, route: Route) => {
 	let currentRoute: Route | null = route
 
 	while (currentRoute) {
@@ -50,13 +51,13 @@ interface RawNodeDatum {
 	errorBoundary: { hasErrorBoundary: boolean; errorBoundaryId: string | null }
 }
 
-const constructTree = (routes: Record<string, Route>, parentId?: string): RawNodeDatum[] => {
+const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 	const nodes: RawNodeDatum[] = []
 	const routeKeys = Object.keys(routes)
 	for (const key of routeKeys) {
 		const route = routes[key]
 		if (route.parentId === parentId) {
-			const url = convertRemixPathToUrl(routes, route)
+			const url = convertReactRouterPathToUrl(routes, route)
 			const node: RawNodeDatum = {
 				name: url,
 				attributes: {
@@ -73,7 +74,7 @@ const constructTree = (routes: Record<string, Route>, parentId?: string): RawNod
 	return nodes
 }
 
-export const createRouteTree = (routes: RouteManifest<Route>) => {
+export const createRouteTree = (routes: RouteManifest | undefined) => {
 	return constructTree(routes)
 }
 

@@ -1,8 +1,7 @@
 /* eslint-disable indent */
 import { PassThrough } from 'node:stream'
-import type { AppLoadContext, EntryContext } from '@remix-run/node'
-import { createReadableStreamFromReadable } from '@remix-run/node'
-import { RemixServer } from '@remix-run/react'
+import { type AppLoadContext, type EntryContext, ServerRouter } from "react-router"
+import { createReadableStreamFromReadable } from '@react-router/node'
 import * as isbotModule from 'isbot'
 import { renderToPipeableStream } from 'react-dom/server'
 import 'dotenv/config'
@@ -13,7 +12,7 @@ export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
+  reactRouterContext: EntryContext,
   loadContext: AppLoadContext
 ) {
   return isBotRequest(request.headers.get('user-agent'))
@@ -21,19 +20,16 @@ export default function handleRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext
+        reactRouterContext
       )
     : handleBrowserRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext
+        reactRouterContext
       )
 }
 
-// We have some Remix apps in the wild already running with isbot@3 so we need
-// to maintain backwards compatibility even though we want new apps to use
-// isbot@4.  That way, we can ship this as a minor Semver update to @remix-run/dev.
 function isBotRequest(userAgent: string | null) {
   if (!userAgent) {
     return false
@@ -56,13 +52,13 @@ function handleBotRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  reactRouterContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const { abort, pipe } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
+      <ServerRouter
+        context={reactRouterContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
       />,
@@ -106,13 +102,13 @@ function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  reactRouterContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const { abort, pipe } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
+      <ServerRouter
+        context={reactRouterContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
       />,

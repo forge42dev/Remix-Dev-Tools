@@ -1,13 +1,17 @@
 import chalk from "chalk"
-import { parse } from "es-module-lexer"
 import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import { cutArrayToLastN } from "../client/utils/common.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
-import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
-import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
 
+import type { RequestEvent } from "../shared/request-event.js"
+import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
+import { type WriteFileData, handleWriteFile } from "./file.js"
+import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
+import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
+import { injectRdtClient } from "./utils/inject-client.js"
+import { injectContext } from "./utils/inject-context.js"
 // this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
@@ -22,57 +26,134 @@ declare global {
 }
 
 const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>()
+const unusedEvents = new Map<string, RequestEvent>()
 
-type RemixViteConfig = {
+type ReactRouterViteConfig = {
 	client?: Partial<RdtClientConfig>
 	server?: DevToolsServerConfig
 	pluginDir?: string
-	includeInProd?: boolean
-	improvedConsole?: boolean
-	/** The directory where the remix app is located. Defaults to the "./app" relative to where vite.config is being defined. */
-	remixDir?: string
+	includeInProd?: {
+		client?: boolean
+		server?: boolean
+		devTools?: boolean
+	}
+	/** The directory where the react router app is located. Defaults to the "./app" relative to where vite.config is being defined. */
+	appDir?: string
 	editor?: EditorConfig
-	/**
-	 * If the package is marked as deprecated, a warning will be logged in the console
-	 * To disable this warning, set the option to true
-	 * @default false
-	 */
-	suppressDeprecationWarning?: boolean
 }
 
-export const defineRdtConfig = (config: RemixViteConfig) => config
+export const defineRdtConfig = (config: ReactRouterViteConfig) => config
 
-export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
+export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (args) => {
 	const serverConfig = args?.server || {}
 	const clientConfig = {
 		...args?.client,
 		editorName: args?.editor?.name,
 	}
+	const includeClient = args?.includeInProd?.client ?? false
+	const includeServer = args?.includeInProd?.server ?? false
+	const includeDevtools = args?.includeInProd?.devTools ?? false
 
-	const include = args?.includeInProd ?? false
-	const improvedConsole = args?.improvedConsole ?? true
-	const remixDir = args?.remixDir || "./app"
+	const appDir = args?.appDir || "./app"
 
-	const shouldInject = (mode: string | undefined) => mode === "development" || include
-
+	const shouldInject = (mode: string | undefined, include: boolean) => mode === "development" || include
+	const isTransformable = (id: string) => {
+		const extensions = [".tsx", ".jsx", ".ts", ".js"]
+		if (!extensions.some((ext) => id.endsWith(ext))) {
+			return
+		}
+		if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
+			return
+		}
+		const routeId = id.replace(normalizePath(process.cwd()), "").replace("/app/", "").replace(".tsx", "")
+		return routeId
+	}
 	// Set the server config on the process object so that it can be accessed by the plugin
 	if (typeof process !== "undefined") {
 		process.rdt_config = serverConfig
 	}
 	return [
 		{
-			enforce: "pre",
-			name: "remix-development-tools-server",
+			name: "react-router-devtools",
 			apply(config) {
+				return shouldInject(config.mode, includeClient)
+			},
+			async configResolved(resolvedViteConfig) {
+				const reactRouterIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router")
+				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router-devtools")
+				if (reactRouterIndex >= 0 && devToolsIndex > reactRouterIndex) {
+					throw new Error("react-router-devtools plugin has to be before the react-router plugin!")
+				}
+			},
+			async transform(code, id) {
+				const isRoot = id.endsWith("/root.tsx") || id.endsWith("/root.jsx")
+				if (!isRoot) {
+					return
+				}
+				const pluginDir = args?.pluginDir || undefined
+				const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : []
+				const pluginNames = plugins.map((p) => p.name)
+				const pluginImports = plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n")
+				const config = `{ "config": ${JSON.stringify(clientConfig)}, "plugins": "[${pluginNames.join(",")}]" }`
+				return injectRdtClient(code, config, pluginImports)
+			},
+		},
+		{
+			name: "react-router-devtools-inject-context",
+			apply(config) {
+				return shouldInject(config.mode, includeDevtools)
+			},
+			transform(code, id) {
+				const routeId = isTransformable(id)
+				if (!routeId) {
+					return
+				}
+				const finalCode = injectContext(code, routeId)
+				return finalCode
+			},
+		},
+		{
+			name: "react-router-devtools-data-function-augment",
+			apply(config) {
+				return shouldInject(config.mode, includeServer)
+			},
+			transform(code, id) {
+				const routeId = isTransformable(id)
+				if (!routeId) {
+					return
+				}
+				const finalCode = augmentDataFetchingFunctions(code, routeId)
+				return finalCode
+			},
+		},
+		{
+			enforce: "pre",
+			name: "react-router-devtools-custom-server",
+			apply(config) {
+				// Custom server is only needed in development for piping events to the client
 				return config.mode === "development"
 			},
 			async configureServer(server) {
+				if (server.config.appType !== "custom") {
+					return
+				}
 				server.httpServer?.on("listening", () => {
 					process.rdt_port = server.config.server.port ?? 5173
 				})
+				const channel = server.hot.channels.find((channel) => channel.name === "ws")
 				server.middlewares.use((req, res, next) =>
 					handleDevToolsViteRequest(req, res, next, (parsedData) => {
-						const { type, data } = parsedData
+						const { type, data, routine } = parsedData
+						if (routine === "request-event") {
+							unusedEvents.set(parsedData.id + parsedData.startTime, parsedData)
+							for (const client of server.hot.channels) {
+								if (client.name === "ws") {
+									client.send("request-event", JSON.stringify(parsedData))
+								}
+							}
+
+							return
+						}
 						const id = data.id
 						const existingData = routeInfo.get(id)
 						if (existingData) {
@@ -91,10 +172,13 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 							}
 						}
 						for (const client of server.hot.channels) {
-							client.send("route-info", JSON.stringify({ type, data }))
+							if (client.name === "ws") {
+								client.send("route-info", JSON.stringify({ type, data }))
+							}
 						}
 					})
 				)
+
 				server.hot.on("all-route-info", (data, client) => {
 					client.send(
 						"all-route-info",
@@ -106,6 +190,30 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 				})
 
 				if (!server.config.isProduction) {
+					channel?.on("remove-event", (data, client) => {
+						const parsedData = data
+						const { id, startTime } = parsedData
+
+						unusedEvents.delete(id + startTime)
+					})
+					channel?.on("get-events", (_, client) => {
+						const events = Array.from(unusedEvents.values())
+
+						if (events) {
+							client.send("get-events", JSON.stringify(events))
+						}
+					})
+					channel?.on("request-event", (data, client) => {
+						unusedEvents.set(data.id + data.startTime, data)
+						client.send(
+							"request-event",
+							JSON.stringify({
+								type: "request-event",
+								data: data,
+								...data,
+							})
+						)
+					})
 					const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
 					const openInEditor = (path: string | undefined, lineNum: string | undefined) => {
 						if (!path) {
@@ -114,147 +222,53 @@ export const remixDevTools: (args?: RemixViteConfig) => Plugin[] = (args) => {
 						editor.open(path, lineNum)
 					}
 
-					server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({ data, openInEditor, remixDir }))
+					server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({ data, openInEditor, appDir }))
+					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor }))
 				}
 			},
 		},
-		...(improvedConsole
-			? [
-					{
-						name: "better-console-logs",
-						enforce: "pre",
-						apply(config) {
-							return config.mode === "development"
-						},
-						async transform(code, id) {
-							// Ignore anything external
-							if (
-								id.includes("node_modules") ||
-								id.includes("?raw") ||
-								id.includes("dist") ||
-								id.includes("build") ||
-								!id.includes("app")
-							)
-								return
-
-							if (code.includes("console.")) {
-								const lines = code.split("\n")
-								return lines
-									.map((line, lineNumber) => {
-										if (line.trim().startsWith("//") || line.trim().startsWith("/**") || line.trim().startsWith("*")) {
-											return line
-										}
-										// Do not add for arrow functions or return statements
-										if (line.replaceAll(" ", "").includes("=>console.") || line.includes("return console.")) {
-											return line
-										}
-
-										const column = line.indexOf("console.")
-										const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()), "")}:${lineNumber + 1}:${column + 1}`)}\\n → "`
-										if (line.includes("console.log(")) {
-											const newLine = `console.log(${logMessage},`
-											return line.replace("console.log(", newLine)
-										}
-										if (line.includes("console.error(")) {
-											const newLine = `console.error(${logMessage},`
-											return line.replace("console.error(", newLine)
-										}
-										return line
-									})
-									.join("\n")
-							}
-						},
-					} satisfies Plugin,
-				]
-			: []),
 		{
-			name: "remix-development-tools",
+			name: "better-console-logs",
+			enforce: "pre",
 			apply(config) {
-				return shouldInject(config.mode)
-			},
-			async configResolved(resolvedViteConfig) {
-				if (!args?.suppressDeprecationWarning && resolvedViteConfig.appType === "custom") {
-					// Log a warning message
-					// biome-ignore lint/suspicious/noConsole: disable noConsole rule for this line
-					console.log(
-						`\n\n⚠️  ${chalk.yellowBright("remix-development-tools")} are going to be deprecated and will be renamed to ${chalk.greenBright("react-router-devtools ")} when React Router v7 is released ⚠️`,
-						`\n⚠️  Set suppressDeprecationWarning to true in your ${chalk.greenBright("vite.config.ts")} file to silence this warning ⚠️`
-					)
-				}
-
-				const remixIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "remix")
-				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "remix-development-tools")
-
-				if (remixIndex >= 0 && devToolsIndex > remixIndex) {
-					throw new Error("remixDevTools plugin has to be before the remix plugin!")
-				}
+				return config.mode === "development"
 			},
 			async transform(code, id) {
-				const pluginDir = args?.pluginDir || undefined
-				const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : []
-				const pluginNames = plugins.map((p) => p.name)
-				// Wraps loaders/actions
+				// Ignore anything external
 				if (
-					(id.includes("virtual:server-entry") || id.includes("virtual:remix/server-build")) &&
-					process.env.NODE_ENV === "development"
-				) {
-					const updatedCode = [
-						`import { augmentLoadersAndActions } from "remix-development-tools/server";`,
-						code.replace("export const routes =", "const routeModules ="),
-						"export const routes = augmentLoadersAndActions(routeModules);",
-					].join("\n")
+					id.includes("node_modules") ||
+					id.includes("?raw") ||
+					id.includes("dist") ||
+					id.includes("build") ||
+					!id.includes("app")
+				)
+					return
 
-					return updatedCode
-				}
-				if (id.endsWith("/root.tsx") || id.endsWith("/root.jsx")) {
-					const [, exports] = parse(code)
-					const exportNames = exports.map((e) => e.n)
-					const hasLinksExport = exportNames.includes("links")
+				if (code.includes("console.")) {
 					const lines = code.split("\n")
+					return lines
+						.map((line, lineNumber) => {
+							if (line.trim().startsWith("//") || line.trim().startsWith("/**") || line.trim().startsWith("*")) {
+								return line
+							}
+							// Do not add for arrow functions or return statements
+							if (line.replaceAll(" ", "").includes("=>console.") || line.includes("return console.")) {
+								return line
+							}
 
-					const imports = [
-						'import { withViteDevTools } from "remix-development-tools/client";',
-						'import rdtStylesheet from "remix-development-tools/client.css?url";',
-						plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n"),
-					]
-
-					const augmentedLinksExport = hasLinksExport
-						? `export const links = () => [...linksExport(), { rel: "stylesheet", href: rdtStylesheet }];`
-						: `export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];`
-
-					const augmentedDefaultExport = `export default withViteDevTools(AppExport, { config: ${JSON.stringify(clientConfig)}, plugins: [${pluginNames.join(
-						","
-					)}] })();`
-
-					const updatedCode = lines.map((line) => {
-						// Handles default export augmentation
-						if (line.includes("export default function")) {
-							const exportName = line.split("export default function ")[1].split("(")[0].trim()
-							const newLine = line.replace(`export default function ${exportName}`, "function AppExport")
-							return newLine
-						}
-						if (line.includes("export default")) {
-							const newline = line.replace("export default", "const AppExport =")
-							return newline
-						}
-						// Handles links export augmentation
-						if (line.includes("export const links")) {
-							return line.replace("export const links", "const linksExport")
-						}
-						if (line.includes("export let links")) {
-							return line.replace("export let links", "const linksExport")
-						}
-						if (line.includes("export function links")) {
-							return line.replace("export function links", "function linksExport")
-						}
-						// export { links } from "/app/root.tsx" variant
-						if (line.includes("export {") && line.includes("links") && line.includes("/app/root")) {
-							return line.replace("links", "links as linksExport")
-						}
-						return line
-					})
-					// Returns the new code
-					return [...imports, ...updatedCode, augmentedLinksExport, augmentedDefaultExport].join("\n")
+							const column = line.indexOf("console.")
+							const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()), "")}:${lineNumber + 1}:${column + 1}`)}\\n → "`
+							if (line.includes("console.log(")) {
+								const newLine = `console.log(${logMessage},`
+								return line.replace("console.log(", newLine)
+							}
+							if (line.includes("console.error(")) {
+								const newLine = `console.error(${logMessage},`
+								return line.replace("console.error(", newLine)
+							}
+							return line
+						})
+						.join("\n")
 				}
 			},
 		},

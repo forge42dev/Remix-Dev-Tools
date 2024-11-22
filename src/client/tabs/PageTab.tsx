@@ -1,6 +1,6 @@
-import { useMatches, useRevalidator } from "@remix-run/react"
 import clsx from "clsx"
 import { useMemo } from "react"
+import { useMatches, useRevalidator } from "react-router"
 
 import { RouteSegmentInfo } from "../components/RouteSegmentInfo.js"
 
@@ -17,6 +17,7 @@ const PageTab = () => {
 					<button
 						type="button"
 						onClick={() => revalidate()}
+						data-testid="revalidate-button"
 						className={clsx(
 							"z-20 cursor-pointer rounded-lg border border-green-500 px-3 py-1 text-sm font-semibold text-white",
 							state !== "idle" && "pointer-events-none opacity-50"

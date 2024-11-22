@@ -1,7 +1,6 @@
-import { json } from '@remix-run/node'
-import type { LoaderFunctionArgs } from '@remix-run/node'
-import type { ClientLoaderFunctionArgs } from '@remix-run/react'
-import { Outlet } from '@remix-run/react'
+
+import type { ClientLoaderFunctionArgs, LoaderFunctionArgs } from 'react-router'
+import { Outlet } from 'react-router'
 import { cacheClientLoader, useCachedLoaderData } from 'remix-client-cache'
 
 import { Sidebar } from '~/components/layout/Sidebar'
@@ -20,7 +19,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     metadata = (await getParsedMetadata(params.tag)) ?? metadata
   }
 
-  return json({
+  return  ({
     metadata,
     tag: params.tag,
   })
