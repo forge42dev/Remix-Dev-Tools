@@ -68,7 +68,7 @@
 	"bugs": {
 		"url": "https://github.com/forge42dev/react-router-devtools/issues"
 	},
-	"homepage": "https://forge42.dev/react-router-devtools",
+	"homepage": "https://react-router-devtools.forge42.dev/",
 	"readme": "https://github.com/forge42dev/react-router-devtools#readme",
 	"scripts": {
 		"clean": "git clean -fdX --exclude=\"!.env\"",
