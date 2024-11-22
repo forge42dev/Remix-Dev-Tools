@@ -67,7 +67,7 @@ const Tab = ({
 }
 
 const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
-	const { settings, setSettings } = useSettingsContext()
+	const { settings } = useSettingsContext()
 	const { htmlErrors } = useHtmlErrors()
 	const { setPersistOpen } = usePersistOpen()
 	const { activeTab } = settings
