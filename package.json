@@ -1,6 +1,6 @@
 {
 	"name": "remix-development-tools",
-	"description": "Remix development tools - a set of tools for developing/debugging Remix.run apps",
+	"description": "Remix development tools - a set of tools for developing/debugging Remix.run apps [deprecated branch]",
 	"author": "Alem Tuzlak",
 	"version": "4.7.7",
 	"license": "MIT",
