@@ -3,7 +3,11 @@ import type { RouteWildcards } from "../context/rdtReducer.js"
 import { convertReactRouterPathToUrl, findParentErrorBoundary } from "./sanitize.js"
 type EntryRoute = EntryContext["manifest"]["routes"][0]
 type Route = Pick<NonNullable<EntryRoute>, "id" | "index" | "path" | "parentId">
-
+declare global {
+	interface Window {
+		__reactRouterManifest?: EntryContext["manifest"]
+	}
+}
 export function getRouteType(route: Route) {
 	if (route.id === "root") {
 		return "ROOT"

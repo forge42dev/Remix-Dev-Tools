@@ -1,3 +1,4 @@
+import type { EntryContext } from "react-router"
 import { getRouteType, isLayoutRoute, isLeafRoute } from "./routing.js"
 // Mock the window.__reactRouterManifest.routes object for testing purposes
 const mockRoutes = {
@@ -29,7 +30,11 @@ const mockRoutes = {
 		path: "path",
 	},
 }
-
+declare global {
+	interface Window {
+		__reactRouterManifest?: EntryContext["manifest"]
+	}
+}
 window.__reactRouterManifest = {
 	routes: mockRoutes,
 } as any

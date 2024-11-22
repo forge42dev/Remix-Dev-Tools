@@ -2,6 +2,7 @@ import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { reactRouterDevTools, defineRdtConfig } from "react-router-devtools"
+
 import inspect from "vite-plugin-inspect"
 const config = defineRdtConfig({
   client: {
