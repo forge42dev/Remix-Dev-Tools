@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./assets/react-router-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" height="240" alt="react-router-devtools"  />
+<img src="./assets/remix-dev-tools.png" style="display: block; margin: 0 auto;" align="middle" height="240" alt="react-router-devtools"  />
 </p>
 
 # react-router-devtools
