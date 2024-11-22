@@ -30,7 +30,7 @@ const DEFAULT_VALUES = {
 
 const NewRouteForm = () => {
 	const { sendJsonMessage } = useRemixForgeSocket({
-		onMessage: (e) => {
+		onMessage: (e: { data: any }) => {
 			const messageData = e.data
 			if (messageData.type === "route_added") {
 				setNewRouteInfo(DEFAULT_VALUES)
