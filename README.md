@@ -53,6 +53,20 @@ export default defineConfig({
 
 That's it, you're done!
 
+### CloudFlare
+
+If you're trying to spin it up on CF, try adding this to your `optimizeDeps` in your `vite.config.js` file:
+```ts
+optimizeDeps: {
+  include: [
+    // other optimized deps
+    "beautify",
+    "react-diff-viewer-continued",
+    "classnames",
+    "@bkrem/react-transition-group",
+  ],
+},
+```
 
 ## Support
 
