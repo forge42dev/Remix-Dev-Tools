@@ -1,4 +1,3 @@
-import fs from "node:fs"
 import type { IncomingMessage, ServerResponse } from "node:http"
 import type { Connect } from "vite"
 
@@ -49,7 +48,8 @@ export const handleDevToolsViteRequest = (
 	})
 }
 
-export function checkPath(routePath: string, extensions = [".tsx", ".jsx", ".ts", ".js"]) {
+export async function checkPath(routePath: string, extensions = [".tsx", ".jsx", ".ts", ".js"]) {
+	const fs = await import("node:fs")
 	// Check if the path exists as a directory
 	if (fs.existsSync(routePath) && fs.lstatSync(routePath).isDirectory()) {
 		return { validPath: routePath, type: "directory" } as const
