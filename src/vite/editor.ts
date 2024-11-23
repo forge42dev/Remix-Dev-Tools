@@ -1,6 +1,3 @@
-import { exec } from "node:child_process"
-import fs from "node:fs"
-import path from "node:path"
 import { normalizePath } from "vite"
 import { checkPath } from "./utils.js"
 
@@ -25,30 +22,32 @@ export type EditorConfig = {
 
 export const DEFAULT_EDITOR_CONFIG: EditorConfig = {
 	name: "VSCode",
-	open: (path, lineNumber) => {
+	open: async (path, lineNumber) => {
+		const { exec } = await import("node:child_process")
 		exec(`code -g "${normalizePath(path).replaceAll("$", "\\$")}${lineNumber ? `:${lineNumber}` : ""}"`)
 	},
 }
 
-export const handleOpenSource = ({
+export const handleOpenSource = async ({
 	data,
 	openInEditor,
 	appDir,
 }: {
 	data: OpenSourceData
 	appDir: string
-	openInEditor: (path: string, lineNum: string | undefined) => void
+	openInEditor: (path: string, lineNum: string | undefined) => Promise<void>
 }) => {
 	const { source, line, routeID } = data.data
 	const lineNum = line ? `${line}` : undefined
-
+	const fs = await import("node:fs")
+	const path = await import("node:path")
 	if (source) {
 		return openInEditor(source, lineNum)
 	}
 
 	if (routeID) {
 		const routePath = path.join(appDir, routeID)
-		const checkedPath = checkPath(routePath)
+		const checkedPath = await checkPath(routePath)
 
 		if (!checkedPath) return
 		const { type, validPath } = checkedPath

@@ -215,7 +215,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 						)
 					})
 					const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
-					const openInEditor = (path: string | undefined, lineNum: string | undefined) => {
+					const openInEditor = async (path: string | undefined, lineNum: string | undefined) => {
 						if (!path) {
 							return
 						}

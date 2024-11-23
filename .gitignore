@@ -136,3 +136,4 @@ dist
 # IDE
 .idea
 .tsup
+.react-router
