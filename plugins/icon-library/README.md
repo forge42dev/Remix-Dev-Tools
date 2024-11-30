@@ -9,12 +9,12 @@ This plugin allows you to see all your project icons in a new tab in react route
 ### Vite
 1. Create a plugin directory in your project. (eg on the root you can create a `your-path-here` folder)
 2. Copy the code from the plugin located in this folder. and paste it into there (eg `your-path-here/icon-library.tsx`)
-3. Specify the plugin directory in your vite config via the `pluginsDir` option:
+3. Specify the plugin directory in your vite config via the `pluginDir` option:
 
 ```js
   // vite.config.js
   export default {
-    plugins: [reactRouterDevTools({ pluginsDir: './your-path-here' })]
+    plugins: [reactRouterDevTools({ pluginDir: './your-path-here' })]
   }
 ```
 

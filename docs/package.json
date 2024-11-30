@@ -52,7 +52,7 @@
     "rehype-slug": "^6.0.0",
     "remark-emoji": "^4.0.1",
     "remark-gfm": "^4.0.0",
-    "remix-client-cache": "https://pkg.pr.new/forge42dev/remix-client-cache@14.tgz",
+    "remix-client-cache": "2.0.0",
     "tailwind-merge": "^2.2.1",
     "unist-util-filter": "^5.0.1",
     "unist-util-visit": "^5.0.0",

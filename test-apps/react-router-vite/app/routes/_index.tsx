@@ -2,6 +2,7 @@
 import type { MetaFunction , LoaderFunctionArgs, ClientLoaderFunctionArgs} from "react-router";
 import { Link, useFetcher, useSubmit } from "react-router";
 import { Button } from "../components/Button";
+import * as ss from "~/utils/example";
 
 
 export const meta: MetaFunction = () => {
@@ -12,8 +13,8 @@ export const meta: MetaFunction = () => {
 };
 
 
-export const loader = async ({ request, context,devTools  }: LoaderFunctionArgs) => {
-
+export const loader = async ({ request, context,devTools, params  }: LoaderFunctionArgs) => {
+  const d = await ss?.loader( );
   const trace =  devTools?.tracing.trace
   const data = await  trace?.("Loader call - GET users", async () => {
 
