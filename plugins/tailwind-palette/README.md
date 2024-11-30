@@ -17,12 +17,12 @@ This plugin allows you to see all tailwind colors in a new tab in react router d
      }
      ```
 4. Copy the code from the plugin located in this folder. and paste it into there (eg `your-path-here/tailwind-palette.tsx`)
-5. Specify the plugin directory in your vite config via the `pluginsDir` option:
+5. Specify the plugin directory in your vite config via the `pluginDir` option:
 
 ```js
   // vite.config.js
   export default {
-    plugins: [reactRouterDevTools({ pluginsDir: './your-path-here' })]
+    plugins: [reactRouterDevTools({ pluginDir: './your-path-here' })]
   }
 ```
 

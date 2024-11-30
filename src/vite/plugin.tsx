@@ -4,7 +4,6 @@ import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import { cutArrayToLastN } from "../client/utils/common.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
-
 import type { RequestEvent } from "../shared/request-event.js"
 import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
 import { type WriteFileData, handleWriteFile } from "./file.js"
@@ -55,17 +54,19 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	const includeDevtools = args?.includeInProd?.devTools ?? false
 
 	const appDir = args?.appDir || "./app"
-
+	const appDirName = appDir.replace("./", "")
 	const shouldInject = (mode: string | undefined, include: boolean) => mode === "development" || include
 	const isTransformable = (id: string) => {
 		const extensions = [".tsx", ".jsx", ".ts", ".js"]
 		if (!extensions.some((ext) => id.endsWith(ext))) {
 			return
 		}
-		if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
+		const isRoute = id.includes(`${appDirName}/root`) || id.includes(`${appDirName}/routes`)
+		if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?") || !isRoute) {
 			return
 		}
-		const routeId = id.replace(normalizePath(process.cwd()), "").replace("/app/", "").replace(".tsx", "")
+
+		const routeId = id.replace(normalizePath(process.cwd()), "").replace(`/${appDirName}/`, "").replace(".tsx", "")
 		return routeId
 	}
 	// Set the server config on the process object so that it can be accessed by the plugin
@@ -240,7 +241,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					id.includes("?raw") ||
 					id.includes("dist") ||
 					id.includes("build") ||
-					!id.includes("app")
+					!id.includes(appDirName)
 				)
 					return
 
