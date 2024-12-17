@@ -120,15 +120,16 @@ function toFunctionExpression(decl: Babel.FunctionDeclaration) {
 	return t.functionExpression(decl.id, decl.params, decl.body, decl.generator, decl.async)
 }
 
-export function injectContext(code: string, routeId: string) {
+export function injectContext(code: string, routeId: string, id: string) {
+	const [filePath] = id.split("?")
 	try {
 		const ast = parse(code, { sourceType: "module" })
 		const didTransform = transform(ast, routeId)
 		if (!didTransform) {
-			return code
+			return { code }
 		}
-		return gen(ast).code
+		return gen(ast, { sourceMaps: true, sourceFileName: filePath, filename: id })
 	} catch (e) {
-		return code
+		return { code }
 	}
 }
