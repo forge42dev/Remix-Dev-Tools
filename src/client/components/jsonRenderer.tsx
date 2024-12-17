@@ -51,7 +51,13 @@ const JsonRenderer = ({ data, expansionLevel }: JsonRendererProps) => {
 	const [json, setJson] = useState(originalData)
 
 	useEffect(() => {
-		setJson(data)
+		let mounted = true
+		if (mounted) {
+			setJson(data)
+		}
+		return () => {
+			mounted = false
+		}
 	}, [data])
 
 	if (typeof json === "string") {
