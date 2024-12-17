@@ -8,7 +8,8 @@ describe("transform", () => {
 			`
 			export function loader() {}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
@@ -22,7 +23,8 @@ describe("transform", () => {
 			`
 			export const loader = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
@@ -36,7 +38,8 @@ describe("transform", () => {
 			`
 			export let loader = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
@@ -50,7 +53,8 @@ describe("transform", () => {
 			`
 			export var loader = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
@@ -64,7 +68,8 @@ describe("transform", () => {
 			`
 			export { loader } from "./loader.js";
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
@@ -80,7 +85,8 @@ describe("transform", () => {
 			import {  loader } from "./loader.js";
 			export { loader };
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
@@ -96,7 +102,8 @@ describe("transform", () => {
 			`
 			export function clientLoader() {}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
@@ -110,7 +117,8 @@ describe("transform", () => {
 			`
 			export const clientLoader = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
@@ -124,7 +132,8 @@ describe("transform", () => {
 			`
 			export let clientLoader = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
@@ -138,7 +147,8 @@ describe("transform", () => {
 			`
 			export var clientLoader = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
@@ -153,7 +163,8 @@ describe("transform", () => {
 			import { clientLoader } from "./client-loader.js";
 			export { clientLoader };
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
@@ -170,7 +181,8 @@ describe("transform", () => {
 			import { clientLoader } from "./client-loader.js";
 			export { clientLoader };
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
@@ -186,7 +198,8 @@ describe("transform", () => {
 			`
 			export function action() {}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
@@ -200,7 +213,8 @@ describe("transform", () => {
 			`
 			export const action = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
@@ -214,7 +228,8 @@ describe("transform", () => {
 			`
 			export let action = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
@@ -228,7 +243,8 @@ describe("transform", () => {
 			`
 			export var action = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
@@ -242,7 +258,8 @@ describe("transform", () => {
 			`
 			export { action } from "./action.js";
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
@@ -258,7 +275,8 @@ describe("transform", () => {
 			import {  action } from "./action.js";
 			export { action };
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
@@ -274,7 +292,8 @@ describe("transform", () => {
 			`
 			export function clientAction() {}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
@@ -288,7 +307,8 @@ describe("transform", () => {
 			`
 			export const clientAction = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
@@ -302,7 +322,8 @@ describe("transform", () => {
 			`
 			export let clientAction = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
@@ -316,7 +337,8 @@ describe("transform", () => {
 			`
 			export var clientAction = async ({ request }) => { return {};}
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
@@ -331,7 +353,8 @@ describe("transform", () => {
 			import { clientAction } from "./client-action.js";
 			export { clientAction };
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
@@ -348,7 +371,8 @@ describe("transform", () => {
 			import { clientAction } from "./client-action.js";
 			export { clientAction };
 			`,
-			"test"
+			"test",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";

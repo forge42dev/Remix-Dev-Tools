@@ -8,7 +8,8 @@ describe("transform", () => {
 			`
 			export default function App() {}`,
 			'{ "config": { "defaultOpen":false,"position":"top-right","requireUrlFlag":false,"liveUrls":[{"url":"https://forge42.dev","name":"Production"},{"url":"https://forge42.dev/staging","name":"Staging"}]}, "plugins": "[tailwindPalettePlugin]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -38,7 +39,8 @@ describe("transform", () => {
 			`
 			export default function App() {}`,
 			'{ "config": { "defaultOpen":false,"position":"top-right","requireUrlFlag":false,"liveUrls":[{"url":"https://forge42.dev","name":"Production"},{"url":"https://forge42.dev/staging","name":"Staging"}]}, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -68,7 +70,8 @@ describe("transform", () => {
 			`
 			export default function App() {}`,
 			'{ "config": { }, "plugins": "[tailwindPalettePlugin,coolPlugin]" }',
-			'import tailwindPalettePlugin from "somewhere";import coolPlugin from "somewhere-else";'
+			'import tailwindPalettePlugin from "somewhere";import coolPlugin from "somewhere-else";',
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import tailwindPalettePlugin from "somewhere";
@@ -93,7 +96,8 @@ describe("transform", () => {
 			}
 			`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -117,7 +121,8 @@ describe("transform", () => {
 			export default App;
 			`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -139,7 +144,8 @@ describe("transform", () => {
 			export default App;
 			`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -164,7 +170,8 @@ describe("transform", () => {
 			}
 			`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -189,7 +196,8 @@ describe("transform", () => {
 			export default App;
 			`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -210,7 +218,8 @@ describe("transform", () => {
 			export const links = () => [];
 			export default function App() {}`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLinksWrapper as _withLinksWrapper, withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -230,7 +239,8 @@ describe("transform", () => {
 			export const links = () => [{ rel: "stylesheet", href: "rdtStylesheet.css" }];
 			export default function App() {}`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLinksWrapper as _withLinksWrapper, withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -250,7 +260,8 @@ describe("transform", () => {
 			export function links() { return [{ rel: "stylesheet", href: "rdtStylesheet.css" }] };
 			export default function App() {}`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLinksWrapper as _withLinksWrapper, withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -270,7 +281,8 @@ describe("transform", () => {
 			export function links() { return [] };
 			export default function App() {}`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLinksWrapper as _withLinksWrapper, withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
@@ -293,7 +305,8 @@ describe("transform", () => {
 			}
 			export default function App() {}`,
 			'{ "config": { }, "plugins": "[]" }',
-			""
+			"",
+			"/file/path"
 		)
 		const expected = removeWhitespace(`
 			import { withLinksWrapper as _withLinksWrapper, withViteDevTools as _withViteDevTools } from "react-router-devtools/client";

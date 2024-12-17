@@ -107,13 +107,14 @@ function toFunctionExpression(decl: Babel.FunctionDeclaration) {
 	return t.functionExpression(decl.id, decl.params, decl.body, decl.generator, decl.async)
 }
 
-export function injectRdtClient(code: string, clientConfig: string, pluginImports: string) {
+export function injectRdtClient(code: string, clientConfig: string, pluginImports: string, id: string) {
+	const [filePath] = id.split("?")
 	const ast = parse(code, { sourceType: "module" })
 	const didTransform = transform(ast, clientConfig)
 	if (!didTransform) {
 		return { code }
 	}
-	const generatedOutput = gen(ast, { sourceMaps: true })
+	const generatedOutput = gen(ast, { sourceMaps: true, sourceFileName: filePath, filename: id })
 	const output = `${pluginImports}\n${generatedOutput.code}`
 
 	if (!output.includes("export const links")) {

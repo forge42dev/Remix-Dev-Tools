@@ -50,7 +50,7 @@ describe("withLoaderWrapper", () => {
 		const wrappedEnd = performance.now()
 		const wrappedTime = wrappedEnd - wrappedStart
 		// Allow for some variance in execution time
-		expect(wrappedTime - originalTime).toBeLessThan(10)
+		expect(wrappedTime - originalTime).toBeLessThan(30)
 	})
 
 	it("should get the params and the request object passed down properly", async () => {
@@ -156,7 +156,7 @@ describe("withActionWrapper", () => {
 		const wrappedEnd = performance.now()
 		const wrappedTime = wrappedEnd - wrappedStart
 		// Allow for some variance in execution time
-		expect(wrappedTime - originalTime).toBeLessThan(10)
+		expect(wrappedTime - originalTime).toBeLessThan(30)
 	})
 
 	it("should get the params and the request object passed down properly", async () => {

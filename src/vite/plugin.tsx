@@ -96,7 +96,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				const pluginNames = plugins.map((p) => p.name)
 				const pluginImports = plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n")
 				const config = `{ "config": ${JSON.stringify(clientConfig)}, "plugins": "[${pluginNames.join(",")}]" }`
-				return injectRdtClient(code, config, pluginImports)
+				return injectRdtClient(code, config, pluginImports, id)
 			},
 		},
 		{
@@ -109,7 +109,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				if (!routeId) {
 					return
 				}
-				const finalCode = injectContext(code, routeId)
+				const finalCode = injectContext(code, routeId, id)
 				return finalCode
 			},
 		},
@@ -123,7 +123,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				if (!routeId) {
 					return
 				}
-				const finalCode = augmentDataFetchingFunctions(code, routeId)
+				const finalCode = augmentDataFetchingFunctions(code, routeId, id)
 				return finalCode
 			},
 		},
